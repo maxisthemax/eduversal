@@ -11,7 +11,7 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <Box>
-      <AppBar color="inherit" elevation={0}>
+      <AppBar color="inherit" elevation={0} position="static">
         <Toolbar>
           <Typography variant="h4" color="primary">
             <b>Photoversal Studio</b>
@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Stack
         direction="row"
         sx={{
-          height: getFullHeightSize(2),
+          height: getFullHeightSize(10),
           width: "100%",
         }}
       >
