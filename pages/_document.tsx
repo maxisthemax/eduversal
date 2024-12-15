@@ -8,7 +8,8 @@ import { Html, Head, Main, NextScript, DocumentContext } from "next/document";
 export default function Document(props: DocumentHeadTagsProps) {
   return (
     <Html lang="en">
-      <Head /> <DocumentHeadTags {...props} />
+      <Head></Head>
+      <DocumentHeadTags {...props} />
       <body>
         <Main />
         <NextScript />
