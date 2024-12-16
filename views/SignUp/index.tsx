@@ -8,8 +8,6 @@ import { TextFieldForm } from "@/components/Form";
 
 //*mui
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -26,6 +24,7 @@ const validationSchema = yup.object({
     .string()
     .min(6, "Password is less than 6")
     .required("Password is required"),
+  name: yup.string().required("Name is required"),
 });
 
 export default function SignIn() {
@@ -34,10 +33,16 @@ export default function SignIn() {
       <Container maxWidth="sm" sx={{ alignContent: "center" }}>
         <Paper elevation={0}>
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ email: "", password: "", name: "" }}
             validationSchema={validationSchema}
-            onSubmit={async ({ email, password }) => {
-              await axios.post("/api/auth/signIn", { email, password });
+            onSubmit={async ({ email, password, name }) => {
+              const res = await axios.post("/api/auth/signUp", {
+                email,
+                password,
+                name,
+              });
+
+              console.log(res);
             }}
           >
             {({
@@ -59,7 +64,7 @@ export default function SignIn() {
                 <Form onSubmit={handleSubmit}>
                   <Stack spacing={2} sx={{ p: 2 }}>
                     <Typography variant="h3">
-                      <b>Sign In</b>
+                      <b>Sign Up</b>
                     </Typography>
                     <Stack direction="row" spacing={2}>
                       <Button fullWidth variant="contained" color="primary">
@@ -69,6 +74,12 @@ export default function SignIn() {
                         Marchants
                       </Button>
                     </Stack>
+                    <TextFieldForm
+                      name="name"
+                      label="Name"
+                      formProps={formProps}
+                      props={{ required: true }}
+                    />
                     <TextFieldForm
                       name="email"
                       label="Email"
@@ -81,22 +92,17 @@ export default function SignIn() {
                       formProps={formProps}
                       props={{ required: true, type: "password" }}
                     />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Remember Me"
-                      labelPlacement="end"
-                    />
                     <Button
                       fullWidth
                       type="submit"
                       variant="contained"
                       color="primary"
                     >
-                      Sign In
+                      Register
                     </Button>
                     <Typography>
-                      Don&apos;t have an account yet?{" "}
-                      <Link href={"/signup"}>Sign up</Link>
+                      If you already have an account.{" "}
+                      <Link href={"/signin"}>Sign In Here</Link>
                     </Typography>
                   </Stack>
                 </Form>
