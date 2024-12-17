@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
 //*components
-import Layout from 'components/Layout'
+import Layout from '../../components/Layout'
 import { TextFieldForm } from 'components/Form'
 import { OverlayBox } from 'components/Box'
 
