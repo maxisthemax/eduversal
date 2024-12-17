@@ -1,1 +1,1 @@
-export { default as OverlayBox } from './OverlayBox'
+export { default as OverlayBox } from "./OverlayBox";

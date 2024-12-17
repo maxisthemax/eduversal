@@ -1,23 +1,23 @@
-import { SessionOptions } from 'iron-session'
+import { SessionOptions } from "iron-session";
 
 export interface SessionData {
-  id: string
-  name: string
-  email: string
-  isLoggedIn: boolean
+  id: string;
+  name: string;
+  email: string;
+  isLoggedIn: boolean;
 }
 
 export const defaultSession: SessionData = {
-  id: '',
-  name: '',
-  email: '',
+  id: "",
+  name: "",
+  email: "",
   isLoggedIn: false,
-}
+};
 
 export const sessionOptions: SessionOptions = {
   password: process.env.IRON_SESSION_PASSWORD as string,
-  cookieName: 'myapp_secure_session',
+  cookieName: "myapp_secure_session",
   cookieOptions: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === "production",
   },
-}
+};

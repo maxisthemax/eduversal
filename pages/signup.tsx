@@ -1,7 +1,7 @@
-import SignUpView from 'views/SignUp'
+import SignUpView from "views/SignUp";
 
 function SignUp() {
-  return <SignUpView />
+  return <SignUpView />;
 }
 
-export default SignUp
+export default SignUp;

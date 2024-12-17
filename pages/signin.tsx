@@ -1,7 +1,7 @@
-import SignInView from 'views/SignIn'
+import SignInView from "views/SignIn";
 
 function SignIn() {
-  return <SignInView />
+  return <SignInView />;
 }
 
-export default SignIn
+export default SignIn;
