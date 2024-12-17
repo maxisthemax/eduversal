@@ -1,10 +1,12 @@
 import * as yup from "yup";
 import { Form, Formik } from "formik";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 //*components
 import Layout from "@/components/Layout";
 import { TextFieldForm } from "@/components/Form";
+import { OverlayBox } from "@/components/Box";
 
 //*mui
 import Button from "@mui/material/Button";
@@ -29,6 +31,8 @@ const validationSchema = yup.object({
 });
 
 export default function SignIn() {
+  const { push } = useRouter();
+
   return (
     <Layout>
       <Container maxWidth="sm" sx={{ alignContent: "center" }}>
@@ -38,6 +42,7 @@ export default function SignIn() {
             validationSchema={validationSchema}
             onSubmit={async ({ email, password }) => {
               await axios.post("/api/auth/signIn", { email, password });
+              push("/");
             }}
           >
             {({
@@ -47,6 +52,7 @@ export default function SignIn() {
               touched,
               handleBlur,
               handleSubmit,
+              isSubmitting,
             }) => {
               const formProps = {
                 values,
@@ -56,50 +62,52 @@ export default function SignIn() {
                 handleChange,
               };
               return (
-                <Form onSubmit={handleSubmit}>
-                  <Stack spacing={2} sx={{ p: 2 }}>
-                    <Typography variant="h3">
-                      <b>Sign In</b>
-                    </Typography>
-                    <Stack direction="row" spacing={2}>
-                      <Button fullWidth variant="contained" color="primary">
-                        User
+                <OverlayBox isLoading={isSubmitting}>
+                  <Form onSubmit={handleSubmit}>
+                    <Stack spacing={2} sx={{ p: 2 }}>
+                      <Typography variant="h3">
+                        <b>Sign In</b>
+                      </Typography>
+                      <Stack direction="row" spacing={2}>
+                        <Button fullWidth variant="contained" color="primary">
+                          User
+                        </Button>
+                        <Button fullWidth variant="contained">
+                          Marchants
+                        </Button>
+                      </Stack>
+                      <TextFieldForm
+                        name="email"
+                        label="Email"
+                        formProps={formProps}
+                        props={{ required: true, placeholder: "Your Email" }}
+                      />
+                      <TextFieldForm
+                        name="password"
+                        label="Password"
+                        formProps={formProps}
+                        props={{ required: true, type: "password" }}
+                      />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Remember Me"
+                        labelPlacement="end"
+                      />
+                      <Button
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                      >
+                        Sign In
                       </Button>
-                      <Button fullWidth variant="contained">
-                        Marchants
-                      </Button>
+                      <Typography>
+                        Don&apos;t have an account yet?{" "}
+                        <Link href={"/signup"}>Sign up</Link>
+                      </Typography>
                     </Stack>
-                    <TextFieldForm
-                      name="email"
-                      label="Email"
-                      formProps={formProps}
-                      props={{ required: true, placeholder: "Your Email" }}
-                    />
-                    <TextFieldForm
-                      name="password"
-                      label="Password"
-                      formProps={formProps}
-                      props={{ required: true, type: "password" }}
-                    />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Remember Me"
-                      labelPlacement="end"
-                    />
-                    <Button
-                      fullWidth
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                    >
-                      Sign In
-                    </Button>
-                    <Typography>
-                      Don&apos;t have an account yet?{" "}
-                      <Link href={"/signup"}>Sign up</Link>
-                    </Typography>
-                  </Stack>
-                </Form>
+                  </Form>
+                </OverlayBox>
               );
             }}
           </Formik>
