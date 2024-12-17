@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 
 //*lib
-import prisma from "lib/prisma";
+import prisma from "@/lib/prisma";
 
 type SignUpRequest = {
   email: string;

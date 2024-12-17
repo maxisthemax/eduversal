@@ -3,8 +3,8 @@ import { Form, Formik } from "formik";
 import axios from "axios";
 
 //*components
-import Layout from "components/Layout";
-import { TextFieldForm } from "components/Form";
+import Layout from "@/components/Layout";
+import { TextFieldForm } from "@/components/Form";
 
 //*mui
 import Button from "@mui/material/Button";

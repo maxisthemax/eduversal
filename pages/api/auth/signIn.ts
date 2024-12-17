@@ -3,8 +3,8 @@ import { getIronSession } from "iron-session";
 import bcrypt from "bcrypt";
 
 //*lib
-import { SessionData, sessionOptions } from "lib/session";
-import prisma from "lib/prisma";
+import { SessionData, sessionOptions } from "@/lib/session";
+import prisma from "@/lib/prisma";
 
 export default async function signInHandler(
   req: NextApiRequest,

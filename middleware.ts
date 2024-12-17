@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getIronSession } from "iron-session";
 
 //*lib
-import { SessionData, sessionOptions } from "lib/session";
+import { SessionData, sessionOptions } from "@/lib/session";
 
 export async function middleware(req: NextRequest) {
   const cookieStore = await cookies();

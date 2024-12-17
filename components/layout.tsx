@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
 //*helpers
-import { getFullHeightSize } from "helpers/stringHelpers";
+import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
