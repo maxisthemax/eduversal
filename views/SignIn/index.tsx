@@ -1,48 +1,42 @@
-import * as yup from "yup";
-import { Form, Formik } from "formik";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import * as yup from 'yup'
+import { Form, Formik } from 'formik'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 //*components
-import Layout from "components/Layout";
-import { TextFieldForm } from "components/Form";
-import { OverlayBox } from "components/Box";
+import Layout from 'components/Layout'
+import { TextFieldForm } from 'components/Form'
+import { OverlayBox } from 'components/Box'
 
 //*mui
-import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Link from "next/link";
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import Link from 'next/link'
 
 //*validation
 const validationSchema = yup.object({
-  email: yup
-    .string()
-    .email("Enter a valid email")
-    .required("Email is required"),
-  password: yup
-    .string()
-    .min(6, "Password is less than 6")
-    .required("Password is required"),
-});
+  email: yup.string().email('Enter a valid email').required('Email is required'),
+  password: yup.string().min(6, 'Password is less than 6').required('Password is required'),
+})
 
 export default function SignIn() {
-  const { push } = useRouter();
+  const { push } = useRouter()
 
   return (
     <Layout>
-      <Container maxWidth="sm" sx={{ alignContent: "center" }}>
+      <Container maxWidth="sm" sx={{ alignContent: 'center' }}>
         <Paper elevation={0}>
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ email: '', password: '' }}
             validationSchema={validationSchema}
             onSubmit={async ({ email, password }) => {
-              await axios.post("/api/auth/signIn", { email, password });
-              push("/");
+              await axios.post('/api/auth/signIn', { email, password })
+              push('/')
             }}
           >
             {({
@@ -60,7 +54,7 @@ export default function SignIn() {
                 touched,
                 handleBlur,
                 handleChange,
-              };
+              }
               return (
                 <OverlayBox isLoading={isSubmitting}>
                   <Form onSubmit={handleSubmit}>
@@ -80,39 +74,33 @@ export default function SignIn() {
                         name="email"
                         label="Email"
                         formProps={formProps}
-                        props={{ required: true, placeholder: "Your Email" }}
+                        props={{ required: true, placeholder: 'Your Email' }}
                       />
                       <TextFieldForm
                         name="password"
                         label="Password"
                         formProps={formProps}
-                        props={{ required: true, type: "password" }}
+                        props={{ required: true, type: 'password' }}
                       />
                       <FormControlLabel
                         control={<Checkbox />}
                         label="Remember Me"
                         labelPlacement="end"
                       />
-                      <Button
-                        fullWidth
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                      >
+                      <Button fullWidth type="submit" variant="contained" color="primary">
                         Sign In
                       </Button>
                       <Typography>
-                        Don&apos;t have an account yet?{" "}
-                        <Link href={"/signup"}>Sign up</Link>
+                        Don&apos;t have an account yet? <Link href={'/signup'}>Sign up</Link>
                       </Typography>
                     </Stack>
                   </Form>
                 </OverlayBox>
-              );
+              )
             }}
           </Formik>
         </Paper>
       </Container>
     </Layout>
-  );
+  )
 }
