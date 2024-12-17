@@ -19,6 +19,7 @@
     "@prisma/client": "^6.0.1",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
     "flat": "^6.0.1",
     "formik": "^2.4.6",
     "iron-session": "^8.0.4",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
