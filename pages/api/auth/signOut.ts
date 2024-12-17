@@ -1,7 +1,7 @@
 // pages/api/logout.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { getIronSession } from "iron-session";
-import { SessionData, sessionOptions } from "@/lib/session";
+import { SessionData, sessionOptions } from "lib/session";
 
 export default async function logoutHandler(
   req: NextApiRequest,
