@@ -1,10 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getIronSession } from "iron-session";
-import bcrypt from "bcrypt";
 
 //*lib
 import { SessionData, sessionOptions } from "@/lib/session";
-import prisma from "@/lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,6 +13,8 @@ export default async function handler(
   }
   const { email, password }: { email: string; password: string } = req.body;
   const session = await getIronSession<SessionData>(req, res, sessionOptions);
+
+  console.log(session);
 
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required" });
