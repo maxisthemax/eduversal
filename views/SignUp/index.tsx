@@ -36,13 +36,11 @@ export default function SignIn() {
             initialValues={{ email: "", password: "", name: "" }}
             validationSchema={validationSchema}
             onSubmit={async ({ email, password, name }) => {
-              const res = await axios.post("/api/auth/signUp", {
+              await axios.post("/api/auth/signUp", {
                 email,
                 password,
                 name,
               });
-
-              console.log(res);
             }}
           >
             {({

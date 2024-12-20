@@ -26,6 +26,7 @@ export async function middleware(req: NextRequest) {
       return res;
     } else {
       nextUrl.pathname = "/signin";
+      nextUrl.search = `?redirect=${encodeURIComponent(pathname)}`;
       return NextResponse.redirect(nextUrl);
     }
   }

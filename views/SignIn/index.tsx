@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { Form, Formik } from "formik";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 //*components
 import Layout from "@/components/Layout";
@@ -32,6 +32,8 @@ const validationSchema = yup.object({
 
 export default function SignIn() {
   const { push } = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   return (
     <Layout>
@@ -42,7 +44,7 @@ export default function SignIn() {
             validationSchema={validationSchema}
             onSubmit={async ({ email, password }) => {
               await axios.post("/api/auth/signIn", { email, password });
-              push("/");
+              push(redirect ?? "/photos");
             }}
           >
             {({
