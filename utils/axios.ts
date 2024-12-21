@@ -9,30 +9,35 @@ import { toast } from "react-toastify";
 
 type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
 
+interface ApiResponse<T> extends AxiosResponse {
+  data: T;
+  message?: string;
+}
+
 interface AxiosUtility {
   get: <T = any>(
     url: string,
     config?: AxiosRequestConfig
-  ) => Promise<AxiosResponse<T>>;
+  ) => Promise<ApiResponse<T>>;
   post: <T = any>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ) => Promise<AxiosResponse<T>>;
+  ) => Promise<ApiResponse<T>>;
   put: <T = any>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ) => Promise<AxiosResponse<T>>;
+  ) => Promise<ApiResponse<T>>;
   patch: <T = any>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ) => Promise<AxiosResponse<T>>;
+  ) => Promise<ApiResponse<T>>;
   delete: <T = any>(
     url: string,
     config?: AxiosRequestConfig
-  ) => Promise<AxiosResponse<T>>;
+  ) => Promise<ApiResponse<T>>;
 }
 
 const api: AxiosInstance = axios.create({
@@ -99,22 +104,41 @@ const request = async <T>(
   url: string,
   data?: any,
   config?: AxiosRequestConfig
-): Promise<AxiosResponse<T>> => {
+): Promise<ApiResponse<T>> => {
   try {
+    let response: AxiosResponse<ApiResponse<T>>;
     switch (method) {
       case "get":
-        return await api.get<T>(url, config);
+        response = await api.get<ApiResponse<T>>(url, config);
+        break;
       case "post":
-        return await api.post<T>(url, data, config);
+        response = await api.post<ApiResponse<T>>(url, data, config);
+        if (response?.data?.message) {
+          toast(response.data.message, { type: "success" });
+        }
+        break;
       case "put":
-        return await api.put<T>(url, data, config);
+        response = await api.put<ApiResponse<T>>(url, data, config);
+        if (response?.data?.message) {
+          toast(response.data.message, { type: "success" });
+        }
+        break;
       case "patch":
-        return await api.patch<T>(url, data, config);
+        response = await api.patch<ApiResponse<T>>(url, data, config);
+        if (response?.data?.message) {
+          toast(response.data.message, { type: "success" });
+        }
+        break;
       case "delete":
-        return await api.delete<T>(url, config);
+        response = await api.delete<ApiResponse<T>>(url, config);
+        if (response?.data?.message) {
+          toast(response.data.message, { type: "success" });
+        }
+        break;
       default:
         throw new Error(`Unsupported method: ${method}`);
     }
+    return response.data;
   } catch (error) {
     handleError(error);
   }

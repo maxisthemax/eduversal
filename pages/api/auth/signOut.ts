@@ -1,14 +1,12 @@
-// pages/api/logout.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { getIronSession } from "iron-session";
 import { SessionData, sessionOptions } from "@/lib/session";
 
-export default async function logoutHandler(
+export default async function signOutHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method !== "POST") {
-    res.setHeader("Allow", ["POST"]);
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
