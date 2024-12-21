@@ -1,23 +1,8 @@
-import axios from "axios";
-import { useRouter } from "next/navigation";
-
 //*mui
-import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
-export default function Home() {
-  const { push } = useRouter();
-
-  return (
-    <>
-      Account
-      <Button
-        onClick={async () => {
-          await axios.post("/api/auth/signOut");
-          push("/signin");
-        }}
-      >
-        Sign Out
-      </Button>
-    </>
-  );
+function Account() {
+  return <Box>Account</Box>;
 }
+
+export default Account;

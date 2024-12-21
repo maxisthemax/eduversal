@@ -1,9 +1,9 @@
 import * as yup from "yup";
 import { Form, Formik } from "formik";
 import axios from "axios";
+import Link from "next/link";
 
 //*components
-import Layout from "@/components/Layout";
 import { TextFieldForm } from "@/components/Form";
 
 //*mui
@@ -12,7 +12,6 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Link from "next/link";
 
 //*validation
 const validationSchema = yup.object({
@@ -29,86 +28,84 @@ const validationSchema = yup.object({
 
 export default function SignIn() {
   return (
-    <Layout>
-      <Container maxWidth="sm" sx={{ alignContent: "center" }}>
-        <Paper elevation={0}>
-          <Formik
-            initialValues={{ email: "", password: "", name: "" }}
-            validationSchema={validationSchema}
-            onSubmit={async ({ email, password, name }) => {
-              await axios.post("/api/auth/signUp", {
-                email,
-                password,
-                name,
-              });
-            }}
-          >
-            {({
+    <Container maxWidth="sm" sx={{ alignContent: "center" }}>
+      <Paper elevation={0}>
+        <Formik
+          initialValues={{ email: "", password: "", name: "" }}
+          validationSchema={validationSchema}
+          onSubmit={async ({ email, password, name }) => {
+            await axios.post("/api/auth/signUp", {
+              email,
+              password,
+              name,
+            });
+          }}
+        >
+          {({
+            values,
+            errors,
+            handleChange,
+            touched,
+            handleBlur,
+            handleSubmit,
+          }) => {
+            const formProps = {
               values,
               errors,
-              handleChange,
               touched,
               handleBlur,
-              handleSubmit,
-            }) => {
-              const formProps = {
-                values,
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-              };
-              return (
-                <Form onSubmit={handleSubmit}>
-                  <Stack spacing={2} sx={{ p: 2 }}>
-                    <Typography variant="h3">
-                      <b>Sign Up</b>
-                    </Typography>
-                    <Stack direction="row" spacing={2}>
-                      <Button fullWidth variant="contained" color="primary">
-                        User
-                      </Button>
-                      <Button fullWidth variant="contained">
-                        Marchants
-                      </Button>
-                    </Stack>
-                    <TextFieldForm
-                      name="name"
-                      label="Name"
-                      formProps={formProps}
-                      props={{ required: true }}
-                    />
-                    <TextFieldForm
-                      name="email"
-                      label="Email"
-                      formProps={formProps}
-                      props={{ required: true, placeholder: "Your Email" }}
-                    />
-                    <TextFieldForm
-                      name="password"
-                      label="Password"
-                      formProps={formProps}
-                      props={{ required: true, type: "password" }}
-                    />
-                    <Button
-                      fullWidth
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                    >
-                      Register
+              handleChange,
+            };
+            return (
+              <Form onSubmit={handleSubmit}>
+                <Stack spacing={2} sx={{ p: 2 }}>
+                  <Typography variant="h3">
+                    <b>Sign Up</b>
+                  </Typography>
+                  <Stack direction="row" spacing={2}>
+                    <Button fullWidth variant="contained" color="primary">
+                      User
                     </Button>
-                    <Typography>
-                      If you already have an account.{" "}
-                      <Link href={"/signin"}>Sign In Here</Link>
-                    </Typography>
+                    <Button fullWidth variant="contained">
+                      Marchants
+                    </Button>
                   </Stack>
-                </Form>
-              );
-            }}
-          </Formik>
-        </Paper>
-      </Container>
-    </Layout>
+                  <TextFieldForm
+                    name="name"
+                    label="Name"
+                    formProps={formProps}
+                    props={{ required: true }}
+                  />
+                  <TextFieldForm
+                    name="email"
+                    label="Email"
+                    formProps={formProps}
+                    props={{ required: true, placeholder: "Your Email" }}
+                  />
+                  <TextFieldForm
+                    name="password"
+                    label="Password"
+                    formProps={formProps}
+                    props={{ required: true, type: "password" }}
+                  />
+                  <Button
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                  >
+                    Register
+                  </Button>
+                  <Typography>
+                    If you already have an account.{" "}
+                    <Link href={"/signin"}>Sign In Here</Link>
+                  </Typography>
+                </Stack>
+              </Form>
+            );
+          }}
+        </Formik>
+      </Paper>
+    </Container>
   );
 }

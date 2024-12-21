@@ -1,23 +1,7 @@
-import axios from "axios";
-import { useRouter } from "next/navigation";
-
 //*mui
-import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
-export default function Home() {
-  const { push } = useRouter();
-
-  return (
-    <>
-      Photos
-      <Button
-        onClick={async () => {
-          await axios.post("/api/auth/signOut");
-          push("/signin");
-        }}
-      >
-        Sign Out
-      </Button>
-    </>
-  );
+function Photo() {
+  return <Box>Photos</Box>;
 }
+export default Photo;

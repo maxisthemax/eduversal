@@ -5,6 +5,7 @@ import {
 } from "@mui/material-nextjs/v15-pagesRouter";
 import { Html, Head, Main, NextScript, DocumentContext } from "next/document";
 import createCache from "@emotion/cache";
+
 const isBrowser = typeof document !== "undefined";
 
 export default function Document(props: DocumentHeadTagsProps) {

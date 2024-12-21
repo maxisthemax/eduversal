@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+function Minimal({ children }: { children: React.ReactNode }) {
   return (
     <Box>
       <AppBar color="inherit" elevation={0} position="static">
@@ -30,3 +30,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     </Box>
   );
 }
+
+export default Minimal;

@@ -2,13 +2,17 @@
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 
-interface OverlayBox {
+interface OverlayBoxProps {
   isLoading: boolean;
   circularSize?: number;
   children: React.ReactNode[] | React.ReactNode;
 }
 
-function OverlayBox({ isLoading, circularSize = 60, children }: OverlayBox) {
+function OverlayBox({
+  isLoading,
+  circularSize = 60,
+  children,
+}: OverlayBoxProps) {
   return (
     <Box style={{ position: "relative" }}>
       {children}
