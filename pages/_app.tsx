@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import { ToastContainer } from "react-toastify";
 
 //*components
 import LayoutWrapper from "@/components/Layouts/LayoutWrapper";
@@ -20,6 +21,11 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AppCacheProvider {...pageProps}>
       <ThemeProvider theme={theme}>
+        <ToastContainer
+          limit={3}
+          position="bottom-left"
+          pauseOnFocusLoss={true}
+        />
         <LayoutWrapper>
           <Component {...pageProps} />
         </LayoutWrapper>

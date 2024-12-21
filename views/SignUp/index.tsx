@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { Form, Formik } from "formik";
-import axios from "axios";
 import Link from "next/link";
 
 //*components
@@ -12,6 +11,9 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+
+//*utils
+import axios from "@/utils/axios";
 
 //*validation
 const validationSchema = yup.object({
@@ -34,7 +36,7 @@ export default function SignIn() {
           initialValues={{ email: "", password: "", name: "" }}
           validationSchema={validationSchema}
           onSubmit={async ({ email, password, name }) => {
-            await axios.post("/api/auth/signUp", {
+            await axios.post("/auth/signUp", {
               email,
               password,
               name,

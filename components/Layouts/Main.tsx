@@ -1,5 +1,4 @@
 import { useRouter, usePathname } from "next/navigation";
-import axios from "axios";
 
 //*components
 import { FlexBox } from "../Box";
@@ -14,6 +13,9 @@ import Button from "@mui/material/Button";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
+
+//*utils
+import axios from "@/utils/axios";
 
 function Main({ children }: { children: React.ReactNode }) {
   //*define
