@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/google-font-display */
 import {
   DocumentHeadTags,
   DocumentHeadTagsProps,
@@ -12,6 +13,14 @@ export default function Document(props: DocumentHeadTagsProps) {
   return (
     <Html lang="en">
       <Head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+          rel="stylesheet"
+        />
         <DocumentHeadTags {...props} />
       </Head>
       <body>

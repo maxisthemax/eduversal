@@ -9,6 +9,14 @@ const baseTheme: ThemeOptions = {
       contrastText: "#ffffff",
     },
   },
+  components: {
+    MuiTextField: {
+      defaultProps: { size: "small", fullWidth: true },
+    },
+    MuiSelect: {
+      defaultProps: { size: "small" },
+    },
+  },
 };
 
 const theme = createTheme(baseTheme);
