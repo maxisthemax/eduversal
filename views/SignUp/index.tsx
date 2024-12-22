@@ -73,7 +73,7 @@ export default function SignIn() {
             state,
             city,
           }) => {
-            await axios.post("/auth/signUp", {
+            await axios.post("auth/signUp", {
               first_name,
               last_name,
               email,

@@ -58,7 +58,7 @@ function Main({ children }: { children: React.ReactNode }) {
             <Button
               variant="contained"
               onClick={async () => {
-                await axios.post("/auth/signOut");
+                await axios.post("auth/signOut");
                 push("/signin");
               }}
             >
