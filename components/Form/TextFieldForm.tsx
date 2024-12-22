@@ -44,6 +44,7 @@ function TextFieldForm({
   label,
   name,
   props,
+  onlyNumber = false,
   children,
 }: {
   formProps: FormProps;
@@ -51,10 +52,31 @@ function TextFieldForm({
   label: string;
   name: string;
   props?: TextFieldProps;
+  onlyNumber?: boolean;
   children?: React.ReactNode;
 }) {
+  const handleKeyDown = (event) => {
+    // Allow only backspace, delete, arrow keys, and numeric keys
+    const allowedKeys = [
+      "Backspace",
+      "Delete",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Tab",
+    ];
+
+    if (
+      !allowedKeys.includes(event.key) &&
+      !(event.key >= "0" && event.key <= "9")
+    ) {
+      event.preventDefault();
+    }
+  };
   return (
     <TextField
+      onKeyDown={onlyNumber ? handleKeyDown : () => {}}
       label={label}
       type={type}
       {...generateTextFieldFormProps(name, formProps)}

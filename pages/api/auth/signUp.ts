@@ -1,13 +1,23 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
 
 //*lib
 import prisma from "@/lib/prisma";
+import { validateRequiredFields } from "@/helpers/apiHelpers";
 
 type SignUpRequest = {
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
-  name: string;
+  country_code: string;
+  phone_no: string;
+  address_1: string;
+  address_2: string;
+  postcode: string;
+  state: string;
+  city: string;
 };
 
 export default async function signUpHandler(
@@ -17,10 +27,35 @@ export default async function signUpHandler(
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Only POST requests are allowed" });
   }
-  const { email, password, name }: SignUpRequest = req.body;
+  const {
+    first_name,
+    last_name,
+    email,
+    password,
+    country_code,
+    phone_no,
+    address_1,
+    address_2,
+    postcode,
+    state,
+    city,
+  }: SignUpRequest = req.body;
 
-  if (!email || !password || !name) {
-    return res.status(400).json({ message: "All fields are required" });
+  if (
+    !validateRequiredFields(req, res, [
+      "first_name",
+      "last_name",
+      "email",
+      "password",
+      "country_code",
+      "phone_no",
+      "address_1",
+      "postcode",
+      "state",
+      "city",
+    ])
+  ) {
+    return;
   }
 
   try {
@@ -29,16 +64,31 @@ export default async function signUpHandler(
       return res.status(400).json({ message: "User already exists" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
+    const verification_token = uuidv4();
+    const verification_token_expiry = new Date(
+      Date.now() + 24 * 60 * 60 * 1000
+    );
+
     const newUser = await prisma.user.create({
       data: {
+        first_name,
+        last_name,
         email,
         password: hashedPassword,
-        name,
+        country_code,
+        phone_no,
+        address_1,
+        address_2,
+        postcode,
+        state,
+        city,
+        verification_token,
+        verification_token_expiry,
       },
     });
     res.status(201).json({
       message: "User registered successfully",
-      user: { id: newUser.id, email: newUser.email, name: newUser.name },
+      user: { ...newUser },
     });
   } catch (error) {
     res.status(500).json({ message: "Registration failed", error });
