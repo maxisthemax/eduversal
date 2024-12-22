@@ -1,4 +1,4 @@
-//*material
+//*mui
 import Icon from "@mui/material/Icon";
 
 //*interface

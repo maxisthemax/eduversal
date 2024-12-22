@@ -88,7 +88,21 @@ export default async function signUpHandler(
     });
     res.status(201).json({
       message: "User registered successfully",
-      user: { ...newUser },
+      user: {
+        id: newUser.id,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+        email: newUser.email,
+        country_code: newUser.country_code,
+        phone_no: newUser.phone_no,
+        address_1: newUser.address_1,
+        address_2: newUser.address_2,
+        postcode: newUser.postcode,
+        state: newUser.state,
+        city: newUser.city,
+        verification_token: newUser.verification_token,
+        verification_token_expiry: newUser.verification_token_expiry,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: "Registration failed", error });

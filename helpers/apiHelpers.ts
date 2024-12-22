@@ -1,13 +1,8 @@
-import startCase from "lodash/startCase";
 import { NextApiRequest, NextApiResponse } from "next";
 
-/**
- * Validates that all required fields are present and not empty.
- *
- * @param fields - An array of field values to validate.
- * @param res - The NextApiResponse object to send the error response if validation fails.
- * @returns A boolean indicating whether the validation failed (`true`) or passed (`false`).
- */
+//*lodash
+import startCase from "lodash/startCase";
+
 export function validateRequiredFields(
   req: NextApiRequest,
   res: NextApiResponse,
