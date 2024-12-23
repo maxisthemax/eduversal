@@ -26,11 +26,14 @@ const validationSchema = yup.object({
     .required("Email is required"),
   password: yup
     .string()
-    .min(6, "Password is less than 6")
+    .min(8, "Password is less than 8")
+    .matches(/[0-9]/, "Password must contain a number")
+    .matches(/[a-zA-Z]/, "Password must contain an alphabet")
+    .matches(/[A-Z]/, "Password must contain an uppercase letter")
     .required("Password is required"),
   confirm_password: yup
     .string()
-    .min(6, "Password is less than 6")
+    .min(8, "Password is less than 6")
     .required("Password is required")
     .oneOf([yup.ref("password")], "Your passwords do not match."),
   phone_no: yup.string().required("Phone No is required"),
@@ -73,7 +76,7 @@ export default function SignIn() {
             state,
             city,
           }) => {
-            await axios.post("/auth/signUp", {
+            await axios.post("auth/signUp", {
               first_name,
               last_name,
               email,

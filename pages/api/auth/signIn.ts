@@ -10,13 +10,19 @@ export default async function signInHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Allow only POST requests
   if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
     return res.status(405).json({ message: "Only POST requests are allowed" });
   }
 
+  // Extract email and password from request body
   const { email, password }: { email: string; password: string } = req.body;
+
+  // Get the session
   const session = await getIronSession<SessionData>(req, res, sessionOptions);
 
+  // Validate email and password
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required" });
   }
@@ -25,9 +31,16 @@ export default async function signInHandler(
     // Find the user in the database
     const user = await prisma.user.findUnique({ where: { email } });
 
+    // Validate user and password
     if (!user || !(await bcrypt.compare(password, user.password))) {
       session.destroy();
       return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Check if user is verified
+    if (!user.is_verified) {
+      session.destroy();
+      return res.status(403).json({ message: "User is not verified" });
     }
 
     // Create a session and store user data
@@ -36,11 +49,13 @@ export default async function signInHandler(
     session.isLoggedIn = true;
     await session.save();
 
+    // Respond with success message and user data
     res.status(200).json({
       message: "Sign In successful",
       user: { id: user.id, email: user.email },
     });
   } catch (error) {
+    console.error("Sign In error:", error);
     res.status(500).json({ message: "Sign In failed", error });
   }
 }

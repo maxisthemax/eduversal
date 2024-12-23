@@ -40,8 +40,12 @@ interface AxiosUtility {
   ) => Promise<ApiResponse<T>>;
 }
 
+const baseURL =
+  typeof window === "undefined"
+    ? process.env.NEXT_SERVER_API_URL + "/api/"
+    : "/api/";
 const api: AxiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
   },

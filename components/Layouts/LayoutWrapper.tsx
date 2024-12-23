@@ -10,7 +10,7 @@ import Main from "./Main";
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();
 
-  if (includes(["/signin", "/signup"], pathName))
+  if (includes(["/signin", "/signup", "/verifyemail"], pathName))
     return <Minimal>{children}</Minimal>;
   else return <Main>{children}</Main>;
 }
