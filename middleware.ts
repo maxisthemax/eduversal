@@ -16,11 +16,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const nextUrl = req.nextUrl.clone();
 
-  if (
-    pathname === "/signin" ||
-    pathname === "/signup" ||
-    pathname === "/verifyemail"
-  ) {
+  if (pathname === "/signin" || pathname === "/signup") {
     if (session.isLoggedIn) {
       nextUrl.pathname = "/";
       return NextResponse.redirect(nextUrl);

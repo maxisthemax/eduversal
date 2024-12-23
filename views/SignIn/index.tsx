@@ -43,7 +43,7 @@ export default function SignIn() {
           initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}
           onSubmit={async ({ email, password }) => {
-            await axios.post("auth/signIn", { email, password });
+            await axios.post("/auth/signIn", { email, password });
             push(redirect ?? "/photos");
           }}
         >
