@@ -16,7 +16,10 @@ export default async function signUpHandler(
   // Allow only POST requests
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
-    return res.status(405).json({ message: "Only POST requests are allowed" });
+    return res.status(405).json({
+      message: "Only POST requests are allowed",
+      type: "ONLY_POST_REQUESTS_ALLOWED",
+    });
   }
 
   // Extract and validate request body
@@ -55,7 +58,10 @@ export default async function signUpHandler(
   // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: "Invalid email format" });
+    return res.status(400).json({
+      message: "Invalid email format",
+      type: "INVALID_EMAIL_FORMAT",
+    });
   }
 
   // Validate password strength
@@ -64,6 +70,7 @@ export default async function signUpHandler(
     return res.status(400).json({
       message:
         "Password must be at least 8 characters long, contain a number, an alphabet, and an uppercase letter",
+      type: "WEAK_PASSWORD",
     });
   }
 
@@ -71,7 +78,10 @@ export default async function signUpHandler(
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({
+        message: "User already exists",
+        type: "USER_ALREADY_EXISTS",
+      });
     }
 
     // Hash the password
@@ -156,9 +166,14 @@ export default async function signUpHandler(
         state: newUser.state,
         city: newUser.city,
       },
+      type: "USER_REGISTERED_SUCCESSFULLY",
     });
   } catch (error) {
     console.error("Registration failed:", error);
-    res.status(500).json({ message: "Registration failed", error });
+    res.status(500).json({
+      message: "Registration failed",
+      error,
+      type: "REGISTRATION_FAILED",
+    });
   }
 }

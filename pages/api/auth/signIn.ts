@@ -13,7 +13,10 @@ export default async function signInHandler(
   // Allow only POST requests
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
-    return res.status(405).json({ message: "Only POST requests are allowed" });
+    return res.status(405).json({
+      message: "Only POST requests are allowed",
+      type: "ONLY_POST_REQUESTS_ALLOWED",
+    });
   }
 
   // Extract email and password from request body
@@ -24,7 +27,10 @@ export default async function signInHandler(
 
   // Validate email and password
   if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
+    return res.status(400).json({
+      message: "Email and password are required",
+      type: "EMAIL_AND_PASSWORD_REQUIRED",
+    });
   }
 
   try {
@@ -34,13 +40,19 @@ export default async function signInHandler(
     // Validate user and password
     if (!user || !(await bcrypt.compare(password, user.password))) {
       session.destroy();
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({
+        message: "Invalid email or password",
+        type: "INVALID_EMAIL_OR_PASSWORD",
+      });
     }
 
     // Check if user is verified
     if (!user.is_verified) {
       session.destroy();
-      return res.status(403).json({ message: "User is not verified" });
+      return res.status(403).json({
+        message: "User is not verified",
+        type: "USER_NOT_VERIFIED",
+      });
     }
 
     // Create a session and store user data
@@ -53,9 +65,14 @@ export default async function signInHandler(
     res.status(200).json({
       message: "Sign In successful",
       user: { id: user.id, email: user.email },
+      type: "SIGN_IN_SUCCESSFUL",
     });
   } catch (error) {
     console.error("Sign In error:", error);
-    res.status(500).json({ message: "Sign In failed", error });
+    res.status(500).json({
+      message: "Sign In failed",
+      error,
+      type: "SIGN_IN_FAILED",
+    });
   }
 }

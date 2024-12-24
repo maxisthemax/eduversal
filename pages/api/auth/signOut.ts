@@ -7,10 +7,13 @@ export default async function signOutHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Check if the request method is POST
+  // Allow only POST requests
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
+    return res.status(405).json({
+      message: "Only POST requests are allowed",
+      type: "ONLY_POST_REQUESTS_ALLOWED",
+    });
   }
 
   // Get the session and destroy it
@@ -18,5 +21,8 @@ export default async function signOutHandler(
   session.destroy();
 
   // Respond with a success message
-  res.status(200).json({ message: "Logged out successfully" });
+  res.status(200).json({
+    message: "Logged out successfully",
+    type: "LOGGED_OUT_SUCCESSFULLY",
+  });
 }
