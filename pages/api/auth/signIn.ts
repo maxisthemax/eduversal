@@ -6,18 +6,15 @@ import bcrypt from "bcrypt";
 import { SessionData, sessionOptions } from "@/lib/session";
 import prisma from "@/lib/prisma";
 
+//*helpers
+import { handleAllowedMethods } from "@/helpers/apiHelpers";
+
 export default async function signInHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Allow only POST requests
-  if (req.method !== "POST") {
-    res.setHeader("Allow", ["POST"]);
-    return res.status(405).json({
-      message: "Only POST requests are allowed",
-      type: "ONLY_POST_REQUESTS_ALLOWED",
-    });
-  }
+  // Use handleAllowedMethods for method validation
+  if (handleAllowedMethods(req, res, ["POST"])) return;
 
   // Extract email and password from request body
   const { email, password }: { email: string; password: string } = req.body;

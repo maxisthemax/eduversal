@@ -7,18 +7,15 @@ import prisma from "@/lib/prisma";
 //*utils
 import { sendEmail } from "@/utils/email";
 
+//*helpers
+import { handleAllowedMethods } from "@/helpers/apiHelpers";
+
 export default async function resendVerificationHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Allow only POST requests
-  if (req.method !== "POST") {
-    res.setHeader("Allow", ["POST"]);
-    return res.status(405).json({
-      message: "Only POST requests are allowed",
-      type: "ONLY_POST_REQUESTS_ALLOWED",
-    });
-  }
+  // Use handleAllowedMethods for method validation
+  if (handleAllowedMethods(req, res, ["POST"])) return;
 
   const { email } = req.body;
 

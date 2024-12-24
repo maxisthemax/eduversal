@@ -35,3 +35,19 @@ function formatList(items: string[]): string {
     return `${formattedItems.join(", ")}, and ${startCase(lastItem)}`;
   }
 }
+
+export function handleAllowedMethods(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  allowedMethods: string[]
+): boolean {
+  if (!allowedMethods.includes(req.method!)) {
+    res.setHeader("Allow", allowedMethods);
+    res.status(405).json({
+      message: `Only ${allowedMethods.join(", ")} requests are allowed`,
+      type: "METHOD_NOT_ALLOWED",
+    });
+    return true;
+  }
+  return false;
+}

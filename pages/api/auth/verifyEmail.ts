@@ -1,20 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
+//*helpers
+import { handleAllowedMethods } from "@/helpers/apiHelpers";
+
 const prisma = new PrismaClient();
 
 export default async function verifyEmailHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Only allow GET requests
-  if (req.method !== "GET") {
-    res.setHeader("Allow", ["GET"]);
-    return res.status(405).json({
-      message: "Only GET requests are allowed",
-      type: "ONLY_GET_REQUESTS_ALLOWED",
-    });
-  }
+  // Use handleAllowedMethods for method validation
+  if (handleAllowedMethods(req, res, ["GET"])) return;
 
   // Extract token and email from query parameters
   const { token, email } = req.query as { token?: string; email?: string };

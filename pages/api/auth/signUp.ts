@@ -6,7 +6,10 @@ import { v4 as uuidv4 } from "uuid";
 import prisma from "@/lib/prisma";
 
 //*helpers
-import { validateRequiredFields } from "@/helpers/apiHelpers";
+import {
+  validateRequiredFields,
+  handleAllowedMethods,
+} from "@/helpers/apiHelpers";
 
 //*utils
 import { sendEmail } from "@/utils/email";
@@ -15,14 +18,8 @@ export default async function signUpHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Allow only POST requests
-  if (req.method !== "POST") {
-    res.setHeader("Allow", ["POST"]);
-    return res.status(405).json({
-      message: "Only POST requests are allowed",
-      type: "ONLY_POST_REQUESTS_ALLOWED",
-    });
-  }
+  // Use handleAllowedMethods for method validation
+  if (handleAllowedMethods(req, res, ["POST"])) return;
 
   // Extract and validate request body
   const {
