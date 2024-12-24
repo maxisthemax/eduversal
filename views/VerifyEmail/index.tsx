@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 //*mui
 import Typography from "@mui/material/Typography";
@@ -7,8 +7,14 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 
-export default function VerifyEmail({ message, isVerified }) {
+//*utils
+import axios from "@/utils/axios";
+
+export default function VerifyEmail({ message, isVerified, type }) {
   const { push } = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+
   return (
     <Container
       maxWidth="sm"
@@ -20,6 +26,18 @@ export default function VerifyEmail({ message, isVerified }) {
           <Box>
             <Button onClick={() => push("/signin")} variant="contained">
               Sign In
+            </Button>
+          </Box>
+        )}
+        {type === "VERIFICATION_TOKEN_EXPIRED" && (
+          <Box>
+            <Button
+              onClick={async () => {
+                axios.post("auth/resendVerification", { email });
+                push("/signin");
+              }}
+            >
+              Resend Email Verification
             </Button>
           </Box>
         )}
