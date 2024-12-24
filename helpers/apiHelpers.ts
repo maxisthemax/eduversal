@@ -1,4 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { getIronSession } from "iron-session";
+
+//*lib
+import { SessionData, sessionOptions } from "@/lib/session";
 
 //*lodash
 import startCase from "lodash/startCase";
@@ -50,4 +54,16 @@ export function handleAllowedMethods(
     return true;
   }
   return false;
+}
+
+export async function getSession(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  remember_me: boolean = false
+) {
+  const options = { ...sessionOptions };
+  if (remember_me) {
+    options.cookieOptions.maxAge = 60 * 60 * 24 * 60; // 60 days
+  }
+  return await getIronSession<SessionData>(req, res, options);
 }

@@ -1,13 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getIronSession } from "iron-session";
 import bcrypt from "bcrypt";
 
 //*lib
-import { SessionData, sessionOptions } from "@/lib/session";
 import prisma from "@/lib/prisma";
 
 //*helpers
-import { handleAllowedMethods } from "@/helpers/apiHelpers";
+import { handleAllowedMethods, getSession } from "@/helpers/apiHelpers";
 
 export default async function signInHandler(
   req: NextApiRequest,
@@ -16,11 +14,15 @@ export default async function signInHandler(
   // Use handleAllowedMethods for method validation
   if (handleAllowedMethods(req, res, ["POST"])) return;
 
-  // Extract email and password from request body
-  const { email, password }: { email: string; password: string } = req.body;
+  // Extract email, password, and remember_me from request body
+  const {
+    email,
+    password,
+    remember_me = false,
+  }: { email: string; password: string; remember_me: boolean } = req.body;
 
   // Get the session
-  const session = await getIronSession<SessionData>(req, res, sessionOptions);
+  const session = await getSession(req, res, remember_me);
 
   // Validate email and password
   if (!email || !password) {

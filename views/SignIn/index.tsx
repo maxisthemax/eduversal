@@ -7,11 +7,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { TextFieldForm } from "@/components/Form";
 import { OverlayBox } from "@/components/Box";
 import { useCustomDialog } from "@/components/Dialog";
+import CheckboxForm from "@/components/Form/CheckboxForm";
 
 //*mui
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -42,11 +41,11 @@ export default function SignIn() {
     <Container maxWidth="sm" sx={{ alignContent: "center" }}>
       <Paper elevation={0}>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ email: "", password: "", remember_me: false }}
           validationSchema={validationSchema}
-          onSubmit={async ({ email, password }) => {
+          onSubmit={async ({ email, password, remember_me }) => {
             try {
-              await axios.post("auth/signIn", { email, password });
+              await axios.post("auth/signIn", { email, password, remember_me });
               push(redirect ?? "/photos");
             } catch (error) {
               if (error.response.data.type === "USER_NOT_VERIFIED") {
@@ -107,10 +106,10 @@ export default function SignIn() {
                       formProps={formProps}
                       props={{ required: true, type: "password" }}
                     />
-                    <FormControlLabel
-                      control={<Checkbox />}
+                    <CheckboxForm
+                      name="remember_me"
                       label="Remember Me"
-                      labelPlacement="end"
+                      formProps={formProps}
                     />
                     <Button
                       fullWidth

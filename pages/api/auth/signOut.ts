@@ -1,11 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getIronSession } from "iron-session";
-
-//*lib
-import { SessionData, sessionOptions } from "@/lib/session";
 
 //*helpers
-import { handleAllowedMethods } from "@/helpers/apiHelpers";
+import { handleAllowedMethods, getSession } from "@/helpers/apiHelpers";
 
 // API route handler for signing out
 export default async function signOutHandler(
@@ -15,8 +11,8 @@ export default async function signOutHandler(
   // Use handleAllowedMethods for method validation
   if (handleAllowedMethods(req, res, ["POST"])) return;
 
-  // Get the session and destroy it
-  const session = await getIronSession<SessionData>(req, res, sessionOptions);
+  // Get the session
+  const session = await getSession(req, res);
   session.destroy();
 
   // Respond with a success message
