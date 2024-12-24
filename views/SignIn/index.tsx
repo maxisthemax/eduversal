@@ -95,14 +95,6 @@ export default function SignIn() {
                     <Typography variant="h3">
                       <b>Sign In</b>
                     </Typography>
-                    <Stack direction="row" spacing={2}>
-                      <Button fullWidth variant="contained" color="primary">
-                        User
-                      </Button>
-                      <Button fullWidth variant="contained">
-                        Marchants
-                      </Button>
-                    </Stack>
                     <TextFieldForm
                       name="email"
                       label="Email"

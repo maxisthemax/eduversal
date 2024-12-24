@@ -22,7 +22,7 @@ import uniqBy from "lodash/uniqBy";
 //*components
 import { CustomIcon } from "../Icons";
 
-//*material
+//*mui
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
