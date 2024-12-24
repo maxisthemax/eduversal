@@ -12,6 +12,7 @@ type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
 interface ApiResponse<T> extends AxiosResponse {
   data: T;
   message?: string;
+  type?: string;
 }
 
 interface AxiosUtility {
@@ -63,6 +64,7 @@ const api: AxiosInstance = axios.create({
 
 const handleError = (error: unknown, disabledErrorToast = false): never => {
   let message = "An unexpected error occurred";
+  let type = "";
 
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
@@ -70,7 +72,10 @@ const handleError = (error: unknown, disabledErrorToast = false): never => {
     if (axiosError.response) {
       // Server responded with a status other than 2xx
       const status = axiosError.response.status;
-      const response = axiosError?.response?.data as { message: string };
+      const response = axiosError?.response?.data as {
+        message: string;
+        type: string;
+      };
 
       if (response && response?.message) {
         message = response?.message;
@@ -95,6 +100,10 @@ const handleError = (error: unknown, disabledErrorToast = false): never => {
             message = `Error: ${status}`;
         }
       }
+
+      if (response && response?.type) {
+        type = response?.type;
+      }
     } else if (axiosError.request) {
       // Request was made but no response received
       message = "No response from server";
@@ -108,7 +117,7 @@ const handleError = (error: unknown, disabledErrorToast = false): never => {
 
   // Display the error message using toast
   if (!disabledErrorToast) {
-    toast(message, { type: "error" });
+    toast(message, { type: "error", toastId: type });
   }
 
   // Rethrow the error if further handling is needed
@@ -132,25 +141,37 @@ const request = async <T>(
       case "post":
         response = await api.post<ApiResponse<T>>(url, data, config);
         if (response?.data?.message && !disabledSuccessToast) {
-          toast(response.data.message, { type: "success" });
+          toast(response.data.message, {
+            type: "success",
+            toastId: response.data.type,
+          });
         }
         break;
       case "put":
         response = await api.put<ApiResponse<T>>(url, data, config);
         if (response?.data?.message && !disabledSuccessToast) {
-          toast(response.data.message, { type: "success" });
+          toast(response.data.message, {
+            type: "success",
+            toastId: response.data.type,
+          });
         }
         break;
       case "patch":
         response = await api.patch<ApiResponse<T>>(url, data, config);
         if (response?.data?.message && !disabledSuccessToast) {
-          toast(response.data.message, { type: "success" });
+          toast(response.data.message, {
+            type: "success",
+            toastId: response.data.type,
+          });
         }
         break;
       case "delete":
         response = await api.delete<ApiResponse<T>>(url, config);
         if (response?.data?.message && !disabledSuccessToast) {
-          toast(response.data.message, { type: "success" });
+          toast(response.data.message, {
+            type: "success",
+            toastId: response.data.type,
+          });
         }
         break;
       default:

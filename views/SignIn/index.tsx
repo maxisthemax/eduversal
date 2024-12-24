@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 //*components
 import { TextFieldForm } from "@/components/Form";
 import { OverlayBox } from "@/components/Box";
+import { useCustomDialog } from "@/components/Dialog";
 
 //*mui
 import Button from "@mui/material/Button";
@@ -35,6 +36,7 @@ export default function SignIn() {
   const { push } = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
+  const { handleOpenDialog } = useCustomDialog();
 
   return (
     <Container maxWidth="sm" sx={{ alignContent: "center" }}>
@@ -43,8 +45,20 @@ export default function SignIn() {
           initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}
           onSubmit={async ({ email, password }) => {
-            await axios.post("auth/signIn", { email, password });
-            push(redirect ?? "/photos");
+            try {
+              await axios.post("auth/signIn", { email, password });
+              push(redirect ?? "/photos");
+            } catch (error) {
+              if (error.response.data.type === "USER_NOT_VERIFIED") {
+                handleOpenDialog({
+                  allowClose: false,
+                  allowOutsideClose: false,
+                  title: "User Not Verified",
+                  description: "Please check your email to verify your account",
+                  onConfirm: () => {},
+                });
+              }
+            }
           }}
         >
           {({
