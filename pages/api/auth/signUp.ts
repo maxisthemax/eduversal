@@ -1,26 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
+import nodemailer from "nodemailer";
 
 //*lib
 import prisma from "@/lib/prisma";
 
 //*helpers
 import { validateRequiredFields } from "@/helpers/apiHelpers";
-
-type SignUpRequest = {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  country_code: string;
-  phone_no: string;
-  address_1: string;
-  address_2: string;
-  postcode: string;
-  state: string;
-  city: string;
-};
 
 export default async function signUpHandler(
   req: NextApiRequest,
@@ -45,7 +32,7 @@ export default async function signUpHandler(
     postcode,
     state,
     city,
-  }: SignUpRequest = req.body;
+  } = req.body;
 
   // Validate required fields
   if (
@@ -128,7 +115,30 @@ export default async function signUpHandler(
     }/verifyemail?token=${verification_token}&email=${encodeURIComponent(
       email
     )}`;
-    console.log("🚀 ~ verificationLink:", verificationLink);
+
+    // Validate environment variables
+    if (!process.env.NEXT_EMAIL_USER || !process.env.NEXT_EMAIL_PASS) {
+      throw new Error("Email environment variables are not set");
+    }
+
+    // Set up Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.NEXT_EMAIL_USER,
+        pass: process.env.NEXT_EMAIL_PASS,
+      },
+    });
+
+    // Send verification email
+    await transporter.sendMail({
+      from: process.env.NEXT_EMAIL_USER,
+      to: email,
+      subject: "Email Verification",
+      html: `<p>Please verify your email by clicking the following link:</p><p><a href="${verificationLink}">${verificationLink}</a></p>`,
+    });
 
     // Respond with success message and user data
     res.status(201).json({

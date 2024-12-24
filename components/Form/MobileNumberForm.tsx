@@ -111,8 +111,8 @@ function MobileNumberForm({
   return (
     <>
       <TextField
-        InputProps={
-          disabledCode
+        slotProps={{
+          input: disabledCode
             ? {}
             : {
                 startAdornment: (
@@ -126,14 +126,20 @@ function MobileNumberForm({
                     endIcon={
                       <CustomIcon icon="arrow_drop_down" iconColor="inherit" />
                     }
-                    sx={{ fontSize: 14, textWrap: "nowrap", pl: 2, pr: 1 }}
+                    sx={{
+                      fontSize: "inherit",
+                      fontWeight: "inherit",
+                      textWrap: "nowrap",
+                      pl: 2,
+                      pr: 1,
+                    }}
                   >
                     {countryCallingCode}
                   </Button>
                 ),
                 sx: { pl: 0 },
-              }
-        }
+              },
+        }}
         label={label}
         {...generateTextFieldFormProps(name, formProps)}
         {...props}

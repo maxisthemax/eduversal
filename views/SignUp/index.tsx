@@ -1,9 +1,12 @@
 import * as yup from "yup";
 import { Form, Formik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 //*components
+import { useCustomDialog } from "@/components/Dialog";
 import { MobileNumberForm, TextFieldForm } from "@/components/Form";
+import { OverlayBox } from "@/components/Box";
 import StateSelectTextFieldForm from "@/components/Form/StateSelectTextFieldForm";
 
 //*mui
@@ -43,7 +46,9 @@ const validationSchema = yup.object({
   city: yup.string().required("City is required"),
 });
 
-export default function SignIn() {
+function SignUp() {
+  const { push } = useRouter();
+  const { handleOpenDialog } = useCustomDialog();
   return (
     <Container maxWidth="sm" sx={{ alignContent: "center" }}>
       <Paper elevation={0}>
@@ -76,18 +81,34 @@ export default function SignIn() {
             state,
             city,
           }) => {
-            await axios.post("auth/signUp", {
-              first_name,
-              last_name,
-              email,
-              password,
-              country_code,
-              phone_no,
-              address_1,
-              address_2,
-              postcode,
-              state,
-              city,
+            await axios.post(
+              "auth/signUp",
+              {
+                first_name,
+                last_name,
+                email,
+                password,
+                country_code,
+                phone_no,
+                address_1,
+                address_2,
+                postcode,
+                state,
+                city,
+              },
+              undefined,
+              true
+            );
+
+            handleOpenDialog({
+              allowOutsideClose: false,
+              allowClose: false,
+              title: "Registration Successful",
+              description:
+                "You have successfully registered. Check your email to verify your account.",
+              onConfirm: () => {
+                push("/signin");
+              },
             });
           }}
         >
@@ -99,6 +120,7 @@ export default function SignIn() {
             handleBlur,
             handleSubmit,
             setFieldValue,
+            isSubmitting,
           }) => {
             const formProps = {
               values,
@@ -108,97 +130,99 @@ export default function SignIn() {
               handleChange,
             };
             return (
-              <Form onSubmit={handleSubmit}>
-                <Stack spacing={2} sx={{ p: 2 }}>
-                  <Typography variant="h3">
-                    <b>Sign Up</b>
-                  </Typography>
-                  <TextFieldForm
-                    name="first_name"
-                    label="First Name"
-                    formProps={formProps}
-                    props={{ required: true }}
-                  />
-                  <TextFieldForm
-                    name="last_name"
-                    label="Last Name"
-                    formProps={formProps}
-                    props={{ required: true }}
-                  />
-                  <TextFieldForm
-                    name="email"
-                    label="Email"
-                    formProps={formProps}
-                    props={{
-                      required: true,
-                      placeholder: "Your Email",
-                    }}
-                  />
-                  <TextFieldForm
-                    name="password"
-                    label="Password"
-                    formProps={formProps}
-                    props={{
-                      required: true,
-                      type: "password",
-                      autoComplete: "new-password",
-                    }}
-                  />
-                  <TextFieldForm
-                    name="confirm_password"
-                    label="Confirm Password"
-                    formProps={formProps}
-                    props={{ required: true, type: "password" }}
-                  />
-                  <MobileNumberForm
-                    name="phone_no"
-                    label="Phone No"
-                    formProps={formProps}
-                    props={{ required: true }}
-                    countryCallingCode={values.country_code}
-                    onCountryChange={(e) => setFieldValue("country_code", e)}
-                  />
-                  <TextFieldForm
-                    name="address_1"
-                    label="Address 1"
-                    formProps={formProps}
-                    props={{ required: true }}
-                  />
-                  <TextFieldForm
-                    name="address_2"
-                    label="Address 2"
-                    formProps={formProps}
-                  />
-                  <TextFieldForm
-                    name="postcode"
-                    label="Postcode"
-                    formProps={formProps}
-                    onlyNumber={true}
-                  />
-                  <StateSelectTextFieldForm
-                    name="state"
-                    label="State"
-                    formProps={formProps}
-                  />
-                  <TextFieldForm
-                    name="city"
-                    label="City"
-                    formProps={formProps}
-                  />
-                  <Button
-                    fullWidth
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Register
-                  </Button>
-                  <Typography>
-                    If you already have an account.{" "}
-                    <Link href={"/signin"}>Sign In Here</Link>
-                  </Typography>
-                </Stack>
-              </Form>
+              <OverlayBox isLoading={isSubmitting}>
+                <Form onSubmit={handleSubmit}>
+                  <Stack spacing={2} sx={{ p: 2 }}>
+                    <Typography variant="h3">
+                      <b>Sign Up</b>
+                    </Typography>
+                    <TextFieldForm
+                      name="first_name"
+                      label="First Name"
+                      formProps={formProps}
+                      props={{ required: true }}
+                    />
+                    <TextFieldForm
+                      name="last_name"
+                      label="Last Name"
+                      formProps={formProps}
+                      props={{ required: true }}
+                    />
+                    <TextFieldForm
+                      name="email"
+                      label="Email"
+                      formProps={formProps}
+                      props={{
+                        required: true,
+                        placeholder: "Your Email",
+                      }}
+                    />
+                    <TextFieldForm
+                      name="password"
+                      label="Password"
+                      formProps={formProps}
+                      props={{
+                        required: true,
+                        type: "password",
+                        autoComplete: "new-password",
+                      }}
+                    />
+                    <TextFieldForm
+                      name="confirm_password"
+                      label="Confirm Password"
+                      formProps={formProps}
+                      props={{ required: true, type: "password" }}
+                    />
+                    <MobileNumberForm
+                      name="phone_no"
+                      label="Phone No"
+                      formProps={formProps}
+                      props={{ required: true }}
+                      countryCallingCode={values.country_code}
+                      onCountryChange={(e) => setFieldValue("country_code", e)}
+                    />
+                    <TextFieldForm
+                      name="address_1"
+                      label="Address 1"
+                      formProps={formProps}
+                      props={{ required: true }}
+                    />
+                    <TextFieldForm
+                      name="address_2"
+                      label="Address 2"
+                      formProps={formProps}
+                    />
+                    <TextFieldForm
+                      name="postcode"
+                      label="Postcode"
+                      formProps={formProps}
+                      onlyNumber={true}
+                    />
+                    <StateSelectTextFieldForm
+                      name="state"
+                      label="State"
+                      formProps={formProps}
+                    />
+                    <TextFieldForm
+                      name="city"
+                      label="City"
+                      formProps={formProps}
+                    />
+                    <Button
+                      fullWidth
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                    >
+                      Register
+                    </Button>
+                    <Typography>
+                      If you already have an account.{" "}
+                      <Link href={"/signin"}>Sign In Here</Link>
+                    </Typography>
+                  </Stack>
+                </Form>
+              </OverlayBox>
             );
           }}
         </Formik>
@@ -206,3 +230,4 @@ export default function SignIn() {
     </Container>
   );
 }
+export default SignUp;

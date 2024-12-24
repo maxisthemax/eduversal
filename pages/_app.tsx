@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 
 //*components
 import LayoutWrapper from "@/components/Layouts/LayoutWrapper";
+import { CustomDialog } from "@/components/Dialog";
 
 //*mui
 import { AppCacheProvider } from "@mui/material-nextjs/v15-pagesRouter";
@@ -21,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AppCacheProvider {...pageProps}>
       <ThemeProvider theme={theme}>
+        <CustomDialog />
         <ToastContainer
           limit={3}
           position="bottom-left"
