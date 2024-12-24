@@ -36,7 +36,7 @@ export default function SignIn() {
   const { push } = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
-  const { handleOpenDialog } = useCustomDialog();
+  const { handleOpenDialog, handleCloseDialog } = useCustomDialog();
 
   return (
     <Container maxWidth="sm" sx={{ alignContent: "center" }}>
@@ -54,7 +54,18 @@ export default function SignIn() {
                   allowClose: false,
                   allowOutsideClose: false,
                   title: "User Not Verified",
-                  description: "Please check your email to verify your account",
+                  description:
+                    "Please check your email to verify your account \n If you didn't receive any email, click the button below to resend",
+                  content: (
+                    <Button
+                      onClick={async () => {
+                        axios.post("auth/resendVerification", { email });
+                        handleCloseDialog();
+                      }}
+                    >
+                      Resend Email Verification
+                    </Button>
+                  ),
                   onConfirm: () => {},
                 });
               }

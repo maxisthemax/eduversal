@@ -1,13 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
-import nodemailer from "nodemailer";
 
 //*lib
 import prisma from "@/lib/prisma";
 
 //*helpers
 import { validateRequiredFields } from "@/helpers/apiHelpers";
+
+//*utils
+import { sendEmail } from "@/utils/email";
 
 export default async function signUpHandler(
   req: NextApiRequest,
@@ -131,19 +133,8 @@ export default async function signUpHandler(
       throw new Error("Email environment variables are not set");
     }
 
-    // Set up Nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: process.env.NEXT_EMAIL_USER,
-        pass: process.env.NEXT_EMAIL_PASS,
-      },
-    });
-
     // Send verification email
-    await transporter.sendMail({
+    await sendEmail({
       from: process.env.NEXT_EMAIL_USER,
       to: email,
       subject: "Email Verification",
