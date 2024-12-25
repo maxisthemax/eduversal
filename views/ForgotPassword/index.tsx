@@ -1,6 +1,7 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { useRouter } from "next/navigation";
 
 //*components
 import { OverlayBox } from "@/components/Box";
@@ -13,7 +14,6 @@ import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import axios from "@/utils/axios";
-import Link from "next/link";
 
 // Define the Yup validation schema
 const validationSchema = Yup.object().shape({
@@ -23,6 +23,7 @@ const validationSchema = Yup.object().shape({
 });
 
 function ForgotPassword() {
+  const { push } = useRouter();
   return (
     <Container maxWidth="sm" sx={{ alignContent: "center" }}>
       <Paper elevation={0}>
@@ -74,10 +75,7 @@ function ForgotPassword() {
                     >
                       Submit
                     </Button>
-                    <Typography>
-                      If you remeber your login.{" "}
-                      <Link href={"/signin"}>Sign In Here</Link>
-                    </Typography>
+                    <Button onClick={() => push("/signin")}>Back</Button>
                   </Stack>
                 </Form>
               </OverlayBox>

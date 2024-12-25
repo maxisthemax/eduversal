@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 //*components
 import { OverlayBox } from "@/components/Box";
@@ -35,85 +35,94 @@ const validationSchema = yup.object().shape({
 });
 
 function ResetPassword() {
+  const { push } = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
   const token = searchParams.get("token") || "";
 
   return (
-    <Container maxWidth="sm" sx={{ alignContent: "center" }}>
+    <Container
+      maxWidth="sm"
+      sx={{ alignContent: "center", textAlign: "center" }}
+    >
       <Paper elevation={0}>
-        <Formik
-          initialValues={{ new_password: "", confirm_new_password: "" }}
-          validationSchema={validationSchema}
-          onSubmit={async (values) => {
-            await axios.post("/auth/resetPassword", {
-              token,
-              email,
-              new_password: values.new_password,
-            });
-          }}
-        >
-          {({
-            values,
-            errors,
-            handleChange,
-            touched,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-          }) => {
-            const formProps = {
+        {!email || !token ? (
+          <Typography variant="h6">Invalid Link.</Typography>
+        ) : (
+          <Formik
+            initialValues={{ new_password: "", confirm_new_password: "" }}
+            validationSchema={validationSchema}
+            onSubmit={async (values) => {
+              await axios.post("/auth/resetPassword", {
+                token,
+                email,
+                new_password: values.new_password,
+              });
+            }}
+          >
+            {({
               values,
               errors,
+              handleChange,
               touched,
               handleBlur,
-              handleChange,
-            };
-            return (
-              <OverlayBox isLoading={isSubmitting}>
-                <Form onSubmit={handleSubmit}>
-                  <Stack spacing={2} sx={{ p: 2 }}>
-                    <Typography variant="h3">
-                      <b>Reset Password</b>
-                    </Typography>
-                    <TextField
-                      name="email"
-                      label="Email"
-                      value={email}
-                      disabled={true}
-                    />
-                    <TextFieldForm
-                      name="new_password"
-                      label="New Password"
-                      type="password"
-                      formProps={formProps}
-                      props={{
-                        required: true,
-                        type: "password",
-                        autoComplete: "new-password",
-                      }}
-                    />
-                    <TextFieldForm
-                      name="confirm_new_password"
-                      label="Confirm Password"
-                      type="password"
-                      formProps={formProps}
-                      props={{ required: true }}
-                    />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      disabled={isSubmitting}
-                    >
-                      Submit
-                    </Button>
-                  </Stack>
-                </Form>
-              </OverlayBox>
-            );
-          }}
-        </Formik>
+              handleSubmit,
+              isSubmitting,
+            }) => {
+              const formProps = {
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+              };
+              return (
+                <OverlayBox isLoading={isSubmitting}>
+                  <Form onSubmit={handleSubmit}>
+                    <Stack spacing={2} sx={{ p: 2 }}>
+                      <Typography variant="h3">
+                        <b>Reset Password</b>
+                      </Typography>
+                      <TextField
+                        name="email"
+                        label="Email"
+                        value={email}
+                        disabled={true}
+                      />
+                      <TextFieldForm
+                        name="new_password"
+                        label="New Password"
+                        type="password"
+                        formProps={formProps}
+                        props={{
+                          required: true,
+                          type: "password",
+                          autoComplete: "new-password",
+                        }}
+                      />
+                      <TextFieldForm
+                        name="confirm_new_password"
+                        label="Confirm Password"
+                        type="password"
+                        formProps={formProps}
+                        props={{ required: true }}
+                      />{" "}
+                      <Button onClick={() => push("/signin")}>Back</Button>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={isSubmitting}
+                      >
+                        Submit
+                      </Button>
+                    </Stack>
+                  </Form>
+                </OverlayBox>
+              );
+            }}
+          </Formik>
+        )}
       </Paper>
     </Container>
   );
