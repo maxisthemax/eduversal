@@ -10,6 +10,7 @@ export default async function resetPassword(
 ) {
   const { token, email, new_password } = req.body;
 
+  // Validate password strength
   const passwordRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[A-Z]).{8,}$/;
   if (!passwordRegex.test(new_password)) {
     return res.status(400).json({
@@ -30,17 +31,17 @@ export default async function resetPassword(
       const verification = user?.verification;
 
       if (!verification || verification.type !== "PASSWORD_RESET") {
-        throw new Error("Invalid or expired token");
+        throw { message: "Invalid or expired token", type: "INVALID_TOKEN" };
       }
 
       // Check if the token matches
       if (verification.token !== token) {
-        throw new Error("Invalid token");
+        throw { message: "Invalid token", type: "INVALID_TOKEN" };
       }
 
       // Check if the token is expired
       if (verification.token_expiry < new Date()) {
-        throw new Error("Token expired");
+        throw { message: "Token expired", type: "TOKEN_EXPIRED" };
       }
 
       // Hash the new password
@@ -64,7 +65,7 @@ export default async function resetPassword(
   } catch (error) {
     return res.status(400).json({
       message: error.message,
-      type: "RESET_PASSWORD_ERROR",
+      type: error.type || "RESET_PASSWORD_ERROR",
     });
   } finally {
     await prisma.$disconnect();
