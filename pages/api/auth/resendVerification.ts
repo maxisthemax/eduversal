@@ -55,6 +55,7 @@ export default async function resendVerificationHandler(
         token: verification_token,
         token_expiry: verification_token_expiry,
         user_id: user.id,
+        type: "EMAIL_VERIFICATION",
       },
     });
 

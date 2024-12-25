@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 //*components
 import { TextFieldForm } from "@/components/Form";
-import { OverlayBox } from "@/components/Box";
+import { FlexBox, OverlayBox } from "@/components/Box";
 import { useCustomDialog } from "@/components/Dialog";
 import CheckboxForm from "@/components/Form/CheckboxForm";
 
@@ -31,7 +31,7 @@ const validationSchema = yup.object({
     .required("Password is required"),
 });
 
-export default function SignIn() {
+function SignIn() {
   const { push } = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
@@ -106,11 +106,17 @@ export default function SignIn() {
                       formProps={formProps}
                       props={{ required: true, type: "password" }}
                     />
-                    <CheckboxForm
-                      name="remember_me"
-                      label="Remember Me"
-                      formProps={formProps}
-                    />
+                    <Stack direction="row" sx={{ alignItems: "center" }}>
+                      <CheckboxForm
+                        name="remember_me"
+                        label="Remember Me"
+                        formProps={formProps}
+                      />
+                      <FlexBox />
+                      <Typography>
+                        <Link href={"/forgotpassword"}>Forgot Password?</Link>
+                      </Typography>
+                    </Stack>
                     <Button
                       fullWidth
                       type="submit"
@@ -133,3 +139,5 @@ export default function SignIn() {
     </Container>
   );
 }
+
+export default SignIn;

@@ -115,6 +115,7 @@ export default async function signUpHandler(
         token: verification_token,
         token_expiry: verification_token_expiry,
         user_id: newUser.id,
+        type: "EMAIL_VERIFICATION",
       },
     });
 

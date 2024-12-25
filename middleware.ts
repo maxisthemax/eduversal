@@ -19,7 +19,9 @@ export async function middleware(req: NextRequest) {
   if (
     pathname === "/signin" ||
     pathname === "/signup" ||
-    pathname === "/verifyemail"
+    pathname === "/verifyemail" ||
+    pathname === "/forgotpassword" ||
+    pathname === "/resetpassword"
   ) {
     if (session.isLoggedIn) {
       nextUrl.pathname = "/";

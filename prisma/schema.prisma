@@ -28,9 +28,15 @@ model User {
 }
 
 model Verification {
-  id           String   @id @default(cuid())
+  id           String           @id @default(cuid())
   token        String
   token_expiry DateTime
-  user_id      String   @unique
-  user         User     @relation(fields: [user_id], references: [id])
+  type         VerificationType
+  user_id      String           @unique
+  user         User             @relation(fields: [user_id], references: [id])
+}
+
+enum VerificationType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
 }

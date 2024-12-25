@@ -1,0 +1,122 @@
+import React from "react";
+import { Formik, Form } from "formik";
+import * as yup from "yup";
+import { useSearchParams } from "next/navigation";
+
+//*components
+import { OverlayBox } from "@/components/Box";
+import { TextFieldForm } from "@/components/Form";
+
+//*mui
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+
+//*utils
+import axios from "@/utils/axios";
+
+// Define the Yup validation schema
+const validationSchema = yup.object().shape({
+  new_password: yup
+    .string()
+    .min(8, "Password is less than 8")
+    .matches(/[0-9]/, "Password must contain a number")
+    .matches(/[a-zA-Z]/, "Password must contain an alphabet")
+    .matches(/[A-Z]/, "Password must contain an uppercase letter")
+    .required("Password is required"),
+  confirm_new_password: yup
+    .string()
+    .min(8, "Password is less than 8")
+    .required("Password is required")
+    .oneOf([yup.ref("new_password")], "Your passwords do not match."),
+});
+
+function ResetPassword() {
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") || "";
+  const token = searchParams.get("token") || "";
+
+  return (
+    <Container maxWidth="sm" sx={{ alignContent: "center" }}>
+      <Paper elevation={0}>
+        <Formik
+          initialValues={{ new_password: "", confirm_new_password: "" }}
+          validationSchema={validationSchema}
+          onSubmit={async (values) => {
+            await axios.post("/auth/resetPassword", {
+              token,
+              email,
+              new_password: values.new_password,
+            });
+          }}
+        >
+          {({
+            values,
+            errors,
+            handleChange,
+            touched,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+          }) => {
+            const formProps = {
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+            };
+            return (
+              <OverlayBox isLoading={isSubmitting}>
+                <Form onSubmit={handleSubmit}>
+                  <Stack spacing={2} sx={{ p: 2 }}>
+                    <Typography variant="h3">
+                      <b>Reset Password</b>
+                    </Typography>
+                    <TextField
+                      name="email"
+                      label="Email"
+                      value={email}
+                      disabled={true}
+                    />
+                    <TextFieldForm
+                      name="new_password"
+                      label="New Password"
+                      type="password"
+                      formProps={formProps}
+                      props={{
+                        required: true,
+                        type: "password",
+                        autoComplete: "new-password",
+                      }}
+                    />
+                    <TextFieldForm
+                      name="confirm_new_password"
+                      label="Confirm Password"
+                      type="password"
+                      formProps={formProps}
+                      props={{ required: true }}
+                    />
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      disabled={isSubmitting}
+                    >
+                      Submit
+                    </Button>
+                  </Stack>
+                </Form>
+              </OverlayBox>
+            );
+          }}
+        </Formik>
+      </Paper>
+    </Container>
+  );
+}
+
+export default ResetPassword;

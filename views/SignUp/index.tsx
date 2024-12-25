@@ -36,7 +36,7 @@ const validationSchema = yup.object({
     .required("Password is required"),
   confirm_password: yup
     .string()
-    .min(8, "Password is less than 6")
+    .min(8, "Password is less than 8")
     .required("Password is required")
     .oneOf([yup.ref("password")], "Your passwords do not match."),
   phone_no: yup.string().required("Phone No is required"),

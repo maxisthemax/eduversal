@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 //*utils
 import axios from "@/utils/axios";
 
-export default function VerifyEmail({ message, isVerified, type }) {
+function VerifyEmail({ message, isVerified, type }) {
   const { push } = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
@@ -45,3 +45,5 @@ export default function VerifyEmail({ message, isVerified, type }) {
     </Container>
   );
 }
+
+export default VerifyEmail;
