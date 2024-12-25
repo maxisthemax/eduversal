@@ -1,6 +1,6 @@
 import React from "react";
+import * as yup from "yup";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 
 //*components
@@ -11,78 +11,80 @@ import { TextFieldForm } from "@/components/Form";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+
+//*utils
 import axios from "@/utils/axios";
 
-// Define the Yup validation schema
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
+const validationSchema = yup.object().shape({
+  email: yup
+    .string()
     .email("Invalid email address")
     .required("Email is required"),
 });
 
 function ForgotPassword() {
+  //*define
   const { push } = useRouter();
+
   return (
     <Container maxWidth="sm" sx={{ alignContent: "center" }}>
-      <Paper elevation={0}>
-        <Formik
-          initialValues={{ email: "" }}
-          validationSchema={validationSchema}
-          onSubmit={async (values) => {
-            await axios.post("/auth/forgotPassword", values);
-          }}
-        >
-          {({
+      <Formik
+        initialValues={{ email: "" }}
+        validationSchema={validationSchema}
+        onSubmit={async (values) => {
+          await axios.post("/auth/forgotPassword", values);
+          push("/signin");
+        }}
+      >
+        {({
+          values,
+          errors,
+          handleChange,
+          touched,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+        }) => {
+          const formProps = {
             values,
             errors,
-            handleChange,
             touched,
             handleBlur,
-            handleSubmit,
-            isSubmitting,
-          }) => {
-            const formProps = {
-              values,
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-            };
-            return (
-              <OverlayBox isLoading={isSubmitting}>
-                <Form onSubmit={handleSubmit}>
-                  <Stack spacing={2} sx={{ p: 2 }}>
-                    <Typography variant="h3">
-                      <b>Forgot Password</b>
-                    </Typography>
-                    <Typography>
-                      An email will be sent to you with instructions on how to
-                      reset your password
-                    </Typography>
-                    <TextFieldForm
-                      name="email"
-                      label="Email"
-                      formProps={formProps}
-                      props={{ required: true }}
-                    />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      disabled={isSubmitting}
-                    >
-                      Submit
-                    </Button>
-                    <Button onClick={() => push("/signin")}>Back</Button>
-                  </Stack>
-                </Form>
-              </OverlayBox>
-            );
-          }}
-        </Formik>
-      </Paper>
+            handleChange,
+          };
+          return (
+            <OverlayBox isLoading={isSubmitting}>
+              <Form onSubmit={handleSubmit}>
+                <Stack spacing={2} sx={{ p: 2 }}>
+                  <Typography variant="h3">
+                    <b>Forgot Password</b>
+                  </Typography>
+                  <Typography>
+                    An email will be sent to you with instructions on how to
+                    reset your password
+                  </Typography>
+                  <TextFieldForm
+                    name="email"
+                    label="Email"
+                    formProps={formProps}
+                    props={{ required: true }}
+                  />
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={isSubmitting}
+                  >
+                    Submit
+                  </Button>
+                  <Button onClick={() => push("/signin")}>Back</Button>
+                </Stack>
+              </Form>
+            </OverlayBox>
+          );
+        }}
+      </Formik>
     </Container>
   );
 }

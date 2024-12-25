@@ -1,26 +1,35 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
 
+//*helpers
+import {
+  emailRegex,
+  handleAllowedMethods,
+  validateRequiredFields,
+} from "@/helpers/apiHelpers";
+
 //*lib
 import prisma from "@/lib/prisma";
 
 //*utils
 import { sendEmail } from "@/utils/email";
 
-//*helpers
-import { handleAllowedMethods } from "@/helpers/apiHelpers";
-
-export default async function resendVerificationHandler(
+export default async function resendVerification(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   // Use handleAllowedMethods for method validation
   if (handleAllowedMethods(req, res, ["POST"])) return;
 
+  // Extract the request body
   const { email } = req.body;
 
+  // Validate required fields
+  if (!validateRequiredFields(req, res, ["email"])) {
+    return;
+  }
+
   // Validate email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({
       message: "Invalid email format",
@@ -65,11 +74,6 @@ export default async function resendVerificationHandler(
     }/verifyemail?token=${verification_token}&email=${encodeURIComponent(
       email
     )}`;
-
-    // Validate environment variables
-    if (!process.env.NEXT_EMAIL_USER || !process.env.NEXT_EMAIL_PASS) {
-      throw new Error("Email environment variables are not set");
-    }
 
     // Send verification email
     await sendEmail({

@@ -2,19 +2,21 @@ import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 
-//*lib
-import prisma from "@/lib/prisma";
-
 //*helpers
 import {
   validateRequiredFields,
   handleAllowedMethods,
+  emailRegex,
+  passwordRegex,
 } from "@/helpers/apiHelpers";
+
+//*lib
+import prisma from "@/lib/prisma";
 
 //*utils
 import { sendEmail } from "@/utils/email";
 
-export default async function signUpHandler(
+export default async function signUp(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -55,7 +57,6 @@ export default async function signUpHandler(
   }
 
   // Validate email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({
       message: "Invalid email format",
@@ -64,7 +65,6 @@ export default async function signUpHandler(
   }
 
   // Validate password strength
-  const passwordRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[A-Z]).{8,}$/;
   if (!passwordRegex.test(password)) {
     return res.status(400).json({
       message:
@@ -92,31 +92,36 @@ export default async function signUpHandler(
       Date.now() + 24 * 60 * 60 * 1000
     );
 
-    // Create new user in the database
-    const newUser = await prisma.user.create({
-      data: {
-        first_name,
-        last_name,
-        email,
-        password: hashedPassword,
-        country_code,
-        phone_no,
-        address_1,
-        address_2,
-        postcode,
-        state,
-        city,
-      },
-    });
+    // Use transaction for user creation and verification creation
+    const newUser = await prisma.$transaction(async (prisma) => {
+      // Create new user in the database
+      const user = await prisma.user.create({
+        data: {
+          first_name,
+          last_name,
+          email,
+          password: hashedPassword,
+          country_code,
+          phone_no,
+          address_1,
+          address_2,
+          postcode,
+          state,
+          city,
+        },
+      });
 
-    // Create verification entry in the database
-    await prisma.verification.create({
-      data: {
-        token: verification_token,
-        token_expiry: verification_token_expiry,
-        user_id: newUser.id,
-        type: "EMAIL_VERIFICATION",
-      },
+      // Create verification entry in the database
+      await prisma.verification.create({
+        data: {
+          token: verification_token,
+          token_expiry: verification_token_expiry,
+          user_id: user.id,
+          type: "EMAIL_VERIFICATION",
+        },
+      });
+
+      return user;
     });
 
     // Generate verification link

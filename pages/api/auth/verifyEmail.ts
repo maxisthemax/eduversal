@@ -1,26 +1,35 @@
-import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 //*helpers
-import { handleAllowedMethods } from "@/helpers/apiHelpers";
+import {
+  emailRegex,
+  handleAllowedMethods,
+  validateRequiredFields,
+} from "@/helpers/apiHelpers";
 
-const prisma = new PrismaClient();
+//*lib
+import prisma from "@/lib/prisma";
 
-export default async function verifyEmailHandler(
+export default async function verifyEmail(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   // Use handleAllowedMethods for method validation
   if (handleAllowedMethods(req, res, ["GET"])) return;
 
-  // Extract token and email from query parameters
-  const { token, email } = req.query as { token?: string; email?: string };
+  // Extract from request body
+  const { token, email } = req.body;
 
-  // Validate presence of token and email
-  if (!token || !email) {
+  // Validate required fields
+  if (!validateRequiredFields(req, res, ["email", "token"])) {
+    return;
+  }
+
+  // Validate email format
+  if (!emailRegex.test(email)) {
     return res.status(400).json({
-      message: "Invalid verification link.",
-      type: "INVALID_VERIFICATION_LINK",
+      message: "Invalid email format",
+      type: "INVALID_EMAIL_FORMAT",
     });
   }
 
@@ -50,7 +59,11 @@ export default async function verifyEmailHandler(
     const verification = user.verification;
 
     // Validate the verification token
-    if (!verification || verification.token !== token) {
+    if (
+      !verification ||
+      verification.type !== "EMAIL_VERIFICATION" ||
+      verification.token !== token
+    ) {
       return res.status(400).json({
         message: "Invalid verification token.",
         type: "INVALID_VERIFICATION_TOKEN",
@@ -90,8 +103,5 @@ export default async function verifyEmailHandler(
       error,
       type: "INTERNAL_SERVER_ERROR",
     });
-  } finally {
-    // Disconnect Prisma client
-    await prisma.$disconnect();
   }
 }

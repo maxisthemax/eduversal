@@ -1,17 +1,41 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
-const prisma = new PrismaClient();
+//*helpers
+import {
+  emailRegex,
+  handleAllowedMethods,
+  passwordRegex,
+  validateRequiredFields,
+} from "@/helpers/apiHelpers";
+
+//*lib
+import prisma from "@/lib/prisma";
 
 export default async function resetPassword(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Use handleAllowedMethods for method validation
+  if (handleAllowedMethods(req, res, ["POST"])) return;
+
+  // Extract the request body
   const { token, email, new_password } = req.body;
 
+  // Validate required fields
+  if (!validateRequiredFields(req, res, ["token", "email", "new_password"])) {
+    return;
+  }
+
+  // Validate email format
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({
+      message: "Invalid email format",
+      type: "INVALID_EMAIL_FORMAT",
+    });
+  }
+
   // Validate password strength
-  const passwordRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[A-Z]).{8,}$/;
   if (!passwordRegex.test(new_password)) {
     return res.status(400).json({
       message:
@@ -30,18 +54,23 @@ export default async function resetPassword(
 
       const verification = user?.verification;
 
-      if (!verification || verification.type !== "PASSWORD_RESET") {
-        throw { message: "Invalid or expired token", type: "INVALID_TOKEN" };
-      }
-
-      // Check if the token matches
-      if (verification.token !== token) {
-        throw { message: "Invalid token", type: "INVALID_TOKEN" };
+      if (
+        !verification ||
+        verification.type !== "PASSWORD_RESET" ||
+        verification.token !== token
+      ) {
+        throw {
+          message: "Invalid or expired token",
+          type: "INVALID_PASSWORD_RESET_TOKEN",
+        };
       }
 
       // Check if the token is expired
       if (verification.token_expiry < new Date()) {
-        throw { message: "Token expired", type: "TOKEN_EXPIRED" };
+        throw {
+          message: "Token expired",
+          type: "PASSWORD_RESET_TOKEN_EXPIRED",
+        };
       }
 
       // Hash the new password
@@ -49,7 +78,7 @@ export default async function resetPassword(
 
       // Update the user's password
       await prisma.user.update({
-        where: { email },
+        where: { id: user.id },
         data: { password: hashedPassword },
       });
 
@@ -67,7 +96,5 @@ export default async function resetPassword(
       message: error.message,
       type: error.type || "RESET_PASSWORD_ERROR",
     });
-  } finally {
-    await prisma.$disconnect();
   }
 }

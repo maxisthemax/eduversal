@@ -67,3 +67,6 @@ export async function getSession(
   }
   return await getIronSession<SessionData>(req, res, options);
 }
+
+export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const passwordRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[A-Z]).{8,}$/;

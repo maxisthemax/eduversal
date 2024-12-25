@@ -1,14 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 
 //*helpers
-import { handleAllowedMethods } from "@/helpers/apiHelpers";
+import {
+  emailRegex,
+  handleAllowedMethods,
+  validateRequiredFields,
+} from "@/helpers/apiHelpers";
+
+//*lib
+import prisma from "@/lib/prisma";
 
 //*utils
 import { sendEmail } from "@/utils/email";
-
-const prisma = new PrismaClient();
 
 export default async function forgotPassword(
   req: NextApiRequest,
@@ -17,9 +21,23 @@ export default async function forgotPassword(
   // Use handleAllowedMethods for method validation
   if (handleAllowedMethods(req, res, ["POST"])) return;
 
-  try {
-    const { email } = req.body;
+  // Extract the request body
+  const { email } = req.body;
 
+  // Validate required fields
+  if (!validateRequiredFields(req, res, ["email"])) {
+    return;
+  }
+
+  // Validate email format
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({
+      message: "Invalid email format",
+      type: "INVALID_EMAIL_FORMAT",
+    });
+  }
+
+  try {
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -41,7 +59,7 @@ export default async function forgotPassword(
 
     // Generate reset token and expiry
     const reset_token = uuidv4();
-    const reset_token_expiry = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // 2 days
+    const reset_token_expiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 2 days
 
     // Upsert verification entry in the database
     await prisma.verification.upsert({

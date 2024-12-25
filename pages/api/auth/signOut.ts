@@ -3,8 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 //*helpers
 import { handleAllowedMethods, getSession } from "@/helpers/apiHelpers";
 
-// API route handler for signing out
-export default async function signOutHandler(
+export default async function signOut(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

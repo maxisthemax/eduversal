@@ -18,7 +18,6 @@ import TextField from "@mui/material/TextField";
 //*utils
 import axios from "@/utils/axios";
 
-// Define the Yup validation schema
 const validationSchema = yup.object().shape({
   new_password: yup
     .string()
