@@ -13,6 +13,7 @@ import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import axios from "@/utils/axios";
+import Link from "next/link";
 
 // Define the Yup validation schema
 const validationSchema = Yup.object().shape({
@@ -55,6 +56,10 @@ function ForgotPassword() {
                     <Typography variant="h3">
                       <b>Forgot Password</b>
                     </Typography>
+                    <Typography>
+                      An email will be sent to you with instructions on how to
+                      reset your password
+                    </Typography>
                     <TextFieldForm
                       name="email"
                       label="Email"
@@ -69,6 +74,10 @@ function ForgotPassword() {
                     >
                       Submit
                     </Button>
+                    <Typography>
+                      If you remeber your login.{" "}
+                      <Link href={"/signin"}>Sign In Here</Link>
+                    </Typography>
                   </Stack>
                 </Form>
               </OverlayBox>

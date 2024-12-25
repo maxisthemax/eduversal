@@ -27,7 +27,10 @@ const validationSchema = yup.object({
     .required("Email is required"),
   password: yup
     .string()
-    .min(6, "Password is less than 6")
+    .min(8, "Password is less than 8")
+    .matches(/[0-9]/, "Password must contain a number")
+    .matches(/[a-zA-Z]/, "Password must contain an alphabet")
+    .matches(/[A-Z]/, "Password must contain an uppercase letter")
     .required("Password is required"),
 });
 
@@ -106,7 +109,7 @@ function SignIn() {
                       formProps={formProps}
                       props={{ required: true, type: "password" }}
                     />
-                    <Stack direction="row" sx={{ alignItems: "center" }}>
+                    <Stack direction="row" sx={{ alignItems: "center", pl: 1 }}>
                       <CheckboxForm
                         name="remember_me"
                         label="Remember Me"
