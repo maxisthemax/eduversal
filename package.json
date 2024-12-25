@@ -25,6 +25,7 @@
     "bcrypt": "^5.1.1",
     "country-codes-list": "^1.6.11",
     "country-list": "^2.3.0",
+    "dayjs": "^1.11.13",
     "flat": "^6.0.1",
     "formik": "^2.4.6",
     "iron-session": "^8.0.4",

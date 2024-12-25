@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 //*helpers
 import {
+  checkRateLimit,
   emailRegex,
   handleAllowedMethods,
   validateRequiredFields,
@@ -18,6 +19,9 @@ export default async function forgotPassword(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  //  checkRateLimit for rate limiting
+  await checkRateLimit(req, res);
+
   // Use handleAllowedMethods for method validation
   if (handleAllowedMethods(req, res, ["POST"])) return;
 

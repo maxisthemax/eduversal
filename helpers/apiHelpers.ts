@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getIronSession } from "iron-session";
+import dayjs from "dayjs";
 
 //*lib
 import { SessionData, sessionOptions } from "@/lib/session";
@@ -70,3 +71,41 @@ export async function getSession(
 
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const passwordRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[A-Z]).{8,}$/;
+
+export async function checkRateLimit(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  limit: number = 10
+) {
+  // Get the session
+  const session = await getSession(req, res);
+
+  // Rate limit check
+  if (!session?.rateLimitLastAt) {
+    session.rateLimit = 0;
+  }
+
+  if (
+    session.rateLimit &&
+    session.rateLimit > limit &&
+    dayjs().diff(dayjs(session.rateLimitLastAt), "minute") < 1
+  ) {
+    return res.status(429).json({
+      message: "Too many requests, please try again later",
+      type: "RATE_LIMIT_EXCEEDED",
+    });
+  }
+
+  // Reset rate limit if more than 1 minute has passed
+  if (
+    !session.rateLimit ||
+    dayjs().diff(dayjs(session.rateLimitLastAt), "minute") >= 1
+  ) {
+    session.rateLimit = 0;
+  }
+
+  // Increment rate limit counter
+  session.rateLimit = (session.rateLimit || 0) + 1;
+  session.rateLimitLastAt = new Date();
+  session.save();
+}

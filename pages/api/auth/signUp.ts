@@ -92,36 +92,31 @@ export default async function signUp(
       Date.now() + 24 * 60 * 60 * 1000
     );
 
-    // Use transaction for user creation and verification creation
-    const newUser = await prisma.$transaction(async (prisma) => {
-      // Create new user in the database
-      const user = await prisma.user.create({
-        data: {
-          first_name,
-          last_name,
-          email,
-          password: hashedPassword,
-          country_code,
-          phone_no,
-          address_1,
-          address_2,
-          postcode,
-          state,
-          city,
-        },
-      });
+    // Create new user in the database
+    const newUser = await prisma.user.create({
+      data: {
+        first_name,
+        last_name,
+        email,
+        password: hashedPassword,
+        country_code,
+        phone_no,
+        address_1,
+        address_2,
+        postcode,
+        state,
+        city,
+      },
+    });
 
-      // Create verification entry in the database
-      await prisma.verification.create({
-        data: {
-          token: verification_token,
-          token_expiry: verification_token_expiry,
-          user_id: user.id,
-          type: "EMAIL_VERIFICATION",
-        },
-      });
-
-      return user;
+    // Create verification entry in the database
+    await prisma.verification.create({
+      data: {
+        token: verification_token,
+        token_expiry: verification_token_expiry,
+        user_id: newUser.id,
+        type: "EMAIL_VERIFICATION",
+      },
     });
 
     // Generate verification link

@@ -5,6 +5,8 @@ export interface SessionData {
   name: string;
   email: string;
   isLoggedIn: boolean;
+  rateLimit?: number;
+  rateLimitLastAt?: Date;
 }
 
 export const defaultSession: SessionData = {
