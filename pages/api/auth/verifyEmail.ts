@@ -15,7 +15,7 @@ export default async function verifyEmail(
   res: NextApiResponse
 ) {
   // Use handleAllowedMethods for method validation
-  if (handleAllowedMethods(req, res, ["GET"])) return;
+  if (handleAllowedMethods(req, res, ["POST"])) return;
 
   // Extract from request body
   const { token, email } = req.body;

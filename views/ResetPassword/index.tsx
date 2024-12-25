@@ -57,6 +57,7 @@ function ResetPassword() {
                 email,
                 new_password: values.new_password,
               });
+              push("/signin");
             }}
           >
             {({
@@ -105,8 +106,7 @@ function ResetPassword() {
                         type="password"
                         formProps={formProps}
                         props={{ required: true }}
-                      />{" "}
-                      <Button onClick={() => push("/signin")}>Back</Button>
+                      />
                       <Button
                         type="submit"
                         variant="contained"
@@ -115,6 +115,7 @@ function ResetPassword() {
                       >
                         Submit
                       </Button>
+                      <Button onClick={() => push("/signin")}>Back</Button>
                     </Stack>
                   </Form>
                 </OverlayBox>
