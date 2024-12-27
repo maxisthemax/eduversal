@@ -26,6 +26,8 @@ model User {
   updated_at   DateTime      @updatedAt
   verification Verification?
   role         UserRole      @default(USER)
+
+  @@index([email])
 }
 
 model Verification {
@@ -35,6 +37,28 @@ model Verification {
   type         VerificationType
   user_id      String           @unique
   user         User             @relation(fields: [user_id], references: [id])
+  created_at   DateTime         @default(now())
+  updated_at   DateTime         @updatedAt
+
+  @@index([user_id])
+}
+
+model Institution {
+  id         String          @id @default(cuid())
+  name       String
+  code       String          @unique
+  type_id    String
+  type       InstitutionType @relation(fields: [type_id], references: [id])
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt
+}
+
+model InstitutionType {
+  id           String        @id @default(cuid())
+  name         String
+  institutions Institution[]
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
 }
 
 enum VerificationType {
