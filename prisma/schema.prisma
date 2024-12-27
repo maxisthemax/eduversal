@@ -25,6 +25,7 @@ model User {
   created_at   DateTime      @default(now())
   updated_at   DateTime      @updatedAt
   verification Verification?
+  role         UserRole      @default(USER)
 }
 
 model Verification {
@@ -39,4 +40,10 @@ model Verification {
 enum VerificationType {
   EMAIL_VERIFICATION
   PASSWORD_RESET
+}
+
+enum UserRole {
+  ADMIN
+  SUPERADMIN
+  USER
 }

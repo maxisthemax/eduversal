@@ -73,6 +73,7 @@ export default async function signIn(
     // Create a session and store user data
     session.id = user.id;
     session.email = user.email;
+    session.role = user.role;
     session.isLoggedIn = true;
     await session.save();
 

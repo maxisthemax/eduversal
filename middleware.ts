@@ -2,6 +2,9 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { getIronSession } from "iron-session";
 
+//*lodash
+import startWith from "lodash/startsWith";
+
 //*lib
 import { SessionData, sessionOptions } from "@/lib/session";
 
@@ -29,7 +32,12 @@ export async function middleware(req: NextRequest) {
     } else return res;
   } else {
     if (session.isLoggedIn) {
-      return res;
+      if (startWith(pathname, "/admin")) {
+        if (session.role === "USER") {
+          nextUrl.pathname = "/";
+          return NextResponse.redirect(nextUrl);
+        } else return res;
+      } else return res;
     } else {
       nextUrl.pathname = "/signin";
       nextUrl.search = `?redirect=${encodeURIComponent(pathname)}`;

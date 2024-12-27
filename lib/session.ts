@@ -4,6 +4,7 @@ export interface SessionData {
   id: string;
   name: string;
   email: string;
+  role: "SUPERADMIN" | "ADMIN" | "USER";
   isLoggedIn: boolean;
   rateLimit?: number;
   rateLimitLastAt?: Date;
@@ -13,6 +14,7 @@ export const defaultSession: SessionData = {
   id: "",
   name: "",
   email: "",
+  role: "USER",
   isLoggedIn: false,
 };
 
