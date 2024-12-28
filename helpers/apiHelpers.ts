@@ -13,13 +13,28 @@ export function validateRequiredFields(
   res: NextApiResponse,
   fields: string[]
 ): boolean {
-  const missingFields = fields.filter((field) => {
+  const missingFieldsBody = fields.filter((field) => {
     const value = req.body[field];
     return value === undefined || value === null || value === "";
   });
-  if (missingFields.length > 0) {
-    const formattedFields = formatList(missingFields);
-    const verb = missingFields.length === 1 ? "is" : "are";
+
+  const missingFieldsQuery = fields.filter((field) => {
+    const value = req.body[field];
+    return value === undefined || value === null || value === "";
+  });
+
+  if (missingFieldsBody.length > 0) {
+    const formattedFields = formatList(missingFieldsBody);
+    const verb = missingFieldsBody.length === 1 ? "is" : "are";
+    const message = `${formattedFields} ${verb} required.`;
+
+    res.status(400).json({ message });
+    return false;
+  }
+
+  if (missingFieldsQuery.length > 0) {
+    const formattedFields = formatList(missingFieldsQuery);
+    const verb = missingFieldsQuery.length === 1 ? "is" : "are";
     const message = `${formattedFields} ${verb} required.`;
 
     res.status(400).json({ message });
@@ -79,6 +94,11 @@ export async function checkRateLimit(
 ) {
   // Get the session
   const session = await getSession(req, res);
+  if (!session?.id)
+    return res.status(429).json({
+      message: "User is signed out",
+      type: "USER_SIGNED_OUT",
+    });
 
   // Rate limit check
   if (!session?.rateLimitLastAt) {

@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma";
+import bcrypt from "bcrypt";
 
 async function main() {
   /**
@@ -193,13 +194,16 @@ async function main() {
   /**
    * 6. Users
    */
+  const saltRounds = 10;
+
   // Regular user
+  const hashedPasswordJane = await bcrypt.hash("securepassword", saltRounds);
   const userJane = await prisma.user.create({
     data: {
       first_name: "Jane",
       last_name: "Doe",
       email: "jane@example.com",
-      password: "securepassword",
+      password: hashedPasswordJane,
       country_code: "+1",
       phone_no: "1234567890",
       address_1: "123 Maple Street",
@@ -212,12 +216,13 @@ async function main() {
   });
 
   // Admin user
+  const hashedPasswordAdmin = await bcrypt.hash("12345678A", saltRounds);
   const userAdmin = await prisma.user.create({
     data: {
       first_name: "Admin",
       last_name: "User",
-      email: "admin@example.com",
-      password: "supersecurepassword",
+      email: "admin@admin.com",
+      password: hashedPasswordAdmin,
       country_code: "+1",
       phone_no: "9876543210",
       address_1: "456 Oak Avenue",

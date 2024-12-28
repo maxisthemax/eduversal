@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 //*components
 import LayoutWrapper from "@/components/Layouts/LayoutWrapper";
@@ -18,20 +19,31 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // default: true
+    },
+  },
+});
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <AppCacheProvider {...pageProps}>
-      <ThemeProvider theme={theme}>
-        <CustomDialog />
-        <ToastContainer
-          limit={3}
-          position="bottom-left"
-          pauseOnFocusLoss={true}
-        />
-        <LayoutWrapper>
-          <Component {...pageProps} />
-        </LayoutWrapper>
-      </ThemeProvider>
-    </AppCacheProvider>
+    <QueryClientProvider client={queryClient}>
+      <AppCacheProvider {...pageProps}>
+        <ThemeProvider theme={theme}>
+          <CustomDialog />
+          <ToastContainer
+            limit={3}
+            position="bottom-left"
+            pauseOnFocusLoss={true}
+          />
+          <LayoutWrapper>
+            <Component {...pageProps} />
+          </LayoutWrapper>
+        </ThemeProvider>
+      </AppCacheProvider>
+    </QueryClientProvider>
   );
 }

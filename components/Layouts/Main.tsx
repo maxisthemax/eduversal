@@ -10,74 +10,81 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import LinearProgress from "@mui/material/LinearProgress";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
-//*utils
-import axios from "@/utils/axios";
+//*data
+import { useUser } from "@/data/user";
 
 function Main({ children }: { children: React.ReactNode }) {
   //*define
   const { push } = useRouter();
   const pathName = usePathname();
 
-  return (
-    <Box>
-      <AppBar color="inherit" elevation={0} position="static">
-        <Toolbar>
-          <Stack direction="row" sx={{ width: "100%" }} spacing={2}>
-            <Typography variant="h4" color="primary">
-              <b>Photoversal Studio</b>
-            </Typography>
-            <FlexBox />
-            <Button
-              color={pathName === "/photos" ? "primary" : "inherit"}
-              onClick={async () => {
-                push("/photos");
-              }}
-            >
-              PHOTOS
-            </Button>
-            <Button
-              color={pathName === "/cart" ? "primary" : "inherit"}
-              onClick={async () => {
-                push("/cart");
-              }}
-            >
-              CART
-            </Button>
-            <Button
-              color={pathName === "/account" ? "primary" : "inherit"}
-              onClick={async () => {
-                push("/account");
-              }}
-            >
-              ACCOUNT
-            </Button>
-            <Button
-              variant="contained"
-              onClick={async () => {
-                await axios.post("auth/signOut");
-                push("/signin");
-              }}
-            >
-              SIGN OUT
-            </Button>
-          </Stack>
-        </Toolbar>
-      </AppBar>
-      <Stack
-        direction="row"
-        sx={{
-          height: getFullHeightSize(10),
-          width: "100%",
-        }}
-      >
-        {children}
-      </Stack>
-    </Box>
-  );
+  //*data
+  const { data, status } = useUser();
+
+  if (status === "pending") return <LinearProgress />;
+  else
+    return (
+      <Box>
+        <AppBar color="inherit" elevation={0} position="static">
+          <Toolbar>
+            <Stack direction="row" sx={{ width: "100%" }} spacing={2}>
+              <Typography variant="h4" color="primary">
+                <b>Photoversal Studio</b>
+              </Typography>
+              <FlexBox />
+              {data?.role !== "USER" && (
+                <Button
+                  color={pathName === "/admin" ? "primary" : "inherit"}
+                  onClick={async () => {
+                    push("/admin");
+                  }}
+                >
+                  ADMIN
+                </Button>
+              )}
+              <Button
+                color={pathName === "/photos" ? "primary" : "inherit"}
+                onClick={async () => {
+                  push("/photos");
+                }}
+              >
+                PHOTOS
+              </Button>
+              <Button
+                color={pathName === "/cart" ? "primary" : "inherit"}
+                onClick={async () => {
+                  push("/cart");
+                }}
+              >
+                CART
+              </Button>
+              <Button
+                color={pathName === "/account" ? "primary" : "inherit"}
+                onClick={async () => {
+                  push("/account");
+                }}
+              >
+                ACCOUNT
+              </Button>
+            </Stack>
+          </Toolbar>
+        </AppBar>
+        <Stack
+          direction="row"
+          sx={{
+            height: getFullHeightSize(10),
+            width: "100%",
+          }}
+        >
+          {children}
+        </Stack>
+      </Box>
+    );
 }
 
 export default Main;
