@@ -19,6 +19,12 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const nextUrl = req.nextUrl.clone();
 
+  if (pathname.startsWith("/api")) {
+    if (pathname.startsWith("/api/auth")) {
+      return res;
+    }
+  }
+
   if (
     pathname === "/signin" ||
     pathname === "/signup" ||
@@ -32,7 +38,7 @@ export async function middleware(req: NextRequest) {
     } else return res;
   } else {
     if (session.isLoggedIn) {
-      if (startWith(pathname, "/admin")) {
+      if (startWith(pathname, "/admin") || startWith(pathname, "/api/admin")) {
         if (session.role === "USER") {
           nextUrl.pathname = "/";
           return NextResponse.redirect(nextUrl);
@@ -48,6 +54,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };
