@@ -44,13 +44,50 @@ model Verification {
 }
 
 model Institution {
-  id         String          @id @default(cuid())
+  id            String          @id @default(cuid())
+  name          String
+  code          String          @unique
+  type_id       String
+  type          InstitutionType @relation(fields: [type_id], references: [id])
+  academicYears AcademicYear[]
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+}
+
+model AcademicYear {
+  id             String      @id @default(cuid())
+  name           String
+  institution_id String
+  institution    Institution @relation(fields: [institution_id], references: [id])
+  classes        Class[]
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+
+  @@index([institution_id])
+}
+
+model Class {
+  id               String       @id @default(cuid())
+  name             String
+  standard_id      String
+  standard         Standard     @relation(fields: [standard_id], references: [id])
+  access_code      String       @unique
+  academic_year_id String
+  academicYear     AcademicYear @relation(fields: [academic_year_id], references: [id])
+  start_date       DateTime
+  end_date         DateTime
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @updatedAt
+
+  @@index([academic_year_id])
+}
+
+model Standard {
+  id         String   @id @default(cuid())
   name       String
-  code       String          @unique
-  type_id    String
-  type       InstitutionType @relation(fields: [type_id], references: [id])
-  created_at DateTime        @default(now())
-  updated_at DateTime        @updatedAt
+  classes    Class[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model InstitutionType {

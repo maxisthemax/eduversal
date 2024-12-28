@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "seed": "ts-node --project tsconfig.seed.json prisma/seed.ts",
+    "resetdbandseed": "npx prisma migrate reset && npx prisma db push && npx prisma generate && npm run seed"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -44,13 +46,14 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/bcrypt": "^5.0.2",
-    "@types/node": "^20",
+    "@types/node": "^20.17.10",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.0",
     "prisma": "^6.1.0",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
   }
 }

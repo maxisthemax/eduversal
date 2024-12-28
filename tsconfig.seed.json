@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        // You can keep ESNext if you want, but "moduleResolution": "Node" or "NodeNext" is needed for Node
+        "module": "CommonJS",
+        // or "Node16" / "NodeNext" if you prefer ESM style in Node
+        "target": "ES2020",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        // We do want to emit if needed:
+        // "noEmit": false,
+        // but it's optional if you're running directly with ts-node.
+    },
+    "include": [
+        "prisma/**/*.ts"
+    ]
+}
