@@ -23,7 +23,7 @@ export default function Document(props: DocumentHeadTagsProps) {
         />
         <DocumentHeadTags {...props} />
       </Head>
-      <body>
+      <body style={{ margin: "0px" }}>
         <Main />
         <NextScript />
       </body>

@@ -2,10 +2,12 @@ import { usePathname } from "next/navigation";
 
 //*lodash
 import includes from "lodash/includes";
+import startsWith from "lodash/startsWith";
 
 //*components
 import Minimal from "./Minimal";
 import Main from "./Main";
+import AdminMain from "./AdminMain";
 
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();
@@ -23,6 +25,8 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
     )
   )
     return <Minimal>{children}</Minimal>;
+  else if (startsWith(pathName, "/admin"))
+    return <AdminMain>{children}</AdminMain>;
   else return <Main>{children}</Main>;
 }
 
