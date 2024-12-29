@@ -2,10 +2,10 @@ import Link from "next/link";
 
 //*components
 import DataGrid from "@/components/Table/DataGrid";
+import { Page } from "@/components/Box";
 import AddEditInstitutionDialog from "./AddEditInstitutionDialog";
 
 //*mui
-import Box from "@mui/material/Box";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
@@ -21,8 +21,10 @@ function ContentManager() {
       field: "name",
       headerName: "Name",
       flex: 1,
-      renderCell: ({ formattedValue }) => {
-        return <Link href={""}>{formattedValue}</Link>;
+      renderCell: ({ formattedValue, id }) => {
+        return (
+          <Link href={`/admin/contentmanager/${id}`}>{formattedValue}</Link>
+        );
       },
     },
     {
@@ -49,15 +51,19 @@ function ContentManager() {
   ];
 
   return (
-    <Box sx={{ p: 2 }}>
-      <AddEditInstitutionDialog />
+    <Page
+      leftButton={[]}
+      rightButton={[
+        <AddEditInstitutionDialog key="AddEditInstitutionDialog" />,
+      ]}
+    >
       <DataGrid
-        gap={16}
+        gap={17}
         data={data}
         columns={columns}
         loading={status === "pending"}
       />
-    </Box>
+    </Page>
   );
 }
 

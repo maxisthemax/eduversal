@@ -57,6 +57,17 @@ export default async function institutionsHandler(
     }
   } catch (error) {
     // Handle any errors
+    switch (error.code) {
+      case "P2002":
+        return res.status(500).json({
+          message: `Duplicate field: ${error.meta.target.join(", ")}`,
+          error,
+        });
+
+      default:
+        break;
+    }
+
     return res.status(500).json({
       message: error.message ? error.message : "Failed to process request",
       error,

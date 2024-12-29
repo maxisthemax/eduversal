@@ -2,7 +2,7 @@
 import Box from "@mui/material/Box";
 
 function Admin() {
-  return <Box>Admin</Box>;
+  return <Box></Box>;
 }
 
 export default Admin;
