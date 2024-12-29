@@ -11,7 +11,10 @@ import { GridColDef } from "@mui/x-data-grid";
 import { useInstitutions } from "@/data/institutions";
 
 function ContentManager() {
+  //*data
   const { data } = useInstitutions();
+
+  //*const
   const columns: GridColDef<(typeof data)[number]>[] = [
     {
       field: "name",
