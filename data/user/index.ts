@@ -1,7 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-
 //*utils
-import axios from "@/utils/axios";
+import { useQueryFetch } from "@/helpers/queryHelpers";
 
 //*interface
 interface UserData {
@@ -21,15 +19,9 @@ interface UserData {
 }
 
 export const useUser = () => {
-  const { data, status } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () => {
-      const res = await axios.get("user");
-      return res;
-    },
-  });
+  const { data, status } = useQueryFetch(["user"], "user");
 
-  const userData = data?.data as UserData;
+  const userData = data as UserData;
 
   return { data: userData, status };
 };

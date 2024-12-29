@@ -20,7 +20,7 @@ export const defaultSession: SessionData = {
 
 export const sessionOptions: SessionOptions = {
   password: process.env.IRON_SESSION_PASSWORD as string,
-  cookieName: "myapp_secure_session",
+  cookieName: "eduversal_session",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",
   },

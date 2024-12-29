@@ -1,9 +1,10 @@
 //*mui
 import { DataGrid as DataGridMui, GridToolbar } from "@mui/x-data-grid";
 
-function DataGrid({ data, columns }) {
+function DataGrid({ data, columns, loading = false }) {
   return (
     <DataGridMui
+      loading={loading}
       disableColumnSelector
       disableDensitySelector
       density="compact"

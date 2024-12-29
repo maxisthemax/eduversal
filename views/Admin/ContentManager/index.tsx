@@ -12,10 +12,10 @@ import { useInstitutions } from "@/data/institutions";
 
 function ContentManager() {
   //*data
-  const { data } = useInstitutions();
+  const { data, status } = useInstitutions();
 
   //*const
-  const columns: GridColDef<(typeof data)[number]>[] = [
+  const columns: GridColDef<(typeof data)[]>[] = [
     {
       field: "name",
       headerName: "Name",
@@ -44,7 +44,7 @@ function ContentManager() {
 
   return (
     <Box sx={{ p: 2 }}>
-      <DataGrid data={data} columns={columns} />
+      <DataGrid data={data} columns={columns} loading={status === "pending"} />
     </Box>
   );
 }

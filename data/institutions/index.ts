@@ -1,7 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-
-//*utils
-import axios from "@/utils/axios";
+//*helpers
+import { useQueryFetch } from "@/helpers/queryHelpers";
 
 //*interface
 interface InstitutionType {
@@ -22,15 +20,12 @@ interface Institution {
 }
 
 export const useInstitutions = () => {
-  const { data, status } = useQuery({
-    queryKey: ["admin", "institutions"],
-    queryFn: async () => {
-      const res = await axios.get("admin/institutions");
-      return res;
-    },
-  });
+  const { data, status } = useQueryFetch(
+    ["admin", "institutions"],
+    "admin/institutions"
+  );
 
-  const institutionsData = data?.data as Institution[];
+  const institutionsData = data as Institution[];
   const institutionsDataMemo = institutionsData?.map((institution) => ({
     ...institution,
     type_name_format: institution.type.name,
