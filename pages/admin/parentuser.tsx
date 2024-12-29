@@ -1,8 +1,7 @@
-//*mui
-import Box from "@mui/material/Box";
+import ParentUserView from "@/views/Admin/ParentUser";
 
 function ParentUser() {
-  return <Box>ParentUser</Box>;
+  return <ParentUserView />;
 }
 
 export default ParentUser;
