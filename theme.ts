@@ -16,6 +16,7 @@ const baseTheme: ThemeOptions = {
     MuiSelect: {
       defaultProps: { size: "small" },
     },
+    MuiButton: { defaultProps: { size: "small" } },
   },
 };
 

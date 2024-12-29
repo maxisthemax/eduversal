@@ -74,6 +74,7 @@ export default async function signIn(
     session.id = user.id;
     session.email = user.email;
     session.role = user.role;
+    session.name = user.last_name + " " + user.first_name;
     session.isLoggedIn = true;
     await session.save();
 

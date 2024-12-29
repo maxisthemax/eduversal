@@ -129,3 +129,16 @@ export async function checkRateLimit(
   session.rateLimitLastAt = new Date();
   session.save();
 }
+
+export async function getCreatedByUpdatedBy(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const session = await getSession(req, res);
+  return {
+    created_by_name: session.name,
+    updated_by_name: session.name,
+    created_by_user_id: session.id,
+    updated_by_user_id: session.id,
+  };
+}

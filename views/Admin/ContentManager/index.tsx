@@ -2,6 +2,7 @@ import Link from "next/link";
 
 //*components
 import DataGrid from "@/components/Table/DataGrid";
+import AddEditInstitutionDialog from "./AddEditInstitutionDialog";
 
 //*mui
 import Box from "@mui/material/Box";
@@ -35,6 +36,11 @@ function ContentManager() {
       flex: 1,
     },
     {
+      field: "created_by_name",
+      headerName: "Created By",
+      flex: 1,
+    },
+    {
       field: "created_at",
       headerName: "Created At",
       type: "date",
@@ -44,7 +50,13 @@ function ContentManager() {
 
   return (
     <Box sx={{ p: 2 }}>
-      <DataGrid data={data} columns={columns} loading={status === "pending"} />
+      <AddEditInstitutionDialog />
+      <DataGrid
+        gap={16}
+        data={data}
+        columns={columns}
+        loading={status === "pending"}
+      />
     </Box>
   );
 }

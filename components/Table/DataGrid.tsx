@@ -1,9 +1,13 @@
 //*mui
 import { DataGrid as DataGridMui, GridToolbar } from "@mui/x-data-grid";
 
-function DataGrid({ data, columns, loading = false }) {
+//*helpers
+import { getFullHeightSize } from "@/helpers/stringHelpers";
+
+function DataGrid({ data, columns, loading = false, gap = 0 }) {
   return (
     <DataGridMui
+      sx={{ height: getFullHeightSize(gap) }}
       loading={loading}
       disableColumnSelector
       disableDensitySelector

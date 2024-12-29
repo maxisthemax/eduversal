@@ -50,8 +50,13 @@ model Institution {
   type_id       String
   type          InstitutionType @relation(fields: [type_id], references: [id])
   academicYears AcademicYear[]
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @updatedAt
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
 }
 
 model AcademicYear {
@@ -60,8 +65,13 @@ model AcademicYear {
   institution_id String
   institution    Institution @relation(fields: [institution_id], references: [id])
   classes        Class[]
-  created_at     DateTime    @default(now())
-  updated_at     DateTime    @updatedAt
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
 
   @@index([institution_id])
 }
@@ -76,26 +86,41 @@ model Class {
   academicYear     AcademicYear @relation(fields: [academic_year_id], references: [id])
   start_date       DateTime
   end_date         DateTime
-  created_at       DateTime     @default(now())
-  updated_at       DateTime     @updatedAt
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
 
   @@index([academic_year_id])
 }
 
 model Standard {
-  id         String   @id @default(cuid())
-  name       String
-  classes    Class[]
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id      String  @id @default(cuid())
+  name    String
+  classes Class[]
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
 }
 
 model InstitutionType {
   id           String        @id @default(cuid())
   name         String
   institutions Institution[]
-  created_at   DateTime      @default(now())
-  updated_at   DateTime      @updatedAt
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
 }
 
 enum VerificationType {

@@ -3,195 +3,6 @@ import bcrypt from "bcrypt";
 
 async function main() {
   /**
-   * 1. Institution Types
-   */
-  const preschool = await prisma.institutionType.create({
-    data: {
-      name: "Preschool",
-    },
-  });
-
-  const primary = await prisma.institutionType.create({
-    data: {
-      name: "Primary School",
-    },
-  });
-
-  /**
-   * 2. Institutions
-   *    - references one of the InstitutionTypes
-   */
-  const institutionA = await prisma.institution.create({
-    data: {
-      name: "Tadika ABC",
-      code: "TABC",
-      type: {
-        connect: { id: preschool.id },
-      },
-    },
-  });
-
-  const institutionB = await prisma.institution.create({
-    data: {
-      name: "Sekolah Menengah Kebangsaan Damansara Utama",
-      code: "SMKDU",
-      type: {
-        connect: { id: primary.id },
-      },
-    },
-  });
-
-  /**
-   * 3. Academic Years
-   *    - each references an Institution
-   */
-  const year2024_1 = await prisma.academicYear.create({
-    data: {
-      name: "2024",
-      institution: {
-        connect: { id: institutionA.id },
-      },
-    },
-  });
-
-  const year2025_1 = await prisma.academicYear.create({
-    data: {
-      name: "2024",
-      institution: {
-        connect: { id: institutionA.id },
-      },
-    },
-  });
-
-  const year2024_2 = await prisma.academicYear.create({
-    data: {
-      name: "2024",
-      institution: {
-        connect: { id: institutionB.id },
-      },
-    },
-  });
-
-  /**
-   * 4. Standards
-   */
-  const standardOne = await prisma.standard.create({
-    data: {
-      name: "Standard 1",
-    },
-  });
-
-  const standardTwo = await prisma.standard.create({
-    data: {
-      name: "Standard 2",
-    },
-  });
-
-  const standardThree = await prisma.standard.create({
-    data: {
-      name: "Standard 3",
-    },
-  });
-
-  /**
-   * 5. Classes for 2024
-   *    - references Standard and AcademicYear
-   */
-  const classA = await prisma.class.create({
-    data: {
-      name: "Class A",
-      access_code: "CLASS-A-2024",
-      standard: {
-        connect: { id: standardOne.id },
-      },
-      academicYear: {
-        connect: { id: year2024_1.id },
-      },
-      start_date: new Date("2024-09-01"),
-      end_date: new Date("2025-06-20"),
-    },
-  });
-
-  const classB = await prisma.class.create({
-    data: {
-      name: "Class B",
-      access_code: "CLASS-B-2024",
-      standard: {
-        connect: { id: standardOne.id },
-      },
-      academicYear: {
-        connect: { id: year2024_2.id },
-      },
-      start_date: new Date("2024-09-01"),
-      end_date: new Date("2025-06-20"),
-    },
-  });
-
-  const classC = await prisma.class.create({
-    data: {
-      name: "Class C",
-      access_code: "CLASS-C-2024",
-      standard: {
-        connect: { id: standardTwo.id },
-      },
-      academicYear: {
-        connect: { id: year2024_1.id },
-      },
-      start_date: new Date("2024-09-01"),
-      end_date: new Date("2025-06-20"),
-    },
-  });
-
-  const classD = await prisma.class.create({
-    data: {
-      name: "Class D",
-      access_code: "CLASS-D-2024",
-      standard: {
-        connect: { id: standardThree.id },
-      },
-      academicYear: {
-        connect: { id: year2024_2.id },
-      },
-      start_date: new Date("2024-09-01"),
-      end_date: new Date("2025-06-20"),
-    },
-  });
-
-  /**
-   * 5. Classes for 2025
-   *    - references Standard and AcademicYear
-   */
-  const classE = await prisma.class.create({
-    data: {
-      name: "Class E",
-      access_code: "CLASS-E-2025",
-      standard: {
-        connect: { id: standardOne.id },
-      },
-      academicYear: {
-        connect: { id: year2025_1.id },
-      },
-      start_date: new Date("2025-09-01"),
-      end_date: new Date("2026-06-20"),
-    },
-  });
-
-  const classF = await prisma.class.create({
-    data: {
-      name: "Class F",
-      access_code: "CLASS-F-2025",
-      standard: {
-        connect: { id: standardTwo.id },
-      },
-      academicYear: {
-        connect: { id: year2025_1.id },
-      },
-      start_date: new Date("2025-09-01"),
-      end_date: new Date("2026-06-20"),
-    },
-  });
-
-  /**
    * 6. Users
    */
   const saltRounds = 10;
@@ -231,6 +42,259 @@ async function main() {
       city: "OtherCity",
       is_verified: true,
       role: "ADMIN",
+    },
+  });
+
+  /**
+   * 1. Institution Types
+   */
+  const preschool = await prisma.institutionType.create({
+    data: {
+      name: "Preschool",
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const primary = await prisma.institutionType.create({
+    data: {
+      name: "Primary School",
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  /**
+   * 2. Institutions
+   *    - references one of the InstitutionTypes
+   */
+  const institutionA = await prisma.institution.create({
+    data: {
+      name: "Tadika ABC",
+      code: "TABC",
+      type: {
+        connect: { id: preschool.id },
+      },
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const institutionB = await prisma.institution.create({
+    data: {
+      name: "Sekolah Menengah Kebangsaan Damansara Utama",
+      code: "SMKDU",
+      type: {
+        connect: { id: primary.id },
+      },
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  /**
+   * 3. Academic Years
+   *    - each references an Institution
+   */
+  const year2024_1 = await prisma.academicYear.create({
+    data: {
+      name: "2024",
+      institution: {
+        connect: { id: institutionA.id },
+      },
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const year2025_1 = await prisma.academicYear.create({
+    data: {
+      name: "2024",
+      institution: {
+        connect: { id: institutionA.id },
+      },
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const year2024_2 = await prisma.academicYear.create({
+    data: {
+      name: "2024",
+      institution: {
+        connect: { id: institutionB.id },
+      },
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  /**
+   * 4. Standards
+   */
+  const standardOne = await prisma.standard.create({
+    data: {
+      name: "Standard 1",
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const standardTwo = await prisma.standard.create({
+    data: {
+      name: "Standard 2",
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const standardThree = await prisma.standard.create({
+    data: {
+      name: "Standard 3",
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  /**
+   * 5. Classes for 2024
+   *    - references Standard and AcademicYear
+   */
+  const classA = await prisma.class.create({
+    data: {
+      name: "Class A",
+      access_code: "CLASS-A-2024",
+      standard: {
+        connect: { id: standardOne.id },
+      },
+      academicYear: {
+        connect: { id: year2024_1.id },
+      },
+      start_date: new Date("2024-09-01"),
+      end_date: new Date("2025-06-20"),
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const classB = await prisma.class.create({
+    data: {
+      name: "Class B",
+      access_code: "CLASS-B-2024",
+      standard: {
+        connect: { id: standardOne.id },
+      },
+      academicYear: {
+        connect: { id: year2024_2.id },
+      },
+      start_date: new Date("2024-09-01"),
+      end_date: new Date("2025-06-20"),
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const classC = await prisma.class.create({
+    data: {
+      name: "Class C",
+      access_code: "CLASS-C-2024",
+      standard: {
+        connect: { id: standardTwo.id },
+      },
+      academicYear: {
+        connect: { id: year2024_1.id },
+      },
+      start_date: new Date("2024-09-01"),
+      end_date: new Date("2025-06-20"),
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const classD = await prisma.class.create({
+    data: {
+      name: "Class D",
+      access_code: "CLASS-D-2024",
+      standard: {
+        connect: { id: standardThree.id },
+      },
+      academicYear: {
+        connect: { id: year2024_2.id },
+      },
+      start_date: new Date("2024-09-01"),
+      end_date: new Date("2025-06-20"),
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  /**
+   * 5. Classes for 2025
+   *    - references Standard and AcademicYear
+   */
+  const classE = await prisma.class.create({
+    data: {
+      name: "Class E",
+      access_code: "CLASS-E-2025",
+      standard: {
+        connect: { id: standardOne.id },
+      },
+      academicYear: {
+        connect: { id: year2025_1.id },
+      },
+      start_date: new Date("2025-09-01"),
+      end_date: new Date("2026-06-20"),
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const classF = await prisma.class.create({
+    data: {
+      name: "Class F",
+      access_code: "CLASS-F-2025",
+      standard: {
+        connect: { id: standardTwo.id },
+      },
+      academicYear: {
+        connect: { id: year2025_1.id },
+      },
+      start_date: new Date("2025-09-01"),
+      end_date: new Date("2026-06-20"),
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
     },
   });
 
