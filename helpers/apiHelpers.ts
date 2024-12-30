@@ -13,15 +13,19 @@ export function validateRequiredFields(
   res: NextApiResponse,
   fields: string[]
 ): boolean {
-  const missingFieldsBody = fields.filter((field) => {
-    const value = req.body[field];
-    return value === undefined || value === null || value === "";
-  });
+  const missingFieldsBody =
+    req.body &&
+    fields.filter((field) => {
+      const value = req.body[field];
+      return value === undefined || value === null || value === "";
+    });
 
-  const missingFieldsQuery = fields.filter((field) => {
-    const value = req.body[field];
-    return value === undefined || value === null || value === "";
-  });
+  const missingFieldsQuery =
+    req.query &&
+    fields.filter((field) => {
+      const value = req.query[field];
+      return value === undefined || value === null || value === "";
+    });
 
   if (missingFieldsBody.length > 0) {
     const formattedFields = formatList(missingFieldsBody);

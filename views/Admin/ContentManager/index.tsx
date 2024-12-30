@@ -9,7 +9,7 @@ import AddEditInstitutionDialog from "./AddEditInstitutionDialog";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
-import { useInstitutions } from "@/data/institutions";
+import { useInstitutions } from "@/data/institutions/institutions";
 
 function ContentManager() {
   //*data
