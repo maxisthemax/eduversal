@@ -9,9 +9,9 @@ import AddEditInstitutionDialog from "./AddEditInstitutionDialog";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
-import { useInstitutions } from "@/data/institutions";
+import { useInstitutions } from "@/data/institutions/institutions";
 
-function ContentManager() {
+function Institution() {
   //*data
   const { institutionsData, status } = useInstitutions();
 
@@ -22,9 +22,7 @@ function ContentManager() {
       headerName: "Name",
       flex: 1,
       renderCell: ({ formattedValue, id }) => {
-        return (
-          <Link href={`/admin/contentmanager/${id}`}>{formattedValue}</Link>
-        );
+        return <Link href={`/admin/institution/${id}`}>{formattedValue}</Link>;
       },
     },
     {
@@ -53,7 +51,7 @@ function ContentManager() {
   return (
     <Page
       leftButton={[]}
-      links={[{ href: "/admin/contentmanager", title: "Institutions" }]}
+      links={[{ href: "/admin/institution", title: "Institutions" }]}
       rightButton={[
         <AddEditInstitutionDialog key="AddEditInstitutionDialog" />,
       ]}
@@ -69,4 +67,4 @@ function ContentManager() {
   );
 }
 
-export default ContentManager;
+export default Institution;

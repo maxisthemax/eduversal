@@ -7,21 +7,26 @@ import { SessionData, sessionOptions } from "@/lib/session";
 
 //*lodash
 import startCase from "lodash/startCase";
+import isEmpty from "lodash/isEmpty";
 
 export function validateRequiredFields(
   req: NextApiRequest,
   res: NextApiResponse,
   fields: string[]
 ): boolean {
-  const missingFieldsBody = fields.filter((field) => {
-    const value = req.body[field];
-    return value === undefined || value === null || value === "";
-  });
+  const missingFieldsBody =
+    !isEmpty(req.body) &&
+    fields.filter((field) => {
+      const value = req.body[field];
+      return value === undefined || value === null || value === "";
+    });
 
-  const missingFieldsQuery = fields.filter((field) => {
-    const value = req.body[field];
-    return value === undefined || value === null || value === "";
-  });
+  const missingFieldsQuery =
+    !isEmpty(req.query) &&
+    fields.filter((field) => {
+      const value = req.query[field];
+      return value === undefined || value === null || value === "";
+    });
 
   if (missingFieldsBody.length > 0) {
     const formattedFields = formatList(missingFieldsBody);

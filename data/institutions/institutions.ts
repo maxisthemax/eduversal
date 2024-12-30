@@ -35,6 +35,7 @@ export interface InstitutionCreate {
   code: string;
 }
 
+// Custom hook to fetch and manage institutions data
 export function useInstitutions(institutionId?: string): {
   institutionsData: InstitutionData[];
   institutionsDataById: Record<string, InstitutionData>;
@@ -42,16 +43,18 @@ export function useInstitutions(institutionId?: string): {
   addInstitution: (institution: InstitutionCreate) => Promise<void>;
   status: string;
 } {
+  // Fetch institutions data using custom query hook
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "institutions"],
     "admin/institutions"
   );
 
-  const institutionsData = data as InstitutionData[];
+  const institutionsQueryData = data as InstitutionData[];
 
-  const institutionsDataMemo = useMemo(() => {
-    if (!isLoading && institutionsData) {
-      const mapData = institutionsData.map((data) => {
+  // Memoize institutions data with additional formatting
+  const institutionsData = useMemo(() => {
+    if (!isLoading && institutionsQueryData) {
+      const mapData = institutionsQueryData.map((data) => {
         return {
           ...data,
           type_name_format: data.type.name,
@@ -62,22 +65,24 @@ export function useInstitutions(institutionId?: string): {
 
       return mapData;
     } else return [];
-  }, [institutionsData, isLoading]);
+  }, [institutionsQueryData, isLoading]);
 
+  // Memoize institutions data by ID
   const institutionsDataById = useMemo(() => {
-    return keyBy(institutionsDataMemo, "id");
-  }, [institutionsDataMemo]);
+    return keyBy(institutionsData, "id");
+  }, [institutionsData]);
 
+  // Get specific institution data by ID
   const institutionData = institutionsDataById[institutionId];
 
-  //*Add institution
+  // Add institution
   const addInstitution = async (institution: InstitutionCreate) => {
     await axios.post("admin/institutions", institution);
     refetch();
   };
 
   return {
-    institutionsData: institutionsDataMemo,
+    institutionsData,
     institutionsDataById,
     institutionData,
     addInstitution,

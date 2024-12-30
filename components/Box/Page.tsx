@@ -41,7 +41,7 @@ function Page({
     <Box sx={{ pl: 2, pr: 2, pt: 1, pb: 1 }}>
       {title && <Typography variant="h6">{title}</Typography>}
       <Head>
-        <title>{title}</title>
+        <title>{title ?? findCurrentPathname.title}</title>
       </Head>
       <Stack
         direction="row"

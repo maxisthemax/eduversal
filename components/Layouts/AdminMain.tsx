@@ -30,7 +30,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
   //*define
   const pathname = usePathname();
   const [open, setOpen] = useState({
-    restrictContent: pathname === "/admin/contentmanager",
+    restrictContent: pathname === "/admin/institution",
     userlist: pathname === "/admin/parentuser",
   });
   const { push } = useRouter();
@@ -85,9 +85,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 id: "restrictContent",
                 title: "Restrict Content",
                 icon: "lock",
-                list: [
-                  { title: "Content Manager", href: "/admin/contentmanager" },
-                ],
+                list: [{ title: "Institutions", href: "/admin/institution" }],
               },
               {
                 id: "userlist",

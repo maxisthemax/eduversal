@@ -63,6 +63,9 @@ model AcademicYear {
   id             String      @id @default(cuid())
   name           String
   institution_id String
+  start_date     DateTime
+  end_date       DateTime
+  year           Int
   institution    Institution @relation(fields: [institution_id], references: [id])
   classes        Class[]
 
