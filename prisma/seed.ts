@@ -110,9 +110,6 @@ async function main() {
       institution: {
         connect: { id: institutionA.id },
       },
-      year: 2024,
-      start_date: new Date("2024-01-01"),
-      end_date: new Date("2024-12-31"),
       created_by_user_id: userAdmin.id,
       updated_by_user_id: userAdmin.id,
       created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
@@ -122,13 +119,10 @@ async function main() {
 
   const year2025_1 = await prisma.academicYear.create({
     data: {
-      name: "2025",
+      name: "2024",
       institution: {
         connect: { id: institutionA.id },
       },
-      start_date: new Date("2025-01-01"),
-      end_date: new Date("2025-12-31"),
-      year: 2025,
       created_by_user_id: userAdmin.id,
       updated_by_user_id: userAdmin.id,
       created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
@@ -142,9 +136,6 @@ async function main() {
       institution: {
         connect: { id: institutionB.id },
       },
-      start_date: new Date("2024-01-01"),
-      end_date: new Date("2024-12-31"),
-      year: 2024,
       created_by_user_id: userAdmin.id,
       updated_by_user_id: userAdmin.id,
       created_by_name: userAdmin.first_name + " " + userAdmin.last_name,

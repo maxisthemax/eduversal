@@ -47,11 +47,11 @@ export function useInstitutions(institutionId?: string): {
     "admin/institutions"
   );
 
-  const institutionsQueryData = data as InstitutionData[];
+  const institutionsData = data as InstitutionData[];
 
-  const institutionsData = useMemo(() => {
-    if (!isLoading && institutionsQueryData) {
-      const mapData = institutionsQueryData.map((data) => {
+  const institutionsDataMemo = useMemo(() => {
+    if (!isLoading && institutionsData) {
+      const mapData = institutionsData.map((data) => {
         return {
           ...data,
           type_name_format: data.type.name,
@@ -62,11 +62,11 @@ export function useInstitutions(institutionId?: string): {
 
       return mapData;
     } else return [];
-  }, [institutionsQueryData, isLoading]);
+  }, [institutionsData, isLoading]);
 
   const institutionsDataById = useMemo(() => {
-    return keyBy(institutionsData, "id");
-  }, [institutionsData]);
+    return keyBy(institutionsDataMemo, "id");
+  }, [institutionsDataMemo]);
 
   const institutionData = institutionsDataById[institutionId];
 
@@ -77,7 +77,7 @@ export function useInstitutions(institutionId?: string): {
   };
 
   return {
-    institutionsData,
+    institutionsData: institutionsDataMemo,
     institutionsDataById,
     institutionData,
     addInstitution,

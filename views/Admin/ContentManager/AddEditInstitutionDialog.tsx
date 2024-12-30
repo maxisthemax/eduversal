@@ -24,7 +24,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
-import { useInstitutions } from "@/data/institutions/institutions";
+import { useInstitutions } from "@/data/institutions";
 
 //*validation
 const validationSchema = yup.object({
@@ -82,16 +82,17 @@ function AddEditInstitutionDialogForm({
   institutionId?: string;
   handleClose: () => void;
 }) {
-  const { addInstitution, institutionData } = useInstitutions(institutionId);
+  const { addInstitution, dataById } = useInstitutions();
+  const defaultData = institutionId ? dataById[institutionId] : undefined;
 
   return (
     <Formik
       initialValues={
-        mode === "edit" && institutionData
+        mode === "edit" && defaultData
           ? {
-              name: institutionData.name,
-              type_id: institutionData.type_id,
-              code: institutionData.code,
+              name: defaultData.name,
+              type_id: defaultData.type_id,
+              code: defaultData.code,
             }
           : {
               name: "",
