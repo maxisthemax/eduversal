@@ -13,10 +13,10 @@ import { useInstitutions } from "@/data/institutions";
 
 function ContentManager() {
   //*data
-  const { data, status } = useInstitutions();
+  const { institutionsData, status } = useInstitutions();
 
   //*const
-  const columns: GridColDef<(typeof data)[]>[] = [
+  const columns: GridColDef<(typeof institutionsData)[]>[] = [
     {
       field: "name",
       headerName: "Name",
@@ -53,13 +53,15 @@ function ContentManager() {
   return (
     <Page
       leftButton={[]}
+      links={[{ href: "/admin/contentmanager", title: "Institutions" }]}
       rightButton={[
         <AddEditInstitutionDialog key="AddEditInstitutionDialog" />,
       ]}
+      isLoading={status === "pending"}
     >
       <DataGrid
-        gap={17}
-        data={data}
+        gap={16}
+        data={institutionsData}
         columns={columns}
         loading={status === "pending"}
       />

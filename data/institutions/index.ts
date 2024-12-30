@@ -17,7 +17,7 @@ interface InstitutionType {
   updated_at: string;
 }
 
-interface Institution {
+export interface InstitutionData {
   id: string;
   name: string;
   type_id: string;
@@ -35,13 +35,19 @@ export interface InstitutionCreate {
   code: string;
 }
 
-export const useInstitutions = () => {
+export function useInstitutions(institutionId?: string): {
+  institutionsData: InstitutionData[];
+  institutionsDataById: Record<string, InstitutionData>;
+  institutionData: InstitutionData;
+  addInstitution: (institution: InstitutionCreate) => Promise<void>;
+  status: string;
+} {
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "institutions"],
     "admin/institutions"
   );
 
-  const institutionsData = data as Institution[];
+  const institutionsData = data as InstitutionData[];
 
   const institutionsDataMemo = useMemo(() => {
     if (!isLoading && institutionsData) {
@@ -62,6 +68,8 @@ export const useInstitutions = () => {
     return keyBy(institutionsDataMemo, "id");
   }, [institutionsDataMemo]);
 
+  const institutionData = institutionsDataById[institutionId];
+
   //*Add institution
   const addInstitution = async (institution: InstitutionCreate) => {
     await axios.post("admin/institutions", institution);
@@ -69,9 +77,10 @@ export const useInstitutions = () => {
   };
 
   return {
-    data: institutionsDataMemo,
-    dataById: institutionsDataById,
+    institutionsData: institutionsDataMemo,
+    institutionsDataById,
+    institutionData,
     addInstitution,
     status,
   };
-};
+}
