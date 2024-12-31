@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 //*components
 import { Page } from "@/components/Box";
 import DataGrid from "@/components/Table/DataGrid";
+import AddEditAcademicYearDialog from "./AddEditAcademicYearDialog";
 
 //*mui
 import { GridColDef } from "@mui/x-data-grid";
@@ -65,7 +66,9 @@ function AcademicYear() {
         },
       ]}
       leftButton={[]}
-      rightButton={[]}
+      rightButton={[
+        <AddEditAcademicYearDialog key="addEditAcademicYearDialog" />,
+      ]}
     >
       <DataGrid gap={16} columns={columns} data={academicYearsData} />
     </Page>

@@ -26,12 +26,11 @@ export interface AcademicYearCreate {
   year: number;
   start_date: Date;
   end_date: Date;
-  institution_id: string;
 }
 
 export function useAcademicYears(
   institutionId: string,
-  academic_year_id?: string
+  academicYearId?: string
 ): {
   academicYearsData: AcademicYearData[];
   academicYearsDataById: Record<string, AcademicYearData>;
@@ -70,11 +69,14 @@ export function useAcademicYears(
   }, [academicYearsData]);
 
   // Get specific academic year data by institutionId
-  const academicYearData = academicYearsDataById[academic_year_id];
+  const academicYearData = academicYearsDataById[academicYearId];
 
   // Add academic year
   const addAcademicYear = async (academicYear: AcademicYearCreate) => {
-    await axios.post("admin/academicYears", academicYear);
+    await axios.post(`admin/institutions/${institutionId}/academicYears`, {
+      ...academicYear,
+      institution_id: institutionId,
+    });
     refetch();
   };
 
