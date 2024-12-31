@@ -5,9 +5,12 @@ import { useRouter } from "next/navigation";
 
 //*components
 import { useCustomDialog } from "@/components/Dialog";
-import { MobileNumberForm, TextFieldForm } from "@/components/Form";
+import {
+  MobileNumberForm,
+  TextFieldForm,
+  StateSelectTextFieldForm,
+} from "@/components/Form";
 import { OverlayBox } from "@/components/Box";
-import StateSelectTextFieldForm from "@/components/Form/StateSelectTextFieldForm";
 
 //*mui
 import Button from "@mui/material/Button";

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getIronSession } from "iron-session";
-import dayjs from "dayjs";
+import { differenceInMinutes } from "date-fns";
 
 //*lib
 import { SessionData, sessionOptions } from "@/lib/session";
@@ -118,7 +118,7 @@ export async function checkRateLimit(
   if (
     session.rateLimit &&
     session.rateLimit > limit &&
-    dayjs().diff(dayjs(session.rateLimitLastAt), "minute") < 1
+    differenceInMinutes(new Date(), new Date(session.rateLimitLastAt)) < 1
   ) {
     return res.status(429).json({
       message: "Too many requests, please try again later",
@@ -129,7 +129,7 @@ export async function checkRateLimit(
   // Reset rate limit if more than 1 minute has passed
   if (
     !session.rateLimit ||
-    dayjs().diff(dayjs(session.rateLimitLastAt), "minute") >= 1
+    differenceInMinutes(new Date(), new Date(session.rateLimitLastAt)) >= 1
   ) {
     session.rateLimit = 0;
   }

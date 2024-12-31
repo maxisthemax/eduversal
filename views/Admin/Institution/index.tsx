@@ -49,12 +49,12 @@ function Institution() {
     {
       field: "button",
       headerName: "",
-      flex: 1,
       renderCell: ({ id }) => {
         return (
           <AddEditInstitutionDialog mode="edit" institutionId={id as string} />
         );
       },
+      minWidth: 100,
     },
   ];
 

@@ -4,10 +4,9 @@ import { Form, Formik } from "formik";
 import { useRouter, useSearchParams } from "next/navigation";
 
 //*components
-import { TextFieldForm } from "@/components/Form";
+import { TextFieldForm, CheckboxForm } from "@/components/Form";
 import { FlexBox, OverlayBox } from "@/components/Box";
 import { useCustomDialog } from "@/components/Dialog";
-import CheckboxForm from "@/components/Form/CheckboxForm";
 
 //*mui
 import Button from "@mui/material/Button";

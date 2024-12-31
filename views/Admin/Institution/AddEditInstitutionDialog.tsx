@@ -123,7 +123,6 @@ function AddEditInstitutionDialogForm({
         values,
         errors,
         isSubmitting,
-        isValid,
         submitForm,
         handleChange,
         resetForm,
@@ -154,12 +153,13 @@ function AddEditInstitutionDialogForm({
                     name="name"
                     label="Name"
                     formProps={formProps}
+                    props={{ required: true }}
                   />
                   <TextFieldForm
                     name="type_id"
                     label="Type"
                     formProps={formProps}
-                    props={{ select: true }}
+                    props={{ select: true, required: true }}
                   >
                     <MenuItem value="cm5an3v0w00027k8cz2bm8ta4">
                       Preschool
@@ -172,6 +172,7 @@ function AddEditInstitutionDialogForm({
                     name="code"
                     label="Code"
                     formProps={formProps}
+                    props={{ required: true }}
                   />
                 </Stack>
               </DialogContent>
@@ -188,7 +189,7 @@ function AddEditInstitutionDialogForm({
                 <LoadingButton
                   variant="contained"
                   loading={isSubmitting}
-                  disabled={!isValid || isSubmitting}
+                  disabled={isSubmitting}
                   type="submit"
                   onClick={submitForm}
                 >
