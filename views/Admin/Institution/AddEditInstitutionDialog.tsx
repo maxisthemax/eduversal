@@ -82,7 +82,8 @@ function AddEditInstitutionDialogForm({
   institutionId?: string;
   handleClose: () => void;
 }) {
-  const { addInstitution, institutionData } = useInstitutions(institutionId);
+  const { addInstitution, updateInstitution, institutionData } =
+    useInstitutions(institutionId);
 
   return (
     <Formik
@@ -109,6 +110,7 @@ function AddEditInstitutionDialogForm({
               code: values.code,
             });
           } else {
+            await updateInstitution(institutionId, values);
           }
           handleClose();
           resetForm();
@@ -159,10 +161,10 @@ function AddEditInstitutionDialogForm({
                     formProps={formProps}
                     props={{ select: true }}
                   >
-                    <MenuItem value="cm59pomtu0002uorwn8r9xl3j">
+                    <MenuItem value="cm5an3v0w00027k8cz2bm8ta4">
                       Preschool
                     </MenuItem>
-                    <MenuItem value="cm59pomuw0003uorwc3j8v4tq">
+                    <MenuItem value="cm5an3v1p00037k8cxq9ekwr8">
                       Primary School
                     </MenuItem>
                   </TextFieldForm>

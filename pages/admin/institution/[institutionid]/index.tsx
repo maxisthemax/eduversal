@@ -1,7 +1,7 @@
-import InstitutionView from "@/views/Admin/Institution/AcademyYear";
+import AcademicYearView from "@/views/Admin/Institution/AcademicYear";
 
-function Institution() {
-  return <InstitutionView />;
+function AcademicYear() {
+  return <AcademicYearView />;
 }
 
-export default Institution;
+export default AcademicYear;

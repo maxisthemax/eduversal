@@ -29,11 +29,13 @@ export interface InstitutionData {
   type_name_format?: string;
 }
 
-export interface InstitutionCreate {
+interface InstitutionCreate {
   name: string;
   type_id: string;
   code: string;
 }
+
+type InstitutionUpdate = Partial<InstitutionCreate>;
 
 // Custom hook to fetch and manage institutions data
 export function useInstitutions(institutionId?: string): {
@@ -41,6 +43,10 @@ export function useInstitutions(institutionId?: string): {
   institutionsDataById: Record<string, InstitutionData>;
   institutionData: InstitutionData;
   addInstitution: (institution: InstitutionCreate) => Promise<void>;
+  updateInstitution: (
+    id: string,
+    institution: InstitutionUpdate
+  ) => Promise<void>;
   status: string;
 } {
   // Fetch institutions data using custom query hook
@@ -81,11 +87,21 @@ export function useInstitutions(institutionId?: string): {
     refetch();
   };
 
+  // Update institution only if there is a difference
+  const updateInstitution = async (
+    id: string,
+    institution: InstitutionUpdate
+  ) => {
+    await axios.put(`admin/institutions`, { id, ...institution });
+    refetch();
+  };
+
   return {
     institutionsData,
     institutionsDataById,
     institutionData,
     addInstitution,
+    updateInstitution,
     status,
   };
 }

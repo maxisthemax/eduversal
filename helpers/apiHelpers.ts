@@ -12,41 +12,46 @@ import isEmpty from "lodash/isEmpty";
 export function validateRequiredFields(
   req: NextApiRequest,
   res: NextApiResponse,
-  fields: string[]
+  fields: string[],
+  type: "body" | "query" = "body"
 ): boolean {
-  const missingFieldsBody =
-    !isEmpty(req.body) &&
-    fields.filter((field) => {
-      const value = req.body[field];
-      return value === undefined || value === null || value === "";
-    });
+  if (type === "body") {
+    const missingFieldsBody =
+      !isEmpty(req.body) &&
+      fields.filter((field) => {
+        const value = req.body[field];
+        return value === undefined || value === null || value === "";
+      });
 
-  const missingFieldsQuery =
-    !isEmpty(req.query) &&
-    fields.filter((field) => {
-      const value = req.query[field];
-      return value === undefined || value === null || value === "";
-    });
+    if (missingFieldsBody.length > 0) {
+      const formattedFields = formatList(missingFieldsBody);
+      const verb = missingFieldsBody.length === 1 ? "is" : "are";
+      const message = `${formattedFields} ${verb} required.`;
 
-  if (missingFieldsBody.length > 0) {
-    const formattedFields = formatList(missingFieldsBody);
-    const verb = missingFieldsBody.length === 1 ? "is" : "are";
-    const message = `${formattedFields} ${verb} required.`;
+      res.status(400).json({ message });
+      return false;
+    }
+    return true;
+  } else if (type === "query") {
+    const missingFieldsQuery =
+      !isEmpty(req.query) &&
+      fields.filter((field) => {
+        const value = req.query[field];
+        return value === undefined || value === null || value === "";
+      });
 
-    res.status(400).json({ message });
-    return false;
+    if (missingFieldsQuery.length > 0) {
+      const formattedFields = formatList(missingFieldsQuery);
+      const verb = missingFieldsQuery.length === 1 ? "is" : "are";
+      const message = `${formattedFields} ${verb} required.`;
+
+      res.status(400).json({ message });
+      return false;
+    }
+    return true;
+  } else {
+    return true;
   }
-
-  if (missingFieldsQuery.length > 0) {
-    const formattedFields = formatList(missingFieldsQuery);
-    const verb = missingFieldsQuery.length === 1 ? "is" : "are";
-    const message = `${formattedFields} ${verb} required.`;
-
-    res.status(400).json({ message });
-    return false;
-  }
-
-  return true;
 }
 
 function formatList(items: string[]): string {
@@ -141,9 +146,13 @@ export async function getCreatedByUpdatedBy(
 ) {
   const session = await getSession(req, res);
   return {
-    created_by_name: session.name,
-    updated_by_name: session.name,
-    created_by_user_id: session.id,
-    updated_by_user_id: session.id,
+    created_by: {
+      created_by_name: session.name,
+      created_by_user_id: session.id,
+    },
+    updated_by: {
+      updated_by_name: session.name,
+      updated_by_user_id: session.id,
+    },
   };
 }

@@ -46,6 +46,16 @@ function Institution() {
       type: "date",
       flex: 1,
     },
+    {
+      field: "button",
+      headerName: "",
+      flex: 1,
+      renderCell: ({ id }) => {
+        return (
+          <AddEditInstitutionDialog mode="edit" institutionId={id as string} />
+        );
+      },
+    },
   ];
 
   return (

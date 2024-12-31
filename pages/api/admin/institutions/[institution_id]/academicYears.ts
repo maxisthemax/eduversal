@@ -59,7 +59,10 @@ export default async function academicYearHandler(
         }
 
         // Get createdBy and updatedBy
-        const createdByUpdatedBy = await getCreatedByUpdatedBy(req, res);
+        const { created_by, updated_by } = await getCreatedByUpdatedBy(
+          req,
+          res
+        );
 
         // Create the new academic year
         const newAcademicYear = await prisma.academicYear.create({
@@ -69,7 +72,8 @@ export default async function academicYearHandler(
             start_date,
             end_date,
             institution_id,
-            ...createdByUpdatedBy,
+            ...created_by,
+            ...updated_by,
           },
         });
 

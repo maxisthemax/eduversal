@@ -11,7 +11,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import { useInstitutions } from "@/data/institutions/institutions";
 import { useAcademicYears } from "@/data/institutions/academicYear";
 
-function Institution() {
+function AcademicYear() {
   const params = useParams();
   const institutionId = params.institutionid as string;
   const { institutionData, status } = useInstitutions(institutionId);
@@ -72,4 +72,4 @@ function Institution() {
   );
 }
 
-export default Institution;
+export default AcademicYear;
