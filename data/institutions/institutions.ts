@@ -5,6 +5,7 @@ import keyBy from "lodash/keyBy";
 
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
+import { checkSameValue } from "@/helpers/objectHelpers";
 
 //*utils
 import axios from "@/utils/axios";
@@ -92,7 +93,16 @@ export function useInstitutions(institutionId?: string): {
     id: string,
     institution: InstitutionUpdate
   ) => {
-    await axios.put(`admin/institutions`, { id, ...institution });
+    const currentInstitution = institutionsDataById[id];
+
+    // Remove fields that have the same value]
+    const { changes, isEmpty } = checkSameValue(
+      currentInstitution,
+      institution
+    );
+    if (isEmpty) return;
+
+    await axios.put(`admin/institutions`, { id, ...changes });
     refetch();
   };
 
