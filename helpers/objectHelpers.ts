@@ -18,8 +18,6 @@ export function checkSameValue(
         delete updatedNewData[key];
       }
     } else if (updatedNewData[key] === currentData[key]) {
-      console.log(updatedNewData[key]);
-      console.log(currentData[key]);
       delete updatedNewData[key];
     }
   });
