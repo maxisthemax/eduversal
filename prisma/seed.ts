@@ -189,7 +189,7 @@ async function main() {
    * 5. Classes for 2024
    *    - references Standard and AcademicYear
    */
-  const classA = await prisma.class.create({
+  const classA = await prisma.classes.create({
     data: {
       name: "Class A",
       access_code: "CLASS-A-2024",
@@ -208,7 +208,7 @@ async function main() {
     },
   });
 
-  const classB = await prisma.class.create({
+  const classB = await prisma.classes.create({
     data: {
       name: "Class B",
       access_code: "CLASS-B-2024",
@@ -227,7 +227,7 @@ async function main() {
     },
   });
 
-  const classC = await prisma.class.create({
+  const classC = await prisma.classes.create({
     data: {
       name: "Class C",
       access_code: "CLASS-C-2024",
@@ -246,7 +246,7 @@ async function main() {
     },
   });
 
-  const classD = await prisma.class.create({
+  const classD = await prisma.classes.create({
     data: {
       name: "Class D",
       access_code: "CLASS-D-2024",
@@ -269,7 +269,7 @@ async function main() {
    * 5. Classes for 2025
    *    - references Standard and AcademicYear
    */
-  const classE = await prisma.class.create({
+  const classE = await prisma.classes.create({
     data: {
       name: "Class E",
       access_code: "CLASS-E-2025",
@@ -288,7 +288,7 @@ async function main() {
     },
   });
 
-  const classF = await prisma.class.create({
+  const classF = await prisma.classes.create({
     data: {
       name: "Class F",
       access_code: "CLASS-F-2025",

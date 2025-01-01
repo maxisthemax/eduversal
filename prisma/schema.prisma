@@ -67,7 +67,7 @@ model AcademicYear {
   end_date       DateTime
   year           Int
   institution    Institution @relation(fields: [institution_id], references: [id])
-  classes        Class[]
+  classes        Classes[]
 
   created_by_user_id String
   created_by_name    String
@@ -79,7 +79,7 @@ model AcademicYear {
   @@index([institution_id])
 }
 
-model Class {
+model Classes {
   id               String       @id @default(cuid())
   name             String
   standard_id      String
@@ -101,9 +101,9 @@ model Class {
 }
 
 model Standard {
-  id      String  @id @default(cuid())
+  id      String    @id @default(cuid())
   name    String
-  classes Class[]
+  classes Classes[]
 
   created_by_user_id String
   created_by_name    String
