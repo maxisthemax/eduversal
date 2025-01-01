@@ -5,6 +5,7 @@ import keyBy from "lodash/keyBy";
 
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
+import { checkSameValue } from "@/helpers/objectHelpers";
 
 //*utils
 import axios from "@/utils/axios";
@@ -28,6 +29,8 @@ export interface AcademicYearCreate {
   end_date: Date;
 }
 
+type AcademicYearUpdate = Partial<AcademicYearCreate>;
+
 export function useAcademicYears(
   institutionId: string,
   academicYearId?: string
@@ -36,6 +39,10 @@ export function useAcademicYears(
   academicYearsDataById: Record<string, AcademicYearData>;
   academicYearData: AcademicYearData;
   addAcademicYear: (academicYear: AcademicYearCreate) => Promise<void>;
+  updateAcademicYear: (
+    id: string,
+    academicYear: AcademicYearUpdate
+  ) => Promise<void>;
   status: string;
 } {
   // Fetch academic years data
@@ -80,11 +87,33 @@ export function useAcademicYears(
     refetch();
   };
 
+  // Update academic year only if there is a difference
+  const updateAcademicYear = async (
+    id: string,
+    academicYear: AcademicYearUpdate
+  ) => {
+    const currentAcademicYear = academicYearsDataById[id];
+
+    // Remove fields that have the same value]
+    const { changes, isEmpty } = checkSameValue(
+      currentAcademicYear,
+      academicYear
+    );
+    if (isEmpty) return;
+
+    await axios.put(`admin/institutions/${institutionId}/academicYears`, {
+      id,
+      ...changes,
+    });
+    refetch();
+  };
+
   return {
     academicYearsData,
     academicYearsDataById,
     academicYearData,
     addAcademicYear,
+    updateAcademicYear,
     status,
   };
 }

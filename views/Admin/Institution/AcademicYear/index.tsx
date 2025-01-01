@@ -53,6 +53,19 @@ function AcademicYear() {
       type: "date",
       flex: 1,
     },
+    {
+      field: "button",
+      headerName: "",
+      renderCell: ({ id }) => {
+        return (
+          <AddEditAcademicYearDialog
+            mode="edit"
+            academicYearId={id as string}
+          />
+        );
+      },
+      minWidth: 100,
+    },
   ];
 
   return (

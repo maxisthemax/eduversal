@@ -1,3 +1,5 @@
+import { isDate } from "date-fns";
+
 //*lodash
 import isEmpty from "lodash/isEmpty";
 
@@ -11,7 +13,13 @@ export function checkSameValue(
 
   // Remove fields that have the same value
   Object.keys(newData).forEach((key) => {
-    if (updatedNewData[key] === currentData[key]) {
+    if (isDate(updatedNewData[key]) || isDate(currentData[key])) {
+      if (updatedNewData[key].toString() === currentData[key].toString()) {
+        delete updatedNewData[key];
+      }
+    } else if (updatedNewData[key] === currentData[key]) {
+      console.log(updatedNewData[key]);
+      console.log(currentData[key]);
       delete updatedNewData[key];
     }
   });

@@ -87,10 +87,8 @@ function AddEditAcademicYearDialogForm({
   const params = useParams();
   const institutionId = params.institutionid as string;
 
-  const { academicYearData, addAcademicYear } = useAcademicYears(
-    institutionId,
-    academicYearId
-  );
+  const { academicYearData, addAcademicYear, updateAcademicYear } =
+    useAcademicYears(institutionId, academicYearId);
 
   return (
     <Formik
@@ -113,8 +111,9 @@ function AddEditAcademicYearDialogForm({
       onSubmit={async (values, { resetForm }) => {
         try {
           if (mode === "add") {
-            await addAcademicYear({ ...values });
+            await addAcademicYear(values);
           } else {
+            await updateAcademicYear(academicYearId, values);
           }
           handleClose();
           resetForm();
@@ -181,6 +180,7 @@ function AddEditAcademicYearDialogForm({
                     props={{ type: "number", required: true }}
                   />
                   <DatePickerForm
+                    mode="start"
                     name="start_date"
                     label="Start Date"
                     formProps={formProps}
@@ -189,6 +189,7 @@ function AddEditAcademicYearDialogForm({
                   <DatePickerForm
                     name="end_date"
                     label="End Date"
+                    mode="end"
                     formProps={formProps}
                     props={{ required: true }}
                   />
