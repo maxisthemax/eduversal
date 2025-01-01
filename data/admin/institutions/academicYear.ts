@@ -82,7 +82,6 @@ export function useAcademicYears(
   const addAcademicYear = async (academicYear: AcademicYearCreate) => {
     await axios.post(`admin/institutions/${institutionId}/academicYears`, {
       ...academicYear,
-      institution_id: institutionId,
     });
     refetch();
   };
@@ -101,10 +100,10 @@ export function useAcademicYears(
     );
     if (isEmpty) return;
 
-    await axios.put(`admin/institutions/${institutionId}/academicYears`, {
-      id,
-      ...changes,
-    });
+    await axios.put(
+      `admin/institutions/${institutionId}/academicYears/${id}`,
+      changes
+    );
     refetch();
   };
 
