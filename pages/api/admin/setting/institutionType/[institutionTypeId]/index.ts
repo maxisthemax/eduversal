@@ -22,7 +22,7 @@ export default async function handler(
         const { institutionTypeId } = req.query;
 
         // Validate required fields
-        if (!validateRequiredFields(req, res, ["institutionTypeId"])) {
+        if (!validateRequiredFields(req, res, ["institutionTypeId"], "query")) {
           return;
         }
 

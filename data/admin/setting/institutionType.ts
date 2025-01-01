@@ -78,7 +78,7 @@ export function useInstitutionTypes(): {
     );
     if (isEmpty) return;
 
-    await axios.put(`admin/setting/institutionType`, { id, ...changes });
+    await axios.put(`admin/setting/institutionType/${id}`, changes);
     refetch();
   };
 

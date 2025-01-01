@@ -13,8 +13,12 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { useInstitutionTypes } from "@/data/admin/setting/institutionType";
 
 export default function ChipsArray() {
-  const { institutionTypesData, status, addInstitutionType } =
-    useInstitutionTypes();
+  const {
+    institutionTypesData,
+    status,
+    addInstitutionType,
+    updateInstitutionType,
+  } = useInstitutionTypes();
   const { handleOpenDialog } = useCustomDialog();
 
   return (
@@ -39,7 +43,24 @@ export default function ChipsArray() {
             }}
           />
           {institutionTypesData.map(({ id, name }) => {
-            return <Chip key={id} label={name} onDelete={() => {}} />;
+            return (
+              <Chip
+                key={id}
+                label={name}
+                onClick={() => {
+                  handleOpenDialog({
+                    allowOutsideClose: false,
+                    title: "Update Institution Type",
+                    textField: { id: "text", defaultValue: name },
+                    onConfirm: async (name: string) => {
+                      await updateInstitutionType(id, { name });
+                    },
+                    placeholder: "Institution Type",
+                    fieldValue: name,
+                  });
+                }}
+              />
+            );
           })}
         </Stack>
       </Stack>
