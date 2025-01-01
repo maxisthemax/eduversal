@@ -48,30 +48,32 @@ function Page({
         spacing={1}
         sx={{ width: "100%", pb: 1, alignItems: "center" }}
       >
-        <Box>
-          <IconButton
-            disableRipple
-            size="small"
-            onClick={() => router.push(links[0].href)}
-            color="primary"
-          >
-            <CustomIcon fontSizeSx="16px" icon="home" />
-          </IconButton>
-          {links.length > 1 && (
+        {links && (
+          <Box>
             <IconButton
               disableRipple
               size="small"
-              onClick={() =>
-                router.push(
-                  links[findIndex(links, { href: pathName }) - 1].href
-                )
-              }
+              onClick={() => router.push(links[0].href)}
               color="primary"
             >
-              <CustomIcon fontSizeSx="16px" icon="arrow_back" />
+              <CustomIcon fontSizeSx="16px" icon="home" />
             </IconButton>
-          )}
-        </Box>
+            {links?.length > 1 && (
+              <IconButton
+                disableRipple
+                size="small"
+                onClick={() =>
+                  router.push(
+                    links[findIndex(links, { href: pathName }) - 1].href
+                  )
+                }
+                color="primary"
+              >
+                <CustomIcon fontSizeSx="16px" icon="arrow_back" />
+              </IconButton>
+            )}
+          </Box>
+        )}
         <Breadcrumbs separator=">">
           {links &&
             links.length > 0 &&

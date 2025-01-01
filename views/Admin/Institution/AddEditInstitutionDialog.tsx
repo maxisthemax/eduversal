@@ -24,7 +24,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
-import { useInstitutions } from "@/data/institutions/institutions";
+import { useInstitutions } from "@/data/admin/institutions/institutions";
 
 //*validation
 const validationSchema = yup.object({

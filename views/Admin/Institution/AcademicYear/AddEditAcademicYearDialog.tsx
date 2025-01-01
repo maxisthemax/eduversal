@@ -25,7 +25,7 @@ import Stack from "@mui/material/Stack";
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
-import { useAcademicYears } from "@/data/institutions/academicYear";
+import { useAcademicYears } from "@/data/admin/institutions/academicYear";
 
 //*validation
 const validationSchema = yup.object({
