@@ -14,7 +14,7 @@ import { useAcademicYears } from "@/data/admin/institutions/academicYear";
 
 function AcademicYear() {
   const params = useParams();
-  const institutionId = params.institutionid as string;
+  const institutionId = params.institutionId as string;
   const { institutionData, status } = useInstitutions(institutionId);
   const { academicYearsData } = useAcademicYears(institutionId);
 

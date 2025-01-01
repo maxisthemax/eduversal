@@ -85,7 +85,7 @@ function AddEditAcademicYearDialogForm({
   handleClose: () => void;
 }) {
   const params = useParams();
-  const institutionId = params.institutionid as string;
+  const institutionId = params.institutionId as string;
 
   const { academicYearData, addAcademicYear, updateAcademicYear } =
     useAcademicYears(institutionId, academicYearId);
