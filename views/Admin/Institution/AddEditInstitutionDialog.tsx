@@ -18,6 +18,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 
 //*helpers
@@ -25,6 +26,7 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
 import { useInstitutions } from "@/data/admin/institutions/institutions";
+import { useInstitutionTypes } from "@/data/admin/setting/institutionType";
 
 //*validation
 const validationSchema = yup.object({
@@ -84,6 +86,9 @@ function AddEditInstitutionDialogForm({
 }) {
   const { addInstitution, updateInstitution, institutionData } =
     useInstitutions(institutionId);
+  const { institutionTypesData, status } = useInstitutionTypes();
+
+  if (status === "pending") return <LinearProgress />;
 
   return (
     <Formik
@@ -161,12 +166,13 @@ function AddEditInstitutionDialogForm({
                     formProps={formProps}
                     props={{ select: true, required: true }}
                   >
-                    <MenuItem value="cm5an3v0w00027k8cz2bm8ta4">
-                      Preschool
-                    </MenuItem>
-                    <MenuItem value="cm5an3v1p00037k8cxq9ekwr8">
-                      Primary School
-                    </MenuItem>
+                    {institutionTypesData.map(({ id, name }) => {
+                      return (
+                        <MenuItem key={id} value={id}>
+                          {name}
+                        </MenuItem>
+                      );
+                    })}
                   </TextFieldForm>
                   <TextFieldForm
                     name="code"
