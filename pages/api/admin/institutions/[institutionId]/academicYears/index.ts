@@ -86,36 +86,9 @@ export default async function academicYearHandler(
         // Return the newly created academic year
         return res.status(201).json({ data: newAcademicYear });
       }
-      case "PUT": {
-        // Update an existing academic year
-        const { id, name, year, start_date, end_date } = req.body;
-
-        // Validate required fields
-        if (!validateRequiredFields(req, res, ["id"], "body")) {
-          return;
-        }
-
-        // Get updatedBy
-        const { updated_by } = await getCreatedByUpdatedBy(req, res);
-
-        // Update the academic year
-        const updatedAcademicYear = await prisma.academicYear.update({
-          where: { id },
-          data: {
-            name,
-            year,
-            start_date,
-            end_date,
-            ...updated_by,
-          },
-        });
-
-        // Return the updated academic year
-        return res.status(200).json({ data: updatedAcademicYear });
-      }
       default:
         // Use handleAllowedMethods for method validation
-        if (handleAllowedMethods(req, res, ["GET", "POST", "PUT"])) return;
+        if (handleAllowedMethods(req, res, ["GET", "POST"])) return;
     }
   } catch (error) {
     // Handle any errors

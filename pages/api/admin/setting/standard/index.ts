@@ -17,36 +17,44 @@ export default async function handler(
 ) {
   try {
     switch (req.method) {
-      case "PUT": {
-        // Get institutionTypeId from query
-        const { institutionTypeId } = req.query;
+      case "GET": {
+        // Fetch all standard types ordered by name in ascending order
+        const standard = await prisma.standard.findMany({
+          orderBy: { name: "asc" },
+        });
 
-        // Validate required fields
-        if (!validateRequiredFields(req, res, ["institutionTypeId"], "query")) {
+        // Return the standard types
+        return res.status(200).json({ data: standard });
+      }
+      case "POST": {
+        // Extract name from request body
+        const { name } = req.body;
+
+        // Validate required fields in request body
+        if (!validateRequiredFields(req, res, ["name"])) {
           return;
         }
 
-        // Update the institution type
-        const { name } = req.body;
+        // Get created_by and updated_by information
+        const { created_by, updated_by } = await getCreatedByUpdatedBy(
+          req,
+          res
+        );
 
-        // Get createdBy and updatedBy
-        const { updated_by } = await getCreatedByUpdatedBy(req, res);
-
-        // Update the institution type
-        const updatedInstitutionType = await prisma.institutionType.update({
-          where: { id: institutionTypeId as string },
+        // Create a new standard type in the database
+        const newStandard = await prisma.standard.create({
           data: {
             name,
+            ...created_by,
             ...updated_by,
           },
         });
-
-        // Return the updated institution
-        return res.status(200).json({ data: updatedInstitutionType });
+        // Return the newly created standard type
+        return res.status(201).json({ data: newStandard });
       }
       default: {
         // Handle unsupported methods
-        if (handleAllowedMethods(req, res, ["PUT"])) return;
+        if (handleAllowedMethods(req, res, ["GET", "POST"])) return;
       }
     }
   } catch (error) {
@@ -57,11 +65,9 @@ export default async function handler(
           message: `Duplicate field: ${error.meta.target.join(", ")}`,
           error,
         });
-
       default:
         break;
     }
-
     // Handle other errors
     return res.status(500).json({
       message: error.message ? error.message : "Failed to process request",

@@ -18,31 +18,31 @@ export default async function handler(
   try {
     switch (req.method) {
       case "PUT": {
-        // Get institutionTypeId from query
-        const { institutionTypeId } = req.query;
+        // Extract standardId from query parameters
+        const { standardId } = req.query;
 
-        // Validate required fields
-        if (!validateRequiredFields(req, res, ["institutionTypeId"], "query")) {
+        // Validate required fields in query parameters
+        if (!validateRequiredFields(req, res, ["standardId"], "query")) {
           return;
         }
 
-        // Update the institution type
+        // Extract name from request body
         const { name } = req.body;
 
-        // Get createdBy and updatedBy
+        // Get updated_by information
         const { updated_by } = await getCreatedByUpdatedBy(req, res);
 
-        // Update the institution type
-        const updatedInstitutionType = await prisma.institutionType.update({
-          where: { id: institutionTypeId as string },
+        // Update the standard in the database
+        const updatedStandard = await prisma.standard.update({
+          where: { id: standardId as string },
           data: {
             name,
             ...updated_by,
           },
         });
 
-        // Return the updated institution
-        return res.status(200).json({ data: updatedInstitutionType });
+        // Return the updated standard
+        return res.status(200).json({ data: updatedStandard });
       }
       default: {
         // Handle unsupported methods
@@ -57,11 +57,9 @@ export default async function handler(
           message: `Duplicate field: ${error.meta.target.join(", ")}`,
           error,
         });
-
       default:
         break;
     }
-
     // Handle other errors
     return res.status(500).json({
       message: error.message ? error.message : "Failed to process request",

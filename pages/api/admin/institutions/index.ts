@@ -61,7 +61,7 @@ export default async function institutionsHandler(
 
       default:
         // Use handleAllowedMethods for method validation
-        if (handleAllowedMethods(req, res, ["GET", "POST", "PUT"])) return;
+        if (handleAllowedMethods(req, res, ["GET", "POST"])) return;
     }
   } catch (error) {
     // Handle any errors

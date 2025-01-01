@@ -55,7 +55,7 @@ export default async function handler(
       }
       default: {
         // Handle unsupported methods
-        if (handleAllowedMethods(req, res, ["GET", "POST", "PUT"])) return;
+        if (handleAllowedMethods(req, res, ["GET", "POST"])) return;
       }
     }
   } catch (error) {
