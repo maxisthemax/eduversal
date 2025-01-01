@@ -102,7 +102,7 @@ export function useInstitutions(institutionId?: string): {
     );
     if (isEmpty) return;
 
-    await axios.put(`admin/institutions`, { id, ...changes });
+    await axios.put(`admin/institutions/${id}`, changes);
     refetch();
   };
 

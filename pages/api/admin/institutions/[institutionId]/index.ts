@@ -16,47 +16,34 @@ export default async function institutionsHandler(
 ) {
   try {
     switch (req.method) {
-      case "GET": {
-        // Fetch all institutions with their types
-        const institutions = await prisma.institution.findMany({
-          include: { type: true },
-          orderBy: { name: "desc" },
-        });
-
-        // Return the institutions
-        return res.status(200).json({ data: institutions });
-      }
-
-      case "POST": {
-        // Create a new institution
-        const { name, type_id, code } = req.body;
+      case "PUT": {
+        // Update an existing institution
+        const { institutionId } = req.query;
 
         // Validate required fields
-        if (
-          !validateRequiredFields(req, res, ["name", "type_id", "code"], "body")
-        ) {
+        if (!validateRequiredFields(req, res, ["institutionId"], "query")) {
           return;
         }
 
-        // Get createdBy and updatedBy
-        const { created_by, updated_by } = await getCreatedByUpdatedBy(
-          req,
-          res
-        );
+        // Update an existing institution
+        const { name, type_id, code } = req.body;
 
-        // Create the new institution
-        const newInstitution = await prisma.institution.create({
+        // Get  updatedBy
+        const { updated_by } = await getCreatedByUpdatedBy(req, res);
+
+        // Update the institution
+        const updatedInstitution = await prisma.institution.update({
+          where: { id: institutionId as string },
           data: {
             name,
             type_id,
             code,
-            ...created_by,
             ...updated_by,
           },
         });
 
-        // Return the newly created institution
-        return res.status(201).json({ data: newInstitution });
+        // Return the updated institution
+        return res.status(200).json({ data: updatedInstitution });
       }
 
       default:

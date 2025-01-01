@@ -18,16 +18,16 @@ export default async function academicYearHandler(
     switch (req.method) {
       case "GET": {
         // Get institution_id from query
-        const { institution_id } = req.query;
+        const { institutionId } = req.query;
 
         // Validate required fields
-        if (!validateRequiredFields(req, res, ["institution_id"])) {
+        if (!validateRequiredFields(req, res, ["institutionId"])) {
           return;
         }
 
         // Fetch academic years for the given institution_id
         const academicYears = await prisma.academicYear.findMany({
-          where: { institution_id: institution_id as string },
+          where: { institution_id: institutionId as string },
           orderBy: [
             {
               year: "desc",
