@@ -9,8 +9,8 @@ import AddEditAcademicYearDialog from "./AddEditAcademicYearDialog";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
-import { useInstitutions } from "@/data/admin/institutions/institutions";
-import { useAcademicYears } from "@/data/admin/institutions/academicYear";
+import { useInstitutions } from "@/data/admin/institution/institution";
+import { useAcademicYears } from "@/data/admin/institution/academicYear";
 import Link from "next/link";
 
 function AcademicYear() {

@@ -9,9 +9,9 @@ import AddEditAcademicYearDialog from "./AddEditAcademicYearDialog";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
-import { useInstitutions } from "@/data/admin/institutions/institutions";
-import { useAcademicYears } from "@/data/admin/institutions/academicYear";
-import { useCourses } from "@/data/admin/institutions/courses";
+import { useInstitutions } from "@/data/admin/institution/institution";
+import { useAcademicYears } from "@/data/admin/institution/academicYear";
+import { useCourses } from "@/data/admin/institution/course";
 
 function AcademicYear() {
   const params = useParams();

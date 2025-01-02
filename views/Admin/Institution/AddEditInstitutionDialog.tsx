@@ -25,7 +25,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
-import { useInstitutions } from "@/data/admin/institutions/institutions";
+import { useInstitutions } from "@/data/admin/institution/institution";
 import { useInstitutionTypes } from "@/data/admin/setting/institutionType";
 
 //*validation
