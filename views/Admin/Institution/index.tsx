@@ -28,23 +28,23 @@ function Institution() {
     {
       field: "code",
       headerName: "Code",
-      flex: 1,
+      width: 150,
     },
     {
       field: "type_name_format",
       headerName: "Type",
-      flex: 1,
+      width: 200,
     },
     {
       field: "created_by_name",
       headerName: "Created By",
-      flex: 1,
+      width: 200,
     },
     {
       field: "created_at",
       headerName: "Created At",
       type: "date",
-      flex: 1,
+      width: 100,
     },
     {
       field: "button",

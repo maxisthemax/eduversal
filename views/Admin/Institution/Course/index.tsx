@@ -31,40 +31,40 @@ function AcademicYear() {
     {
       field: "standard_name_format",
       headerName: "Standard",
-      flex: 1,
+      width: 200,
     },
     {
       field: "access_code",
       headerName: "Access Code",
-      flex: 1,
+      width: 200,
     },
     {
       field: "valid_period_format",
       headerName: "Valid Period",
-      flex: 1,
+      width: 100,
     },
     {
       field: "start_date",
       headerName: "Start Date",
       type: "date",
-      flex: 1,
+      width: 100,
     },
     {
       field: "end_date",
       headerName: "End Date",
       type: "date",
-      flex: 1,
+      width: 100,
     },
     {
       field: "created_by_name",
       headerName: "Created By",
-      flex: 1,
+      width: 200,
     },
     {
       field: "created_at",
       headerName: "Created At",
       type: "date",
-      flex: 1,
+      width: 100,
     },
     {
       field: "button",
