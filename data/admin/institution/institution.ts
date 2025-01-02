@@ -53,7 +53,7 @@ export function useInstitutions(institutionId?: string): {
   // Fetch institutions data using custom query hook
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "institutions"],
-    "admin/institutions"
+    "admin/institution"
   );
 
   const institutionsQueryData = data as InstitutionData[];
@@ -84,7 +84,7 @@ export function useInstitutions(institutionId?: string): {
 
   // Add institution
   const addInstitution = async (institution: InstitutionCreate) => {
-    await axios.post("admin/institutions", institution);
+    await axios.post("admin/institution", institution);
     refetch();
   };
 
@@ -102,7 +102,7 @@ export function useInstitutions(institutionId?: string): {
     );
     if (isEmpty) return;
 
-    await axios.put(`admin/institutions/${id}`, changes);
+    await axios.put(`admin/institution/${id}`, changes);
     refetch();
   };
 

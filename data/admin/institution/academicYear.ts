@@ -48,7 +48,7 @@ export function useAcademicYears(
   // Fetch academic years data
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "institutions", institutionId, "academicYears"],
-    `admin/institutions/${institutionId}/academicYears`
+    `admin/institution/${institutionId}/academicYear`
   );
 
   const academicYearsQueryData = data as AcademicYearData[];
@@ -80,7 +80,7 @@ export function useAcademicYears(
 
   // Add academic year
   const addAcademicYear = async (academicYear: AcademicYearCreate) => {
-    await axios.post(`admin/institutions/${institutionId}/academicYears`, {
+    await axios.post(`admin/institution/${institutionId}/academicYear`, {
       ...academicYear,
     });
     refetch();
@@ -101,7 +101,7 @@ export function useAcademicYears(
     if (isEmpty) return;
 
     await axios.put(
-      `admin/institutions/${institutionId}/academicYears/${id}`,
+      `admin/institution/${institutionId}/academicYear/${id}`,
       changes
     );
     refetch();

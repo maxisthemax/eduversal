@@ -49,7 +49,7 @@ export function useCourses(
   // Fetch courses data
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "institutions", institutionId, "courses"],
-    `admin/institutions/${institutionId}/academicYears/${academicYearId}/courses`
+    `admin/institution/${institutionId}/academicYear/${academicYearId}/course`
   );
 
   const coursesQueryData = data as CourseData[];
@@ -82,7 +82,7 @@ export function useCourses(
   // Add course
   const addCourse = async (course: CourseCreate) => {
     await axios.post(
-      `admin/institutions/${institutionId}/academicYear/${academicYearId}/courses`,
+      `admin/institution/${institutionId}/academicYear/${academicYearId}/course`,
       course
     );
     refetch();
@@ -96,10 +96,7 @@ export function useCourses(
     const { changes, isEmpty } = checkSameValue(currentCourse, course);
     if (isEmpty) return;
 
-    await axios.put(
-      `admin/institutions/${institutionId}/courses/${id}`,
-      changes
-    );
+    await axios.put(`admin/institution/${institutionId}/course/${id}`, changes);
     refetch();
   };
 
