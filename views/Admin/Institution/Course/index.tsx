@@ -11,27 +11,22 @@ import { GridColDef } from "@mui/x-data-grid";
 //*data
 import { useInstitutions } from "@/data/admin/institutions/institutions";
 import { useAcademicYears } from "@/data/admin/institutions/academicYear";
-import Link from "next/link";
+import { useCourses } from "@/data/admin/institutions/courses";
 
 function AcademicYear() {
   const params = useParams();
   const institutionId = params.institutionId as string;
+  const academicYearId = params.academicYearId as string;
   const { institutionData, status } = useInstitutions(institutionId);
-  const { academicYearsData } = useAcademicYears(institutionId);
+  const { academicYearData } = useAcademicYears(institutionId, academicYearId);
+  const { coursesData } = useCourses(institutionId, academicYearId);
 
   //*const
-  const columns: GridColDef<(typeof academicYearsData)[]>[] = [
+  const columns: GridColDef<(typeof coursesData)[]>[] = [
     {
       field: "name",
       headerName: "Name",
       flex: 1,
-      renderCell: ({ formattedValue, id }) => {
-        return (
-          <Link href={`/admin/institution/${institutionId}/${id}`}>
-            {formattedValue}
-          </Link>
-        );
-      },
     },
     {
       field: "year",
@@ -85,13 +80,17 @@ function AcademicYear() {
           href: `/admin/institution/${institutionId}`,
           title: institutionData?.name,
         },
+        {
+          href: `/admin/institution/${institutionId}/${academicYearId}`,
+          title: academicYearData?.name,
+        },
       ]}
       leftButton={[]}
       rightButton={[
         <AddEditAcademicYearDialog key="addEditAcademicYearDialog" />,
       ]}
     >
-      <DataGrid gap={16} columns={columns} data={academicYearsData} />
+      <DataGrid gap={16} columns={columns} data={coursesData} />
     </Page>
   );
 }
