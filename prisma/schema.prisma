@@ -50,6 +50,7 @@ model Institution {
   type_id       String
   type          InstitutionType @relation(fields: [type_id], references: [id])
   academicYears AcademicYear[]
+  courses       Course[]
 
   created_by_user_id String
   created_by_name    String
@@ -67,7 +68,7 @@ model AcademicYear {
   end_date       DateTime
   year           Int
   institution    Institution @relation(fields: [institution_id], references: [id])
-  classes        Classes[]
+  course         Course[]
 
   created_by_user_id String
   created_by_name    String
@@ -79,12 +80,14 @@ model AcademicYear {
   @@index([institution_id])
 }
 
-model Classes {
+model Course {
   id               String       @id @default(cuid())
   name             String
   standard_id      String
   standard         Standard     @relation(fields: [standard_id], references: [id])
   access_code      String       @unique
+  institution_id   String
+  institution      Institution  @relation(fields: [institution_id], references: [id])
   academic_year_id String
   academicYear     AcademicYear @relation(fields: [academic_year_id], references: [id])
   start_date       DateTime
@@ -97,13 +100,14 @@ model Classes {
   updated_by_name    String
   updated_at         DateTime @updatedAt
 
+  @@index([institution_id])
   @@index([academic_year_id])
 }
 
 model Standard {
-  id      String    @id @default(cuid())
-  name    String
-  classes Classes[]
+  id     String   @id @default(cuid())
+  name   String
+  course Course[]
 
   created_by_user_id String
   created_by_name    String

@@ -186,19 +186,22 @@ async function main() {
   });
 
   /**
-   * 5. Classes for 2024
+   * 5. Courses for 2024
    *    - references Standard and AcademicYear
    */
-  const classA = await prisma.classes.create({
+  const courseA = await prisma.course.create({
     data: {
-      name: "Class A",
-      access_code: "CLASS-A-2024",
+      name: "Course A",
+      access_code: "COURSE-A-2024",
       standard: {
         connect: { id: standardOne.id },
       },
       academicYear: {
         connect: { id: year2024_1.id },
       },
+      institution: {
+        connect: { id: institutionA.id },
+      },
       start_date: new Date("2024-09-01"),
       end_date: new Date("2025-06-20"),
       created_by_user_id: userAdmin.id,
@@ -208,16 +211,19 @@ async function main() {
     },
   });
 
-  const classB = await prisma.classes.create({
+  const courseB = await prisma.course.create({
     data: {
-      name: "Class B",
-      access_code: "CLASS-B-2024",
+      name: "Course B",
+      access_code: "COURSE-B-2024",
       standard: {
         connect: { id: standardOne.id },
       },
       academicYear: {
         connect: { id: year2024_2.id },
       },
+      institution: {
+        connect: { id: institutionB.id },
+      },
       start_date: new Date("2024-09-01"),
       end_date: new Date("2025-06-20"),
       created_by_user_id: userAdmin.id,
@@ -227,16 +233,19 @@ async function main() {
     },
   });
 
-  const classC = await prisma.classes.create({
+  const courseC = await prisma.course.create({
     data: {
-      name: "Class C",
-      access_code: "CLASS-C-2024",
+      name: "Course C",
+      access_code: "COURSE-C-2024",
       standard: {
         connect: { id: standardTwo.id },
       },
       academicYear: {
         connect: { id: year2024_1.id },
       },
+      institution: {
+        connect: { id: institutionA.id },
+      },
       start_date: new Date("2024-09-01"),
       end_date: new Date("2025-06-20"),
       created_by_user_id: userAdmin.id,
@@ -246,15 +255,18 @@ async function main() {
     },
   });
 
-  const classD = await prisma.classes.create({
+  const courseD = await prisma.course.create({
     data: {
-      name: "Class D",
-      access_code: "CLASS-D-2024",
+      name: "Course D",
+      access_code: "COURSE-D-2024",
       standard: {
         connect: { id: standardThree.id },
       },
       academicYear: {
         connect: { id: year2024_2.id },
+      },
+      institution: {
+        connect: { id: institutionB.id },
       },
       start_date: new Date("2024-09-01"),
       end_date: new Date("2025-06-20"),
@@ -266,19 +278,22 @@ async function main() {
   });
 
   /**
-   * 5. Classes for 2025
+   * 5. Courses for 2025
    *    - references Standard and AcademicYear
    */
-  const classE = await prisma.classes.create({
+  const courseE = await prisma.course.create({
     data: {
-      name: "Class E",
-      access_code: "CLASS-E-2025",
+      name: "Course E",
+      access_code: "COURSE-E-2025",
       standard: {
         connect: { id: standardOne.id },
       },
       academicYear: {
         connect: { id: year2025_1.id },
       },
+      institution: {
+        connect: { id: institutionA.id },
+      },
       start_date: new Date("2025-09-01"),
       end_date: new Date("2026-06-20"),
       created_by_user_id: userAdmin.id,
@@ -288,16 +303,19 @@ async function main() {
     },
   });
 
-  const classF = await prisma.classes.create({
+  const courseF = await prisma.course.create({
     data: {
-      name: "Class F",
-      access_code: "CLASS-F-2025",
+      name: "Course F",
+      access_code: "COURSE-F-2025",
       standard: {
         connect: { id: standardTwo.id },
       },
       academicYear: {
         connect: { id: year2025_1.id },
       },
+      institution: {
+        connect: { id: institutionA.id },
+      },
       start_date: new Date("2025-09-01"),
       end_date: new Date("2026-06-20"),
       created_by_user_id: userAdmin.id,
@@ -307,15 +325,15 @@ async function main() {
     },
   });
 
-  // Log the created userAdmin and classes
+  // Log the created userAdmin and courses
   console.log("Created Admin User:", userAdmin);
-  console.log("Created Classes:", {
-    classA,
-    classB,
-    classC,
-    classD,
-    classE,
-    classF,
+  console.log("Created Courses:", {
+    courseA,
+    courseB,
+    courseC,
+    courseD,
+    courseE,
+    courseF,
   });
 
   /**
