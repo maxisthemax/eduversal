@@ -48,7 +48,14 @@ export function useCourses(
 } {
   // Fetch courses data
   const { data, status, isLoading, refetch } = useQueryFetch(
-    ["admin", "institutions", institutionId, "courses"],
+    [
+      "admin",
+      "institutions",
+      institutionId,
+      "academicYears",
+      academicYearId,
+      "courses",
+    ],
     `admin/institution/${institutionId}/academicYear/${academicYearId}/course`
   );
 
