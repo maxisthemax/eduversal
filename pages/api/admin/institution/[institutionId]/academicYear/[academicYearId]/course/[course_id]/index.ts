@@ -17,29 +17,36 @@ export default async function courseHandler(
   try {
     switch (req.method) {
       case "PUT": {
-        const { courseId } = req.query;
+        const { course_id } = req.query;
 
         // Validate required fields
-        if (!validateRequiredFields(req, res, ["courseId"], "query")) {
+        if (!validateRequiredFields(req, res, ["course_id"], "query")) {
           return;
         }
 
         // Update an existing course
-        const { name, access_code, standard_id, start_date, end_date } =
-          req.body;
+        const {
+          name,
+          access_code,
+          standard_id,
+          start_date,
+          end_date,
+          valid_period,
+        } = req.body;
 
         // Get updatedBy
         const { updated_by } = await getCreatedByUpdatedBy(req, res);
 
         // Update the course
         const updatedCourse = await prisma.course.update({
-          where: { id: courseId as string },
+          where: { id: course_id as string },
           data: {
             name,
             access_code,
             standard_id,
             start_date,
             end_date,
+            valid_period,
             ...updated_by,
           },
         });

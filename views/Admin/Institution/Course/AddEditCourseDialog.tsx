@@ -5,8 +5,9 @@ import {
   bindTrigger,
   usePopupState,
 } from "material-ui-popup-state/hooks";
-import { getYear, endOfYear, startOfYear } from "date-fns";
 import { useParams } from "next/navigation";
+import { addMonths, addYears } from "date-fns";
+import { v4 as uuidv4 } from "uuid";
 
 //*components
 import { OverlayBox } from "@/components/Box";
@@ -20,27 +21,36 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
+import { useStandard } from "@/data/admin/setting/standard";
+import {
+  useCourses,
+  validPeriodOptions,
+} from "@/data/admin/institution/course";
+import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
 
 //*validation
 const validationSchema = yup.object({
   name: yup.string().required("Required"),
-  year: yup.number().required("Required"),
+  access_code: yup.string().required("Required"),
   start_date: yup.date().required("Required"),
   end_date: yup.date().required("Required"),
+  standard_id: yup.string().required("Required"),
+  valid_period: yup.string().required("Required"),
 });
 
-function AddEditAcademicYearDialog({
+function AddEditCourseDialog({
   mode = "add",
-  academicYearId,
+  courseId,
 }: {
   mode?: "add" | "edit";
-  academicYearId?: string;
+  courseId?: string;
 }) {
   //*define
   const popupState = usePopupState({ variant: "dialog" });
@@ -51,7 +61,7 @@ function AddEditAcademicYearDialog({
         variant={mode === "edit" ? "outlined" : "contained"}
         {...bindTrigger(popupState)}
       >
-        {mode === "edit" ? "Edit" : "Add Academic Year"}
+        {mode === "edit" ? "Edit" : "Add Course"}
       </Button>
       <Dialog
         {...bindDialog(popupState)}
@@ -63,9 +73,9 @@ function AddEditAcademicYearDialog({
           popupState.close();
         }}
       >
-        <AddEditAcademicYearDialogForm
+        <AddEditCourseDialogForm
           mode={mode}
-          academicYearId={academicYearId}
+          courseId={courseId}
           handleClose={() => popupState.close()}
         />
       </Dialog>
@@ -73,47 +83,60 @@ function AddEditAcademicYearDialog({
   );
 }
 
-export default AddEditAcademicYearDialog;
+export default AddEditCourseDialog;
 
-function AddEditAcademicYearDialogForm({
-  academicYearId,
+function AddEditCourseDialogForm({
+  courseId,
   mode = "add",
   handleClose,
 }: {
   mode: "add" | "edit";
-  academicYearId?: string;
+  courseId?: string;
   handleClose: () => void;
 }) {
   const params = useParams();
   const institutionId = params.institutionId as string;
-
-  const { academicYearData, addAcademicYear, updateAcademicYear } =
-    useAcademicYears(institutionId, academicYearId);
+  const academicYearId = params.academicYearId as string;
+  const { institutionData } = useInstitutions(institutionId);
+  const { academicYearData } = useAcademicYears(institutionId, academicYearId);
+  const { courseData, addCourse, updateCourse } = useCourses(
+    institutionId,
+    academicYearId,
+    courseId
+  );
+  const { standardsData } = useStandard();
 
   return (
     <Formik
       initialValues={
-        mode === "edit" && academicYearData
+        mode === "edit" && courseData
           ? {
-              name: academicYearData.name,
-              year: academicYearData.year,
-              start_date: academicYearData.start_date,
-              end_date: academicYearData.end_date,
+              name: courseData.name,
+              access_code: courseData.access_code,
+              start_date: courseData.start_date,
+              end_date: courseData.end_date,
+              standard_id: courseData.standard_id,
+              valid_period: courseData.valid_period,
             }
           : {
               name: "",
-              year: getYear(new Date()),
-              start_date: startOfYear(new Date()),
-              end_date: endOfYear(new Date()),
+              access_code:
+                institutionData.code +
+                academicYearData.year.toString() +
+                uuidv4().slice(0, 4).toUpperCase(),
+              standard_id: "",
+              valid_period: "YEAR",
+              start_date: new Date(),
+              end_date: addYears(new Date(), 1),
             }
       }
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         try {
           if (mode === "add") {
-            await addAcademicYear(values);
+            await addCourse(values);
           } else {
-            await updateAcademicYear(academicYearId, values);
+            await updateCourse(courseId, values);
           }
           handleClose();
           resetForm();
@@ -145,7 +168,7 @@ function AddEditAcademicYearDialogForm({
           <OverlayBox isLoading={isSubmitting}>
             <Form>
               <DialogTitle>
-                {mode === "edit" ? "Edit Academic Year" : "Add Academic Year"}
+                {mode === "edit" ? "Edit Course" : "Add Course"}
               </DialogTitle>
               <DialogContent>
                 <Stack
@@ -161,37 +184,73 @@ function AddEditAcademicYearDialogForm({
                     props={{ required: true }}
                   />
                   <TextFieldForm
-                    name="year"
-                    label="Year"
+                    name="standard_id"
+                    label="Standard"
+                    formProps={formProps}
+                    props={{ select: true, required: true }}
+                  >
+                    {standardsData.map(({ id, name }) => {
+                      return (
+                        <MenuItem key={id} value={id}>
+                          {name}
+                        </MenuItem>
+                      );
+                    })}
+                  </TextFieldForm>
+                  <TextFieldForm
+                    name="access_code"
+                    label="Access Code"
+                    formProps={formProps}
+                    props={{ required: true, disabled: true }}
+                  />
+                  <TextFieldForm
+                    name="valid_period"
+                    label="Valid Period"
                     formProps={{
                       ...formProps,
                       handleChange: (e) => {
                         handleChange(e);
-                        setFieldValue(
-                          "start_date",
-                          startOfYear(new Date("01/01/" + e.target.value))
-                        );
-                        setFieldValue(
-                          "end_date",
-                          endOfYear(new Date("01/01/" + e.target.value))
-                        );
+                        if (e.target.value !== "CUSTOM") {
+                          setFieldValue(
+                            "end_date",
+                            addMonths(
+                              values.start_date,
+                              { MONTH: 1, QUARTER: 3, HALF: 6, YEAR: 12 }[
+                                e.target.value
+                              ]
+                            )
+                          );
+                        }
                       },
                     }}
-                    props={{ type: "number", required: true }}
-                  />
+                    props={{ select: true, required: true }}
+                  >
+                    {validPeriodOptions.map(({ value, label }) => {
+                      return (
+                        <MenuItem key={value} value={value}>
+                          {label}
+                        </MenuItem>
+                      );
+                    })}
+                  </TextFieldForm>
                   <DatePickerForm
                     mode="start"
                     name="start_date"
                     label="Start Date"
                     formProps={formProps}
-                    props={{ required: true }}
+                    props={{
+                      required: true,
+                    }}
                   />
                   <DatePickerForm
                     name="end_date"
                     label="End Date"
                     mode="end"
                     formProps={formProps}
-                    props={{ required: true }}
+                    props={{
+                      required: true,
+                      disabled: values.valid_period !== "CUSTOM",
+                    }}
                   />
                 </Stack>
               </DialogContent>

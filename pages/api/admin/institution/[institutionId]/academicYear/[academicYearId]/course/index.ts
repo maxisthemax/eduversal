@@ -33,6 +33,7 @@ export default async function courseHandler(
             institution_id: institutionId as string,
             academic_year_id: academicYearId as string,
           },
+          include: { standard: true },
           orderBy: [
             {
               name: "asc",
@@ -59,8 +60,14 @@ export default async function courseHandler(
         }
 
         // Create a new course
-        const { name, access_code, standard_id, start_date, end_date } =
-          req.body;
+        const {
+          name,
+          access_code,
+          standard_id,
+          valid_period,
+          start_date,
+          end_date,
+        } = req.body;
 
         // Validate required fields
         if (
@@ -70,6 +77,7 @@ export default async function courseHandler(
             "standard_id",
             "start_date",
             "end_date",
+            "valid_period",
           ])
         ) {
           return;
@@ -89,6 +97,7 @@ export default async function courseHandler(
             standard_id,
             start_date,
             end_date,
+            valid_period,
             institution_id: institutionId as string,
             academic_year_id: academicYearId as string,
             ...created_by,

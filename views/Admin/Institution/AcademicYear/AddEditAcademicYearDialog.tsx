@@ -166,7 +166,7 @@ function AddEditAcademicYearDialogForm({
                     formProps={{
                       ...formProps,
                       handleChange: (e) => {
-                        handleChange(e);
+                        formProps.handleChange(e);
                         setFieldValue(
                           "start_date",
                           startOfYear(new Date("01/01/" + e.target.value))

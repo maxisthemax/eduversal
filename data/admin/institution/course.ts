@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 //*lodash
 import keyBy from "lodash/keyBy";
+import find from "lodash/find";
 
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
@@ -16,12 +17,26 @@ export interface CourseData {
   name: string;
   start_date: Date;
   end_date: Date;
+  standard_id: string;
   institution_id: string;
   academic_year_id: string;
   access_code: string;
   created_at: Date;
   updated_at: Date;
+  standard: { name: string };
+  valid_period: "MONTH" | "QUARTER" | "HALF" | "YEAR" | "CUSTOM";
+
+  standard_name_format: string;
+  valid_period_format: string;
 }
+
+export const validPeriodOptions = [
+  { value: "MONTH", label: "1 Month" },
+  { value: "QUARTER", label: "3 Months" },
+  { value: "HALF", label: "6 Months" },
+  { value: "YEAR", label: "1 Year" },
+  { value: "CUSTOM", label: "Custom" },
+];
 
 export interface CourseCreate {
   name: string;
@@ -29,7 +44,7 @@ export interface CourseCreate {
   standard_id: string;
   start_date: Date;
   end_date: Date;
-  academic_year_id: string;
+  valid_period: string;
 }
 
 type CourseUpdate = Partial<CourseCreate>;
@@ -71,6 +86,11 @@ export function useCourses(
           end_date: new Date(data.end_date),
           created_at: new Date(data.created_at),
           updated_at: new Date(data.updated_at),
+
+          standard_name_format: data.standard.name,
+          valid_period_format: find(validPeriodOptions, {
+            value: data.valid_period,
+          })?.label,
         };
       });
 
@@ -103,7 +123,10 @@ export function useCourses(
     const { changes, isEmpty } = checkSameValue(currentCourse, course);
     if (isEmpty) return;
 
-    await axios.put(`admin/institution/${institutionId}/course/${id}`, changes);
+    await axios.put(
+      `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${id}`,
+      changes
+    );
     refetch();
   };
 

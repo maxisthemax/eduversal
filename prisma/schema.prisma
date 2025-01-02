@@ -92,6 +92,7 @@ model Course {
   academicYear     AcademicYear @relation(fields: [academic_year_id], references: [id])
   start_date       DateTime
   end_date         DateTime
+  valid_period     ValidType
 
   created_by_user_id String
   created_by_name    String
@@ -139,4 +140,12 @@ enum UserRole {
   ADMIN
   SUPERADMIN
   USER
+}
+
+enum ValidType {
+  MONTH
+  QUARTER
+  HALF
+  YEAR
+  CUSTOM
 }

@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 //*components
 import { Page } from "@/components/Box";
 import DataGrid from "@/components/Table/DataGrid";
-import AddEditAcademicYearDialog from "./AddEditAcademicYearDialog";
+import AddEditCourseDialog from "./AddEditCourseDialog";
 
 //*mui
 import { GridColDef } from "@mui/x-data-grid";
@@ -29,8 +29,18 @@ function AcademicYear() {
       flex: 1,
     },
     {
-      field: "year",
-      headerName: "Year",
+      field: "standard_name_format",
+      headerName: "Standard",
+      flex: 1,
+    },
+    {
+      field: "access_code",
+      headerName: "Access Code",
+      flex: 1,
+    },
+    {
+      field: "valid_period_format",
+      headerName: "Valid Period",
       flex: 1,
     },
     {
@@ -60,12 +70,7 @@ function AcademicYear() {
       field: "button",
       headerName: "",
       renderCell: ({ id }) => {
-        return (
-          <AddEditAcademicYearDialog
-            mode="edit"
-            academicYearId={id as string}
-          />
-        );
+        return <AddEditCourseDialog mode="edit" courseId={id as string} />;
       },
       minWidth: 100,
     },
@@ -86,9 +91,7 @@ function AcademicYear() {
         },
       ]}
       leftButton={[]}
-      rightButton={[
-        <AddEditAcademicYearDialog key="addEditAcademicYearDialog" />,
-      ]}
+      rightButton={[<AddEditCourseDialog key="addEditAcademicYearDialog" />]}
     >
       <DataGrid gap={16} columns={columns} data={coursesData} />
     </Page>

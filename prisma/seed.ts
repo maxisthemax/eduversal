@@ -1,5 +1,7 @@
 import prisma from "../lib/prisma";
 import bcrypt from "bcrypt";
+import toUpper from "lodash/toUpper";
+import { v4 as uuidv4 } from "uuid";
 
 async function main() {
   /**
@@ -189,10 +191,22 @@ async function main() {
    * 5. Courses for 2024
    *    - references Standard and AcademicYear
    */
+  const generateAccessCode = (
+    institutionCode: string,
+    academicYear: string,
+    runningNumber: string
+  ) => {
+    return `${institutionCode}${academicYear}${toUpper(runningNumber)}`;
+  };
+
   const courseA = await prisma.course.create({
     data: {
       name: "Course A",
-      access_code: "COURSE-A-2024",
+      access_code: generateAccessCode(
+        institutionA.code,
+        year2024_1.year.toString(),
+        uuidv4().slice(0, 4)
+      ),
       standard: {
         connect: { id: standardOne.id },
       },
@@ -202,8 +216,9 @@ async function main() {
       institution: {
         connect: { id: institutionA.id },
       },
-      start_date: new Date("2024-09-01"),
-      end_date: new Date("2025-06-20"),
+      start_date: new Date("2025-01-01"),
+      end_date: new Date("2025-12-31"),
+      valid_period: "YEAR",
       created_by_user_id: userAdmin.id,
       updated_by_user_id: userAdmin.id,
       created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
@@ -214,7 +229,11 @@ async function main() {
   const courseB = await prisma.course.create({
     data: {
       name: "Course B",
-      access_code: "COURSE-B-2024",
+      access_code: generateAccessCode(
+        institutionB.code,
+        year2024_2.year.toString(),
+        uuidv4().slice(0, 4)
+      ),
       standard: {
         connect: { id: standardOne.id },
       },
@@ -224,8 +243,9 @@ async function main() {
       institution: {
         connect: { id: institutionB.id },
       },
-      start_date: new Date("2024-09-01"),
-      end_date: new Date("2025-06-20"),
+      start_date: new Date("2025-01-01"),
+      end_date: new Date("2025-12-31"),
+      valid_period: "YEAR",
       created_by_user_id: userAdmin.id,
       updated_by_user_id: userAdmin.id,
       created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
@@ -236,7 +256,11 @@ async function main() {
   const courseC = await prisma.course.create({
     data: {
       name: "Course C",
-      access_code: "COURSE-C-2024",
+      access_code: generateAccessCode(
+        institutionA.code,
+        year2024_1.year.toString(),
+        uuidv4().slice(0, 4)
+      ),
       standard: {
         connect: { id: standardTwo.id },
       },
@@ -246,8 +270,9 @@ async function main() {
       institution: {
         connect: { id: institutionA.id },
       },
-      start_date: new Date("2024-09-01"),
-      end_date: new Date("2025-06-20"),
+      start_date: new Date("2025-01-01"),
+      end_date: new Date("2025-12-31"),
+      valid_period: "YEAR",
       created_by_user_id: userAdmin.id,
       updated_by_user_id: userAdmin.id,
       created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
@@ -258,7 +283,11 @@ async function main() {
   const courseD = await prisma.course.create({
     data: {
       name: "Course D",
-      access_code: "COURSE-D-2024",
+      access_code: generateAccessCode(
+        institutionB.code,
+        year2024_2.year.toString(),
+        uuidv4().slice(0, 4)
+      ),
       standard: {
         connect: { id: standardThree.id },
       },
@@ -268,8 +297,9 @@ async function main() {
       institution: {
         connect: { id: institutionB.id },
       },
-      start_date: new Date("2024-09-01"),
-      end_date: new Date("2025-06-20"),
+      start_date: new Date("2025-01-01"),
+      end_date: new Date("2025-12-31"),
+      valid_period: "YEAR",
       created_by_user_id: userAdmin.id,
       updated_by_user_id: userAdmin.id,
       created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
@@ -284,7 +314,11 @@ async function main() {
   const courseE = await prisma.course.create({
     data: {
       name: "Course E",
-      access_code: "COURSE-E-2025",
+      access_code: generateAccessCode(
+        institutionA.code,
+        year2025_1.year.toString(),
+        uuidv4().slice(0, 4)
+      ),
       standard: {
         connect: { id: standardOne.id },
       },
@@ -294,8 +328,9 @@ async function main() {
       institution: {
         connect: { id: institutionA.id },
       },
-      start_date: new Date("2025-09-01"),
-      end_date: new Date("2026-06-20"),
+      start_date: new Date("2025-01-01"),
+      end_date: new Date("2025-12-31"),
+      valid_period: "YEAR",
       created_by_user_id: userAdmin.id,
       updated_by_user_id: userAdmin.id,
       created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
@@ -306,7 +341,11 @@ async function main() {
   const courseF = await prisma.course.create({
     data: {
       name: "Course F",
-      access_code: "COURSE-F-2025",
+      access_code: generateAccessCode(
+        institutionA.code,
+        year2025_1.year.toString(),
+        uuidv4().slice(0, 4)
+      ),
       standard: {
         connect: { id: standardTwo.id },
       },
@@ -316,8 +355,9 @@ async function main() {
       institution: {
         connect: { id: institutionA.id },
       },
-      start_date: new Date("2025-09-01"),
-      end_date: new Date("2026-06-20"),
+      start_date: new Date("2025-01-01"),
+      end_date: new Date("2025-12-31"),
+      valid_period: "YEAR",
       created_by_user_id: userAdmin.id,
       updated_by_user_id: userAdmin.id,
       created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
