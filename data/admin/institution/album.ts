@@ -46,6 +46,11 @@ export interface AlbumCreate {
   course_id?: string;
 }
 
+export const type = [
+  { value: "INDIVIDUAL", label: "Individual" },
+  { value: "GROUP", label: "Class/Club" },
+];
+
 type AlbumUpdate = Partial<AlbumCreate>;
 
 export function useAlbums(

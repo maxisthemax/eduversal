@@ -4,9 +4,7 @@ import { useParams } from "next/navigation";
 import { Page } from "@/components/Box";
 import useCustomTabs from "@/components/Box/useCustomTabs";
 import AlbumContent from "./AlbumContent";
-
-//*mui
-import Button from "@mui/material/Button";
+import AddEditAlbumDialog from "./AddEditAlbumDialog";
 
 //*data
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
@@ -73,11 +71,7 @@ function Album() {
           title: courseData?.name,
         },
       ]}
-      rightButton={[
-        <Button variant="contained" key="">
-          Add New Album
-        </Button>,
-      ]}
+      rightButton={[<AddEditAlbumDialog key={"addEditAlbumDialog"} />]}
     >
       {tabsComponent}
     </Page>
