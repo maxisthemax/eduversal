@@ -138,7 +138,7 @@ model Album {
   id             String       @id @default(cuid())
   name           String
   description    String
-  type           String
+  type           AlbumType
   photos         Photo[]
   institution_id String?
   institution    Institution? @relation(fields: [institution_id], references: [id])
@@ -175,6 +175,11 @@ model Photo {
 
   @@index([album_id])
   @@index([institution_id])
+}
+
+enum AlbumType {
+  INDIVIDUAL
+  GROUP
 }
 
 enum VerificationType {
