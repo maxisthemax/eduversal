@@ -27,11 +27,11 @@ function Album() {
   const { albumsData, status: albumStatus } = useAlbums();
 
   const { tabsComponent } = useCustomTabs({
-    tabs: albumsData.map(({ id, name, photos }) => {
+    tabs: albumsData.map(({ id, name }) => {
       return {
         label: name,
         value: id,
-        render: <AlbumContent photos={photos} />,
+        render: <AlbumContent albumId={id} />,
       };
     }),
     defaultTab: albumsData[0]?.id,
