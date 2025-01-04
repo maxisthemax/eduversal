@@ -16,8 +16,10 @@ import Link from "next/link";
 function AcademicYear() {
   const params = useParams();
   const institutionId = params.institutionId as string;
-  const { institutionData, status } = useInstitutions(institutionId);
-  const { academicYearsData } = useAcademicYears(institutionId);
+  const { institutionData, status: institutionStatus } =
+    useInstitutions(institutionId);
+  const { academicYearsData, status: academicYearStatus } =
+    useAcademicYears(institutionId);
 
   //*const
   const columns: GridColDef<(typeof academicYearsData)[]>[] = [
@@ -78,7 +80,9 @@ function AcademicYear() {
 
   return (
     <Page
-      isLoading={status === "pending"}
+      isLoading={
+        institutionStatus === "pending" || academicYearStatus === "pending"
+      }
       links={[
         { href: "/admin/institution", title: "Institutions" },
         {

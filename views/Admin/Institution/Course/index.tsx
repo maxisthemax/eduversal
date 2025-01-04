@@ -1,4 +1,5 @@
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 //*components
 import { Page } from "@/components/Box";
@@ -17,9 +18,16 @@ function AcademicYear() {
   const params = useParams();
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
-  const { institutionData, status } = useInstitutions(institutionId);
-  const { academicYearData } = useAcademicYears(institutionId, academicYearId);
-  const { coursesData } = useCourses(institutionId, academicYearId);
+  const { institutionData, status: institutionStatus } =
+    useInstitutions(institutionId);
+  const { academicYearData, status: academicYearStatus } = useAcademicYears(
+    institutionId,
+    academicYearId
+  );
+  const { coursesData, status: coursesStatus } = useCourses(
+    institutionId,
+    academicYearId
+  );
 
   //*const
   const columns: GridColDef<(typeof coursesData)[]>[] = [
@@ -27,6 +35,15 @@ function AcademicYear() {
       field: "name",
       headerName: "Name",
       flex: 1,
+      renderCell: ({ formattedValue, id }) => {
+        return (
+          <Link
+            href={`/admin/institution/${institutionId}/${academicYearId}/${id}`}
+          >
+            {formattedValue}
+          </Link>
+        );
+      },
     },
     {
       field: "standard_name_format",
@@ -78,7 +95,11 @@ function AcademicYear() {
 
   return (
     <Page
-      isLoading={status === "pending"}
+      isLoading={
+        institutionStatus === "pending" ||
+        academicYearStatus === "pending" ||
+        coursesStatus === "pending"
+      }
       links={[
         { href: "/admin/institution", title: "Institutions" },
         {

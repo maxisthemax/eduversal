@@ -51,6 +51,8 @@ model Institution {
   type          InstitutionType @relation(fields: [type_id], references: [id])
   academicYears AcademicYear[]
   courses       Course[]
+  Album         Album[]
+  Photo         Photo[]
 
   created_by_user_id String
   created_by_name    String
@@ -93,6 +95,7 @@ model Course {
   start_date       DateTime
   end_date         DateTime
   valid_period     ValidType
+  Album            Album[]
 
   created_by_user_id String
   created_by_name    String
@@ -129,6 +132,49 @@ model InstitutionType {
   updated_by_user_id String
   updated_by_name    String
   updated_at         DateTime @updatedAt
+}
+
+model Album {
+  id             String       @id @default(cuid())
+  name           String
+  description    String
+  type           String
+  photos         Photo[]
+  institution_id String?
+  institution    Institution? @relation(fields: [institution_id], references: [id])
+  course_id      String?
+  course         Course?      @relation(fields: [course_id], references: [id])
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
+
+  @@index([institution_id])
+  @@index([course_id])
+}
+
+model Photo {
+  id             String       @id @default(cuid())
+  name           String
+  download_url   String
+  display_url    String
+  album_id       String
+  album          Album        @relation(fields: [album_id], references: [id])
+  institution_id String?
+  institution    Institution? @relation(fields: [institution_id], references: [id])
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
+
+  @@index([album_id])
+  @@index([institution_id])
 }
 
 enum VerificationType {
