@@ -18,8 +18,7 @@ function AcademicYear() {
   const institutionId = params.institutionId as string;
   const { institutionData, status: institutionStatus } =
     useInstitutions(institutionId);
-  const { academicYearsData, status: academicYearStatus } =
-    useAcademicYears(institutionId);
+  const { academicYearsData, status: academicYearStatus } = useAcademicYears();
 
   //*const
   const columns: GridColDef<(typeof academicYearsData)[]>[] = [

@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useParams } from "next/navigation";
 
 //*lodash
 import keyBy from "lodash/keyBy";
@@ -53,12 +54,7 @@ export const type = [
 
 type AlbumUpdate = Partial<AlbumCreate>;
 
-export function useAlbums(
-  institutionId: string,
-  academicYearId: string,
-  courseId: string,
-  albumId?: string
-): {
+export function useAlbums(albumId?: string): {
   albumsData: AlbumData[];
   albumsDataById: Record<string, AlbumData>;
   albumData: AlbumData | undefined;
@@ -66,6 +62,11 @@ export function useAlbums(
   updateAlbum: (id: string, album: AlbumUpdate) => Promise<void>;
   status: string;
 } {
+  const params = useParams();
+  const institutionId = params.institutionId as string;
+  const academicYearId = params.academicYearId as string;
+  const courseId = params.courseId as string;
+
   // Fetch albums data
   const { data, status, isLoading, refetch } = useQueryFetch(
     [

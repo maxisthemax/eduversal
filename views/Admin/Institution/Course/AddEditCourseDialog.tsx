@@ -98,12 +98,8 @@ function AddEditCourseDialogForm({
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
   const { institutionData } = useInstitutions(institutionId);
-  const { academicYearData } = useAcademicYears(institutionId, academicYearId);
-  const { courseData, addCourse, updateCourse } = useCourses(
-    institutionId,
-    academicYearId,
-    courseId
-  );
+  const { academicYearData } = useAcademicYears(academicYearId);
+  const { courseData, addCourse, updateCourse } = useCourses(courseId);
   const { standardsData } = useStandard();
 
   return (

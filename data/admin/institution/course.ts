@@ -1,3 +1,4 @@
+import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
 //*lodash
@@ -49,11 +50,7 @@ export interface CourseCreate {
 
 type CourseUpdate = Partial<CourseCreate>;
 
-export function useCourses(
-  institutionId: string,
-  academicYearId: string,
-  courseId?: string
-): {
+export function useCourses(courseId?: string): {
   coursesData: CourseData[];
   coursesDataById: Record<string, CourseData>;
   courseData: CourseData | undefined;
@@ -61,6 +58,9 @@ export function useCourses(
   updateCourse: (id: string, course: CourseUpdate) => Promise<void>;
   status: string;
 } {
+  const params = useParams();
+  const institutionId = params.institutionId as string;
+  const academicYearId = params.academicYearId as string;
   // Fetch courses data
   const { data, status, isLoading, refetch } = useQueryFetch(
     [

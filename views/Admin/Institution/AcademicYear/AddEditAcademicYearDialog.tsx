@@ -6,7 +6,6 @@ import {
   usePopupState,
 } from "material-ui-popup-state/hooks";
 import { getYear, endOfYear, startOfYear } from "date-fns";
-import { useParams } from "next/navigation";
 
 //*components
 import { OverlayBox } from "@/components/Box";
@@ -84,11 +83,8 @@ function AddEditAcademicYearDialogForm({
   academicYearId?: string;
   handleClose: () => void;
 }) {
-  const params = useParams();
-  const institutionId = params.institutionId as string;
-
   const { academicYearData, addAcademicYear, updateAcademicYear } =
-    useAcademicYears(institutionId, academicYearId);
+    useAcademicYears(academicYearId);
 
   return (
     <Formik

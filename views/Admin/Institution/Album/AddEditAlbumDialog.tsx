@@ -5,7 +5,6 @@ import {
   bindTrigger,
   usePopupState,
 } from "material-ui-popup-state/hooks";
-import { useParams } from "next/navigation";
 
 //*components
 import { OverlayBox } from "@/components/Box";
@@ -83,16 +82,7 @@ function AddEditAlbumDialogForm({
   albumId?: string;
   handleClose: () => void;
 }) {
-  const params = useParams();
-  const institutionId = params.institutionId as string;
-  const courseId = params.courseId as string;
-  const academicYearId = params.academicYearId as string;
-  const { albumData, addAlbum, updateAlbum } = useAlbums(
-    institutionId,
-    academicYearId,
-    courseId,
-    albumId
-  );
+  const { albumData, addAlbum, updateAlbum } = useAlbums(albumId);
 
   return (
     <Formik

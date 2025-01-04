@@ -21,20 +21,10 @@ function Album() {
   //*data
   const { institutionData, status: institutionStatus } =
     useInstitutions(institutionId);
-  const { academicYearData, status: academicYearStatus } = useAcademicYears(
-    institutionId,
-    academicYearId
-  );
-  const { courseData, status: courseStatus } = useCourses(
-    institutionId,
-    academicYearId,
-    courseId
-  );
-  const { albumsData, status: albumStatus } = useAlbums(
-    institutionId,
-    academicYearId,
-    courseId
-  );
+  const { academicYearData, status: academicYearStatus } =
+    useAcademicYears(academicYearId);
+  const { courseData, status: courseStatus } = useCourses(courseId);
+  const { albumsData, status: albumStatus } = useAlbums();
 
   const { tabsComponent } = useCustomTabs({
     tabs: albumsData.map(({ id, name, photos }) => {

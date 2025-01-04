@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useParams } from "next/navigation";
 
 //*lodash
 import keyBy from "lodash/keyBy";
@@ -31,10 +32,7 @@ export interface AcademicYearCreate {
 
 type AcademicYearUpdate = Partial<AcademicYearCreate>;
 
-export function useAcademicYears(
-  institutionId: string,
-  academicYearId?: string
-): {
+export function useAcademicYears(academicYearId?: string): {
   academicYearsData: AcademicYearData[];
   academicYearsDataById: Record<string, AcademicYearData>;
   academicYearData: AcademicYearData;
@@ -45,6 +43,9 @@ export function useAcademicYears(
   ) => Promise<void>;
   status: string;
 } {
+  const params = useParams();
+  const institutionId = params.institutionId as string;
+
   // Fetch academic years data
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "institutions", institutionId, "academicYears"],
