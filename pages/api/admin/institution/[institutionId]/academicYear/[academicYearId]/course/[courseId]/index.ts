@@ -17,10 +17,10 @@ export default async function courseHandler(
   try {
     switch (req.method) {
       case "PUT": {
-        const { course_id } = req.query;
+        const { courseId } = req.query;
 
         // Validate required fields
-        if (!validateRequiredFields(req, res, ["course_id"], "query")) {
+        if (!validateRequiredFields(req, res, ["courseId"], "query")) {
           return;
         }
 
@@ -39,7 +39,7 @@ export default async function courseHandler(
 
         // Update the course
         const updatedCourse = await prisma.course.update({
-          where: { id: course_id as string },
+          where: { id: courseId as string },
           data: {
             name,
             access_code,
