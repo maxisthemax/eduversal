@@ -87,6 +87,10 @@ function useCustomTabs({
     router.push(removeParamsFromString(router.asPath, ["tab"]));
   }, []);
 
+  useEffect(() => {
+    if (defaultTab) setValue(defaultTab);
+  }, [defaultTab]);
+
   return {
     value,
     setValue,

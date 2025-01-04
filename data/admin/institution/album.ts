@@ -11,6 +11,18 @@ import { checkSameValue } from "@/helpers/objectHelpers";
 import axios from "@/utils/axios";
 
 //*interface
+export interface PhotoData {
+  id: string;
+  name: string;
+  download_url: string;
+  display_url: string;
+
+  created_by_name: string;
+  updated_by_name: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
 export interface AlbumData {
   id: string;
   name: string;
@@ -20,7 +32,7 @@ export interface AlbumData {
   course_id: string;
   created_at: Date;
   updated_at: Date;
-  photos: { name: string; download_url: string; display_url: string }[];
+  photos: PhotoData[];
 
   created_by_name: string;
   updated_by_name: string;
@@ -92,7 +104,7 @@ export function useAlbums(
   // Add album
   const addAlbum = async (album: AlbumCreate) => {
     await axios.post(
-      `admin/institution/${institutionId}/course/${courseId}/album`,
+      `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${courseId}/album`,
       album
     );
     refetch();
@@ -107,7 +119,7 @@ export function useAlbums(
     if (isEmpty) return;
 
     await axios.put(
-      `admin/institution/${institutionId}/course/${courseId}/album/${id}`,
+      `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${courseId}/album/${id}`,
       changes
     );
     refetch();
