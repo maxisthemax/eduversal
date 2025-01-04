@@ -390,6 +390,76 @@ async function main() {
     },
   });
 
+  /**
+   * 8. Albums
+   */
+  const album1 = await prisma.album.create({
+    data: {
+      name: "Summer Vacation",
+      description: "Photos from our summer vacation.",
+      type: "INDIVIDUAL",
+      institution_id: institutionA.id,
+      course_id: courseA.id,
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const album2 = await prisma.album.create({
+    data: {
+      name: "Winter Wonderland",
+      description: "Photos from our winter trip.",
+      type: "GROUP",
+      institution_id: institutionB.id,
+      course_id: courseB.id,
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  /**
+   * 9. Photos
+   */
+  const photo1 = await prisma.photo.create({
+    data: {
+      name: "Beach",
+      download_url:
+        "https://plus.unsplash.com/premium_photo-1670137142833-7e7ddd459501?q=80&w=1901&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      display_url:
+        "https://static.imgix.net/lorie.png?h=480&w=320&mark64=aHR0cHM6Ly9hc3NldHMuaW1naXgubmV0L3ByZXNza2l0L2ltZ2l4LXByZXNza2l0LnBkZj9mbT1wbmcmcGFnZT00",
+      album_id: album1.id,
+      institution_id: institutionA.id,
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  const photo2 = await prisma.photo.create({
+    data: {
+      name: "Snowy Mountains",
+      download_url:
+        "https://plus.unsplash.com/premium_photo-1670137142833-7e7ddd459501?q=80&w=1901&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      display_url:
+        "https://static.imgix.net/lorie.png?h=480&w=320&mark64=aHR0cHM6Ly9hc3NldHMuaW1naXgubmV0L3ByZXNza2l0L2ltZ2l4LXByZXNza2l0LnBkZj9mbT1wbmcmcGFnZT00",
+      album_id: album2.id,
+      institution_id: institutionB.id,
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  // Log the created albums and photos
+  console.log("Created Albums:", { album1, album2 });
+  console.log("Created Photos:", { photo1, photo2 });
+
   console.log("Seeded database successfully!");
 }
 
