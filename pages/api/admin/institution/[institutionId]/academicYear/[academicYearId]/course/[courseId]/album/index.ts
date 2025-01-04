@@ -31,6 +31,16 @@ export default async function albumHandler(
             institution_id: institutionId as string,
             course_id: courseId as string,
           },
+          include: {
+            photos: {
+              select: {
+                id: true,
+                name: true,
+                display_url: true,
+                created_at: true,
+              },
+            },
+          },
           orderBy: [
             {
               name: "asc",
