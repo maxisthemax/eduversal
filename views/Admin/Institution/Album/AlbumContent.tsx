@@ -1,5 +1,9 @@
 import { useParams } from "next/navigation";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
+
+//*components
+import AddEditAlbumDialog from "./AddEditAlbumDialog";
+import Photo from "../Photo";
 
 //*mui
 import Grid from "@mui/material/Grid2";
@@ -27,43 +31,39 @@ function AlbumContent({ albumId }: { albumId: string }) {
         sx={{ overflow: "auto", height: getFullHeightSize(23) }}
       >
         <Grid container spacing={2}>
-          {/* {photos.map((item, index) => (
-            <Grid
-              size={{ xs: 12, sm: 6, md: 4, lg: 2 }}
-              key={index}
-              sx={{ textAlign: "center" }}
-            >
-              <Box
-                component="img"
-                src={`${item.display_url}`}
-                alt={item.name}
-                style={{
-                  aspectRatio: "2/3",
-                  display: "block",
-                  width: "100%",
-                  objectFit: "cover",
-                }}
-              />
-              <Typography variant="caption">{item.name}</Typography>
-            </Grid>
-          ))} */}
+          <Photo albumId={albumData.id} />
         </Grid>
       </Grid>
       <Grid size={{ xs: 4 }} sx={{ background: "#EBEBEB" }}>
         <Grid container sx={{ p: 2 }} rowGap={1}>
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 10 }} sx={{ alignContent: "center" }}>
             <Typography>
               <b>Album Details</b>
             </Typography>
           </Grid>
+          <Grid size={{ xs: 2 }}>
+            <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
+          </Grid>
           <NameValue name="Name" value={albumData.name} />
+          <NameValue name="Type" value={albumData.type_format} />
           <NameValue
             name="Created"
             value={format(albumData.created_at, "PP")}
           />
           <NameValue
+            name="Updated"
+            value={format(albumData.updated_at, "PP")}
+          />
+          <NameValue
             name="Available Unitl"
             value={format(courseData.end_date, "PP")}
+          />
+          <NameValue
+            name=""
+            value={
+              differenceInDays(courseData.end_date, new Date()) +
+              " days remaining"
+            }
           />
         </Grid>
       </Grid>

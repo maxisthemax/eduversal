@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 
 //*lodash
 import keyBy from "lodash/keyBy";
+import find from "lodash/find";
 
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
@@ -37,6 +38,8 @@ export interface AlbumData {
 
   created_by_name: string;
   updated_by_name: string;
+
+  type_format: string;
 }
 
 export interface AlbumCreate {
@@ -90,6 +93,7 @@ export function useAlbums(albumId?: string): {
       const mapData = albumsQueryData.map((data) => {
         return {
           ...data,
+          type_format: find(type, (t) => t.value === data.type)?.label,
           created_at: new Date(data.created_at),
           updated_at: new Date(data.updated_at),
         };
