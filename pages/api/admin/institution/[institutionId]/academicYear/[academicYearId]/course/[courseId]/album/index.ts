@@ -17,7 +17,7 @@ export default async function albumHandler(
   try {
     switch (req.method) {
       case "GET": {
-        // Get institutionId and academicYearId from query
+        // Get institutionId and courseId from query
         const { institutionId, courseId } = req.query;
 
         // Validate required fields
@@ -25,7 +25,7 @@ export default async function albumHandler(
           return;
         }
 
-        // Fetch albums for the given institutionId and academicYearId
+        // Fetch albums for the given institutionId and courseId
         const albums = await prisma.album.findMany({
           where: {
             institution_id: institutionId as string,
@@ -52,6 +52,7 @@ export default async function albumHandler(
         return res.status(200).json({ data: albums });
       }
       case "POST": {
+        // Get institutionId and courseId from query
         const { institutionId, courseId } = req.query;
 
         // Validate required fields
@@ -112,7 +113,7 @@ export default async function albumHandler(
     }
 
     return res.status(500).json({
-      message: error.message ? error.message : "Failed to process request",
+      message: error.message || "Failed to process request",
       error,
     });
   } finally {

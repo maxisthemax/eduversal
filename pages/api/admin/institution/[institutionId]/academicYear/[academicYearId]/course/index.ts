@@ -45,9 +45,10 @@ export default async function courseHandler(
         return res.status(200).json({ data: courses });
       }
       case "POST": {
+        // Get institutionId and academicYearId from query
         const { institutionId, academicYearId } = req.query;
 
-        // Validate required fields
+        // Validate required fields in query
         if (
           !validateRequiredFields(
             req,
@@ -59,7 +60,7 @@ export default async function courseHandler(
           return;
         }
 
-        // Create a new course
+        // Extract course details from request body
         const {
           name,
           access_code,
@@ -69,7 +70,7 @@ export default async function courseHandler(
           end_date,
         } = req.body;
 
-        // Validate required fields
+        // Validate required fields in body
         if (
           !validateRequiredFields(req, res, [
             "name",
@@ -122,7 +123,7 @@ export default async function courseHandler(
     }
 
     return res.status(500).json({
-      message: error.message ? error.message : "Failed to process request",
+      message: error.message || "Failed to process request",
       error,
     });
   } finally {
