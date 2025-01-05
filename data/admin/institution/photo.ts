@@ -39,7 +39,7 @@ export function usePhotos(
   photosData: PhotoData[];
   photosDataById: Record<string, PhotoData>;
   photoData: PhotoData | undefined;
-  addPhoto: (photo: PhotoCreate) => Promise<void>;
+  addPhoto: (photos: PhotoCreate[]) => Promise<void>;
   updatePhoto: (id: string, photo: PhotoUpdate) => Promise<void>;
   status: string;
 } {
@@ -89,10 +89,10 @@ export function usePhotos(
   const photoData = photoId ? photosDataById[photoId] : undefined;
 
   // Add photo
-  const addPhoto = async (photo: PhotoCreate) => {
+  const addPhoto = async (photos: PhotoCreate[]) => {
     await axios.post(
       `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${courseId}/album/${albumId}/photo`,
-      photo
+      { photos }
     );
     refetch();
   };

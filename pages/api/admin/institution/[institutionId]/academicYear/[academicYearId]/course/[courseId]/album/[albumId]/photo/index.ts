@@ -57,41 +57,43 @@ export default async function albumHandler(
           return;
         }
 
-        // Create a new album
-        const { name, display_url, download_url } = req.body;
-
-        // Validate required fields
-        if (
-          !validateRequiredFields(req, res, [
-            "name",
-            "display_url",
-            "download_url",
-          ])
-        ) {
-          return;
-        }
-
         // Get createdBy and updatedBy
         const { created_by, updated_by } = await getCreatedByUpdatedBy(
           req,
           res
         );
 
-        // Create the new album
-        const newAlbum = await prisma.photo.create({
-          data: {
-            name,
-            display_url,
-            download_url,
-            institution_id: institutionId as string,
-            album_id: albumId as string,
-            ...created_by,
-            ...updated_by,
-          },
+        // Create new albums
+        const { photos } = req.body;
+
+        // Validate required fields
+        if (!photos || !Array.isArray(photos) || photos.length === 0) {
+          return res.status(400).json({
+            message: "No photos provided or invalid format.",
+          });
+        }
+
+        // Validate each photo
+        if (!validateRequiredFields(req, res, ["photos"], "body")) {
+          return;
+        }
+
+        // Prepare data for bulk insert
+        const newPhotos = photos.map((photo) => ({
+          ...photo,
+          institution_id: institutionId as string,
+          album_id: albumId as string,
+          ...created_by,
+          ...updated_by,
+        }));
+
+        // Insert multiple photos
+        const createdPhotos = await prisma.photo.createMany({
+          data: newPhotos,
         });
 
-        // Return the newly created album
-        return res.status(201).json({ data: newAlbum });
+        // Return the newly created photos
+        return res.status(201).json({ data: createdPhotos });
       }
       default:
         // Use handleAllowedMethods for method validation
