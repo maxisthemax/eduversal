@@ -26,7 +26,6 @@ export interface CourseData {
   updated_at: Date;
   standard: { name: string };
   valid_period: "MONTH" | "QUARTER" | "HALF" | "YEAR" | "CUSTOM";
-
   standard_name_format: string;
   valid_period_format: string;
 }
@@ -61,6 +60,7 @@ export function useCourses(courseId?: string): {
   const params = useParams();
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
+
   // Fetch courses data
   const { data, status, isLoading, refetch } = useQueryFetch(
     [
@@ -79,29 +79,25 @@ export function useCourses(courseId?: string): {
   // Memoize courses data
   const coursesData = useMemo(() => {
     if (!isLoading && coursesQueryData) {
-      const mapData = coursesQueryData.map((data) => {
-        return {
-          ...data,
-          start_date: new Date(data.start_date),
-          end_date: new Date(data.end_date),
-          created_at: new Date(data.created_at),
-          updated_at: new Date(data.updated_at),
-
-          standard_name_format: data.standard.name,
-          valid_period_format: find(validPeriodOptions, {
-            value: data.valid_period,
-          })?.label,
-        };
-      });
-
-      return mapData;
+      return coursesQueryData.map((data) => ({
+        ...data,
+        start_date: new Date(data.start_date),
+        end_date: new Date(data.end_date),
+        created_at: new Date(data.created_at),
+        updated_at: new Date(data.updated_at),
+        standard_name_format: data.standard.name,
+        valid_period_format: find(validPeriodOptions, {
+          value: data.valid_period,
+        })?.label,
+      }));
     } else return [];
   }, [coursesQueryData, isLoading]);
 
   // Memoize courses data by id
-  const coursesDataById = useMemo(() => {
-    return keyBy(coursesData, "id");
-  }, [coursesData]);
+  const coursesDataById = useMemo(
+    () => keyBy(coursesData, "id"),
+    [coursesData]
+  );
 
   // Get specific course data by courseId
   const courseData = courseId ? coursesDataById[courseId] : undefined;

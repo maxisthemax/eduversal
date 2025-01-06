@@ -18,7 +18,6 @@ export interface PhotoData {
   name: string;
   download_url: string;
   display_url: string;
-
   created_by_name: string;
   updated_by_name: string;
   created_at: Date;
@@ -35,10 +34,8 @@ export interface AlbumData {
   created_at: Date;
   updated_at: Date;
   photos: PhotoData[];
-
   created_by_name: string;
   updated_by_name: string;
-
   type_format: string;
 }
 
@@ -90,23 +87,17 @@ export function useAlbums(albumId?: string): {
   // Memoize albums data
   const albumsData = useMemo(() => {
     if (!isLoading && albumsQueryData) {
-      const mapData = albumsQueryData.map((data) => {
-        return {
-          ...data,
-          type_format: find(type, (t) => t.value === data.type)?.label,
-          created_at: new Date(data.created_at),
-          updated_at: new Date(data.updated_at),
-        };
-      });
-
-      return mapData;
+      return albumsQueryData.map((data) => ({
+        ...data,
+        type_format: find(type, (t) => t.value === data.type)?.label,
+        created_at: new Date(data.created_at),
+        updated_at: new Date(data.updated_at),
+      }));
     } else return [];
   }, [albumsQueryData, isLoading]);
 
   // Memoize albums data by id
-  const albumsDataById = useMemo(() => {
-    return keyBy(albumsData, "id");
-  }, [albumsData]);
+  const albumsDataById = useMemo(() => keyBy(albumsData, "id"), [albumsData]);
 
   // Get specific album data by albumId
   const albumData = albumId ? albumsDataById[albumId] : undefined;

@@ -94,7 +94,7 @@ export function useAcademicYears(academicYearId?: string): {
   ) => {
     const currentAcademicYear = academicYearsDataById[id];
 
-    // Remove fields that have the same value]
+    // Remove fields that have the same value
     const { changes, isEmpty } = checkSameValue(
       currentAcademicYear,
       academicYear

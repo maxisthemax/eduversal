@@ -17,7 +17,6 @@ export interface PhotoData {
   name: string;
   download_url: string;
   display_url: string;
-
   created_by_name: string;
   updated_by_name: string;
   created_at: Date;
@@ -47,6 +46,7 @@ export function usePhotos(
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
   const courseId = params.courseId as string;
+
   // Fetch photos data
   const { data, status, isLoading, refetch } = useQueryFetch(
     [
@@ -68,22 +68,16 @@ export function usePhotos(
   // Memoize photos data
   const photosData = useMemo(() => {
     if (!isLoading && photosQueryData) {
-      const mapData = photosQueryData.map((data) => {
-        return {
-          ...data,
-          created_at: new Date(data.created_at),
-          updated_at: new Date(data.updated_at),
-        };
-      });
-
-      return mapData;
+      return photosQueryData.map((data) => ({
+        ...data,
+        created_at: new Date(data.created_at),
+        updated_at: new Date(data.updated_at),
+      }));
     } else return [];
   }, [photosQueryData, isLoading]);
 
   // Memoize photos data by id
-  const photosDataById = useMemo(() => {
-    return keyBy(photosData, "id");
-  }, [photosData]);
+  const photosDataById = useMemo(() => keyBy(photosData, "id"), [photosData]);
 
   // Get specific photo data by photoId
   const photoData = photoId ? photosDataById[photoId] : undefined;
