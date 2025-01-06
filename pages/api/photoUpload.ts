@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import formidable, { Fields, Files } from "formidable";
 import { S3 } from "aws-sdk";
 import fs from "fs";
-import { v4 as uuidv4 } from "uuid";
 import sharp from "sharp";
 
 //*lodash
@@ -79,32 +78,35 @@ export default async function handler(
       const uploadPromises = fileArray.map(async (file) => {
         // Create a readable stream from the file path that formidable provides
         const fileStream = fs.createReadStream(file.filepath);
-        const { format } = await sharp(file.filepath).metadata();
+        const { format, width } = await sharp(file.filepath).metadata();
+        let newWidth = width;
+        while (newWidth > 500) {
+          newWidth *= 0.9; // Reduce width by 50% until it's less than 100px
+        }
         const watermarkSvg = createWatermarkSVG("EXAMPLE");
-        let transform = sharp(file.filepath).composite([
+        let transform = sharp(file.filepath).resize(Math.floor(newWidth));
+
+        if (format === "png") {
+          // e.g. compressionLevel: 9 is the maximum compression
+          transform = transform.png({ quality: 80, compressionLevel: 9 });
+        } else if (format === "jpeg") {
+          transform = transform.jpeg({ quality: 80 });
+        } else if (format === "avif") {
+          transform = transform.avif({ quality: 80 });
+        } else {
+          // fallback: force everything else to JPEG or choose another path
+          transform = transform.jpeg({ quality: 80 });
+        }
+        transform = transform.composite([
           {
             input: Buffer.from(watermarkSvg),
             gravity: "center", // place it bottom-right
           },
         ]);
-
-        if (format === "png") {
-          // e.g. compressionLevel: 9 is the maximum compression
-          transform = transform.png({ quality: 40, compressionLevel: 9 });
-        } else if (format === "jpeg") {
-          transform = transform.jpeg({ quality: 40 });
-        } else if (format === "avif") {
-          transform = transform.avif({ quality: 40 });
-        } else {
-          // fallback: force everything else to JPEG or choose another path
-          transform = transform.jpeg({ quality: 40 });
-        }
         const watermarkedAndCompressedBuffer = await transform.toBuffer();
 
         // Generate a new file name
-        const newFileName = `${Date.now()}-${uuidv4().slice(0, 4)}-${
-          file.originalFilename || file.newFilename
-        }`;
+        const newFileName = file.originalFilename || file.newFilename;
 
         // Upload parameters for the original file
         const uploadParams: S3.PutObjectRequest = {
@@ -117,10 +119,9 @@ export default async function handler(
         // Upload the original file to S3 (or DO Spaces)
         await s3.upload(uploadParams).promise();
 
-        const newFileNameWatermark = `${Date.now()}-${uuidv4().slice(
-          0,
-          4
-        )}-watermark-${file.originalFilename || file.newFilename}`;
+        const newFileNameWatermark = `watermark-${
+          file.originalFilename || file.newFilename
+        }`;
 
         // Upload parameters for the watermark file
         const uploadParams_watermark: S3.PutObjectRequest = {
@@ -132,6 +133,10 @@ export default async function handler(
           ),
           Body: watermarkedAndCompressedBuffer,
           ACL: "public-read",
+          ContentType: file.mimetype,
+          Metadata: {
+            "Content-Disposition": "inline",
+          },
         };
 
         // Upload the watermark file to S3 (or DO Spaces)
@@ -191,7 +196,7 @@ function createWatermarkSVG(text: string) {
         .watermark {
           font-family: Arial, sans-serif;
           font-size: 60px;
-          fill: rgba(255, 255, 255, 1); /* white with 80% opacity */
+          fill: rgba(0, 0, 0, 0.8); /* white with 80% opacity */
           font-weight: bold;
         }
       </style>

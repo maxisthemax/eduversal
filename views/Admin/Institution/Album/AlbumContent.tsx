@@ -11,7 +11,7 @@ import { useDropzone } from "react-dropzone";
 //*components
 import AddEditAlbumDialog from "./AddEditAlbumDialog";
 import Photo from "../Photo";
-import { FlexBox } from "@/components/Box";
+import { FlexBox, OverlayBox } from "@/components/Box";
 
 //*mui
 import Grid from "@mui/material/Grid2";
@@ -51,6 +51,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
 
   //*states
   const [files, setFiles] = useState<File[]>([]);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   //*data
   const { albumData } = useAlbums(albumId);
@@ -68,11 +69,14 @@ function AlbumContent({ albumId }: { albumId: string }) {
       formData.append("files", file);
     });
     try {
+      setIsUploading(true);
       const res = await axios.post("photoUpload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      addPhoto(res.data);
+      await addPhoto(res.data);
+      setIsUploading(false);
     } catch (error) {
+      setIsUploading(false);
       console.error("Error uploading files:", error);
     }
 
@@ -86,7 +90,16 @@ function AlbumContent({ albumId }: { albumId: string }) {
         sx={{ overflow: "auto", height: getFullHeightSize(23) }}
       >
         <Grid container spacing={2}>
-          <Grid size={{ xs: 12 }} sx={{ textAlign: "end" }}>
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              textAlign: "end",
+              position: "sticky",
+              top: 0,
+              background: "white",
+              zIndex: 1,
+            }}
+          >
             <Button variant="contained" {...bindTrigger(popupState)}>
               Upload
             </Button>
@@ -95,79 +108,81 @@ function AlbumContent({ albumId }: { albumId: string }) {
               {...bindDialog(popupState)}
               onClose={() => {}}
             >
-              <DialogContent>
-                <Grid
-                  container
-                  spacing={2}
-                  direction="row"
-                  sx={{
-                    maxHeight: getFullHeightSize(28),
-                    overflow: "auto",
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  {files.map((file, index) => {
-                    return (
-                      <Grid
-                        size={{ xs: 1.5 }}
-                        key={index}
-                        sx={{ textAlign: "center" }}
-                      >
-                        <Box
-                          component="img"
-                          src={URL.createObjectURL(file)}
-                          alt={file.name}
-                          style={{
-                            aspectRatio: "2/3",
-                            display: "block",
-                            width: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
-                        <Typography variant="caption">{file.name}</Typography>
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={() => {
-                    popupState.close();
-                    setFiles([]);
-                  }}
-                >
-                  Close
-                </Button>
-                <FlexBox />
-                <Box
-                  {...getRootProps()}
-                  sx={{
-                    textAlign: "center",
-                    cursor: "pointer",
-                  }}
-                >
-                  <input {...getInputProps()} />
-                  <Button variant="contained" color="primary">
-                    Select Files
+              <OverlayBox isLoading={isUploading}>
+                <DialogContent sx={{ minWidth: 400 }}>
+                  <Grid
+                    container
+                    spacing={2}
+                    direction="row"
+                    sx={{
+                      maxHeight: getFullHeightSize(28),
+                      overflow: "auto",
+                      justifyContent: "flex-start",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    {files.map((file, index) => {
+                      return (
+                        <Grid
+                          size={{ xs: 1.5 }}
+                          key={index}
+                          sx={{ textAlign: "center" }}
+                        >
+                          <Box
+                            component="img"
+                            src={URL.createObjectURL(file)}
+                            alt={file.name}
+                            style={{
+                              aspectRatio: "2/3",
+                              display: "block",
+                              width: "100%",
+                              objectFit: "cover",
+                            }}
+                          />
+                          <Typography variant="caption">{file.name}</Typography>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      popupState.close();
+                      setFiles([]);
+                    }}
+                  >
+                    Close
                   </Button>
-                </Box>
-                <Button
-                  variant="contained"
-                  disabled={files.length === 0}
-                  onClick={handleUpload}
-                >
-                  Upload
-                </Button>
-              </DialogActions>
+                  <FlexBox />
+                  <Box
+                    {...getRootProps()}
+                    sx={{
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input {...getInputProps()} />
+                    <Button variant="contained" color="primary">
+                      Select Files
+                    </Button>
+                  </Box>
+                  <Button
+                    variant="contained"
+                    disabled={files.length === 0}
+                    onClick={handleUpload}
+                  >
+                    Upload
+                  </Button>
+                </DialogActions>
+              </OverlayBox>
             </Dialog>
           </Grid>
           <Photo albumId={albumData.id} />
         </Grid>
       </Grid>
       <Grid size={{ xs: 4 }} sx={{ background: "#EBEBEB" }}>
-        <Grid container sx={{ p: 2 }} rowGap={1}>
+        <Grid container sx={{ p: 2 }} rowGap={0.5}>
           <Grid size={{ xs: 10 }} sx={{ alignContent: "center" }}>
             <Typography>
               <b>Album Details</b>
@@ -209,12 +224,14 @@ function NameValue({ name, value }: { name: string; value: string }) {
   return (
     <>
       <Grid size={{ xs: 4 }}>
-        <Typography variant="subtitle2">
-          <b>{name}</b>
+        <Typography variant="subtitle2" fontWeight={400}>
+          {name}
         </Typography>
       </Grid>
       <Grid size={{ xs: 8 }}>
-        <Typography variant="subtitle2">{value}</Typography>
+        <Typography variant="subtitle2" fontWeight={400}>
+          {value}
+        </Typography>
       </Grid>
     </>
   );

@@ -87,13 +87,26 @@ export default async function albumHandler(
           ...updated_by,
         }));
 
-        // Insert multiple photos
-        const createdPhotos = await prisma.photo.createMany({
-          data: newPhotos,
-        });
+        // Filter out photos already present in the database
+        const photosToCreate = [];
+        for (const photo of newPhotos) {
+          const existing = await prisma.photo.findFirst({
+            where: {
+              download_url: photo.download_url,
+              album_id: albumId as string,
+              institution_id: institutionId as string,
+            },
+          });
+          if (!existing) {
+            photosToCreate.push(photo);
+          }
+        }
+        if (photosToCreate.length) {
+          await prisma.photo.createMany({ data: photosToCreate });
+        }
 
         // Return the newly created photos
-        return res.status(201).json({ data: createdPhotos });
+        return res.status(201).json({ data: photosToCreate });
       }
       default:
         // Use handleAllowedMethods for method validation
