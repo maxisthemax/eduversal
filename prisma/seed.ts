@@ -9,7 +9,24 @@ async function main() {
     data: {
       first_name: "1",
       last_name: "Admin",
-      email: "admin@admin.com",
+      email: "admin1@admin.com",
+      password: hashedPasswordAdmin,
+      country_code: "+60",
+      phone_no: "123456789",
+      address_1: "Photoversal Studio",
+      postcode: "123456",
+      state: "Selangor",
+      city: "Seri Kembangan",
+      is_verified: true,
+      role: "ADMIN",
+    },
+  });
+
+  await prisma.user.create({
+    data: {
+      first_name: "2",
+      last_name: "Admin",
+      email: "admin2@admin.com",
       password: hashedPasswordAdmin,
       country_code: "+60",
       phone_no: "123456789",
