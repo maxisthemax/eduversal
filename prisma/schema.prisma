@@ -157,14 +157,15 @@ model Album {
 }
 
 model Photo {
-  id             String       @id @default(cuid())
-  name           String
-  download_url   String
-  display_url    String
-  album_id       String
-  album          Album        @relation(fields: [album_id], references: [id])
-  institution_id String?
-  institution    Institution? @relation(fields: [institution_id], references: [id])
+  id                     String       @id @default(cuid())
+  name                   String
+  download_url           String
+  download_watermark_url String
+  display_url            String
+  album_id               String
+  album                  Album        @relation(fields: [album_id], references: [id])
+  institution_id         String?
+  institution            Institution? @relation(fields: [institution_id], references: [id])
 
   created_by_user_id String
   created_by_name    String

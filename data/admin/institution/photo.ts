@@ -16,6 +16,7 @@ export interface PhotoData {
   id: string;
   name: string;
   download_url: string;
+  download_watermark_url: string;
   display_url: string;
   created_by_name: string;
   updated_by_name: string;
@@ -26,11 +27,13 @@ export interface PhotoData {
 export interface PhotoCreate {
   name: string;
   download_url: string;
+  download_watermark_url: string;
   display_url: string;
 }
 
 type PhotoUpdate = Partial<PhotoCreate>;
 
+// This hook manages photo fetching, adding, updating, and deleting within an album.
 export function usePhotos(
   albumId: string,
   photoId?: string
@@ -40,6 +43,7 @@ export function usePhotos(
   photoData: PhotoData | undefined;
   addPhoto: (photos: PhotoCreate[]) => Promise<void>;
   updatePhoto: (id: string, photo: PhotoUpdate) => Promise<void>;
+  deletePhoto: (photoIds: string[]) => Promise<void>;
   status: string;
 } {
   const params = useParams();
@@ -106,12 +110,28 @@ export function usePhotos(
     refetch();
   };
 
+  // Delete photo
+  const deletePhoto = async (photoIds: string[]) => {
+    await axios.post(
+      `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${courseId}/album/${albumId}/deletePhoto`,
+      { photoIds }
+    );
+    const keys = [];
+    photoIds.forEach((id) => {
+      keys.push(photosDataById[id].download_url);
+      keys.push(photosDataById[id].download_watermark_url);
+    });
+    await axios.post(`deletePhoto`, { keys }, undefined, true);
+    refetch();
+  };
+
   return {
     photosData,
     photosDataById,
     photoData,
     addPhoto,
     updatePhoto,
+    deletePhoto,
     status,
   };
 }

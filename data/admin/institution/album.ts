@@ -17,6 +17,7 @@ export interface PhotoData {
   id: string;
   name: string;
   download_url: string;
+  download_watermark_url: string;
   display_url: string;
   created_by_name: string;
   updated_by_name: string;

@@ -10,7 +10,7 @@ import {
   validateRequiredFields,
 } from "@/helpers/apiHelpers";
 
-export default async function albumHandler(
+export default async function photoHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -25,8 +25,8 @@ export default async function albumHandler(
           return;
         }
 
-        // Fetch albums for the given institutionId and albumId
-        const albums = await prisma.photo.findMany({
+        // Fetch photos for the given institutionId and albumId
+        const photos = await prisma.photo.findMany({
           where: {
             institution_id: institutionId as string,
             album_id: albumId as string,
@@ -38,8 +38,8 @@ export default async function albumHandler(
           ],
         });
 
-        // Return the albums
-        return res.status(200).json({ data: albums });
+        // Return the photos
+        return res.status(200).json({ data: photos });
       }
       case "POST": {
         // Get institutionId and albumId from query
@@ -63,7 +63,7 @@ export default async function albumHandler(
           res
         );
 
-        // Create new albums
+        // Create new photos
         const { photos } = req.body;
 
         // Validate required fields
