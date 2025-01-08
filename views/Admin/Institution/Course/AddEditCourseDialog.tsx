@@ -57,12 +57,13 @@ function AddEditCourseDialog({
 
   return (
     <>
-      <Button
-        variant={mode === "edit" ? "outlined" : "contained"}
-        {...bindTrigger(popupState)}
-      >
-        {mode === "edit" ? "Edit" : "Add Course"}
-      </Button>
+      {mode === "edit" ? (
+        <MenuItem {...bindTrigger(popupState)}>Edit</MenuItem>
+      ) : (
+        <Button variant={"contained"} {...bindTrigger(popupState)}>
+          Add Course
+        </Button>
+      )}
       <Dialog
         {...bindDialog(popupState)}
         maxWidth="sm"

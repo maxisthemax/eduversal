@@ -55,7 +55,10 @@ export const type = [
 
 type AlbumUpdate = Partial<AlbumCreate>;
 
-export function useAlbums(albumId?: string): {
+export function useAlbums(
+  albumId?: string,
+  otherParams?: { courseId: string }
+): {
   albumsData: AlbumData[];
   albumsDataById: Record<string, AlbumData>;
   albumData: AlbumData | undefined;
@@ -66,7 +69,7 @@ export function useAlbums(albumId?: string): {
   const params = useParams();
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
-  const courseId = params.courseId as string;
+  const courseId = (params.courseId as string) ?? otherParams?.courseId;
 
   // Fetch albums data
   const { data, status, isLoading, refetch } = useQueryFetch(
