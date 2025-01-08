@@ -7,6 +7,7 @@ import {
 } from "material-ui-popup-state/hooks";
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { toast } from "react-toastify";
 
 //*lodash
 import includes from "lodash/includes";
@@ -56,6 +57,27 @@ function AlbumContent({ albumId }: { albumId: string }) {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     multiple: true,
+    onError: (error) => {
+      console.log(error);
+    },
+    accept: {
+      "image/jpeg": [],
+      "image/png": [],
+    },
+    onDropRejected: (fileRejections) => {
+      toast.error(
+        fileRejections.map((file) => file.errors[0].message).join(`\n`)
+      );
+    },
+    validator: (file) => {
+      if (file.size > 10 * 1024 * 1024) {
+        return {
+          code: "size-too-large",
+          message: `file is larger than 10MB`,
+        };
+      }
+      return null;
+    },
   });
 
   //*states
@@ -215,6 +237,14 @@ function AlbumContent({ albumId }: { albumId: string }) {
                         );
                       })}
                     </Grid>
+                    <Stack sx={{ pt: 1 }}>
+                      <Typography variant="caption">
+                        * Maximum file size is 10MB are allowed
+                      </Typography>
+                      <Typography variant="caption">
+                        * Only .jpeg and .png files are allowed
+                      </Typography>
+                    </Stack>
                   </DialogContent>
                   <DialogActions>
                     <Button
