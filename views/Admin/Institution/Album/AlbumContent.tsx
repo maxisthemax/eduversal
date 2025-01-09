@@ -2,12 +2,14 @@ import { useParams } from "next/navigation";
 import { format, differenceInDays } from "date-fns";
 import {
   bindDialog,
+  bindPopover,
   bindTrigger,
   usePopupState,
 } from "material-ui-popup-state/hooks";
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
+import PopupState from "material-ui-popup-state";
 
 //*lodash
 import includes from "lodash/includes";
@@ -16,6 +18,7 @@ import includes from "lodash/includes";
 import { useCustomDialog } from "@/components/Dialog";
 import AddEditAlbumDialog from "./AddEditAlbumDialog";
 import { FlexBox, OverlayBox } from "@/components/Box";
+import { CustomIcon } from "@/components/Icons";
 
 //*mui
 import Grid from "@mui/material/Grid2";
@@ -27,6 +30,9 @@ import Box from "@mui/material/Box";
 import DialogActions from "@mui/material/DialogActions";
 import Checkbox from "@mui/material/Checkbox";
 import Stack from "@mui/material/Stack";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -38,8 +44,6 @@ import { usePhotos } from "@/data/admin/institution/photo";
 
 //*utils
 import axios from "@/utils/axios";
-import IconButton from "@mui/material/IconButton";
-import { CustomIcon } from "@/components/Icons";
 
 function AlbumContent({ albumId }: { albumId: string }) {
   const params = useParams();
@@ -291,51 +295,89 @@ function AlbumContent({ albumId }: { albumId: string }) {
                   },
                 }}
               >
-                <Button
-                  sx={{ p: 0 }}
-                  onClick={() => {
-                    if (!includes(selection, item.id)) {
-                      setSelection((selection) => [...selection, item.id]);
-                    } else {
-                      setSelection((selection) =>
-                        selection.filter((id) => id !== item.id)
-                      );
-                    }
-                  }}
-                >
-                  <Box
-                    className="checkbox"
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      display: !includes(selection, item.id) ? "none" : "block",
-                    }}
-                  >
-                    <Checkbox
-                      checked={includes(selection, item.id)}
-                      size="small"
-                      disableRipple
-                      sx={{
-                        background: "white",
-                        p: 0,
-                        borderRadius: 0,
-                        m: 0,
-                      }}
-                    />
-                  </Box>
-                  <Box
-                    component="img"
-                    src={`${item.display_url}`}
-                    alt={item.name}
-                    style={{
-                      aspectRatio: "2/3",
-                      display: "block",
-                      width: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Button>
+                <PopupState variant="popover" popupId="demo-popup-popover">
+                  {(popupState) => (
+                    <>
+                      <Button sx={{ p: 0 }} {...bindTrigger(popupState)}>
+                        <Box
+                          className="checkbox"
+                          sx={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            display: !includes(selection, item.id)
+                              ? "none"
+                              : "block",
+                          }}
+                        >
+                          <Checkbox
+                            checked={includes(selection, item.id)}
+                            size="small"
+                            disableRipple
+                            sx={{
+                              background: "white",
+                              p: 0,
+                              borderRadius: 0,
+                              m: 0,
+                            }}
+                            onClick={() => {
+                              if (!includes(selection, item.id)) {
+                                setSelection((selection) => [
+                                  ...selection,
+                                  item.id,
+                                ]);
+                              } else {
+                                setSelection((selection) =>
+                                  selection.filter((id) => id !== item.id)
+                                );
+                              }
+                            }}
+                          />
+                        </Box>
+                        <Box
+                          component="img"
+                          src={`${item.display_url}`}
+                          alt={item.name}
+                          style={{
+                            aspectRatio: "2/3",
+                            display: "block",
+                            width: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </Button>
+                      <Menu
+                        {...bindPopover(popupState)}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        sx={{ p: 0 }}
+                      >
+                        <MenuItem
+                          onClick={async () => {
+                            const res = await axios.get(
+                              `admin/photo/getPhoto?fileKey=${item.download_url}`
+                            );
+                            const link = document.createElement("a");
+                            link.href = res.data.url;
+                            link.download = item.name;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                          }}
+                        >
+                          Download
+                        </MenuItem>
+                      </Menu>
+                    </>
+                  )}
+                </PopupState>
+
                 <Typography
                   variant="caption"
                   sx={{ overflowWrap: "break-word" }}
