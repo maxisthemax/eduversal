@@ -121,7 +121,7 @@ export function usePhotos(
       keys.push(photosDataById[id].download_url);
       keys.push(photosDataById[id].download_watermark_url);
     });
-    await axios.post(`deletePhoto`, { keys }, undefined, true);
+    await axios.post(`admin/photo/deletePhoto`, { keys }, undefined, true);
     refetch();
   };
 

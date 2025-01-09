@@ -107,7 +107,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
     });
     try {
       setIsUploading(true);
-      const res = await axios.post("photoUpload", formData, {
+      const res = await axios.post("admin/photo/uploadPhoto", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       await addPhoto(res.data);

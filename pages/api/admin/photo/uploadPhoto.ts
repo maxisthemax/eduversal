@@ -169,27 +169,6 @@ export default async function handler(
   }
 }
 
-export function getPresignedUrl(
-  bucketName: string,
-  fileKey: string,
-  expiresInSeconds = 60
-): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const params = {
-      Bucket: bucketName,
-      Key: fileKey,
-      Expires: expiresInSeconds, // link expiration in seconds
-    };
-
-    s3.getSignedUrl("getObject", params, (err, url) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(url);
-    });
-  });
-}
-
 function createWatermarkSVG(text: string) {
   // Example: a 400x100 SVG with black text (24px font) and some styling
   // If you don't know the text length or want auto sizing, you can
