@@ -2,10 +2,6 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { getIronSession } from "iron-session";
 
-//*lodash
-import startWith from "lodash/startsWith";
-import includes from "lodash/includes";
-
 //*lib
 import { SessionData, sessionOptions } from "@/lib/session";
 
@@ -25,22 +21,19 @@ export async function middleware(req: NextRequest) {
 
   // Check if the request is for an authentication-related route
   if (
-    includes(
-      [
-        "/signin",
-        "/signup",
-        "/verifyemail",
-        "forgotpassword",
-        "resetpassword",
-        "/api/auth/forgotPassword",
-        "/api/auth/resendVerification",
-        "/api/auth/resetPassword",
-        "/api/auth/signIn",
-        "/api/auth/signUp",
-        "/api/auth/verifyEmail",
-      ],
-      pathname
-    )
+    [
+      "/signin",
+      "/signup",
+      "/verifyemail",
+      "forgotpassword",
+      "resetpassword",
+      "/api/auth/forgotPassword",
+      "/api/auth/resendVerification",
+      "/api/auth/resetPassword",
+      "/api/auth/signIn",
+      "/api/auth/signUp",
+      "/api/auth/verifyEmail",
+    ].includes(pathname)
   ) {
     // Redirect logged-in users away from auth routes
     if (session.isLoggedIn) {
@@ -51,7 +44,10 @@ export async function middleware(req: NextRequest) {
     // Handle non-auth routes
     if (session.isLoggedIn) {
       // Restrict access to admin routes for non-admin users
-      if (startWith(pathname, "/admin") || startWith(pathname, "/api/admin")) {
+      if (
+        (pathname.startsWith, "/admin") ||
+        (pathname.startsWith, "/api/admin")
+      ) {
         if (session.role === "USER") {
           nextUrl.pathname = "/unauthorized";
           return NextResponse.redirect(nextUrl);
