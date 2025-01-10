@@ -187,16 +187,20 @@ function DeleteDialogForm({
   return (
     <>
       <DialogContent>
-        {albumsData.length > 0 && (
+        {albumsData.length > 0 ? (
           <DialogContentText>
             You have albums associated with this course. Please delete the
             albums first to delete the course.
+          </DialogContentText>
+        ) : (
+          <DialogContentText>
+            Are you sure to delete this course?
           </DialogContentText>
         )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>
-        <Button onClick={() => {}}>Delete</Button>
+        {albumsData.length === 0 && <Button onClick={() => {}}>Delete</Button>}
       </DialogActions>
     </>
   );
