@@ -298,7 +298,11 @@ function AlbumContent({ albumId }: { albumId: string }) {
                 <PopupState variant="popover" popupId="demo-popup-popover">
                   {(popupState) => (
                     <>
-                      <Button sx={{ p: 0 }} {...bindTrigger(popupState)}>
+                      <Button
+                        disableRipple
+                        sx={{ p: 0 }}
+                        {...bindTrigger(popupState)}
+                      >
                         <Box
                           className="checkbox"
                           sx={{
@@ -319,8 +323,10 @@ function AlbumContent({ albumId }: { albumId: string }) {
                               p: 0,
                               borderRadius: 0,
                               m: 0,
+                              zIndex: 1,
                             }}
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               if (!includes(selection, item.id)) {
                                 setSelection((selection) => [
                                   ...selection,
