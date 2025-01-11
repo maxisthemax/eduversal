@@ -64,6 +64,7 @@ export function useAlbums(
   albumData: AlbumData | undefined;
   addAlbum: (album: AlbumCreate) => Promise<void>;
   updateAlbum: (id: string, album: AlbumUpdate) => Promise<void>;
+  deleteAlbum: (id: string) => Promise<void>;
   status: string;
 } {
   const params = useParams();
@@ -130,6 +131,14 @@ export function useAlbums(
     refetch();
   };
 
+  // Delete album
+  const deleteAlbum = async (id: string) => {
+    await axios.delete(
+      `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${courseId}/album/${id}`
+    );
+    refetch();
+  };
+
   return {
     albumsData,
     albumsDataById,
@@ -137,5 +146,6 @@ export function useAlbums(
     addAlbum,
     updateAlbum,
     status,
+    deleteAlbum,
   };
 }

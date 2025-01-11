@@ -160,7 +160,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
               >
                 {selection.length > 0 && (
                   <Button variant="contained" onClick={handleDelete}>
-                    DELETE
+                    Delete
                   </Button>
                 )}
                 <Button variant="contained" {...bindTrigger(popupState)}>
@@ -401,7 +401,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                 <b>Album Details</b>
               </Typography>
             </Grid>
-            <Grid size={{ xs: 1 }}>
+            <Grid size={{ xs: 2 }}>
               <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
             </Grid>
             <NameValue name="Name" value={albumData.name} />

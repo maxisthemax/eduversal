@@ -104,12 +104,16 @@ export default async function handler(
             const watermarkedAndCompressedBuffer = await transform.toBuffer();
 
             // Generate a new file name
-            const newFileName = file.originalFilename || file.newFilename;
+            const newFileName = replaceStringAll(
+              file.originalFilename || file.newFilename,
+              " ",
+              "-"
+            );
 
             // Upload parameters for the original file
             const uploadParams: S3.PutObjectRequest = {
               Bucket: process.env.BUCKET_NAME || "",
-              Key: replaceStringAll(`${folderPath}/${newFileName}`, " ", "-"),
+              Key: `${folderPath}/${newFileName}`,
               Body: fileStream,
               ACL: "private",
             };
@@ -117,18 +121,16 @@ export default async function handler(
             // Upload the original file to S3 (or DO Spaces)
             await s3.upload(uploadParams).promise();
 
-            const newFileNameWatermark = `watermark-${
-              file.originalFilename || file.newFilename
-            }`;
+            const newFileNameWatermark = replaceStringAll(
+              `watermark-${file.originalFilename || file.newFilename}`,
+              " ",
+              "-"
+            );
 
             // Upload parameters for the watermark file
             const uploadParams_watermark: S3.PutObjectRequest = {
               Bucket: process.env.BUCKET_NAME || "",
-              Key: replaceStringAll(
-                `${folderPath}/${newFileNameWatermark}`,
-                " ",
-                "-"
-              ),
+              Key: `${folderPath}/${newFileNameWatermark}`,
               Body: watermarkedAndCompressedBuffer,
               ACL: "public-read",
               ContentType: file.mimetype,

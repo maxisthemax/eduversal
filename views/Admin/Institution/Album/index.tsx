@@ -5,6 +5,7 @@ import { Page } from "@/components/Box";
 import useCustomTabs from "@/components/Box/useCustomTabs";
 import AlbumContent from "./AlbumContent";
 import AddEditAlbumDialog from "./AddEditAlbumDialog";
+import { useCustomDialog } from "@/components/Dialog";
 
 //*data
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
@@ -12,7 +13,11 @@ import { useCourses } from "@/data/admin/institution/course";
 import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAlbums } from "@/data/admin/institution/album";
 
+//*mui
+import Button from "@mui/material/Button";
+
 function Album() {
+  const { handleOpenDialog } = useCustomDialog();
   const params = useParams();
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
@@ -24,9 +29,9 @@ function Album() {
   const { academicYearData, status: academicYearStatus } =
     useAcademicYears(academicYearId);
   const { courseData, status: courseStatus } = useCourses(courseId);
-  const { albumsData, status: albumStatus } = useAlbums();
+  const { albumsData, status: albumStatus, deleteAlbum } = useAlbums();
 
-  const { tabsComponent } = useCustomTabs({
+  const { tabsComponent, value } = useCustomTabs({
     tabs: albumsData.map(({ id, name }) => {
       return {
         label: name,
@@ -61,7 +66,26 @@ function Album() {
           title: courseData?.name,
         },
       ]}
-      rightButton={[<AddEditAlbumDialog key={"addEditAlbumDialog"} />]}
+      rightButton={[
+        <AddEditAlbumDialog key={"addEditAlbumDialog"} />,
+        <Button
+          key="deleteAlbum"
+          onClick={() => {
+            handleOpenDialog({
+              allowOutsideClose: false,
+              title: "Delete This Album",
+              description:
+                "Are you sure you want to delete this album?\n All photo related to this album will be deleted and cannot be recovered.",
+              onConfirm: async () => {
+                await deleteAlbum(value);
+              },
+            });
+          }}
+          variant="contained"
+        >
+          Delete This ALbum
+        </Button>,
+      ]}
     >
       {tabsComponent}
     </Page>
