@@ -66,7 +66,7 @@ export default async function academicYearHandler(
       }
       default:
         // Use handleAllowedMethods for method validation
-        if (handleAllowedMethods(req, res, ["PUT"])) return;
+        if (handleAllowedMethods(req, res, ["PUT", "DELETE"])) return;
     }
   } catch (error) {
     // Handle any errors

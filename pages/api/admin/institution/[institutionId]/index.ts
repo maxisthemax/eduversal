@@ -45,10 +45,28 @@ export default async function institutionsHandler(
         // Return the updated institution
         return res.status(200).json({ data: updatedInstitution });
       }
+      case "DELETE": {
+        // Delete an existing institution
+        const { institutionId } = req.query;
 
+        // Validate required fields
+        if (!validateRequiredFields(req, res, ["institutionId"], "query")) {
+          return;
+        }
+
+        // Delete the institution
+        await prisma.institution.delete({
+          where: { id: institutionId as string },
+        });
+
+        // Return a success message
+        return res
+          .status(200)
+          .json({ message: "Institution deleted successfully" });
+      }
       default:
         // Use handleAllowedMethods for method validation
-        if (handleAllowedMethods(req, res, ["PUT"])) return;
+        if (handleAllowedMethods(req, res, ["PUT", "DELETE"])) return;
     }
   } catch (error) {
     // Handle any errors

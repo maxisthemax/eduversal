@@ -1,15 +1,30 @@
 import Link from "next/link";
+import PopupState, {
+  bindTrigger,
+  bindDialog,
+  bindMenu,
+} from "material-ui-popup-state";
 
 //*components
 import DataGrid from "@/components/Table/DataGrid";
-import { Page } from "@/components/Box";
+import { OverlayBox, Page } from "@/components/Box";
 import AddEditInstitutionDialog from "./AddEditInstitutionDialog";
+import { CustomIcon } from "@/components/Icons";
 
 //*mui
+import MenuItem from "@mui/material/MenuItem";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import IconButton from "@mui/material/IconButton";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
 import { useInstitutions } from "@/data/admin/institution/institution";
+import { useAcademicYears } from "@/data/admin/institution/academicYear";
 
 function Institution() {
   //*data
@@ -51,10 +66,25 @@ function Institution() {
       headerName: "",
       renderCell: ({ id }) => {
         return (
-          <AddEditInstitutionDialog mode="edit" institutionId={id as string} />
+          <PopupState variant="popover" popupId="menu">
+            {(popupState) => (
+              <>
+                <IconButton size="small" {...bindTrigger(popupState)}>
+                  <CustomIcon fontSizeSx="20px" icon="more_vert" />
+                </IconButton>
+                <Menu {...bindMenu(popupState)}>
+                  <AddEditInstitutionDialog
+                    mode="edit"
+                    institutionId={id as string}
+                  />
+                  <DeleteDialog institutionId={id as string} />
+                </Menu>
+              </>
+            )}
+          </PopupState>
         );
       },
-      minWidth: 100,
+      width: 60,
     },
   ];
 
@@ -78,3 +108,72 @@ function Institution() {
 }
 
 export default Institution;
+
+function DeleteDialog({ institutionId }: { institutionId: string }) {
+  return (
+    <PopupState variant="popover" popupId="delete">
+      {(popupState) => (
+        <>
+          <MenuItem {...bindTrigger(popupState)}>Delete</MenuItem>
+          <Dialog
+            {...bindDialog(popupState)}
+            maxWidth="xs"
+            fullWidth
+            keepMounted={false}
+            disableEnforceFocus={true}
+            onClose={() => {
+              popupState.close();
+            }}
+          >
+            <DeleteDialogForm
+              institutionId={institutionId}
+              handleClose={popupState.close}
+            />
+          </Dialog>
+        </>
+      )}
+    </PopupState>
+  );
+}
+
+function DeleteDialogForm({
+  institutionId,
+  handleClose,
+}: {
+  institutionId: string;
+  handleClose: () => void;
+}) {
+  const { academicYearsData, status } = useAcademicYears(undefined, {
+    institutionId,
+  });
+  const { deleteInstitution, isDeleting } = useInstitutions(institutionId);
+
+  return (
+    <OverlayBox isLoading={isDeleting || status === "pending"}>
+      <DialogContent>
+        {academicYearsData.length > 0 ? (
+          <DialogContentText>
+            You have academic years associated with this institution. Please
+            delete the academic years first to delete the institution.
+          </DialogContentText>
+        ) : (
+          <DialogContentText>
+            Are you sure to delete this institution?
+          </DialogContentText>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Close</Button>
+        {academicYearsData.length === 0 && (
+          <Button
+            onClick={async () => {
+              await deleteInstitution(institutionId);
+            }}
+          >
+            Delete
+          </Button>
+        )}
+      </DialogActions>
+    </OverlayBox>
+  );
+}

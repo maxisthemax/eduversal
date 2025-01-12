@@ -32,7 +32,10 @@ export interface AcademicYearCreate {
 
 type AcademicYearUpdate = Partial<AcademicYearCreate>;
 
-export function useAcademicYears(academicYearId?: string): {
+export function useAcademicYears(
+  academicYearId?: string,
+  otherParams?: { institutionId: string }
+): {
   academicYearsData: AcademicYearData[];
   academicYearsDataById: Record<string, AcademicYearData>;
   academicYearData: AcademicYearData;
@@ -46,7 +49,8 @@ export function useAcademicYears(academicYearId?: string): {
   status: string;
 } {
   const params = useParams();
-  const institutionId = params.institutionId as string;
+  const institutionId =
+    (params.institutionId as string) ?? otherParams.institutionId;
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch academic years data

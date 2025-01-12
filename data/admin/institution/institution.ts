@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 //*lodash
 import keyBy from "lodash/keyBy";
@@ -49,12 +49,15 @@ export function useInstitutions(institutionId?: string): {
     institution: InstitutionUpdate
   ) => Promise<void>;
   status: string;
+  deleteInstitution: (id: string) => Promise<void>;
+  isDeleting: boolean;
 } {
   // Fetch institutions data using custom query hook
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "institutions"],
     "admin/institution"
   );
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const institutionsQueryData = data as InstitutionData[];
 
@@ -106,6 +109,14 @@ export function useInstitutions(institutionId?: string): {
     refetch();
   };
 
+  // Delete institution
+  const deleteInstitution = async (id: string) => {
+    setIsDeleting(true);
+    await axios.delete(`admin/institution/${id}`);
+    refetch();
+    setIsDeleting(false);
+  };
+
   return {
     institutionsData,
     institutionsDataById,
@@ -113,5 +124,7 @@ export function useInstitutions(institutionId?: string): {
     addInstitution,
     updateInstitution,
     status,
+    deleteInstitution,
+    isDeleting,
   };
 }

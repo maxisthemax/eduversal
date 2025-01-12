@@ -47,12 +47,13 @@ function AddEditInstitutionDialog({
 
   return (
     <>
-      <Button
-        variant={mode === "edit" ? "outlined" : "contained"}
-        {...bindTrigger(popupState)}
-      >
-        {mode === "edit" ? "Edit" : "Add Institution"}
-      </Button>
+      {mode === "edit" ? (
+        <MenuItem {...bindTrigger(popupState)}>Edit</MenuItem>
+      ) : (
+        <Button variant={"contained"} {...bindTrigger(popupState)}>
+          Add Institution
+        </Button>
+      )}
       <Dialog
         {...bindDialog(popupState)}
         maxWidth="sm"
