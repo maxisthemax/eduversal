@@ -5,11 +5,7 @@ import DataGrid from "@/components/Table/DataGrid";
 import Box from "@mui/material/Box";
 import { GridColDef } from "@mui/x-data-grid";
 
-//*data
-import { useStaff } from "@/data/admin/user/staff";
-
-function StaffUser() {
-  const { staffData } = useStaff();
+function ParentUser() {
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
       field: "first_name",
@@ -35,9 +31,9 @@ function StaffUser() {
 
   return (
     <Box sx={{ p: 2 }}>
-      <DataGrid data={staffData} columns={columns} />
+      <DataGrid data={[]} columns={columns} />
     </Box>
   );
 }
 
-export default StaffUser;
+export default ParentUser;

@@ -4,7 +4,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 
 //*helpers
-import { handleAllowedMethods } from "@/helpers/apiHelpers";
+import {
+  handleAllowedMethods,
+  validateRequiredFields,
+} from "@/helpers/apiHelpers";
 
 // API handler function
 export default async function handler(
@@ -25,10 +28,32 @@ export default async function handler(
         // Return the users
         return res.status(200).json({ data: users });
       }
+      case "POST": {
+        // Extract name from request body
+        const { userId, email, role } = req.body;
 
+        // Validate required fields in request body
+        if (!validateRequiredFields(req, res, ["role"])) {
+          return;
+        }
+
+        if (!userId && !email) {
+          return res
+            .status(400)
+            .json({ message: "userId or email is required" });
+        }
+
+        // Update the user role
+        const updatedUser = await prisma.user.update({
+          where: userId ? { id: userId } : { email: email },
+          data: { role },
+        });
+
+        return res.status(201).json({ data: updatedUser });
+      }
       default: {
         // Handle unsupported methods
-        if (handleAllowedMethods(req, res, ["GET"])) return;
+        if (handleAllowedMethods(req, res, ["GET", "POST"])) return;
       }
     }
   } catch (error) {

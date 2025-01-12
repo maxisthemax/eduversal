@@ -1,4 +1,4 @@
-import ParentUserView from "@/views/Admin/ParentUser";
+import ParentUserView from "@/views/Admin/User/ParentUser";
 
 function ParentUser() {
   return <ParentUserView />;

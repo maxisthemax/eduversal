@@ -6,6 +6,9 @@ import keyBy from "lodash/keyBy";
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
 
+//*utils
+import axios from "@/utils/axios";
+
 //*interface
 export interface StaffData {
   id: string;
@@ -23,9 +26,14 @@ export function useStaff(): {
   staffData: StaffData[];
   staffDataById: Record<string, StaffData>;
   status: string;
+  updateUserRole: (
+    role: "USER" | "ADMIN",
+    userId?: string,
+    email?: string
+  ) => Promise<void>;
 } {
   // Fetch staff data
-  const { data, status, isLoading } = useQueryFetch(
+  const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "user", "staff"],
     `admin/user/staff`
   );
@@ -49,9 +57,20 @@ export function useStaff(): {
     return keyBy(staffData, "id");
   }, [staffData]);
 
+  // Update standard only if there is a difference
+  const updateUserRole = async (
+    role: "USER" | "ADMIN",
+    userId?: string,
+    email?: string
+  ) => {
+    await axios.post(`admin/user/staff`, { role, userId, email });
+    refetch();
+  };
+
   return {
     staffData,
     staffDataById,
     status,
+    updateUserRole,
   };
 }

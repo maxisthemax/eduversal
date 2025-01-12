@@ -1,4 +1,4 @@
-import StaffUserView from "@/views/Admin/StaffUser";
+import StaffUserView from "@/views/Admin/User/StaffUser";
 
 function StaffUser() {
   return <StaffUserView />;
