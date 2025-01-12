@@ -91,7 +91,10 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 id: "userlist",
                 title: "User List",
                 icon: "people",
-                list: [{ title: "Parent User", href: "/admin/parentuser" }],
+                list: [
+                  { title: "Parent User", href: "/admin/user/parentuser" },
+                  { title: "Staff User", href: "/admin/user/staffuser" },
+                ],
               },
               {
                 id: "general",
