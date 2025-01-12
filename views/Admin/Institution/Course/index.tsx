@@ -7,7 +7,7 @@ import PopupState, {
 } from "material-ui-popup-state";
 
 //*components
-import { Page } from "@/components/Box";
+import { OverlayBox, Page } from "@/components/Box";
 import DataGrid from "@/components/Table/DataGrid";
 import AddEditCourseDialog from "./AddEditCourseDialog";
 import { CustomIcon } from "@/components/Icons";
@@ -31,7 +31,7 @@ import {
 } from "@mui/material";
 import { useAlbums } from "@/data/admin/institution/album";
 
-function AcademicYear() {
+function Course() {
   const params = useParams();
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
@@ -146,7 +146,7 @@ function AcademicYear() {
   );
 }
 
-export default AcademicYear;
+export default Course;
 
 function DeleteDialog({ courseId }: { courseId: string }) {
   return (
@@ -183,9 +183,10 @@ function DeleteDialogForm({
   handleClose: () => void;
 }) {
   const { albumsData } = useAlbums(undefined, { courseId });
+  const { deleteCourse, isDeleting } = useCourses(courseId);
 
   return (
-    <>
+    <OverlayBox isLoading={isDeleting}>
       <DialogContent>
         {albumsData.length > 0 ? (
           <DialogContentText>
@@ -200,8 +201,16 @@ function DeleteDialogForm({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>
-        {albumsData.length === 0 && <Button onClick={() => {}}>Delete</Button>}
+        {albumsData.length === 0 && (
+          <Button
+            onClick={async () => {
+              await deleteCourse(courseId);
+            }}
+          >
+            Delete
+          </Button>
+        )}
       </DialogActions>
-    </>
+    </OverlayBox>
   );
 }

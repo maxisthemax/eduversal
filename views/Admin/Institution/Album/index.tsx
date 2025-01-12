@@ -68,23 +68,25 @@ function Album() {
       ]}
       rightButton={[
         <AddEditAlbumDialog key={"addEditAlbumDialog"} />,
-        <Button
-          key="deleteAlbum"
-          onClick={() => {
-            handleOpenDialog({
-              allowOutsideClose: false,
-              title: "Delete This Album",
-              description:
-                "Are you sure you want to delete this album?\n All photo related to this album will be deleted and cannot be recovered.",
-              onConfirm: async () => {
-                await deleteAlbum(value);
-              },
-            });
-          }}
-          variant="contained"
-        >
-          Delete This ALbum
-        </Button>,
+        albumsData.length > 0 && (
+          <Button
+            key="deleteAlbum"
+            onClick={() => {
+              handleOpenDialog({
+                allowOutsideClose: false,
+                title: "Delete This Album",
+                description:
+                  "Are you sure you want to delete this album?\n All photo related to this album will be deleted and cannot be recovered.",
+                onConfirm: async () => {
+                  await deleteAlbum(value);
+                },
+              });
+            }}
+            variant="contained"
+          >
+            Delete This ALbum
+          </Button>
+        ),
       ]}
     >
       {tabsComponent}

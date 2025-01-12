@@ -54,6 +54,24 @@ export default async function courseHandler(
         // Return the updated course
         return res.status(200).json({ data: updatedCourse });
       }
+
+      case "DELETE": {
+        const { courseId } = req.query;
+
+        // Validate required fields
+        if (!validateRequiredFields(req, res, ["courseId"], "query")) {
+          return;
+        }
+
+        // Delete the course
+        await prisma.course.delete({
+          where: { id: courseId as string },
+        });
+
+        // Return a success message
+        return res.status(200).json({ message: "Course deleted successfully" });
+      }
+
       default:
         // Use handleAllowedMethods for method validation
         if (handleAllowedMethods(req, res, ["PUT"])) return;

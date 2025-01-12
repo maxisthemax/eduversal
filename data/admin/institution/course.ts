@@ -1,5 +1,5 @@
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 //*lodash
 import keyBy from "lodash/keyBy";
@@ -55,11 +55,14 @@ export function useCourses(courseId?: string): {
   courseData: CourseData | undefined;
   addCourse: (course: CourseCreate) => Promise<void>;
   updateCourse: (id: string, course: CourseUpdate) => Promise<void>;
+  deleteCourse: (id: string) => Promise<void>;
   status: string;
+  isDeleting: boolean;
 } {
   const params = useParams();
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch courses data
   const { data, status, isLoading, refetch } = useQueryFetch(
@@ -126,6 +129,16 @@ export function useCourses(courseId?: string): {
     refetch();
   };
 
+  // Delete course
+  const deleteCourse = async (id: string) => {
+    setIsDeleting(true);
+    await axios.delete(
+      `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${id}`
+    );
+    refetch();
+    setIsDeleting(false);
+  };
+
   return {
     coursesData,
     coursesDataById,
@@ -133,5 +146,7 @@ export function useCourses(courseId?: string): {
     addCourse,
     updateCourse,
     status,
+    deleteCourse,
+    isDeleting,
   };
 }
