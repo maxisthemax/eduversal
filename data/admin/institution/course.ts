@@ -49,7 +49,10 @@ export interface CourseCreate {
 
 type CourseUpdate = Partial<CourseCreate>;
 
-export function useCourses(courseId?: string): {
+export function useCourses(
+  courseId?: string,
+  otherParams?: { academicYearId: string }
+): {
   coursesData: CourseData[];
   coursesDataById: Record<string, CourseData>;
   courseData: CourseData | undefined;
@@ -61,7 +64,9 @@ export function useCourses(courseId?: string): {
 } {
   const params = useParams();
   const institutionId = params.institutionId as string;
-  const academicYearId = params.academicYearId as string;
+  const academicYearId =
+    (params.academicYearId as string) ?? otherParams?.academicYearId;
+
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch courses data

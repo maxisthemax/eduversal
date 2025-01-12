@@ -19,6 +19,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -46,12 +47,14 @@ function AddEditAcademicYearDialog({
 
   return (
     <>
-      <Button
-        variant={mode === "edit" ? "outlined" : "contained"}
-        {...bindTrigger(popupState)}
-      >
-        {mode === "edit" ? "Edit" : "Add Academic Year"}
-      </Button>
+      {mode === "edit" ? (
+        <MenuItem {...bindTrigger(popupState)}>Edit</MenuItem>
+      ) : (
+        <Button variant={"contained"} {...bindTrigger(popupState)}>
+          Add Academic Year
+        </Button>
+      )}
+
       <Dialog
         {...bindDialog(popupState)}
         maxWidth="sm"

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 
 //*lodash
@@ -41,10 +41,13 @@ export function useAcademicYears(academicYearId?: string): {
     id: string,
     academicYear: AcademicYearUpdate
   ) => Promise<void>;
+  deleteAcademicYear: (id: string) => Promise<void>;
+  isDeleting: boolean;
   status: string;
 } {
   const params = useParams();
   const institutionId = params.institutionId as string;
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch academic years data
   const { data, status, isLoading, refetch } = useQueryFetch(
@@ -108,12 +111,24 @@ export function useAcademicYears(academicYearId?: string): {
     refetch();
   };
 
+  // Delete academic year
+  const deleteAcademicYear = async (id: string) => {
+    setIsDeleting(true);
+
+    await axios.delete(`admin/institution/${institutionId}/academicYear/${id}`);
+    refetch();
+
+    setIsDeleting(false);
+  };
+
   return {
     academicYearsData,
     academicYearsDataById,
     academicYearData,
     addAcademicYear,
     updateAcademicYear,
+    deleteAcademicYear,
+    isDeleting,
     status,
   };
 }

@@ -1,17 +1,32 @@
 import { useParams } from "next/navigation";
+import PopupState, {
+  bindTrigger,
+  bindDialog,
+  bindMenu,
+} from "material-ui-popup-state";
+import Link from "next/link";
 
 //*components
-import { Page } from "@/components/Box";
+import { OverlayBox, Page } from "@/components/Box";
 import DataGrid from "@/components/Table/DataGrid";
 import AddEditAcademicYearDialog from "./AddEditAcademicYearDialog";
+import { CustomIcon } from "@/components/Icons";
 
 //*mui
+import MenuItem from "@mui/material/MenuItem";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import IconButton from "@mui/material/IconButton";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
 import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
-import Link from "next/link";
+import { useCourses } from "@/data/admin/institution/course";
 
 function AcademicYear() {
   const params = useParams();
@@ -65,15 +80,27 @@ function AcademicYear() {
     {
       field: "button",
       headerName: "",
+      width: 60,
       renderCell: ({ id }) => {
         return (
-          <AddEditAcademicYearDialog
-            mode="edit"
-            academicYearId={id as string}
-          />
+          <PopupState variant="popover" popupId="menu">
+            {(popupState) => (
+              <>
+                <IconButton size="small" {...bindTrigger(popupState)}>
+                  <CustomIcon fontSizeSx="20px" icon="more_vert" />
+                </IconButton>
+                <Menu {...bindMenu(popupState)}>
+                  <AddEditAcademicYearDialog
+                    mode="edit"
+                    academicYearId={id as string}
+                  />
+                  <DeleteDialog academicYearId={id as string} />
+                </Menu>
+              </>
+            )}
+          </PopupState>
         );
       },
-      minWidth: 100,
     },
   ];
 
@@ -100,3 +127,71 @@ function AcademicYear() {
 }
 
 export default AcademicYear;
+
+function DeleteDialog({ academicYearId }: { academicYearId: string }) {
+  return (
+    <PopupState variant="popover" popupId="delete">
+      {(popupState) => (
+        <>
+          <MenuItem {...bindTrigger(popupState)}>Delete</MenuItem>
+          <Dialog
+            {...bindDialog(popupState)}
+            maxWidth="xs"
+            fullWidth
+            keepMounted={false}
+            disableEnforceFocus={true}
+            onClose={() => {
+              popupState.close();
+            }}
+          >
+            <DeleteDialogForm
+              academicYearId={academicYearId}
+              handleClose={popupState.close}
+            />
+          </Dialog>
+        </>
+      )}
+    </PopupState>
+  );
+}
+
+function DeleteDialogForm({
+  academicYearId,
+  handleClose,
+}: {
+  academicYearId: string;
+  handleClose: () => void;
+}) {
+  const { coursesData, status } = useCourses(undefined, { academicYearId });
+  const { deleteAcademicYear, isDeleting } = useAcademicYears(academicYearId);
+
+  return (
+    <OverlayBox isLoading={isDeleting || status === "pending"}>
+      <DialogContent>
+        {coursesData.length > 0 ? (
+          <DialogContentText>
+            You have courses associated with this academic year. Please delete
+            the courses first to delete the academic year.
+          </DialogContentText>
+        ) : (
+          <DialogContentText>
+            Are you sure you want to delete this academic year?
+          </DialogContentText>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Close</Button>
+        {coursesData.length === 0 && (
+          <Button
+            onClick={async () => {
+              await deleteAcademicYear(academicYearId);
+              handleClose();
+            }}
+          >
+            Delete
+          </Button>
+        )}
+      </DialogActions>
+    </OverlayBox>
+  );
+}

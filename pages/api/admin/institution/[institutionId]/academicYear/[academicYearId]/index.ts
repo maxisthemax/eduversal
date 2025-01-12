@@ -45,6 +45,25 @@ export default async function academicYearHandler(
         // Return the updated academic year
         return res.status(200).json({ data: updatedAcademicYear });
       }
+
+      case "DELETE": {
+        const { academicYearId } = req.query;
+
+        // Validate required fields
+        if (!validateRequiredFields(req, res, ["academicYearId"], "query")) {
+          return;
+        }
+
+        // Delete the academic year
+        await prisma.academicYear.delete({
+          where: { id: academicYearId as string },
+        });
+
+        // Return a success message
+        return res
+          .status(200)
+          .json({ message: "Academic year deleted successfully" });
+      }
       default:
         // Use handleAllowedMethods for method validation
         if (handleAllowedMethods(req, res, ["PUT"])) return;

@@ -182,11 +182,11 @@ function DeleteDialogForm({
   courseId: string;
   handleClose: () => void;
 }) {
-  const { albumsData } = useAlbums(undefined, { courseId });
+  const { albumsData, status } = useAlbums(undefined, { courseId });
   const { deleteCourse, isDeleting } = useCourses(courseId);
 
   return (
-    <OverlayBox isLoading={isDeleting}>
+    <OverlayBox isLoading={isDeleting || status === "pending"}>
       <DialogContent>
         {albumsData.length > 0 ? (
           <DialogContentText>
