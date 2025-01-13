@@ -82,7 +82,7 @@ export function useCourses(
     `admin/institution/${institutionId}/academicYear/${academicYearId}/course`
   );
 
-  const coursesQueryData = data as CourseData[];
+  const coursesQueryData = data?.data as CourseData[];
 
   // Memoize courses data
   const coursesData = useMemo(() => {

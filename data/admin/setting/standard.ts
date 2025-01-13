@@ -37,7 +37,7 @@ export function useStandard(): {
     `admin/setting/standard`
   );
 
-  const standardsQueryData = data as StandardData[];
+  const standardsQueryData = data?.data as StandardData[];
 
   // Memoize standards data
   const standardsData = useMemo(() => {

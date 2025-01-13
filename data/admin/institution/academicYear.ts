@@ -59,7 +59,7 @@ export function useAcademicYears(
     `admin/institution/${institutionId}/academicYear`
   );
 
-  const academicYearsQueryData = data as AcademicYearData[];
+  const academicYearsQueryData = data?.data as AcademicYearData[];
 
   // Memoize academic years data
   const academicYearsData = useMemo(() => {

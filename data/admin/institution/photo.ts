@@ -67,7 +67,7 @@ export function usePhotos(
     `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${courseId}/album/${albumId}/photo`
   );
 
-  const photosQueryData = data as PhotoData[];
+  const photosQueryData = data?.data as PhotoData[];
 
   // Memoize photos data
   const photosData = useMemo(() => {

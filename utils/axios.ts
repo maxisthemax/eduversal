@@ -11,6 +11,8 @@ type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
 
 interface ApiResponse<T> extends AxiosResponse {
   data: T;
+  currentPage?: number;
+  totalCount?: number;
   message?: string;
   type?: string;
 }

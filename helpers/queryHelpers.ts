@@ -23,7 +23,11 @@ export function useQueryFetch(
 
   const fetchFn = async () => {
     const res = await axios.get(queryUrl);
-    return res.data;
+    return {
+      data: res.data,
+      currentPage: res.currentPage,
+      totalCount: res.totalCount,
+    };
   };
   const result = useQuery({
     queryKey: queryKey,

@@ -87,7 +87,7 @@ export function useAlbums(
     `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${courseId}/album`
   );
 
-  const albumsQueryData = data as AlbumData[];
+  const albumsQueryData = data?.data as AlbumData[];
 
   // Memoize albums data
   const albumsData = useMemo(() => {

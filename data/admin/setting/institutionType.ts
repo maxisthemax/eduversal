@@ -40,7 +40,7 @@ export function useInstitutionTypes(): {
     `admin/setting/institutionType`
   );
 
-  const institutionTypesQueryData = data as InstitutionTypeData[];
+  const institutionTypesQueryData = data?.data as InstitutionTypeData[];
 
   // Memoize institution types data
   const institutionTypesData = useMemo(() => {

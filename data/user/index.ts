@@ -27,7 +27,7 @@ export const useUser = () => {
   const queryClient = useQueryClient();
   const { data, status, isError } = useQueryFetch(["user"], "user");
 
-  const userData = data as UserData;
+  const userData = data?.data as UserData;
 
   useEffect(() => {
     if (isError) {

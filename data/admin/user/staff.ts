@@ -38,7 +38,7 @@ export function useStaff(): {
     `admin/user/staff`
   );
 
-  const staffQueryData = data as StaffData[];
+  const staffQueryData = data?.data as StaffData[];
 
   // Memoize staff data
   const staffData = useMemo(() => {

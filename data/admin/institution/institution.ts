@@ -59,7 +59,7 @@ export function useInstitutions(institutionId?: string): {
   );
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const institutionsQueryData = data as InstitutionData[];
+  const institutionsQueryData = data?.data as InstitutionData[];
 
   // Memoize institutions data with additional formatting
   const institutionsData = useMemo(() => {
