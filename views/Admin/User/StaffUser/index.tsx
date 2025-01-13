@@ -87,7 +87,8 @@ function StaffUser() {
             handleOpenDialog({
               allowOutsideClose: false,
               title: "Add Admin",
-              description: "Add admin with user email.",
+              description:
+                "Add admin with user email.\nMake sure email already registered.",
               textField: { id: "text", defaultValue: "" },
               placeholder: "User email",
               onConfirm: async (value) => {

@@ -84,7 +84,11 @@ function CustomDialog() {
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        {description && <DialogContentText>{description}</DialogContentText>}
+        {description && (
+          <DialogContentText sx={{ whiteSpace: "break-spaces" }}>
+            {description}
+          </DialogContentText>
+        )}
         {content ? content : <></>}
 
         {textField?.id === "text" && (
