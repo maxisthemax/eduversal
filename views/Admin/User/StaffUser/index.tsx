@@ -91,7 +91,7 @@ function StaffUser() {
               textField: { id: "text", defaultValue: "" },
               placeholder: "User email",
               onConfirm: async (value) => {
-                updateUserRole("ADMIN", undefined, value as string);
+                await updateUserRole("ADMIN", undefined, value as string);
               },
             });
           }}

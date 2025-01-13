@@ -42,6 +42,15 @@ export default async function handler(
             .status(400)
             .json({ message: "userId or email is required" });
         }
+        // Find the user by userId or email
+        const user = await prisma.user.findUnique({
+          where: userId ? { id: userId } : { email: email },
+        });
+
+        // If no user is found, return an error
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
 
         // Update the user role
         const updatedUser = await prisma.user.update({
