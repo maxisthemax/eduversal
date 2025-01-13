@@ -1,3 +1,7 @@
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+
 //*utils
 import { useQueryFetch } from "@/helpers/queryHelpers";
 
@@ -19,9 +23,18 @@ interface UserData {
 }
 
 export const useUser = () => {
-  const { data, status } = useQueryFetch(["user"], "user");
+  const { push } = useRouter();
+  const queryClient = useQueryClient();
+  const { data, status, isError } = useQueryFetch(["user"], "user");
 
   const userData = data as UserData;
+
+  useEffect(() => {
+    if (isError) {
+      queryClient.clear();
+      push("/signin");
+    }
+  }, [isError]);
 
   return { data: userData, status };
 };

@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 //*mui
 import Box from "@mui/material/Box";
@@ -10,6 +11,7 @@ import axios from "@/utils/axios";
 function Account() {
   //*define
   const { push } = useRouter();
+  const queryClient = useQueryClient();
 
   return (
     <Box>
@@ -17,6 +19,7 @@ function Account() {
         variant="contained"
         onClick={async () => {
           await axios.post("auth/signOut");
+          queryClient.clear();
           push("/signin");
         }}
       >
