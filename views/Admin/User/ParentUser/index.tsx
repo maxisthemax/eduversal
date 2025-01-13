@@ -31,7 +31,7 @@ function ParentUser() {
 
   return (
     <Box sx={{ p: 2 }}>
-      <DataGrid data={[]} columns={columns} />
+      <DataGrid data={[]} columns={columns} gap={12.1} />
     </Box>
   );
 }

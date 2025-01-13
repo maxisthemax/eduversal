@@ -44,10 +44,7 @@ export async function middleware(req: NextRequest) {
     // Handle non-auth routes
     if (session.isLoggedIn) {
       // Restrict access to admin routes for non-admin users
-      if (
-        (pathname.startsWith, "/admin") ||
-        (pathname.startsWith, "/api/admin")
-      ) {
+      if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
         if (session.role === "USER") {
           nextUrl.pathname = "/unauthorized";
           return NextResponse.redirect(nextUrl);
