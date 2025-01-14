@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
 //*utils
 import axios from "@/utils/axios";
@@ -12,6 +12,7 @@ export function useQueryFetch(
     refetchIntervalInBackground?: boolean;
     refetchInterval?: number;
     refetchOnMount?: boolean;
+    isKeepPreviousData?: boolean;
   }
 ) {
   const enabled = option?.enabled ?? true;
@@ -20,6 +21,7 @@ export function useQueryFetch(
     option?.refetchIntervalInBackground ?? false;
   const refetchOnWindowFocus = option?.refetchOnWindowFocus ?? false;
   const refetchOnMount = option?.refetchOnMount ?? false;
+  const isKeepPreviousData = option?.isKeepPreviousData ?? false;
 
   const fetchFn = async () => {
     const res = await axios.get(queryUrl);
@@ -37,6 +39,7 @@ export function useQueryFetch(
     refetchIntervalInBackground,
     refetchOnWindowFocus,
     refetchOnMount,
+    ...(isKeepPreviousData ? { placeholderData: keepPreviousData } : {}),
   });
 
   return result;

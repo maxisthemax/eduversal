@@ -33,7 +33,7 @@ function StaffUser() {
     },
     {
       field: "email",
-      headerName: "Eamil",
+      headerName: "Email",
       flex: 1,
     },
     {

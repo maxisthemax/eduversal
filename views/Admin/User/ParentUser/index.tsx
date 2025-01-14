@@ -5,7 +5,12 @@ import DataGrid from "@/components/Table/DataGrid";
 import Box from "@mui/material/Box";
 import { GridColDef } from "@mui/x-data-grid";
 
+//*data
+import { useParent } from "@/data/admin/user/parent";
+
 function ParentUser() {
+  const { parentData, pagination } = useParent();
+
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
       field: "first_name",
@@ -19,7 +24,7 @@ function ParentUser() {
     },
     {
       field: "email",
-      headerName: "Eamil",
+      headerName: "Email",
       flex: 1,
     },
     {
@@ -31,7 +36,17 @@ function ParentUser() {
 
   return (
     <Box sx={{ p: 2 }}>
-      <DataGrid data={[]} columns={columns} gap={12.1} />
+      <DataGrid
+        data={parentData}
+        columns={columns}
+        gap={12.1}
+        pagination={{
+          paginationModel: pagination.pageModel,
+          onPaginationModelChange: pagination.setPageModel,
+          rowCount: pagination.totalCount,
+          paginationMode: "server",
+        }}
+      />
     </Box>
   );
 }
