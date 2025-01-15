@@ -8,8 +8,11 @@ import { GridColDef } from "@mui/x-data-grid";
 //*data
 import { useParent } from "@/data/admin/user/parent";
 
+//*lodash
+import debounce from "lodash/debounce";
+
 function ParentUser() {
-  const { parentData, pagination, status } = useParent();
+  const { parentData, pagination, status, filter } = useParent();
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
@@ -34,6 +37,10 @@ function ParentUser() {
     },
   ];
 
+  const handleFilterChange = debounce((model) => {
+    filter.setFilterModel(model);
+  }, 1000);
+
   return (
     <Box sx={{ p: 2 }}>
       <DataGrid
@@ -47,6 +54,10 @@ function ParentUser() {
           onPaginationModelChange: pagination.setPageModel,
           rowCount: pagination.totalCount,
           paginationMode: "server",
+        }}
+        filter={{
+          filterMode: "server",
+          onFilterChange: handleFilterChange,
         }}
       />
     </Box>

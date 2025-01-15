@@ -6,6 +6,7 @@ import {
   GridFeatureMode,
   GridPaginationModel,
   GridCallbackDetails,
+  GridFilterModel,
 } from "@mui/x-data-grid";
 
 //*helpers
@@ -18,6 +19,7 @@ function DataGrid({
   gap = 0,
   pagination,
   height = "height",
+  filter,
 }: {
   data: any[];
   columns: any[];
@@ -33,11 +35,18 @@ function DataGrid({
     paginationMode?: GridFeatureMode;
   };
   height?: "height" | "maxHeight";
+  filter?: {
+    filterMode: "server" | "client";
+    onFilterChange: (model: GridFilterModel) => void;
+  };
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
   const rowCount = pagination?.rowCount;
   const paginationMode = pagination?.paginationMode || "client";
+
+  const filterMode = filter?.filterMode || "client";
+  const onFilterChange = filter?.onFilterChange;
 
   return (
     <DataGridMui
@@ -59,6 +68,9 @@ function DataGrid({
           showQuickFilter: true,
         },
       }}
+      filterMode={filterMode}
+      onFilterModelChange={onFilterChange}
+      disableColumnFilter={filterMode === "server"}
     />
   );
 }

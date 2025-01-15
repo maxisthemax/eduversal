@@ -104,7 +104,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
               },
             ].map(({ title, list, id, icon }, index) => {
               return (
-                <>
+                <Box key={id}>
                   <ListItemButton
                     onClick={() => {
                       setOpen({
@@ -159,7 +159,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                       );
                     })}
                   </Collapse>
-                </>
+                </Box>
               );
             })}
           </List>

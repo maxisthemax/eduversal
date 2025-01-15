@@ -6,6 +6,9 @@ import keyBy from "lodash/keyBy";
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
 
+//*mui
+import { GridFilterModel } from "@mui/x-data-grid";
+
 //*interface
 export interface ParentData {
   id: string;
@@ -31,13 +34,21 @@ export function useParent(): {
       React.SetStateAction<{ page: number; pageSize: number }>
     >;
   };
+  filter?: {
+    filterModel: GridFilterModel;
+    setFilterModel: React.Dispatch<React.SetStateAction<GridFilterModel>>;
+  };
 } {
   const [pageModel, setPageModel] = useState({ page: 0, pageSize: 10 });
+  const [filterModel, setFilterModel] = useState<GridFilterModel>();
 
   // Fetch parent data with pagination
+  const searchQuery = filterModel?.quickFilterValues?.[0] || undefined;
   const { data, status, isLoading } = useQueryFetch(
-    ["admin", "user", "parent", "page", pageModel.page],
-    `admin/user/parent?page=${pageModel.page}&pageSize=${pageModel.pageSize}`,
+    ["admin", "user", "parent", "page", pageModel.page, searchQuery],
+    `admin/user/parent?page=${pageModel.page}&pageSize=${pageModel.pageSize}${
+      searchQuery ? `&search=${searchQuery}` : ""
+    }`,
     { isKeepPreviousData: true }
   );
 
@@ -67,5 +78,6 @@ export function useParent(): {
     parentDataById,
     status,
     pagination: { currentPage, totalCount, pageModel, setPageModel },
+    filter: { filterModel, setFilterModel },
   };
 }

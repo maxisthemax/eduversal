@@ -15,12 +15,33 @@ export default async function handler(
     switch (req.method) {
       case "GET": {
         const { page = 0, pageSize = 10 } = req.query;
+        const search = (req.query?.search as string) ?? undefined;
         const skip = Number(page) * Number(pageSize);
 
         // Fetch total count of users
         const totalCount = await prisma.user.count({
           where: {
             role: "USER",
+            ...(search
+              ? {
+                  OR: [
+                    { email: { contains: search, mode: "insensitive" } },
+                    { first_name: { contains: search, mode: "insensitive" } },
+                    { last_name: { contains: search, mode: "insensitive" } },
+                    {
+                      AND: [
+                        {
+                          country_code: {
+                            contains: search,
+                            mode: "insensitive",
+                          },
+                        },
+                        { phone_no: { contains: search, mode: "insensitive" } },
+                      ],
+                    },
+                  ],
+                }
+              : {}),
           },
         });
 
@@ -28,6 +49,26 @@ export default async function handler(
         const users = await prisma.user.findMany({
           where: {
             role: "USER",
+            ...(search
+              ? {
+                  OR: [
+                    { email: { contains: search, mode: "insensitive" } },
+                    { first_name: { contains: search, mode: "insensitive" } },
+                    { last_name: { contains: search, mode: "insensitive" } },
+                    {
+                      AND: [
+                        {
+                          country_code: {
+                            contains: search,
+                            mode: "insensitive",
+                          },
+                        },
+                        { phone_no: { contains: search, mode: "insensitive" } },
+                      ],
+                    },
+                  ],
+                }
+              : {}),
           },
           orderBy: { first_name: "asc" },
           skip,
