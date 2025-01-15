@@ -17,6 +17,7 @@ function DataGrid({
   loading = false,
   gap = 0,
   pagination,
+  height = "height",
 }: {
   data: any[];
   columns: any[];
@@ -31,6 +32,7 @@ function DataGrid({
     rowCount: number;
     paginationMode?: GridFeatureMode;
   };
+  height?: "height" | "maxHeight";
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -43,7 +45,7 @@ function DataGrid({
       paginationModel={paginationModel}
       paginationMode={paginationMode}
       onPaginationModelChange={onPaginationModelChange}
-      sx={{ height: getFullHeightSize(gap) }}
+      sx={{ [height]: getFullHeightSize(gap) }}
       loading={loading}
       disableColumnSelector
       disableDensitySelector

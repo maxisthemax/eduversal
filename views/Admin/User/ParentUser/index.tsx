@@ -9,7 +9,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import { useParent } from "@/data/admin/user/parent";
 
 function ParentUser() {
-  const { parentData, pagination } = useParent();
+  const { parentData, pagination, status } = useParent();
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
@@ -37,6 +37,8 @@ function ParentUser() {
   return (
     <Box sx={{ p: 2 }}>
       <DataGrid
+        loading={status === "pending"}
+        height="maxHeight"
         data={parentData}
         columns={columns}
         gap={12.1}
