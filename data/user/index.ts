@@ -25,16 +25,19 @@ interface UserData {
 export const useUser = () => {
   const { push } = useRouter();
   const queryClient = useQueryClient();
-  const { data, status, isError } = useQueryFetch(["user"], "user");
+  const { data, status } = useQueryFetch(["user"], "user");
 
   const userData = data?.data as UserData;
 
   useEffect(() => {
-    if (isError) {
+    if (
+      status === "success" &&
+      data?.response?.data?.type === "FAILED_TO_FETCH_USER_DATA"
+    ) {
       queryClient.clear();
       push("/signin");
     }
-  }, [isError]);
+  }, [data, status]);
 
   return { data: userData, status };
 };

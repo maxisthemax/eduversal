@@ -24,12 +24,18 @@ export function useQueryFetch(
   const isKeepPreviousData = option?.isKeepPreviousData ?? false;
 
   const fetchFn = async () => {
-    const res = await axios.get(queryUrl);
-    return {
-      data: res.data,
-      currentPage: res.currentPage,
-      totalCount: res.totalCount,
-    };
+    try {
+      const res = await axios.get(queryUrl);
+      return {
+        data: res.data,
+        currentPage: res.currentPage,
+        totalCount: res.totalCount,
+        type: res.type,
+        message: res.message,
+      };
+    } catch (error) {
+      return error;
+    }
   };
   const result = useQuery({
     queryKey: queryKey,
