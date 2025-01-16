@@ -14,14 +14,12 @@ function AuthMain({ children }: { children: React.ReactNode }) {
         sx={{
           height: "100vh",
           overflow: "hidden",
+          backgroundColor: "#F8F3EF",
+          alignContent: "center",
+          maxWidth: "900px",
         }}
       >
-        <Box
-          component="img"
-          src={"/image/login_bg_1.png"}
-          height={"100%"}
-          width={"100%"}
-        />
+        <Box component="img" src={"/image/login_bg_1.png"} width={"100%"} />
       </Grid>
       <Grid size={{ xs: 12, sm: 12, md: 7.5 }}>
         <Stack
