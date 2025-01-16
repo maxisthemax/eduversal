@@ -79,8 +79,8 @@ function ResetPassword() {
               return (
                 <OverlayBox isLoading={isSubmitting}>
                   <Form onSubmit={handleSubmit}>
-                    <Stack spacing={2} sx={{ p: 2 }}>
-                      <Typography variant="h3">
+                    <Stack spacing={2} sx={{ p: 2, textAlign: "center" }}>
+                      <Typography variant="h4">
                         <b>Reset Password</b>
                       </Typography>
                       <TextField

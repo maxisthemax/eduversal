@@ -25,8 +25,8 @@ export async function middleware(req: NextRequest) {
       "/signin",
       "/signup",
       "/verifyemail",
-      "forgotpassword",
-      "resetpassword",
+      "/forgotpassword",
+      "/resetpassword",
       "/api/auth/forgotPassword",
       "/api/auth/resendVerification",
       "/api/auth/resetPassword",
@@ -62,6 +62,6 @@ export async function middleware(req: NextRequest) {
 // Configuration for the middleware matcher
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|login_bg_1.png).*)",
   ],
 };

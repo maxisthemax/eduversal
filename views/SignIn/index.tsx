@@ -92,9 +92,14 @@ function SignIn() {
             return (
               <OverlayBox isLoading={isSubmitting}>
                 <Form onSubmit={handleSubmit}>
-                  <Stack spacing={2} sx={{ p: 2 }}>
-                    <Typography variant="h3">
+                  <Stack spacing={3} sx={{ p: 2, textAlign: "center" }}>
+                    <Typography variant="h4">
                       <b>Sign In</b>
+                    </Typography>
+                    <Typography variant="body1" sx={{ pl: 5, pr: 5 }}>
+                      {
+                        "Access your child's class albums, download cherished photos, and more."
+                      }
                     </Typography>
                     <TextFieldForm
                       name="email"
@@ -125,10 +130,10 @@ function SignIn() {
                       variant="contained"
                       color="primary"
                     >
-                      Sign In
+                      Log In
                     </Button>
                     <Typography sx={{ textAlign: "center", pt: 4 }}>
-                      Don&apos;t have an account yet?{" "}
+                      Don&apos;t have an account?{" "}
                       <Link href={"/signup"}>Sign up</Link>
                     </Typography>
                   </Stack>

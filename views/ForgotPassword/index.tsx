@@ -56,13 +56,14 @@ function ForgotPassword() {
           return (
             <OverlayBox isLoading={isSubmitting}>
               <Form onSubmit={handleSubmit}>
-                <Stack spacing={2} sx={{ p: 2 }}>
-                  <Typography variant="h3">
+                <Stack spacing={2} sx={{ p: 2, textAlign: "center" }}>
+                  <Typography variant="h4">
                     <b>Forgot Password</b>
                   </Typography>
-                  <Typography>
-                    An email will be sent to you with instructions on how to
-                    reset your password
+                  <Typography variant="body1" sx={{ pl: 5, pr: 5 }}>
+                    {
+                      "An email will be sent to you with instructions on how to reset your password"
+                    }
                   </Typography>
                   <TextFieldForm
                     name="email"
