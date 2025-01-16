@@ -1,5 +1,4 @@
 //*mui
-import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -13,9 +12,7 @@ function Minimal({ children }: { children: React.ReactNode }) {
     <Box>
       <AppBar color="inherit" elevation={0} position="static">
         <Toolbar>
-          <Typography variant="h4" color="primary">
-            <b>Photoversal Studio</b>
-          </Typography>
+          <Box component="img" src={"/image/logo.png"} height={"30px"} />
         </Toolbar>
       </AppBar>
       <Stack

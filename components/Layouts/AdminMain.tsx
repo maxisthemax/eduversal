@@ -7,7 +7,6 @@ import { CustomIcon } from "../Icons";
 import { GoogleIcon } from "../Icons/CustomIcon";
 
 //*mui
-import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -45,9 +44,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
         <AppBar color="inherit" elevation={0} position="static">
           <Toolbar>
             <Stack direction="row" sx={{ width: "100%" }} spacing={2}>
-              <Typography variant="h4" color="primary">
-                <b>Admin Control</b>
-              </Typography>
+              <Box component="img" src={"/image/logo.png"} height={"30px"} />
               <FlexBox />
               {data?.role !== "USER" && (
                 <Button

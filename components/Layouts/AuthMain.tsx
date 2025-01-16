@@ -18,7 +18,7 @@ function AuthMain({ children }: { children: React.ReactNode }) {
       >
         <Box
           component="img"
-          src={"/login_bg_1.png"}
+          src={"/image/login_bg_1.png"}
           height={"100%"}
           width={"100%"}
         />
