@@ -51,8 +51,8 @@ model Institution {
   type          InstitutionType @relation(fields: [type_id], references: [id])
   academicYears AcademicYear[]
   courses       Course[]
-  Album         Album[]
-  Photo         Photo[]
+  albums        Album[]
+  photos        Photo[]
 
   created_by_user_id String
   created_by_name    String
@@ -95,7 +95,7 @@ model Course {
   start_date       DateTime
   end_date         DateTime
   valid_period     ValidType
-  Album            Album[]
+  albums           Album[]
 
   created_by_user_id String
   created_by_name    String

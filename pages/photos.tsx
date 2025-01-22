@@ -1,7 +1,7 @@
-//*mui
-import Box from "@mui/material/Box";
+import PhotosView from "@/views/Photos";
 
-function Photo() {
-  return <Box>Photos</Box>;
+function Photos() {
+  return <PhotosView />;
 }
-export default Photo;
+
+export default Photos;

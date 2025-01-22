@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import LinearProgress from "@mui/material/LinearProgress";
 import IconButton from "@mui/material/IconButton";
+import { SxProps, Theme } from "@mui/material";
 
 function Page({
   children,
@@ -25,6 +26,7 @@ function Page({
   links,
   title,
   isLoading = false,
+  sx,
 }: {
   title?: string;
   children: React.ReactNode;
@@ -32,13 +34,14 @@ function Page({
   rightButton?: React.ReactNode[];
   links?: { href: string; title: string }[];
   isLoading?: boolean;
+  sx?: SxProps<Theme>;
 }) {
   const router = useRouter();
   const pathName = usePathname();
   const findCurrentPathname = find(links, { href: pathName });
 
   return (
-    <Box sx={{ pl: 2, pr: 2, pt: 1, pb: 1 }}>
+    <Box sx={{ pl: 2, pr: 2, pt: 1, pb: 1, ...sx }}>
       {title && <Typography variant="h6">{title}</Typography>}
       <Head>
         <title>{title ?? findCurrentPathname?.title}</title>
