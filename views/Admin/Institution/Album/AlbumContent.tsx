@@ -188,7 +188,9 @@ function AlbumContent({ albumId }: { albumId: string }) {
                       {files.map((file, index) => {
                         return (
                           <Grid
-                            size={{ xs: 1.5 }}
+                            size={{
+                              xs: albumData.type === "INDIVIDUAL" ? 1.5 : 2,
+                            }}
                             key={index}
                             sx={{
                               textAlign: "center",
@@ -228,7 +230,10 @@ function AlbumContent({ albumId }: { albumId: string }) {
                               src={URL.createObjectURL(file)}
                               alt={file.name}
                               style={{
-                                aspectRatio: "2/3",
+                                aspectRatio:
+                                  albumData.type === "INDIVIDUAL"
+                                    ? "2/3"
+                                    : "3/2",
                                 display: "block",
                                 width: "100%",
                                 objectFit: "cover",
@@ -285,7 +290,12 @@ function AlbumContent({ albumId }: { albumId: string }) {
             </Grid>
             {photosData.map((item, index) => (
               <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 2 }}
+                size={{
+                  xs: 12,
+                  sm: 6,
+                  md: 4,
+                  lg: albumData.type === "INDIVIDUAL" ? 2 : 3,
+                }}
                 key={index}
                 sx={{
                   textAlign: "center",
@@ -345,7 +355,8 @@ function AlbumContent({ albumId }: { albumId: string }) {
                           src={`${item.display_url}`}
                           alt={item.name}
                           style={{
-                            aspectRatio: "2/3",
+                            aspectRatio:
+                              albumData.type === "INDIVIDUAL" ? "2/3" : "3/2",
                             display: "block",
                             width: "100%",
                             objectFit: "cover",

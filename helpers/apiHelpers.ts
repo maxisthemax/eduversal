@@ -104,11 +104,6 @@ export async function checkRateLimit(
 ) {
   // Get the session
   const session = await getSession(req, res);
-  if (!session?.id)
-    return res.status(429).json({
-      message: "User is signed out",
-      type: "USER_SIGNED_OUT",
-    });
 
   // Rate limit check
   if (!session?.rateLimitLastAt) {
