@@ -26,6 +26,7 @@ model User {
   updated_at   DateTime      @updatedAt
   verification Verification?
   role         UserRole      @default(USER)
+  UserCourse   UserCourse[]
 
   @@index([email])
 }
@@ -99,10 +100,11 @@ model Course {
 
   created_by_user_id String
   created_by_name    String
-  created_at         DateTime @default(now())
+  created_at         DateTime     @default(now())
   updated_by_user_id String
   updated_by_name    String
-  updated_at         DateTime @updatedAt
+  updated_at         DateTime     @updatedAt
+  UserCourse         UserCourse[]
 
   @@index([institution_id])
   @@index([academic_year_id])
@@ -176,6 +178,25 @@ model Photo {
 
   @@index([album_id])
   @@index([institution_id])
+}
+
+model UserCourse {
+  id        String   @id @default(cuid())
+  names     String[]
+  user_id   String
+  user      User     @relation(fields: [user_id], references: [id])
+  course_id String
+  course    Course   @relation(fields: [course_id], references: [id])
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
+
+  @@index([user_id])
+  @@index([course_id])
 }
 
 enum AlbumType {

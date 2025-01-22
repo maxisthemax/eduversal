@@ -3,21 +3,28 @@ import { formatDate } from "date-fns";
 //*components
 import { FlexBox } from "@/components/Box";
 import { CustomIcon } from "@/components/Icons";
+import AddEditUserCourseDialog from "./AddEditUserCourseDialog";
 
 //*lodash
 import sum from "lodash/sum";
 
 //*mui
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 
+//*data
+import { useUserCourse } from "@/data/admin/userCourse/course";
+
 function Photos() {
+  const { userCoursesData, status } = useUserCourse();
+
+  if (status === "pending") return <LinearProgress />;
   return (
     <Container maxWidth="xl">
       <Stack
@@ -26,26 +33,13 @@ function Photos() {
         alignItems="center"
         sx={{ p: 2 }}
       >
-        <Typography variant="h6">Class (2)</Typography>
-        <Button variant="contained">Add Class</Button>
+        <Typography variant="h6">
+          Class ({userCoursesData?.length ?? 0})
+        </Typography>
+        <AddEditUserCourseDialog />
       </Stack>
       <Stack spacing={2}>
-        {[
-          {
-            id: 1,
-            title: "Class Name - Class Standard (Year)",
-            users: [{ name: "Yap Chung Lee" }, { name: "Yan Chung Wen" }],
-            albums: [{ photos: ["23", "45"] }, { photos: ["sss", "111"] }],
-            course: { date: new Date() },
-          },
-          {
-            id: 2,
-            title: "Class Name - Class Standard (Year)",
-            users: [{ name: "Yap Chung Lee" }, { name: "Yan Chung Wen" }],
-            albums: [{ photos: ["23", "45"] }, { photos: ["sss", "111"] }],
-            course: { date: new Date() },
-          },
-        ].map(({ id, users, albums, course }) => {
+        {userCoursesData.map(({ id, names, course, title_format }) => {
           return (
             <Paper key={id} variant="outlined" sx={{ p: 3 }}>
               <Stack
@@ -60,22 +54,27 @@ function Photos() {
                 />
                 <Stack>
                   <Typography variant="body1" gutterBottom>
-                    <b>Class Name - Class Standard (Year)</b>
+                    <b>{title_format}</b>
                   </Typography>
                   <Stack direction={"row"} spacing={2}>
                     <Typography variant="body2">
-                      {users.map(({ name }) => name).join(", ")}
+                      {names.map((name) => name).join(", ")}
                     </Typography>
-                    <Link href="#" variant="caption" underline="hover">
+                    <Link
+                      variant="body2"
+                      underline="hover"
+                      sx={{ cursor: "pointer" }}
+                    >
                       Edit
                     </Link>
                   </Stack>
                   <Typography variant="body2">
-                    {albums.length} Albums |{" "}
-                    {sum(albums.map(({ photos }) => photos.length))} Photos
+                    {course.albums.length} Albums |{" "}
+                    {sum(course.albums.map(({ photos }) => photos.length))}{" "}
+                    Photos
                   </Typography>
                   <Typography variant="body2">
-                    Avaliable until {formatDate(course.date, "dd MMM yyyy")}
+                    Avaliable until {formatDate(course.end_date, "dd MMM yyyy")}
                   </Typography>
                 </Stack>
                 <FlexBox />
