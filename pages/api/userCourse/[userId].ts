@@ -81,20 +81,6 @@ export default async function courseHandler(
           res
         );
 
-        // Check if the user Course already exists
-        const userCourse = await prisma.userCourse.findFirst({
-          where: {
-            user_id: userId as string,
-            course_id,
-          },
-        });
-
-        if (userCourse) {
-          return res.status(400).json({
-            message: "User Course already exists",
-          });
-        }
-
         // Create the new academic year
         const newCourse = await prisma.userCourse.create({
           data: {
