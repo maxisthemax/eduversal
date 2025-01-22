@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 //*lodash
 import keyBy from "lodash/keyBy";
@@ -39,7 +39,9 @@ export function useUserCourse(): {
   userCoursesDataById: Record<string, CourseData>;
   status: string;
   addUserCourse: (child: string[], course_id: string) => Promise<void>;
+  isAdding: boolean;
 } {
+  const [isAdding, setIsAddng] = useState(false);
   const { data: userData } = useUser();
 
   // Fetch user courses data
@@ -74,11 +76,13 @@ export function useUserCourse(): {
 
   // functions
   async function addUserCourse(child: string[], course_id: string) {
+    setIsAddng(true);
     await axios.post(`userCourse/${userData.id}`, {
       names: child,
       course_id,
     });
     refetch();
+    setIsAddng(false);
   }
 
   return {
@@ -86,5 +90,6 @@ export function useUserCourse(): {
     userCoursesDataById,
     status,
     addUserCourse,
+    isAdding,
   };
 }
