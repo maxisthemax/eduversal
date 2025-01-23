@@ -26,7 +26,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Link from "@mui/material/Link";
 
 //*data
-import { UserCourseData, useUserCourse } from "@/data/admin/userCourse/course";
+import { UserCourseData, useUserCourse } from "@/data/userCourse/course";
 
 //*utils
 import axios from "@/utils/axios";
@@ -89,16 +89,15 @@ function AddEditUserCourseDialogForm({
   id: string;
   handleClose: () => void;
 }) {
-  const { addUserCourse, isAdding, userCoursesDataById, updateUserCourse } =
-    useUserCourse();
-  const defaultData = userCoursesDataById[id];
+  const { addUserCourse, isAdding, updateUserCourse, userCourseData } =
+    useUserCourse(id);
   const [isChecking, setIsChecking] = useState(false);
   const [code, setCode] = useState("");
   const [data, setData] = useState<UserCourseData | undefined>(
-    mode === "edit" ? defaultData : undefined
+    mode === "edit" ? userCourseData : undefined
   );
   const [child, setChild] = useState<string[]>(
-    mode === "edit" ? defaultData.names : [""]
+    mode === "edit" ? userCourseData.names : [""]
   );
 
   return (

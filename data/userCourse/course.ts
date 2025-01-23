@@ -19,23 +19,28 @@ export interface UserCourseData {
   course_id: string;
   course: {
     academicYear: {
+      id: true;
       year: number;
     };
     name: string;
     standard: {
+      id: string;
       name: string;
     };
     albums: {
-      photos: [];
+      type: string;
+      photos: { id: string; name: string; display_url: string }[];
       name: string;
+      id: string;
     }[];
     end_date: string;
   };
   title_format: string;
 }
 
-export function useUserCourse(): {
+export function useUserCourse(userCourseId?: string): {
   userCoursesData: UserCourseData[];
+  userCourseData: UserCourseData;
   userCoursesDataById: Record<string, UserCourseData>;
   status: string;
   addUserCourse: (child: string[], course_id: string) => Promise<void>;
@@ -77,6 +82,8 @@ export function useUserCourse(): {
     [userCoursesData]
   );
 
+  const userCourseData = userCoursesDataById[userCourseId];
+
   // functions
   async function addUserCourse(child: string[], course_id: string) {
     setIsAddng(true);
@@ -101,6 +108,7 @@ export function useUserCourse(): {
   return {
     userCoursesData,
     userCoursesDataById,
+    userCourseData,
     status,
     addUserCourse,
     isAdding,

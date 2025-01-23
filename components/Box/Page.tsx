@@ -26,6 +26,7 @@ function Page({
   links,
   title,
   isLoading = false,
+  disabledLinkButton = false,
   sx,
 }: {
   title?: string;
@@ -34,6 +35,7 @@ function Page({
   rightButton?: React.ReactNode[];
   links?: { href: string; title: string }[];
   isLoading?: boolean;
+  disabledLinkButton?: boolean;
   sx?: SxProps<Theme>;
 }) {
   const router = useRouter();
@@ -51,7 +53,7 @@ function Page({
         spacing={1}
         sx={{ width: "100%", pb: 1, alignItems: "center" }}
       >
-        {links && (
+        {links && !disabledLinkButton && (
           <Box>
             <IconButton
               disableRipple

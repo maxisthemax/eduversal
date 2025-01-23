@@ -1,4 +1,5 @@
 import { formatDate } from "date-fns";
+import { useRouter } from "next/navigation";
 
 //*components
 import { FlexBox } from "@/components/Box";
@@ -18,11 +19,11 @@ import LinearProgress from "@mui/material/LinearProgress";
 import IconButton from "@mui/material/IconButton";
 
 //*data
-import { useUserCourse } from "@/data/admin/userCourse/course";
+import { useUserCourse } from "@/data/userCourse/course";
 
 function Photos() {
   const { userCoursesData, status } = useUserCourse();
-
+  const { push } = useRouter();
   if (status === "pending") return <LinearProgress />;
   return (
     <Container maxWidth="xl">
@@ -71,7 +72,10 @@ function Photos() {
                   </Typography>
                 </Stack>
                 <FlexBox />
-                <IconButton color="primary">
+                <IconButton
+                  color="primary"
+                  onClick={() => push(`/photos/${id}`)}
+                >
                   <CustomIcon icon="arrow_forward" />
                 </IconButton>
               </Stack>
