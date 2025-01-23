@@ -1,5 +1,6 @@
 import { useParams } from "next/navigation";
 import { formatDate } from "date-fns";
+import { useRouter } from "next/navigation";
 
 //*components
 import { Page } from "@/components/Box";
@@ -18,8 +19,10 @@ import Button from "@mui/material/Button";
 import { useUserCourse } from "@/data/userCourse/course";
 
 function Class() {
-  const { id } = useParams();
-  const { userCourseData, status } = useUserCourse(id as string);
+  const { push } = useRouter();
+  const { class_id } = useParams();
+  const { userCourseData, status } = useUserCourse(class_id as string);
+
   if (status === "pending") return <LinearProgress />;
   return (
     <Container maxWidth="xl">
@@ -29,8 +32,8 @@ function Class() {
         links={[
           { href: "/photos", title: "Class" },
           {
-            href: `/photos/${id}`,
-            title: "Photos",
+            href: `/photos/${class_id}`,
+            title: "Albums",
           },
         ]}
       >
@@ -38,45 +41,54 @@ function Class() {
           <b>{userCourseData.title_format}</b>
         </Typography>
         <Divider />
-        <Grid container spacing={2} sx={{ pt: 2 }}>
-          {userCourseData.course.albums.map(({ id, name, photos, type }) => {
-            return (
-              <Grid spacing={2} key={id} size={{ xs: 2 }}>
-                <Stack>
-                  <Button sx={{ p: 0 }}>
-                    <Box
-                      component="img"
-                      src={photos[0]?.display_url ?? ""}
+        <Grid container spacing={3} sx={{ pt: 2 }}>
+          {userCourseData.course.albums.map(
+            ({ id: albumId, name, photos, type }) => {
+              return (
+                <Grid spacing={2} key={albumId} size={{ xs: 2 }}>
+                  <Stack>
+                    <Button
+                      onClick={() => push(`/photos/${class_id}/${albumId}`)}
+                      sx={{ p: 0, pl: 2, pr: 2, border: "1px solid #B8BDC4" }}
+                    >
+                      <Box
+                        component="img"
+                        src={photos[0]?.display_url ?? ""}
+                        sx={{
+                          backgroundColor: "grey.300",
+                          width: "100%",
+                          height: "100%",
+                          aspectRatio: "2/3",
+                          objectFit:
+                            type === "INDIVIDUAL" ? "cover" : "contain",
+                        }}
+                      />
+                    </Button>
+                    <Typography
+                      gutterBottom
                       sx={{
-                        backgroundColor: "grey.300",
-                        width: "100%",
-                        height: "100%",
-                        aspectRatio: "2/3",
-                        objectFit: type === "INDIVIDUAL" ? "cover" : "contain",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
                       }}
-                    />
-                  </Button>
-                  <Typography
-                    gutterBottom
-                    sx={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    <b>{name}</b>
-                  </Typography>
-                  <Typography variant="caption">
-                    {photos?.length ?? 0} Photos
-                  </Typography>
-                  <Typography variant="caption">
-                    Available until{" "}
-                    {formatDate(userCourseData.course.end_date, "dd MMM yyyy")}
-                  </Typography>
-                </Stack>
-              </Grid>
-            );
-          })}
+                    >
+                      <b>{name}</b>
+                    </Typography>
+                    <Typography variant="caption">
+                      {photos?.length ?? 0} Photos
+                    </Typography>
+                    <Typography variant="caption">
+                      Available until{" "}
+                      {formatDate(
+                        userCourseData.course.end_date,
+                        "dd MMM yyyy"
+                      )}
+                    </Typography>
+                  </Stack>
+                </Grid>
+              );
+            }
+          )}
         </Grid>
       </Page>
     </Container>
