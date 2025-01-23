@@ -13,7 +13,7 @@ import axios from "@/utils/axios";
 import { useUser } from "@/data/user";
 
 //*interface
-export interface CourseData {
+export interface UserCourseData {
   id: string;
   names: string[];
   course_id: string;
@@ -35,12 +35,15 @@ export interface CourseData {
 }
 
 export function useUserCourse(): {
-  userCoursesData: CourseData[];
-  userCoursesDataById: Record<string, CourseData>;
+  userCoursesData: UserCourseData[];
+  userCoursesDataById: Record<string, UserCourseData>;
   status: string;
   addUserCourse: (child: string[], course_id: string) => Promise<void>;
   isAdding: boolean;
+  updateUserCourse: (child: string[], user_course_id: string) => Promise<void>;
+  isUpdating: boolean;
 } {
+  const [isUpdating, setIsUpdating] = useState(false);
   const [isAdding, setIsAddng] = useState(false);
   const { data: userData } = useUser();
 
@@ -50,7 +53,7 @@ export function useUserCourse(): {
     `userCourse/${userData.id}`
   );
 
-  const userCoursesQueryData = data?.data as CourseData[];
+  const userCoursesQueryData = data?.data as UserCourseData[];
 
   // Memoize user courses data
   const userCoursesData = useMemo(() => {
@@ -85,11 +88,23 @@ export function useUserCourse(): {
     setIsAddng(false);
   }
 
+  async function updateUserCourse(child: string[], user_course_id: string) {
+    setIsUpdating(true);
+    await axios.put(`userCourse/${userData.id}`, {
+      names: child,
+      user_course_id,
+    });
+    refetch();
+    setIsUpdating(false);
+  }
+
   return {
     userCoursesData,
     userCoursesDataById,
     status,
     addUserCourse,
     isAdding,
+    updateUserCourse,
+    isUpdating,
   };
 }

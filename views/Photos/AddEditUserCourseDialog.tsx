@@ -23,24 +23,41 @@ import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import Link from "@mui/material/Link";
 
 //*data
-import { CourseData } from "@/data/admin/institution/course";
-import { useUserCourse } from "@/data/admin/userCourse/course";
+import { UserCourseData, useUserCourse } from "@/data/admin/userCourse/course";
 
 //*utils
 import axios from "@/utils/axios";
 import { DialogTitle } from "@mui/material";
 
-function AddEditUserCourseDialog() {
+function AddEditUserCourseDialog({
+  mode = "add",
+  id,
+}: {
+  mode?: "add" | "edit";
+  id?: string;
+}) {
   //*define
   const popupState = usePopupState({ variant: "dialog" });
 
   return (
     <>
-      <Button variant={"contained"} {...bindTrigger(popupState)}>
-        Add Class
-      </Button>
+      {mode === "edit" ? (
+        <Link
+          variant="body2"
+          underline="hover"
+          sx={{ cursor: "pointer" }}
+          {...bindTrigger(popupState)}
+        >
+          Edit
+        </Link>
+      ) : (
+        <Button variant={"contained"} {...bindTrigger(popupState)}>
+          Add Class
+        </Button>
+      )}
       <Dialog
         {...bindDialog(popupState)}
         maxWidth="sm"
@@ -50,6 +67,8 @@ function AddEditUserCourseDialog() {
         onClose={() => {}}
       >
         <AddEditUserCourseDialogForm
+          mode={mode}
+          id={id}
           handleClose={() => {
             popupState.close();
           }}
@@ -62,15 +81,25 @@ function AddEditUserCourseDialog() {
 export default AddEditUserCourseDialog;
 
 function AddEditUserCourseDialogForm({
+  mode,
+  id,
   handleClose,
 }: {
+  mode: "add" | "edit";
+  id: string;
   handleClose: () => void;
 }) {
-  const { addUserCourse, isAdding } = useUserCourse();
+  const { addUserCourse, isAdding, userCoursesDataById, updateUserCourse } =
+    useUserCourse();
+  const defaultData = userCoursesDataById[id];
   const [isChecking, setIsChecking] = useState(false);
   const [code, setCode] = useState("");
-  const [data, setData] = useState<CourseData>(undefined);
-  const [child, setChild] = useState<string[]>([""]);
+  const [data, setData] = useState<UserCourseData | undefined>(
+    mode === "edit" ? defaultData : undefined
+  );
+  const [child, setChild] = useState<string[]>(
+    mode === "edit" ? defaultData.names : [""]
+  );
 
   return (
     <OverlayBox isLoading={isAdding || isChecking}>
@@ -116,7 +145,7 @@ function AddEditUserCourseDialogForm({
                   </Grid>
                   <Grid size={{ xs: 6 }} sx={{ justifyItems: "start" }}>
                     <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                      {data.name}
+                      {data.title_format}
                     </Typography>
                   </Grid>
                   <Grid size={{ xs: 6 }}>
@@ -126,7 +155,7 @@ function AddEditUserCourseDialogForm({
                   </Grid>
                   <Grid size={{ xs: 6 }} sx={{ justifyItems: "start" }}>
                     <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                      {formatDate(data.end_date, "dd MMM yyyy")}
+                      {formatDate(data.course.end_date, "dd MMM yyyy")}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -173,20 +202,31 @@ function AddEditUserCourseDialogForm({
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setData(undefined)}>Back</Button>
+            <Button
+              onClick={() =>
+                mode === "add" ? setData(undefined) : handleClose()
+              }
+            >
+              Back
+            </Button>
             <FlexBox />
             <Button
               variant="contained"
               onClick={async () => {
-                if (child.every((name) => name.trim() !== "")) {
-                  await addUserCourse(child, data.id);
+                if (child.every((name) => name.trim().length > 0)) {
+                  if (mode === "add") {
+                    await addUserCourse(child, data.course_id);
+                  } else {
+                    await updateUserCourse(child, data.id);
+                  }
+
                   handleClose();
                 } else {
                   toast("Please fill in all child names", { type: "warning" });
                 }
               }}
             >
-              View Class Photos
+              {mode === "add" ? "   View Class Photos" : "Update"}
             </Button>
           </DialogActions>
         </>
@@ -224,7 +264,19 @@ function AddEditUserCourseDialogForm({
                   setIsChecking(true);
                   const data = await axios.get(`course/${code}`);
                   if (data?.data) {
-                    setData(data.data);
+                    setData({
+                      course: data.data,
+                      id: "",
+                      names: [],
+                      course_id: data.data.id,
+                      title_format:
+                        data.data.name +
+                        " - " +
+                        data.data.standard.name +
+                        " (" +
+                        data.data.academicYear.year.toString() +
+                        ")",
+                    });
                   } else {
                     toast("Invalid Passcode", { type: "error" });
                   }

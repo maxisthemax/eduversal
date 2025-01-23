@@ -110,6 +110,38 @@ export default async function courseHandler(
         return res.status(201).json({ data: newCourse });
       }
 
+      case "PUT": {
+        // Validate required fields
+        if (!validateRequiredFields(req, res, ["userId"], "query")) {
+          return;
+        }
+
+        // Get the names and user_course_id from the request body
+        const { names, user_course_id } = req.body;
+
+        // Validate required fields
+        if (!validateRequiredFields(req, res, ["names", "user_course_id"])) {
+          return;
+        }
+
+        // Get createdBy and updatedBy
+        const { updated_by } = await getCreatedByUpdatedBy(req, res);
+
+        // Update the user course
+        const updatedCourse = await prisma.userCourse.update({
+          where: {
+            id: user_course_id,
+          },
+          data: {
+            names,
+            ...updated_by,
+          },
+        });
+
+        // Return the updated user course
+        return res.status(200).json({ data: updatedCourse });
+      }
+
       default:
         // Use handleAllowedMethods for method validation
         if (handleAllowedMethods(req, res, ["GET"])) return;

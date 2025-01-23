@@ -29,6 +29,13 @@ export default async function courseHandler(
           where: {
             access_code: code as string,
           },
+          select: {
+            academicYear: { select: { year: true, id: true } },
+            standard: { select: { name: true, id: true } },
+            end_date: true,
+            name: true,
+            id: true,
+          },
         });
 
         // Return the courses

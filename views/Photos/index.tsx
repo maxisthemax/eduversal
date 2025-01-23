@@ -16,7 +16,6 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 
 //*data
 import { useUserCourse } from "@/data/admin/userCourse/course";
@@ -60,13 +59,7 @@ function Photos() {
                     <Typography variant="body2">
                       {names.map((name) => name).join(", ")}
                     </Typography>
-                    <Link
-                      variant="body2"
-                      underline="hover"
-                      sx={{ cursor: "pointer" }}
-                    >
-                      Edit
-                    </Link>
+                    <AddEditUserCourseDialog mode="edit" id={id} />
                   </Stack>
                   <Typography variant="body2">
                     {course.albums.length} Albums |{" "}
