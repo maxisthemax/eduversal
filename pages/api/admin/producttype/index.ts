@@ -4,7 +4,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 
 //*helpers
-import { handleAllowedMethods } from "@/helpers/apiHelpers";
+import {
+  getCreatedByUpdatedBy,
+  handleAllowedMethods,
+  validateRequiredFields,
+} from "@/helpers/apiHelpers";
 
 // API handler function
 export default async function handler(
@@ -22,6 +26,46 @@ export default async function handler(
         // Return the product types
         return res.status(200).json({ data: productType });
       }
+
+      case "POST": {
+        // Create a new product type
+        const { name, type, currency, price, is_deliverable } = req.body;
+
+        // Validate required fields
+        if (
+          !validateRequiredFields(
+            req,
+            res,
+            ["name", "type", "currency", "price", "is_deliverable"],
+            "body"
+          )
+        ) {
+          return;
+        }
+
+        // Get createdBy and updatedBy
+        const { created_by, updated_by } = await getCreatedByUpdatedBy(
+          req,
+          res
+        );
+
+        // Create the new product type
+        const newProductType = await prisma.productType.create({
+          data: {
+            name,
+            type,
+            currency,
+            price,
+            is_deliverable,
+            ...created_by,
+            ...updated_by,
+          },
+        });
+
+        // Return the newly created product type
+        return res.status(201).json({ data: newProductType });
+      }
+
       default: {
         // Handle unsupported methods
         if (handleAllowedMethods(req, res, ["GET", "POST"])) return;

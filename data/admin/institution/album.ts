@@ -97,6 +97,9 @@ export function useAlbums(
             data.product_type.currency +
             " " +
             data.product_type.price.toFixed(2),
+          is_deliverable_format: data.product_type.is_deliverable
+            ? "Yes"
+            : "No",
         },
         created_at: new Date(data.created_at),
         updated_at: new Date(data.updated_at),

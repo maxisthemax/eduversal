@@ -448,20 +448,19 @@ function AlbumContent({ albumId }: { albumId: string }) {
             <Grid size={{ xs: 12 }}>
               <Divider />
             </Grid>
+            <Grid size={{ xs: 10 }} sx={{ alignContent: "center" }}>
+              <Typography>
+                <b>Product Details</b>
+              </Typography>
+            </Grid>
+            <NameValue name="Name" value={albumData.product_type.name} />
+            <NameValue name="Type" value={albumData.product_type.type} />
             <NameValue
-              name="Product Name"
-              value={albumData.product_type.name}
+              name="Is Deliverable"
+              value={albumData.product_type.is_deliverable_format}
             />
             <NameValue
-              name="Product Type"
-              value={albumData.product_type.type}
-            />
-            <NameValue
-              name="Product Deliverable"
-              value={albumData.product_type.is_deliverable ? "Yes" : "No"}
-            />
-            <NameValue
-              name="Product Price"
+              name="Price"
               value={albumData.product_type.price_format}
             />
           </Grid>
