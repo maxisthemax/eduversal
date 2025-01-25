@@ -34,6 +34,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
+import Divider from "@mui/material/Divider";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -424,10 +425,6 @@ function AlbumContent({ albumId }: { albumId: string }) {
               <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
             </Grid>
             <NameValue name="Name" value={albumData.name} />
-            <NameValue
-              name="Product Type"
-              value={albumData.product_type.name}
-            />
             <NameValue name="Total Files" value={photosData.length} />
             <NameValue
               name="Created"
@@ -447,6 +444,25 @@ function AlbumContent({ albumId }: { albumId: string }) {
                 differenceInDays(courseData.end_date, new Date()) +
                 " days remaining"
               }
+            />
+            <Grid size={{ xs: 12 }}>
+              <Divider />
+            </Grid>
+            <NameValue
+              name="Product Name"
+              value={albumData.product_type.name}
+            />
+            <NameValue
+              name="Product Type"
+              value={albumData.product_type.type}
+            />
+            <NameValue
+              name="Product Deliverable"
+              value={albumData.product_type.is_deliverable ? "Yes" : "No"}
+            />
+            <NameValue
+              name="Product Price"
+              value={albumData.product_type.price_format}
             />
           </Grid>
         </Grid>

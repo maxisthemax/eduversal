@@ -11,7 +11,11 @@ export interface ProductTypeData {
   id: string;
   name: string;
   type: string;
+  is_deliverable: boolean;
+  currency: string;
+  price: number;
 
+  price_format: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -40,6 +44,7 @@ export function useProductType(): {
     if (!isLoading && productTypesQueryData) {
       return productTypesQueryData.map((data) => ({
         ...data,
+        price_format: data.currency + " " + data.price.toFixed(2),
         created_at: new Date(data.created_at),
         updated_at: new Date(data.updated_at),
       }));

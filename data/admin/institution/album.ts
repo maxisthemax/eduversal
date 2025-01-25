@@ -91,6 +91,13 @@ export function useAlbums(
     if (!isLoading && albumsQueryData) {
       return albumsQueryData.map((data) => ({
         ...data,
+        product_type: {
+          ...data.product_type,
+          price_format:
+            data.product_type.currency +
+            " " +
+            data.product_type.price.toFixed(2),
+        },
         created_at: new Date(data.created_at),
         updated_at: new Date(data.updated_at),
       }));
