@@ -137,15 +137,16 @@ model InstitutionType {
 }
 
 model Album {
-  id             String       @id @default(cuid())
-  name           String
-  description    String
-  type           AlbumType
-  photos         Photo[]
-  institution_id String?
-  institution    Institution? @relation(fields: [institution_id], references: [id])
-  course_id      String?
-  course         Course?      @relation(fields: [course_id], references: [id])
+  id              String       @id @default(cuid())
+  name            String
+  description     String
+  product_type_id String?
+  product_type    ProductType? @relation(fields: [product_type_id], references: [id])
+  photos          Photo[]
+  institution_id  String?
+  institution     Institution? @relation(fields: [institution_id], references: [id])
+  course_id       String?
+  course          Course?      @relation(fields: [course_id], references: [id])
 
   created_by_user_id String
   created_by_name    String
@@ -156,6 +157,7 @@ model Album {
 
   @@index([institution_id])
   @@index([course_id])
+  @@index([product_type_id])
 }
 
 model Photo {
@@ -199,7 +201,59 @@ model UserCourse {
   @@index([course_id])
 }
 
-enum AlbumType {
+model ProductType {
+  id             String          @id @default(cuid())
+  name           String
+  type           ProductTypeType
+  currency       String
+  price          Float
+  is_deliverable Boolean         @default(true)
+  Album          Album[]
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
+}
+
+model ProductVariation {
+  id              String  @id @default(cuid())
+  name            String
+  description     String
+  is_downloadable Boolean @default(true)
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime                 @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime                 @updatedAt
+  options            ProductVariationOption[]
+
+  @@index([id])
+}
+
+model ProductVariationOption {
+  id                 String            @id @default(cuid())
+  name               String
+  description        String
+  can_preview        Boolean           @default(true)
+  currency           String
+  price              Float
+  ProductVariation   ProductVariation? @relation(fields: [productVariationId], references: [id])
+  productVariationId String?
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
+}
+
+enum ProductTypeType {
   INDIVIDUAL
   GROUP
 }

@@ -3,7 +3,6 @@ import { useParams } from "next/navigation";
 
 //*lodash
 import keyBy from "lodash/keyBy";
-import find from "lodash/find";
 
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
@@ -11,6 +10,9 @@ import { checkSameValue } from "@/helpers/objectHelpers";
 
 //*utils
 import axios from "@/utils/axios";
+
+//*interface
+import { ProductTypeData } from "../productType";
 
 //*interface
 export interface PhotoData {
@@ -29,7 +31,8 @@ export interface AlbumData {
   id: string;
   name: string;
   description: string;
-  type: string;
+  product_type_id: string;
+  product_type: ProductTypeData;
   institution_id: string;
   course_id: string;
   created_at: Date;
@@ -37,21 +40,15 @@ export interface AlbumData {
   photos: PhotoData[];
   created_by_name: string;
   updated_by_name: string;
-  type_format: string;
 }
 
 export interface AlbumCreate {
   name: string;
   description: string;
-  type: string;
+  product_type_id: string;
   institution_id?: string;
   course_id?: string;
 }
-
-export const type = [
-  { value: "INDIVIDUAL", label: "Individual" },
-  { value: "GROUP", label: "Class/Club" },
-];
 
 type AlbumUpdate = Partial<AlbumCreate>;
 
@@ -94,7 +91,6 @@ export function useAlbums(
     if (!isLoading && albumsQueryData) {
       return albumsQueryData.map((data) => ({
         ...data,
-        type_format: find(type, (t) => t.value === data.type)?.label,
         created_at: new Date(data.created_at),
         updated_at: new Date(data.updated_at),
       }));

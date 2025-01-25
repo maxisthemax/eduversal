@@ -33,6 +33,7 @@ import Stack from "@mui/material/Stack";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
+import LinearProgress from "@mui/material/LinearProgress";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -91,7 +92,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
   const [selection, setSelection] = useState<string[]>([]);
 
   //*data
-  const { albumData } = useAlbums(albumId);
+  const { albumData, status } = useAlbums(albumId);
   const { courseData } = useCourses(courseId);
   const { addPhoto, photosData, deletePhoto } = usePhotos(albumId);
 
@@ -137,6 +138,8 @@ function AlbumContent({ albumId }: { albumId: string }) {
       },
     });
   };
+
+  if (status === "pending") return <LinearProgress />;
 
   return (
     <OverlayBox isLoading={isDeleting || isUploading}>
@@ -189,7 +192,10 @@ function AlbumContent({ albumId }: { albumId: string }) {
                         return (
                           <Grid
                             size={{
-                              xs: albumData.type === "INDIVIDUAL" ? 1.5 : 2,
+                              xs:
+                                albumData.product_type.type === "INDIVIDUAL"
+                                  ? 1.5
+                                  : 2,
                             }}
                             key={index}
                             sx={{
@@ -231,7 +237,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                               alt={file.name}
                               style={{
                                 aspectRatio:
-                                  albumData.type === "INDIVIDUAL"
+                                  albumData.product_type.type === "INDIVIDUAL"
                                     ? "2/3"
                                     : "3/2",
                                 display: "block",
@@ -294,7 +300,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                   xs: 12,
                   sm: 6,
                   md: 4,
-                  lg: albumData.type === "INDIVIDUAL" ? 2 : 3,
+                  lg: albumData.product_type.type === "INDIVIDUAL" ? 2 : 3,
                 }}
                 key={index}
                 sx={{
@@ -356,7 +362,9 @@ function AlbumContent({ albumId }: { albumId: string }) {
                           alt={item.name}
                           style={{
                             aspectRatio:
-                              albumData.type === "INDIVIDUAL" ? "2/3" : "3/2",
+                              albumData.product_type.type === "INDIVIDUAL"
+                                ? "2/3"
+                                : "3/2",
                             display: "block",
                             width: "100%",
                             objectFit: "cover",
@@ -416,7 +424,10 @@ function AlbumContent({ albumId }: { albumId: string }) {
               <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
             </Grid>
             <NameValue name="Name" value={albumData.name} />
-            <NameValue name="Type" value={albumData.type_format} />
+            <NameValue
+              name="Product Type"
+              value={albumData.product_type.name}
+            />
             <NameValue name="Total Files" value={photosData.length} />
             <NameValue
               name="Created"

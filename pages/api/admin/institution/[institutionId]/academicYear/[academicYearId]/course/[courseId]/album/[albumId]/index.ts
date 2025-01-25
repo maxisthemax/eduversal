@@ -28,7 +28,7 @@ export default async function albumHandler(
         }
 
         // Update an existing album
-        const { name, description, type } = req.body;
+        const { name, description, product_type_id } = req.body;
 
         // Get updatedBy
         const { updated_by } = await getCreatedByUpdatedBy(req, res);
@@ -39,7 +39,7 @@ export default async function albumHandler(
           data: {
             name,
             description,
-            type,
+            product_type_id,
             ...updated_by,
           },
         });

@@ -18,19 +18,21 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
-import { type, useAlbums } from "@/data/admin/institution/album";
+import { useAlbums } from "@/data/admin/institution/album";
+import { useProductType } from "@/data/admin/productType";
 
 //*validation
 const validationSchema = yup.object({
   name: yup.string().required("Required"),
   description: yup.string().required("Required"),
-  type: yup.string().required("Required"),
+  product_type_id: yup.string().required("Required"),
 });
 
 function AddEditAlbumDialog({
@@ -83,6 +85,9 @@ function AddEditAlbumDialogForm({
   handleClose: () => void;
 }) {
   const { albumData, addAlbum, updateAlbum } = useAlbums(albumId);
+  const { productsData, status } = useProductType();
+
+  if (status === "pending") return <LinearProgress />;
 
   return (
     <Formik
@@ -91,12 +96,12 @@ function AddEditAlbumDialogForm({
           ? {
               name: albumData.name,
               description: albumData.description,
-              type: albumData.type,
+              product_type_id: albumData.product_type_id,
             }
           : {
               name: "",
               description: "",
-              type: "INDIVIDUAL",
+              product_type_id: productsData[0].id,
             }
       }
       validationSchema={validationSchema}
@@ -159,15 +164,15 @@ function AddEditAlbumDialogForm({
                   />
 
                   <TextFieldForm
-                    name="type"
-                    label="Type"
+                    name="product_type_id"
+                    label="Product Type"
                     formProps={formProps}
                     props={{ select: true, required: true }}
                   >
-                    {type.map(({ value, label }) => {
+                    {productsData.map(({ id, name }) => {
                       return (
-                        <MenuItem key={value} value={value}>
-                          {label}
+                        <MenuItem key={id} value={id}>
+                          {name}
                         </MenuItem>
                       );
                     })}

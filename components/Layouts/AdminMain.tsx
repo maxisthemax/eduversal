@@ -82,7 +82,10 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 id: "restrictContent",
                 title: "Restrict Content",
                 icon: "lock",
-                list: [{ title: "Institutions", href: "/admin/institution" }],
+                list: [
+                  { title: "Institutions", href: "/admin/institution" },
+                  { title: "Product Type", href: "/admin/producttype" },
+                ],
               },
               {
                 id: "userlist",
