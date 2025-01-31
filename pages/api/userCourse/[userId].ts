@@ -43,7 +43,7 @@ export default async function courseHandler(
                 standard: { select: { id: true, name: true } },
                 albums: {
                   select: {
-                    type: true,
+                    product_type: true,
                     id: true,
                     photos: {
                       select: { id: true, name: true, display_url: true },
