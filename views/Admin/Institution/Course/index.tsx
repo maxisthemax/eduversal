@@ -18,17 +18,15 @@ import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 
 //*data
 import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
 import { useCourses } from "@/data/admin/institution/course";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-} from "@mui/material";
 import { useAlbums } from "@/data/admin/institution/album";
 
 function Course() {

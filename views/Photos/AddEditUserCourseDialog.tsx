@@ -23,6 +23,7 @@ import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
 
 //*data
@@ -30,7 +31,6 @@ import { UserCourseData, useUserCourse } from "@/data/userCourse/course";
 
 //*utils
 import axios from "@/utils/axios";
-import { DialogTitle } from "@mui/material";
 
 function AddEditUserCourseDialog({
   mode = "add",

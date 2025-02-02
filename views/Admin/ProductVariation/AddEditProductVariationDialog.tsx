@@ -25,6 +25,7 @@ import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid2";
+import Typography from "@mui/material/Typography";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -34,12 +35,10 @@ import {
   ProductVariationOptionCreate,
   useProductVariation,
 } from "@/data/admin/productVariation";
-import { Typography } from "@mui/material";
 
 //*validation
 const validationSchema = yup.object({
   name: yup.string().required("Required"),
-  description: yup.string().required("Required"),
   currency: yup.string().required("Required"),
   price: yup.number().required("Required"),
   options: yup
@@ -194,7 +193,6 @@ function AddEditProductVariationDialogForm({
                     name="description"
                     label="Description"
                     formProps={formProps}
-                    props={{ required: true }}
                   />
                   <CheckboxForm
                     name="is_downloadable"
@@ -228,9 +226,10 @@ function AddEditProductVariationDialogForm({
                                           name={`options.${index}.name`}
                                           label="Name"
                                           formProps={formProps}
+                                          props={{ required: true }}
                                         />
                                       </Grid>
-                                      <Grid size={{ xs: 4 }}>
+                                      <Grid size={{ xs: 4.3 }}>
                                         <TextFieldForm
                                           name={`options.${index}.description`}
                                           label="Desciption"
@@ -241,7 +240,7 @@ function AddEditProductVariationDialogForm({
                                           }}
                                         />
                                       </Grid>
-                                      <Grid size={{ xs: 1.5 }}>
+                                      <Grid size={{ xs: 1.2 }}>
                                         <TextFieldForm
                                           name={`options.${index}.currency`}
                                           label="Currency"
