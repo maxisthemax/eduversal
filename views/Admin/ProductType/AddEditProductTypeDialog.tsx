@@ -28,6 +28,7 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
 import { useProductType } from "@/data/admin/productType";
+import TextFieldPriceForm from "@/components/Form/TextFieldPriceForm";
 
 //*validation
 const validationSchema = yup.object({
@@ -184,7 +185,7 @@ function AddEditProductTypeDialogForm({
                     >
                       <MenuItem value="RM">RM</MenuItem>
                     </TextFieldForm>
-                    <TextFieldForm
+                    <TextFieldPriceForm
                       name="price"
                       label="Price"
                       formProps={formProps}

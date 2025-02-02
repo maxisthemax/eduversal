@@ -85,6 +85,10 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 list: [
                   { title: "Institutions", href: "/admin/institution" },
                   { title: "Product Type", href: "/admin/producttype" },
+                  {
+                    title: "Product Variation",
+                    href: "/admin/productvariation",
+                  },
                 ],
               },
               {

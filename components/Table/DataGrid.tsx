@@ -1,4 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+//*lodash
+import some from "lodash/some";
+
 //*mui
 import {
   DataGrid as DataGridMui,
@@ -20,6 +24,7 @@ function DataGrid({
   pagination,
   height = "height",
   filter,
+  autoRowHeightColumn,
 }: {
   data: any[];
   columns: any[];
@@ -39,6 +44,7 @@ function DataGrid({
     filterMode: "server" | "client";
     onFilterChange: (model: GridFilterModel) => void;
   };
+  autoRowHeightColumn?: string[];
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -54,7 +60,12 @@ function DataGrid({
       paginationModel={paginationModel}
       paginationMode={paginationMode}
       onPaginationModelChange={onPaginationModelChange}
-      sx={{ [height]: getFullHeightSize(gap) }}
+      sx={{
+        [height]: getFullHeightSize(gap),
+        "& .MuiDataGrid-cell": {
+          alignContent: "center",
+        },
+      }}
       loading={loading}
       disableColumnSelector
       disableDensitySelector
@@ -71,6 +82,15 @@ function DataGrid({
       filterMode={filterMode}
       onFilterModelChange={onFilterChange}
       disableColumnFilter={filterMode === "server"}
+      getRowHeight={({ model }) => {
+        if (!autoRowHeightColumn) return null;
+        else
+          return some(autoRowHeightColumn, (columnId) => {
+            return model[columnId];
+          })
+            ? "auto"
+            : null;
+      }}
     />
   );
 }
