@@ -239,7 +239,7 @@ model ProductVariationOption {
   id                 String            @id @default(cuid())
   name               String
   description        String
-  can_preview        Boolean           @default(true)
+  preview_url        String?
   currency           String
   price              Float
   ProductVariation   ProductVariation? @relation(fields: [productVariationId], references: [id])

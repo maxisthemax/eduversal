@@ -28,7 +28,7 @@ export interface ProductVariationOption {
   id: string;
   name: string;
   description: string;
-  can_preview: boolean;
+  preview_url: string;
   currency: string;
   price: number;
 
@@ -51,7 +51,7 @@ export interface ProductVariationOptionCreate {
   description: string;
   currency: string;
   price: number;
-  can_preview?: boolean;
+  can_preview?: string;
   status?: string;
 }
 

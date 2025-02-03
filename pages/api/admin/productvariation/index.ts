@@ -33,7 +33,7 @@ export default async function handler(
                 id: true,
                 name: true,
                 description: true,
-                can_preview: true,
+                preview_url: true,
                 currency: true,
                 price: true,
               },

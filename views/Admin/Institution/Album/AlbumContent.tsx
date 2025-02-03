@@ -6,9 +6,7 @@ import {
   bindTrigger,
   usePopupState,
 } from "material-ui-popup-state/hooks";
-import { useState, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import { toast } from "react-toastify";
+import { useState } from "react";
 import PopupState from "material-ui-popup-state";
 
 //*lodash
@@ -46,6 +44,7 @@ import { usePhotos } from "@/data/admin/institution/photo";
 
 //*utils
 import axios from "@/utils/axios";
+import useUpload from "@/components/useUpload";
 
 function AlbumContent({ albumId }: { albumId: string }) {
   const params = useParams();
@@ -54,74 +53,27 @@ function AlbumContent({ albumId }: { albumId: string }) {
   const { handleOpenDialog } = useCustomDialog();
 
   const popupState = usePopupState({ variant: "dialog", popupId: "upload" });
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFiles((files) => {
-      return [...files, ...acceptedFiles];
-    });
-  }, []);
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    multiple: true,
-    onError: (error) => {
-      console.log(error);
-    },
-    accept: {
-      "image/jpeg": [],
-      "image/png": [],
-    },
-    onDropRejected: (fileRejections) => {
-      toast.error(
-        fileRejections.map((file) => file.errors[0].message).join(`\n`)
-      );
-    },
-    validator: (file) => {
-      if (file.size > 10 * 1024 * 1024) {
-        return {
-          code: "size-too-large",
-          message: `file is larger than 10MB`,
-        };
-      }
-      return null;
-    },
-  });
-
-  //*states
-  const [files, setFiles] = useState<File[]>([]);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
-  const [selection, setSelection] = useState<string[]>([]);
 
   //*data
   const { albumData, status } = useAlbums(albumId);
   const { courseData } = useCourses(courseId);
   const { addPhoto, photosData, deletePhoto } = usePhotos(albumId);
 
+  //*upload hook
+  const {
+    files,
+    setFiles,
+    isUploading,
+    getRootProps,
+    getInputProps,
+    handleUpload,
+  } = useUpload(`institution/${institutionId}/album/${albumId}`);
+
+  //*states
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [selection, setSelection] = useState<string[]>([]);
+
   //*function
-  const handleUpload = async () => {
-    const formData = new FormData();
-    formData.append(
-      "folderPath",
-      `institution/${institutionId}/album/${albumId}`
-    );
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
-    try {
-      setIsUploading(true);
-      const res = await axios.post("admin/photo/uploadPhoto", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      await addPhoto(res.data);
-      setIsUploading(false);
-    } catch (error) {
-      setIsUploading(false);
-      console.error("Error uploading files:", error);
-    }
-
-    setFiles([]);
-  };
-
   const handleDelete = async () => {
     handleOpenDialog({
       allowOutsideClose: false,
@@ -138,6 +90,13 @@ function AlbumContent({ albumId }: { albumId: string }) {
         }
       },
     });
+  };
+
+  const handleUploadAndAddPhoto = async () => {
+    const data = await handleUpload();
+    if (data) {
+      await addPhoto(data);
+    }
   };
 
   if (status === "pending") return <LinearProgress />;
@@ -287,7 +246,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                     <Button
                       variant="contained"
                       disabled={files.length === 0}
-                      onClick={handleUpload}
+                      onClick={handleUploadAndAddPhoto}
                     >
                       Upload
                     </Button>
