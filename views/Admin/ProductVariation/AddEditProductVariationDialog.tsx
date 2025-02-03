@@ -47,7 +47,6 @@ const validationSchema = yup.object({
     .of(
       yup.object().shape({
         name: yup.string().required("Required"),
-        description: yup.string().required("Required"),
         currency: yup.string().required("Required"),
         price: yup.string().required("Required"),
       })
@@ -104,8 +103,12 @@ function AddEditProductVariationDialogForm({
   productVariationId?: string;
   handleClose: () => void;
 }) {
-  const { addProductVariation, productVariationData, status } =
-    useProductVariation(productVariationId);
+  const {
+    addProductVariation,
+    productVariationData,
+    updateProductVariation,
+    status,
+  } = useProductVariation(productVariationId);
 
   if (status === "pending") return <LinearProgress />;
 
@@ -119,7 +122,15 @@ function AddEditProductVariationDialogForm({
               currency: productVariationData.options[0].currency,
               price: productVariationData.options[0].price,
               is_downloadable: productVariationData.is_downloadable,
-              options: productVariationData.options,
+              options: productVariationData.options.map((option) => {
+                return {
+                  id: option.id,
+                  name: option.name,
+                  description: option.description,
+                  currency: option.currency,
+                  price: option.price,
+                };
+              }),
             }
           : {
               name: "",
@@ -143,6 +154,7 @@ function AddEditProductVariationDialogForm({
           if (mode === "add") {
             await addProductVariation(values);
           } else {
+            await updateProductVariation(productVariationId, values);
           }
           handleClose();
           resetForm();
@@ -160,6 +172,7 @@ function AddEditProductVariationDialogForm({
         resetForm,
         touched,
         handleBlur,
+        setFieldValue,
       }) => {
         const formProps = {
           values,
@@ -219,9 +232,10 @@ function AddEditProductVariationDialogForm({
                                   option: ProductVariationOptionCreate,
                                   index: number
                                 ) => {
+                                  if (option.status === "deleted") return null;
                                   return (
                                     <>
-                                      <Grid size={{ xs: 3 }}>
+                                      <Grid size={{ xs: 3.5 }}>
                                         <TextFieldForm
                                           name={`options.${index}.name`}
                                           label="Name"
@@ -253,7 +267,7 @@ function AddEditProductVariationDialogForm({
                                           <MenuItem value="RM">RM</MenuItem>
                                         </TextFieldForm>
                                       </Grid>
-                                      <Grid size={{ xs: 2.5 }}>
+                                      <Grid size={{ xs: 2 }}>
                                         <TextFieldPriceForm
                                           name={`options.${index}.price`}
                                           label="Price"
@@ -267,7 +281,14 @@ function AddEditProductVariationDialogForm({
                                         {values.options.length > 1 && (
                                           <Button
                                             variant="contained"
-                                            onClick={() => remove(index)}
+                                            onClick={() =>
+                                              option?.id
+                                                ? setFieldValue(
+                                                    `options.${index}.status`,
+                                                    "deleted"
+                                                  )
+                                                : remove(index)
+                                            }
                                           >
                                             Delete
                                           </Button>
@@ -286,6 +307,7 @@ function AddEditProductVariationDialogForm({
                                     description: "",
                                     currency: "RM",
                                     price: 0,
+                                    status: "new",
                                   })
                                 }
                               >

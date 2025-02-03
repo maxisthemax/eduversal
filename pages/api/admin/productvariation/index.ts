@@ -54,7 +54,7 @@ export default async function handler(
           !validateRequiredFields(
             req,
             res,
-            ["description", "name", "is_downloadable", "options"],
+            ["name", "is_downloadable", "options"],
             "body"
           )
         ) {

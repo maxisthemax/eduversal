@@ -8,6 +8,7 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 
 //*utils
 import axios from "@/utils/axios";
+import { checkSameValue } from "@/helpers/objectHelpers";
 
 //*interface
 export interface ProductVariationData {
@@ -45,12 +46,16 @@ export interface ProductVariationCreate {
 }
 
 export interface ProductVariationOptionCreate {
+  id?: string;
   name: string;
   description: string;
   currency: string;
   price: number;
   can_preview?: boolean;
+  status?: string;
 }
+
+type ProductVariationUpdate = Partial<ProductVariationCreate>;
 
 export function useProductVariation(productVariationId?: string): {
   productVariationsData: ProductVariationData[];
@@ -58,6 +63,10 @@ export function useProductVariation(productVariationId?: string): {
   productVariationData: ProductVariationData;
   addProductVariation: (
     productVariation: ProductVariationCreate
+  ) => Promise<void>;
+  updateProductVariation: (
+    id: string,
+    productVariation: ProductVariationUpdate
   ) => Promise<void>;
   status: string;
 } {
@@ -100,11 +109,29 @@ export function useProductVariation(productVariationId?: string): {
     refetch();
   }
 
+  const updateProductVariation = async (
+    id: string,
+    productVariation: ProductVariationUpdate
+  ) => {
+    const currentProductVariation = productVariationsById[id];
+
+    // Remove fields that have the same value
+    const { changes, isEmpty } = checkSameValue(
+      currentProductVariation,
+      productVariation
+    );
+    if (isEmpty) return;
+
+    await axios.put(`admin/productvariation/${id}`, changes);
+    refetch();
+  };
+
   return {
     productVariationsData,
     productVariationsById,
     status,
     productVariationData,
     addProductVariation,
+    updateProductVariation,
   };
 }
