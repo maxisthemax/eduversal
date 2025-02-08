@@ -14,7 +14,7 @@ function OverlayBox({
   children,
 }: OverlayBoxProps) {
   return (
-    <Box style={{ position: "relative" }}>
+    <Box sx={{ position: "relative" }}>
       {children}
       <Box
         sx={{

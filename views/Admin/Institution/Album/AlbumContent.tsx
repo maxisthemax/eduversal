@@ -195,7 +195,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                               component="img"
                               src={URL.createObjectURL(file)}
                               alt={file.name}
-                              style={{
+                              sx={{
                                 aspectRatio:
                                   albumData.product_type.type === "INDIVIDUAL"
                                     ? "2/3"
@@ -320,7 +320,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                           component="img"
                           src={`${item.display_url}`}
                           alt={item.name}
-                          style={{
+                          sx={{
                             aspectRatio:
                               albumData.product_type.type === "INDIVIDUAL"
                                 ? "2/3"

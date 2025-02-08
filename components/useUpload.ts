@@ -5,19 +5,29 @@ import { toast } from "react-toastify";
 //*utils
 import axios from "@/utils/axios";
 
-export default function useUpload(uploadPath: string) {
+export default function useUpload(
+  uploadPath: string,
+  options?: { multiple: boolean }
+) {
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFiles((files) => {
-      return [...files, ...acceptedFiles];
-    });
-  }, []);
+  const multiple = options?.multiple ?? true;
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    multiple: true,
+  const onDropAccepted = useCallback(
+    (acceptedFiles: File[]) => {
+      if (multiple)
+        setFiles((files) => {
+          return [...files, ...acceptedFiles];
+        });
+      else setFiles(acceptedFiles);
+    },
+    [multiple]
+  );
+
+  const { getRootProps, getInputProps, open } = useDropzone({
+    onDropAccepted,
+    multiple,
     onError: (error) => {
       console.log(error);
     },
@@ -69,5 +79,6 @@ export default function useUpload(uploadPath: string) {
     getRootProps,
     getInputProps,
     handleUpload,
+    open,
   };
 }
