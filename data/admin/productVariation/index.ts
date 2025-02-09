@@ -51,8 +51,7 @@ export interface ProductVariationOptionCreate {
   description: string;
   currency: string;
   price: number;
-  preview_url?: string;
-  preview_image?: string;
+  can_preview?: string;
   status?: string;
 }
 
@@ -104,41 +103,8 @@ export function useProductVariation(productVariationId?: string): {
   const productVariationData = productVariationsById[productVariationId];
 
   async function addProductVariation(productVariation: ProductVariationCreate) {
-    const formData = new FormData();
-    formData.append("name", productVariation.name);
-    formData.append("description", productVariation.description);
-    formData.append(
-      "is_downloadable",
-      productVariation.is_downloadable.toString()
-    );
-    formData.append(
-      "options",
-      JSON.stringify(
-        productVariation.options.map((data) => {
-          return {
-            id: data.id,
-            name: data.name,
-            description: data.description,
-            currency: data.currency,
-            price: data.price,
-            status: data.status,
-          };
-        })
-      )
-    );
-
-    productVariation.options.forEach((option, index) => {
-      if (option.preview_image)
-        formData.append(
-          `options[${index}][preview_image]`,
-          option.preview_image
-        );
-    });
-
-    await axios.post(`admin/productvariation`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    await axios.post(`admin/productvariation`, {
+      ...productVariation,
     });
     refetch();
   }

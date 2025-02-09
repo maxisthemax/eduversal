@@ -101,7 +101,7 @@ function AddEditAlbumDialogForm({
           : {
               name: "",
               description: "",
-              product_type_id: productsData[0]?.id ?? "",
+              product_type_id: productsData[0].id,
             }
       }
       validationSchema={validationSchema}
