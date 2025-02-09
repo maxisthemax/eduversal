@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable, { Fields, Files } from "formidable";
-import { S3 } from "aws-sdk";
 import fs from "fs";
 import sharp from "sharp";
 
@@ -11,21 +10,15 @@ import isEmpty from "lodash/isEmpty";
 import { replaceStringAll } from "@/helpers/stringHelpers";
 import { handleAllowedMethods } from "@/helpers/apiHelpers";
 
+//*functions
+import { upload } from "../../functions/upload";
+
 // Disable Next.js's built-in body parsing, as we use formidable instead.
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-const s3 = new S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  endpoint: process.env.DO_SPACES_ENDPOINT,
-  region: process.env.AWS_REGION,
-  s3ForcePathStyle: false,
-  signatureVersion: "v4",
-});
 
 export default async function handler(
   req: NextApiRequest,
@@ -110,16 +103,13 @@ export default async function handler(
               "-"
             );
 
-            // Upload parameters for the original file
-            const uploadParams: S3.PutObjectRequest = {
-              Bucket: process.env.BUCKET_NAME || "",
+            // Upload the original file to S3 (or DO Spaces)
+            await upload({
               Key: `${folderPath}/${newFileName}`,
               Body: fileStream,
               ACL: "private",
-            };
-
-            // Upload the original file to S3 (or DO Spaces)
-            await s3.upload(uploadParams).promise();
+              ContentType: file.mimetype,
+            });
 
             const newFileNameWatermark = replaceStringAll(
               `watermark-${file.originalFilename || file.newFilename}`,
@@ -127,9 +117,8 @@ export default async function handler(
               "-"
             );
 
-            // Upload parameters for the watermark file
-            const uploadParams_watermark: S3.PutObjectRequest = {
-              Bucket: process.env.BUCKET_NAME || "",
+            // Upload the watermark file to S3 (or DO Spaces)
+            const res = await upload({
               Key: `${folderPath}/${newFileNameWatermark}`,
               Body: watermarkedAndCompressedBuffer,
               ACL: "public-read",
@@ -137,10 +126,7 @@ export default async function handler(
               Metadata: {
                 "Content-Disposition": "inline",
               },
-            };
-
-            // Upload the watermark file to S3 (or DO Spaces)
-            const res = await s3.upload(uploadParams_watermark).promise();
+            });
 
             // Add the URLs to the fileUrls array
             fileUrls.push({
