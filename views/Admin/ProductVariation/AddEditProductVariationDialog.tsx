@@ -5,8 +5,11 @@ import {
   bindTrigger,
   usePopupState,
 } from "material-ui-popup-state/hooks";
+import { useDropzone } from "react-dropzone";
+import { toast } from "react-toastify";
 
 //*components
+import { CustomIcon } from "@/components/Icons";
 import { OverlayBox } from "@/components/Box";
 import {
   TextFieldForm,
@@ -26,9 +29,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
-
-//*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
 
 //*data
 import {
@@ -129,6 +131,8 @@ function AddEditProductVariationDialogForm({
                   description: option.description,
                   currency: option.currency,
                   price: option.price,
+                  preview_image: undefined,
+                  preview_url: option.preview_url,
                 };
               }),
             }
@@ -144,6 +148,8 @@ function AddEditProductVariationDialogForm({
                   description: "",
                   currency: "RM",
                   price: 0,
+                  preview_image: undefined,
+                  preview_url: undefined,
                 },
               ],
             }
@@ -194,7 +200,7 @@ function AddEditProductVariationDialogForm({
                   p={1}
                   direction="column"
                   spacing={2}
-                  sx={{ maxHeight: getFullHeightSize(26.3), overflow: "auto" }}
+                  sx={{ overflow: "auto" }}
                 >
                   <TextFieldForm
                     name="name"
@@ -243,7 +249,7 @@ function AddEditProductVariationDialogForm({
                                           props={{ required: true }}
                                         />
                                       </Grid>
-                                      <Grid size={{ xs: 4.3 }}>
+                                      <Grid size={{ xs: 4.5 }}>
                                         <TextFieldForm
                                           name={`options.${index}.description`}
                                           label="Desciption"
@@ -254,7 +260,7 @@ function AddEditProductVariationDialogForm({
                                           }}
                                         />
                                       </Grid>
-                                      <Grid size={{ xs: 1.2 }}>
+                                      <Grid size={{ xs: 1 }}>
                                         <TextFieldForm
                                           name={`options.${index}.currency`}
                                           label="Currency"
@@ -292,6 +298,48 @@ function AddEditProductVariationDialogForm({
                                           >
                                             Delete
                                           </Button>
+                                        )}
+                                      </Grid>
+                                      {values.options[index].preview_image ? (
+                                        <Grid size={{ xs: 1 }}>
+                                          <IconButton
+                                            onClick={() => {
+                                              setFieldValue(
+                                                `options.${index}.preview_image`,
+                                                undefined
+                                              );
+                                              setFieldValue(
+                                                `options.${index}.preview_url`,
+                                                undefined
+                                              );
+                                            }}
+                                          >
+                                            <CustomIcon icon="delete" />
+                                          </IconButton>
+                                        </Grid>
+                                      ) : (
+                                        <UploadGrid
+                                          setFieldValue={setFieldValue}
+                                          index={index}
+                                        />
+                                      )}
+                                      <Grid size={{ xs: 11 }}>
+                                        {values.options[index]
+                                          .preview_image && (
+                                          <Box
+                                            component="img"
+                                            src={
+                                              values.options[index].preview_url
+                                            }
+                                            alt={
+                                              values.options[index].preview_url
+                                            }
+                                            sx={{
+                                              display: "block",
+                                              width: "25%",
+                                              objectFit: "cover",
+                                            }}
+                                          />
                                         )}
                                       </Grid>
                                     </>
@@ -346,5 +394,59 @@ function AddEditProductVariationDialogForm({
         );
       }}
     </Formik>
+  );
+}
+
+function UploadGrid({
+  setFieldValue,
+  index,
+}: {
+  setFieldValue: (
+    field: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value: any,
+    shouldValidate?: boolean
+  ) => void;
+  index: number;
+}) {
+  const { getRootProps, getInputProps } = useDropzone({
+    onDropAccepted: (files) => {
+      setFieldValue(`options.${index}.preview_image`, files[0]);
+      setFieldValue(
+        `options.${index}.preview_url`,
+        URL.createObjectURL(files[0])
+      );
+    },
+    multiple: false,
+    onError: (error) => {
+      console.log(error);
+    },
+    accept: {
+      "image/jpeg": [],
+      "image/png": [],
+    },
+    onDropRejected: (fileRejections) => {
+      toast.error(
+        fileRejections.map((file) => file.errors[0].message).join(`\n`)
+      );
+    },
+    validator: (file) => {
+      if (file.size > 10 * 1024 * 1024) {
+        return {
+          code: "size-too-large",
+          message: `file is larger than 10MB`,
+        };
+      }
+      return null;
+    },
+  });
+
+  return (
+    <Grid size={{ xs: 1 }} {...getRootProps()}>
+      <input {...getInputProps()} />
+      <IconButton>
+        <CustomIcon icon="upload" />
+      </IconButton>
+    </Grid>
   );
 }
