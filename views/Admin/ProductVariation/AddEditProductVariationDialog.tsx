@@ -41,8 +41,6 @@ import {
 //*validation
 const validationSchema = yup.object({
   name: yup.string().required("Required"),
-  currency: yup.string().required("Required"),
-  price: yup.number().required("Required"),
   options: yup
     .array()
     .min(1, "Required")
@@ -113,7 +111,6 @@ function AddEditProductVariationDialogForm({
   } = useProductVariation(productVariationId);
 
   if (status === "pending") return <LinearProgress />;
-
   return (
     <Formik
       initialValues={
@@ -121,8 +118,6 @@ function AddEditProductVariationDialogForm({
           ? {
               name: productVariationData.name,
               description: productVariationData.description,
-              currency: productVariationData.options[0].currency,
-              price: productVariationData.options[0].price,
               is_downloadable: productVariationData.is_downloadable,
               options: productVariationData.options.map((option) => {
                 return {
@@ -139,8 +134,6 @@ function AddEditProductVariationDialogForm({
           : {
               name: "",
               description: "",
-              currency: "RM",
-              price: 0,
               is_downloadable: true,
               options: [
                 {
@@ -324,8 +317,7 @@ function AddEditProductVariationDialogForm({
                                         />
                                       )}
                                       <Grid size={{ xs: 11 }}>
-                                        {values.options[index]
-                                          .preview_image && (
+                                        {values.options[index].preview_url && (
                                           <Box
                                             component="img"
                                             src={

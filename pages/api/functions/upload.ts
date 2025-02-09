@@ -16,8 +16,7 @@ export async function upload(options: {
   ContentType: string;
   Metadata?: S3.Metadata;
 }): Promise<S3.ManagedUpload.SendData> {
-  // Upload parameters for the watermark file
-  const uploadParams_watermark: S3.PutObjectRequest = {
+  const uploadParams: S3.PutObjectRequest = {
     Bucket: process.env.BUCKET_NAME || "",
     Key: options.Key,
     Body: options.Body,
@@ -25,9 +24,6 @@ export async function upload(options: {
     ContentType: options.ContentType,
     Metadata: options.Metadata,
   };
-
-  // Upload the watermark file to S3 (or DO Spaces)
-  const res = await s3.upload(uploadParams_watermark).promise();
-
+  const res = await s3.upload(uploadParams).promise();
   return res;
 }
