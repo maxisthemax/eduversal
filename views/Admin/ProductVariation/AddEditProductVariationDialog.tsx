@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
-import { OverlayBox } from "@/components/Box";
+import { FlexBox, OverlayBox } from "@/components/Box";
 import {
   TextFieldForm,
   TextFieldPriceForm,
@@ -37,6 +37,7 @@ import {
   ProductVariationOptionCreate,
   useProductVariation,
 } from "@/data/admin/productVariation";
+import { Divider } from "@mui/material";
 
 //*validation
 const validationSchema = yup.object({
@@ -293,52 +294,68 @@ function AddEditProductVariationDialogForm({
                                           </Button>
                                         )}
                                       </Grid>
-                                      {values.options[index].preview_image ? (
-                                        <Grid size={{ xs: 1 }}>
-                                          <IconButton
-                                            onClick={() => {
-                                              setFieldValue(
-                                                `options.${index}.preview_image`,
-                                                undefined
-                                              );
-                                              setFieldValue(
-                                                `options.${index}.preview_url`,
-                                                undefined
-                                              );
-                                            }}
-                                          >
-                                            <CustomIcon icon="delete" />
-                                          </IconButton>
-                                        </Grid>
-                                      ) : (
-                                        <UploadGrid
-                                          setFieldValue={setFieldValue}
-                                          index={index}
-                                        />
-                                      )}
-                                      <Grid size={{ xs: 11 }}>
-                                        {values.options[index].preview_url && (
-                                          <Box
-                                            component="img"
-                                            src={
-                                              values.options[index].preview_url
-                                            }
-                                            alt={
-                                              values.options[index].preview_url
-                                            }
-                                            sx={{
-                                              display: "block",
-                                              width: "25%",
-                                              objectFit: "cover",
-                                            }}
-                                          />
-                                        )}
+
+                                      <Grid size={{ xs: 12 }}>
+                                        <Stack spacing={2} direction="row">
+                                          {values.options[index]
+                                            .preview_url && (
+                                            <Box
+                                              component="img"
+                                              src={
+                                                values.options[index]
+                                                  .preview_url
+                                              }
+                                              alt={
+                                                values.options[index]
+                                                  .preview_url
+                                              }
+                                              sx={{
+                                                display: "block",
+                                                width: "25%",
+                                                objectFit: "cover",
+                                              }}
+                                            />
+                                          )}
+                                          {values.options[index]
+                                            .preview_image ? (
+                                            <Grid size={{ xs: 1 }}>
+                                              <IconButton
+                                                onClick={() => {
+                                                  setFieldValue(
+                                                    `options.${index}.preview_image`,
+                                                    undefined
+                                                  );
+                                                  setFieldValue(
+                                                    `options.${index}.preview_url`,
+                                                    undefined
+                                                  );
+                                                }}
+                                              >
+                                                <CustomIcon icon="delete" />
+                                              </IconButton>
+                                            </Grid>
+                                          ) : (
+                                            <UploadGrid
+                                              setFieldValue={setFieldValue}
+                                              index={index}
+                                            />
+                                          )}
+                                        </Stack>
+                                      </Grid>
+                                      <Grid size={{ xs: 12 }}>
+                                        <Divider />
                                       </Grid>
                                     </>
                                   );
                                 }
                               )}
-                            <Grid size={{ xs: 12 }}>
+                            <Grid
+                              size={{ xs: 12 }}
+                              sx={{
+                                justifyItems: "end",
+                              }}
+                            >
+                              <FlexBox />
                               <Button
                                 variant="contained"
                                 onClick={() =>

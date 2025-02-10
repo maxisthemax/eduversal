@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import fs from "fs";
+import formidable from "formidable";
 
 //*lib
 import prisma from "@/lib/prisma";
@@ -7,8 +9,17 @@ import prisma from "@/lib/prisma";
 import {
   getCreatedByUpdatedBy,
   handleAllowedMethods,
-  validateRequiredFields,
 } from "@/helpers/apiHelpers";
+
+//*functions
+import { upload } from "../../functions/upload";
+
+// Disable Next.js's built-in body parsing, as we use formidable instead.
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 // API handler function
 export default async function handler(
@@ -45,58 +56,87 @@ export default async function handler(
         return res.status(200).json({ data: productVariation });
       }
 
-      case "POST": {
+      case "POST":
         // Create a new product variations
-        const { name, is_downloadable, description, options } = req.body;
+        // Parse form data using formidable
+        const form = formidable({ multiples: true });
+        form.parse(req, async (err, fields, files) => {
+          if (err) {
+            return res
+              .status(400)
+              .json({ message: "Failed to parse form data", error: err });
+          }
 
-        // Validate required fields
-        if (
-          !validateRequiredFields(
-            req,
-            res,
-            ["name", "is_downloadable", "options"],
-            "body"
-          )
-        ) {
-          return;
-        }
+          const { name, is_downloadable, description } = fields;
+          const parseOptions = JSON.parse(fields.options[0] as string);
 
-        // Get createdBy and updatedBy
-        const { created_by, updated_by } = await getCreatedByUpdatedBy(
-          req,
-          res
-        );
-
-        // Start a transaction
-        const result = await prisma.$transaction(async (prisma) => {
-          // Create the new product variation
-          const newProductVariation = await prisma.productVariation.create({
-            data: {
-              description,
-              name,
-              is_downloadable,
-              ...created_by,
-              ...updated_by,
-            },
-          });
-
-          // Create options if provided
-          await prisma.productVariationOption.createMany({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            data: options.map((option: any) => ({
+          const options = parseOptions.map((option, index) => {
+            return {
               ...option,
-              productVariationId: newProductVariation.id,
-              ...created_by,
-              ...updated_by,
-            })),
+              preview_image:
+                files?.[`options[${index}][preview_image]`]?.[0] ?? null,
+            };
           });
 
-          return newProductVariation;
-        });
+          // Get createdBy and updatedBy
+          const { created_by, updated_by } = await getCreatedByUpdatedBy(
+            req,
+            res
+          );
 
-        // Return the newly created product variation
-        return res.status(201).json({ data: result });
-      }
+          // Start a transaction
+          const result = await prisma.$transaction(async (prisma) => {
+            // Create the new product variation
+            const newProductVariation = await prisma.productVariation.create({
+              data: {
+                description: description[0] as string,
+                name: name[0] as string,
+                is_downloadable: is_downloadable[0] === "true", // Convert to boolean
+                ...created_by,
+                ...updated_by,
+              },
+            });
+
+            // Loop through the options and upload the preview_image
+            for (const option of options) {
+              if (option.preview_image) {
+                // Upload the preview image to your storage (e.g., AWS S3, Google Cloud Storage)
+                // Assuming you have a function `uploadImage` that handles the upload
+                const fileStream = fs.createReadStream(
+                  option.preview_image.filepath
+                );
+                const res = await upload({
+                  Key: `productVariation/${newProductVariation.id}/option/${option.preview_image.newFilename}`,
+                  Body: fileStream,
+                  ACL: "public-read",
+                  ContentType: option.preview_image.mimetype,
+                  Metadata: {
+                    "Content-Disposition": "inline",
+                  },
+                });
+                option.preview_url = res.Location;
+              }
+              await prisma.productVariationOption.create({
+                data: {
+                  name: option.name,
+                  description: option.description,
+                  preview_url: option.preview_url,
+                  currency: option.currency,
+                  price: option.price,
+                  productVariationId: newProductVariation.id,
+                  ...created_by,
+                  ...updated_by,
+                },
+              });
+            }
+
+            return newProductVariation;
+          });
+
+          // Return the newly created product variation
+          return res.status(201).json({ data: result });
+        });
+        break;
 
       default: {
         // Handle unsupported methods
@@ -124,3 +164,5 @@ export default async function handler(
     await prisma.$disconnect();
   }
 }
+
+// Disable body parsing for the API route
