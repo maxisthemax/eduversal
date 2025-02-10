@@ -322,11 +322,14 @@ function AddEditProductVariationDialogForm({
                                               <IconButton
                                                 onClick={() => {
                                                   setFieldValue(
-                                                    `options.${index}.preview_image`,
-                                                    undefined
-                                                  );
-                                                  setFieldValue(
                                                     `options.${index}.preview_url`,
+                                                    productVariationData
+                                                      ?.options[index]
+                                                      ?.preview_url ?? undefined
+                                                  );
+
+                                                  setFieldValue(
+                                                    `options.${index}.preview_image`,
                                                     undefined
                                                   );
                                                 }}
