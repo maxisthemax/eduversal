@@ -2,6 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import formidable from "formidable";
 
+//*lodash
+import isArray from "lodash/isArray";
+
 //*lib
 import prisma from "@/lib/prisma";
 
@@ -45,6 +48,7 @@ export default async function handler(
                 name: true,
                 description: true,
                 preview_url: true,
+                preview_url_key: true,
                 currency: true,
                 price: true,
               },
@@ -68,7 +72,11 @@ export default async function handler(
           }
 
           const { name, is_downloadable, description } = fields;
-          const parseOptions = JSON.parse(fields.options[0] as string);
+          const parseOptions = JSON.parse(
+            (isArray(fields.options)
+              ? fields.options[0]
+              : fields.options) as string
+          );
 
           const options = parseOptions.map((option, index) => {
             return {
@@ -89,9 +97,14 @@ export default async function handler(
             // Create the new product variation
             const newProductVariation = await prisma.productVariation.create({
               data: {
-                description: description[0] as string,
-                name: name[0] as string,
-                is_downloadable: is_downloadable[0] === "true", // Convert to boolean
+                description: (isArray(description)
+                  ? description[0]
+                  : description) as string,
+                name: (isArray(name) ? name[0] : name) as string,
+                is_downloadable:
+                  (isArray(is_downloadable)
+                    ? is_downloadable[0]
+                    : is_downloadable) === "true", // Convert to boolean
                 ...created_by,
                 ...updated_by,
               },
@@ -115,12 +128,14 @@ export default async function handler(
                   },
                 });
                 option.preview_url = res.Location;
+                option.preview_url_key = res.Key;
               }
               await prisma.productVariationOption.create({
                 data: {
                   name: option.name,
                   description: option.description,
                   preview_url: option.preview_url,
+                  preview_url_key: option.preview_url_key,
                   currency: option.currency,
                   price: option.price,
                   productVariationId: newProductVariation.id,

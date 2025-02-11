@@ -129,6 +129,7 @@ function AddEditProductVariationDialogForm({
                   price: option.price,
                   preview_image: undefined,
                   preview_url: option.preview_url,
+                  preview_url_key: option.preview_url_key,
                 };
               }),
             }

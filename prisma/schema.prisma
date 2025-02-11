@@ -240,6 +240,7 @@ model ProductVariationOption {
   name               String
   description        String
   preview_url        String?
+  preview_url_key    String?
   currency           String
   price              Float
   ProductVariation   ProductVariation? @relation(fields: [productVariationId], references: [id])

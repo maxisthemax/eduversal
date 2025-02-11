@@ -8,7 +8,6 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 
 //*utils
 import axios from "@/utils/axios";
-import { checkSameValue } from "@/helpers/objectHelpers";
 
 //*interface
 export interface ProductVariationData {
@@ -29,6 +28,7 @@ export interface ProductVariationOption {
   name: string;
   description: string;
   preview_url: string;
+  preview_url_key: string;
   currency: string;
   price: number;
 
@@ -53,6 +53,7 @@ export interface ProductVariationOptionCreate {
   price: number;
   preview_url?: string;
   preview_image?: string;
+  preview_url_key?: string;
   status?: string;
 }
 
@@ -116,7 +117,6 @@ export function useProductVariation(productVariationId?: string): {
       JSON.stringify(
         productVariation.options.map((data) => {
           return {
-            id: data.id,
             name: data.name,
             description: data.description,
             currency: data.currency,
@@ -147,16 +147,42 @@ export function useProductVariation(productVariationId?: string): {
     id: string,
     productVariation: ProductVariationUpdate
   ) => {
-    const currentProductVariation = productVariationsById[id];
-
-    // Remove fields that have the same value
-    const { changes, isEmpty } = checkSameValue(
-      currentProductVariation,
-      productVariation
+    const formData = new FormData();
+    formData.append("name", productVariation.name);
+    formData.append("description", productVariation.description);
+    formData.append(
+      "is_downloadable",
+      productVariation.is_downloadable.toString()
     );
-    if (isEmpty) return;
+    formData.append(
+      "options",
+      JSON.stringify(
+        productVariation.options.map((data) => {
+          return {
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            currency: data.currency,
+            price: data.price,
+            status: data.status,
+            preview_url_key: data.preview_url_key,
+          };
+        })
+      )
+    );
+    productVariation.options.forEach((option, index) => {
+      if (option.preview_image)
+        formData.append(
+          `options[${index}][preview_image]`,
+          option.preview_image
+        );
+    });
 
-    await axios.put(`admin/productvariation/${id}`, changes);
+    await axios.put(`admin/productvariation/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     refetch();
   };
 

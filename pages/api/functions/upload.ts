@@ -27,3 +27,13 @@ export async function upload(options: {
   const res = await s3.upload(uploadParams).promise();
   return res;
 }
+
+export async function deleteFile(keys: string[]) {
+  const deleteParams: S3.DeleteObjectsRequest = {
+    Bucket: process.env.BUCKET_NAME || "",
+    Delete: { Objects: keys.map((key: string) => ({ Key: key })) },
+  };
+
+  // Perform bulk deletion
+  return await s3.deleteObjects(deleteParams).promise();
+}

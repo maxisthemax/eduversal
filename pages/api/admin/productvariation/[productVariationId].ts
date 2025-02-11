@@ -1,4 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import fs from "fs";
+import formidable from "formidable";
+
+//*lodash
+import isArray from "lodash/isArray";
 
 //*lib
 import prisma from "@/lib/prisma";
@@ -7,8 +12,17 @@ import prisma from "@/lib/prisma";
 import {
   getCreatedByUpdatedBy,
   handleAllowedMethods,
-  validateRequiredFields,
 } from "@/helpers/apiHelpers";
+
+//*functions
+import { deleteFile, upload } from "../../functions/upload";
+
+// Disable Next.js's built-in body parsing, as we use formidable instead.
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,66 +30,118 @@ export default async function handler(
 ) {
   try {
     switch (req.method) {
-      case "PUT": {
+      case "PUT":
         // Update an existing product type
         const { productVariationId } = req.query;
 
-        // Validate required fields
-        if (
-          !validateRequiredFields(req, res, ["productVariationId"], "query")
-        ) {
-          return;
-        }
-
-        // Update an existing product type
-        const { name, description, is_downloadable, options } = req.body;
-
-        // Get updatedBy
-        const { updated_by, created_by } = await getCreatedByUpdatedBy(
-          req,
-          res
-        );
-
-        // Start a transaction
-        const result = await prisma.$transaction(async (prisma) => {
-          for (const option of options) {
-            if (option.status === "deleted") {
-              await prisma.productVariationOption.delete({
-                where: { id: option.id },
-              });
-            } else
-              await prisma.productVariationOption.upsert({
-                where: { id: option?.id ?? "" },
-                create: {
-                  ...option,
-                  productVariationId: productVariationId,
-                  ...updated_by,
-                  ...created_by,
-                },
-                update: {
-                  ...option,
-                  ...updated_by,
-                },
-              });
+        const form = formidable({ multiples: true });
+        form.parse(req, async (err, fields, files) => {
+          if (err) {
+            return res
+              .status(400)
+              .json({ message: "Failed to parse form data", error: err });
           }
 
-          // Update the product type
-          const updatedProductType = await prisma.productVariation.update({
-            where: { id: productVariationId as string },
-            data: {
-              name,
-              description,
-              is_downloadable,
-              ...updated_by,
-            },
+          const { name, is_downloadable, description } = fields;
+
+          const parseOptions = JSON.parse(
+            (isArray(fields.options)
+              ? fields.options[0]
+              : fields.options) as string
+          );
+
+          const options = parseOptions.map((option, index) => {
+            return {
+              ...option,
+              preview_image:
+                files?.[`options[${index}][preview_image]`]?.[0] ?? null,
+            };
           });
 
-          return updatedProductType;
-        });
+          // Get createdBy and updatedBy
+          const { created_by, updated_by } = await getCreatedByUpdatedBy(
+            req,
+            res
+          );
 
-        // Return the updated product type
-        return res.status(200).json({ data: result });
-      }
+          // Start a transaction
+          const result = await prisma.$transaction(async (prisma) => {
+            for (const option of options) {
+              if (option.status === "deleted") {
+                await prisma.productVariationOption.delete({
+                  where: { id: option.id },
+                });
+                await deleteFile([option.preview_url_key]);
+              } else {
+                if (option.preview_image) {
+                  // Upload the preview image to your storage (e.g., AWS S3, Google Cloud Storage)
+                  // Assuming you have a function `uploadImage` that handles the upload
+                  const fileStream = fs.createReadStream(
+                    option.preview_image.filepath
+                  );
+                  const res = await upload({
+                    Key: `productVariation/${
+                      productVariationId as string
+                    }/option/${option.preview_image.newFilename}`,
+                    Body: fileStream,
+                    ACL: "public-read",
+                    ContentType: option.preview_image.mimetype,
+                    Metadata: {
+                      "Content-Disposition": "inline",
+                    },
+                  });
+                  option.preview_url = res.Location;
+                  option.preview_url_key = res.Key;
+                }
+
+                await prisma.productVariationOption.upsert({
+                  where: { id: option?.id ?? "" },
+                  create: {
+                    name: option.name,
+                    description: option.description,
+                    preview_url: option.preview_url,
+                    preview_url_key: option.preview_url_key,
+                    currency: option.currency,
+                    price: option.price,
+                    productVariationId: productVariationId as string,
+                    ...created_by,
+                    ...updated_by,
+                  },
+                  update: {
+                    name: option.name,
+                    description: option.description,
+                    preview_url: option.preview_url,
+                    preview_url_key: option.preview_url_key,
+                    currency: option.currency,
+                    price: option.price,
+                    ...updated_by,
+                  },
+                });
+              }
+            }
+
+            const updatedProductType = await prisma.productVariation.update({
+              where: { id: productVariationId as string },
+              data: {
+                description: (isArray(description)
+                  ? description[0]
+                  : description) as string,
+                name: (isArray(name) ? name[0] : name) as string,
+                is_downloadable:
+                  (isArray(is_downloadable)
+                    ? is_downloadable[0]
+                    : is_downloadable) === "true", // Convert to boolean
+                ...created_by,
+              },
+            });
+
+            return updatedProductType;
+          });
+
+          return res.status(200).json({ data: result });
+        });
+        break;
+
       default:
         // Use handleAllowedMethods for method validation
         if (handleAllowedMethods(req, res, ["PUT"])) return;
