@@ -80,9 +80,9 @@ export default async function handler(
                     option.preview_image.filepath
                   );
                   const res = await upload({
-                    Key: `productVariation/${
-                      productVariationId as string
-                    }/option/${option.preview_image.newFilename}`,
+                    Key: `productVariation/${productVariationId as string}/${
+                      option.preview_image.newFilename
+                    }`,
                     Body: fileStream,
                     ACL: "public-read",
                     ContentType: option.preview_image.mimetype,

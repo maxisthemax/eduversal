@@ -17,6 +17,9 @@ import {
 //*functions
 import { upload } from "../../functions/upload";
 
+//*helpers
+import { replaceStringAll } from "@/helpers/stringHelpers";
+
 // Disable Next.js's built-in body parsing, as we use formidable instead.
 export const config = {
   api: {
@@ -118,8 +121,14 @@ export default async function handler(
                 const fileStream = fs.createReadStream(
                   option.preview_image.filepath
                 );
+                const newFileName = replaceStringAll(
+                  option.preview_image.originalFilename ||
+                    option.preview_image.newFilename,
+                  " ",
+                  "-"
+                );
                 const res = await upload({
-                  Key: `productVariation/${newProductVariation.id}/option/${option.preview_image.newFilename}`,
+                  Key: `productvariation/${newProductVariation.id}/${newFileName}`,
                   Body: fileStream,
                   ACL: "public-read",
                   ContentType: option.preview_image.mimetype,
@@ -134,8 +143,8 @@ export default async function handler(
                 data: {
                   name: option.name,
                   description: option.description,
-                  preview_url: option.preview_url,
-                  preview_url_key: option.preview_url_key,
+                  preview_url: option?.preview_url ?? "",
+                  preview_url_key: option?.preview_url_key ?? "",
                   currency: option.currency,
                   price: option.price,
                   productVariationId: newProductVariation.id,
