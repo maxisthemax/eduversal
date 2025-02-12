@@ -86,9 +86,6 @@ export default async function handler(
                     Body: fileStream,
                     ACL: "public-read",
                     ContentType: option.preview_image.mimetype,
-                    Metadata: {
-                      "Content-Disposition": "inline",
-                    },
                   });
                   option.preview_url = res.Location;
                   option.preview_url_key = res.Key;
