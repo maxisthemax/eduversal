@@ -54,8 +54,8 @@ export function useUserCourse(userCourseId?: string): {
 
   // Fetch user courses data
   const { data, status, isLoading, refetch } = useQueryFetch(
-    ["userCourse", userData.id],
-    `userCourse/${userData.id}`
+    ["userCourse", userData?.id],
+    `userCourse/${userData?.id}`
   );
 
   const userCoursesQueryData = data?.data as UserCourseData[];
