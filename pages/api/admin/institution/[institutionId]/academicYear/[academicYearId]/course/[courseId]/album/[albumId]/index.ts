@@ -10,8 +10,8 @@ import {
   validateRequiredFields,
 } from "@/helpers/apiHelpers";
 
-//*api
-import { deletePhotosFromS3 } from "@/pages/api/admin/photo/deletePhoto";
+//*functions
+import { deleteFile } from "@/pages/api/functions/upload";
 
 export default async function albumHandler(
   req: NextApiRequest,
@@ -28,24 +28,73 @@ export default async function albumHandler(
         }
 
         // Update an existing album
-        const { name, description, product_type_id } = req.body;
+        const { name, description, product_type_id, product_variations_id } =
+          req.body;
 
         // Get updatedBy
-        const { updated_by } = await getCreatedByUpdatedBy(req, res);
+        const { created_by, updated_by } = await getCreatedByUpdatedBy(
+          req,
+          res
+        );
 
         // Update the album
-        const updatedalbum = await prisma.album.update({
-          where: { id: albumId as string },
-          data: {
-            name,
-            description,
-            product_type_id,
-            ...updated_by,
-          },
+        const result = await prisma.$transaction(async (prisma) => {
+          await prisma.album.update({
+            where: { id: albumId as string },
+            data: {
+              name,
+              description,
+              product_type_id,
+              ...updated_by,
+            },
+          });
+
+          // Fetch existing product variations for the album
+          const existingVariations =
+            await prisma.albumProductVariation.findMany({
+              where: { album_id: albumId as string },
+            });
+
+          const existingVariationIds = existingVariations.map(
+            (v) => v.productVariation_id
+          );
+
+          // Determine variations to remove
+          const variationsToRemove = existingVariationIds.filter(
+            (id) => !product_variations_id.includes(id)
+          );
+
+          // Remove the variations that are not in the new list
+          if (variationsToRemove.length > 0) {
+            await prisma.albumProductVariation.deleteMany({
+              where: {
+                album_id: albumId as string,
+                productVariation_id: { in: variationsToRemove },
+              },
+            });
+          }
+
+          // Add new variations
+          const newVariations = product_variations_id.filter(
+            (id) => !existingVariationIds.includes(id)
+          );
+
+          console.log(newVariations);
+
+          if (newVariations.length > 0) {
+            await prisma.albumProductVariation.createMany({
+              data: newVariations.map((variationId) => ({
+                album_id: albumId as string,
+                productVariation_id: variationId,
+                ...created_by,
+                ...updated_by,
+              })),
+            });
+          }
         });
 
         // Return the updated album
-        return res.status(200).json({ data: updatedalbum });
+        return res.status(200).json({ data: result });
       }
       case "DELETE": {
         const { albumId, institutionId } = req.query;
@@ -91,7 +140,7 @@ export default async function albumHandler(
             keys.push(download_watermark_url);
           });
 
-          await deletePhotosFromS3(keys);
+          await deleteFile(keys);
         });
 
         return res.status(200).json({
