@@ -6,9 +6,12 @@ import {
   usePopupState,
 } from "material-ui-popup-state/hooks";
 
+//*lodash
+import find from "lodash/find";
+
 //*components
 import { OverlayBox } from "@/components/Box";
-import { TextFieldForm } from "@/components/Form";
+import { TextFieldAutocompleteForm, TextFieldForm } from "@/components/Form";
 
 //*material
 import Dialog from "@mui/material/Dialog";
@@ -20,6 +23,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
+import Autocomplete from "@mui/material/Autocomplete";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -27,6 +31,7 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 //*data
 import { useAlbums } from "@/data/admin/institution/album";
 import { useProductType } from "@/data/admin/productType";
+import { useProductVariation } from "@/data/admin/productVariation";
 
 //*validation
 const validationSchema = yup.object({
@@ -59,9 +64,7 @@ function AddEditAlbumDialog({
         fullWidth
         keepMounted={false}
         disableEnforceFocus={true}
-        onClose={() => {
-          popupState.close();
-        }}
+        onClose={() => {}}
       >
         <AddEditAlbumDialogForm
           mode={mode}
@@ -86,8 +89,11 @@ function AddEditAlbumDialogForm({
 }) {
   const { albumData, addAlbum, updateAlbum } = useAlbums(albumId);
   const { productsData, status } = useProductType();
+  const { productVariationsData, status: productVariationsDataStatus } =
+    useProductVariation();
 
-  if (status === "pending") return <LinearProgress />;
+  if (status === "pending" || productVariationsDataStatus === "pending")
+    return <LinearProgress />;
 
   return (
     <Formik
@@ -97,11 +103,13 @@ function AddEditAlbumDialogForm({
               name: albumData.name,
               description: albumData.description,
               product_type_id: albumData.product_type_id,
+              product_variations_id: albumData.product_variations_id,
             }
           : {
               name: "",
               description: "",
               product_type_id: productsData[0]?.id ?? "",
+              product_variations_id: [],
             }
       }
       validationSchema={validationSchema}
@@ -128,6 +136,7 @@ function AddEditAlbumDialogForm({
         resetForm,
         touched,
         handleBlur,
+        setFieldValue,
       }) => {
         const formProps = {
           values,
@@ -162,7 +171,6 @@ function AddEditAlbumDialogForm({
                     formProps={formProps}
                     props={{ required: true }}
                   />
-
                   <TextFieldForm
                     name="product_type_id"
                     label="Product Type"
@@ -177,6 +185,28 @@ function AddEditAlbumDialogForm({
                       );
                     })}
                   </TextFieldForm>
+                  <Autocomplete
+                    fullWidth
+                    multiple
+                    options={productVariationsData.map(({ id }) => id)}
+                    getOptionLabel={(id) => {
+                      const findOption = find(productVariationsData, { id });
+                      return findOption?.name;
+                    }}
+                    onChange={(e, value) => {
+                      setFieldValue("product_variations_id", value);
+                    }}
+                    value={values["product_variations_id"]}
+                    renderInput={(params) => (
+                      <TextFieldAutocompleteForm
+                        params={params}
+                        name="product_variations_id"
+                        label="Product Variations"
+                        formProps={formProps}
+                      />
+                    )}
+                    disableCloseOnSelect
+                  />
                 </Stack>
               </DialogContent>
               <DialogActions>

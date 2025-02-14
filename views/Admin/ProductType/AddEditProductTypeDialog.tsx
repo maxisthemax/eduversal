@@ -189,7 +189,7 @@ function AddEditProductTypeDialogForm({
                       name="price"
                       label="Price"
                       formProps={formProps}
-                      props={{ required: true, type: "number" }}
+                      props={{ required: true }}
                     />
                   </Stack>
                   <Box sx={{ pl: 2 }}>

@@ -137,16 +137,17 @@ model InstitutionType {
 }
 
 model Album {
-  id              String       @id @default(cuid())
-  name            String
-  description     String
-  product_type_id String?
-  product_type    ProductType? @relation(fields: [product_type_id], references: [id])
-  photos          Photo[]
-  institution_id  String?
-  institution     Institution? @relation(fields: [institution_id], references: [id])
-  course_id       String?
-  course          Course?      @relation(fields: [course_id], references: [id])
+  id                     String                  @id @default(cuid())
+  name                   String
+  description            String
+  product_type_id        String?
+  product_type           ProductType?            @relation(fields: [product_type_id], references: [id])
+  photos                 Photo[]
+  institution_id         String?
+  institution            Institution?            @relation(fields: [institution_id], references: [id])
+  course_id              String?
+  course                 Course?                 @relation(fields: [course_id], references: [id])
+  albumProductVariations AlbumProductVariation[]
 
   created_by_user_id String
   created_by_name    String
@@ -219,10 +220,11 @@ model ProductType {
 }
 
 model ProductVariation {
-  id              String  @id @default(cuid())
-  name            String
-  description     String
-  is_downloadable Boolean @default(true)
+  id                     String                  @id @default(cuid())
+  name                   String
+  description            String
+  is_downloadable        Boolean                 @default(true)
+  albumProductVariations AlbumProductVariation[]
 
   created_by_user_id String
   created_by_name    String
@@ -236,15 +238,15 @@ model ProductVariation {
 }
 
 model ProductVariationOption {
-  id                 String            @id @default(cuid())
-  name               String
-  description        String
-  preview_url        String?
-  preview_url_key    String?
-  currency           String
-  price              Float
-  ProductVariation   ProductVariation? @relation(fields: [productVariationId], references: [id])
-  productVariationId String?
+  id                  String            @id @default(cuid())
+  name                String
+  description         String
+  preview_url         String?
+  preview_url_key     String?
+  currency            String
+  price               Float
+  ProductVariation    ProductVariation? @relation(fields: [productVariation_id], references: [id])
+  productVariation_id String?
 
   created_by_user_id String
   created_by_name    String
@@ -252,6 +254,24 @@ model ProductVariationOption {
   updated_by_user_id String
   updated_by_name    String
   updated_at         DateTime @updatedAt
+}
+
+model AlbumProductVariation {
+  album_id            String
+  album               Album            @relation(fields: [album_id], references: [id])
+  productVariation_id String
+  productVariation    ProductVariation @relation(fields: [productVariation_id], references: [id])
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
+
+  @@id([album_id, productVariation_id])
+  @@index([album_id])
+  @@index([productVariation_id])
 }
 
 enum ProductTypeType {

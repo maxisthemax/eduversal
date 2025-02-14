@@ -36,7 +36,7 @@ export default async function albumHandler(
               name: "asc",
             },
           ],
-          include: { product_type: true },
+          include: { product_type: true, albumProductVariations: true },
         });
 
         // Return the albums
@@ -59,7 +59,8 @@ export default async function albumHandler(
         }
 
         // Create a new album
-        const { name, description, product_type_id } = req.body;
+        const { name, description, product_type_id, product_variations_id } =
+          req.body;
 
         // Validate required fields
         if (
@@ -78,21 +79,38 @@ export default async function albumHandler(
           res
         );
 
-        // Create the new album
-        const newAlbum = await prisma.album.create({
-          data: {
-            name,
-            description,
-            product_type_id,
-            institution_id: institutionId as string,
-            course_id: courseId as string,
-            ...created_by,
-            ...updated_by,
-          },
+        // Start a Prisma transaction
+        const result = await prisma.$transaction(async (prisma) => {
+          // Create the new album
+          const newAlbum = await prisma.album.create({
+            data: {
+              name,
+              description,
+              product_type_id,
+              institution_id: institutionId as string,
+              course_id: courseId as string,
+              ...created_by,
+              ...updated_by,
+            },
+          });
+
+          // If there are product variations, create them
+          if (product_variations_id && product_variations_id.length > 0) {
+            await prisma.albumProductVariation.createMany({
+              data: product_variations_id.map((variationId: string) => ({
+                album_id: newAlbum.id,
+                productVariation_id: variationId,
+                ...created_by,
+                ...updated_by,
+              })),
+            });
+          }
+
+          return newAlbum;
         });
 
         // Return the newly created album
-        return res.status(201).json({ data: newAlbum });
+        return res.status(201).json({ data: result });
       }
       default:
         // Use handleAllowedMethods for method validation

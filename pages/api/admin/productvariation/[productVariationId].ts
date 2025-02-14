@@ -100,7 +100,7 @@ export default async function handler(
                     preview_url_key: option.preview_url_key,
                     currency: option.currency,
                     price: option.price,
-                    productVariationId: productVariationId as string,
+                    productVariation_id: productVariationId as string,
                     ...created_by,
                     ...updated_by,
                   },

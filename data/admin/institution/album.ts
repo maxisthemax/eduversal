@@ -31,6 +31,8 @@ export interface AlbumData {
   id: string;
   name: string;
   description: string;
+  product_variations_id: string[];
+  albumProductVariations: AlbumProductVariationData[];
   product_type_id: string;
   product_type: ProductTypeData;
   institution_id: string;
@@ -42,10 +44,16 @@ export interface AlbumData {
   updated_by_name: string;
 }
 
+export interface AlbumProductVariationData {
+  album_id: string;
+  productVariation_id: string;
+}
+
 export interface AlbumCreate {
   name: string;
   description: string;
   product_type_id: string;
+  product_variations_id: string[];
   institution_id?: string;
   course_id?: string;
 }
@@ -101,6 +109,9 @@ export function useAlbums(
             ? "Yes"
             : "No",
         },
+        product_variations_id: data.albumProductVariations.map(
+          ({ productVariation_id }) => productVariation_id
+        ),
         created_at: new Date(data.created_at),
         updated_at: new Date(data.updated_at),
       }));
