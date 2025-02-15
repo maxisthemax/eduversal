@@ -1,4 +1,4 @@
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 //*
 import find from "lodash/find";
@@ -21,6 +21,7 @@ import Box from "@mui/material/Box";
 import { useUserCourse } from "@/data/userCourse/course";
 
 function Album() {
+  const { push } = useRouter();
   const { class_id, album_id } = useParams();
   const { userCourseData, status } = useUserCourse(class_id as string);
 
@@ -52,12 +53,15 @@ function Album() {
         </Typography>
         <Divider />
         <Grid container spacing={3} sx={{ pt: 2 }}>
-          {album.photos.map(({ id: albumId, display_url }) => {
+          {album.photos.map(({ id: photoId, display_url }) => {
             return (
-              <Grid spacing={2} key={albumId} size={{ xs: 2 }}>
+              <Grid spacing={2} key={photoId} size={{ xs: 2 }}>
                 <Stack>
                   <Button
                     sx={{ p: 0, pl: 2, pr: 2, border: "1px solid #B8BDC4" }}
+                    onClick={() => {
+                      push(`/photos/${class_id}/${album_id}/${photoId}`);
+                    }}
                   >
                     <Box
                       component="img"
@@ -68,7 +72,9 @@ function Album() {
                         height: "100%",
                         aspectRatio: "2/3",
                         objectFit:
-                          album.type === "INDIVIDUAL" ? "cover" : "contain",
+                          album.product_type.type === "INDIVIDUAL"
+                            ? "cover"
+                            : "contain",
                       }}
                     />
                   </Button>

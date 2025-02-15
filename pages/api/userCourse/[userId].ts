@@ -49,6 +49,29 @@ export default async function courseHandler(
                       select: { id: true, name: true, display_url: true },
                     },
                     name: true,
+                    albumProductVariations: {
+                      select: {
+                        productVariation: {
+                          select: {
+                            options: {
+                              select: {
+                                description: true,
+                                id: true,
+                                name: true,
+                                preview_url: true,
+                                preview_url_key: true,
+                                price: true,
+                                currency: true,
+                              },
+                            },
+                            name: true,
+                            description: true,
+                            is_downloadable: true,
+                            id: true,
+                          },
+                        },
+                      },
+                    },
                   },
                 },
                 end_date: true,

@@ -11,6 +11,8 @@ import axios from "@/utils/axios";
 
 //*data
 import { useUser } from "@/data/user";
+import { ProductTypeData } from "../admin/productType";
+import { ProductVariationData } from "../admin/productVariation";
 
 //*interface
 export interface UserCourseData {
@@ -28,7 +30,8 @@ export interface UserCourseData {
       name: string;
     };
     albums: {
-      type: string;
+      albumProductVariations: { productVariation: ProductVariationData }[];
+      product_type: ProductTypeData;
       photos: { id: string; name: string; display_url: string }[];
       name: string;
       id: string;
@@ -72,6 +75,27 @@ export function useUserCourse(userCourseId?: string): {
           " (" +
           data.course.academicYear.year.toString() +
           ")",
+        course: {
+          ...data.course,
+          albums: data.course.albums.map((album) => ({
+            ...album,
+            albumProductVariations: album.albumProductVariations.map(
+              (albumProductVariation) => ({
+                ...albumProductVariation,
+                productVariation: {
+                  ...albumProductVariation.productVariation,
+                  options: albumProductVariation.productVariation.options.map(
+                    (option) => ({
+                      ...option,
+                      price_format:
+                        option.currency + " " + option.price.toString(),
+                    })
+                  ),
+                },
+              })
+            ),
+          })),
+        },
       }));
     } else return [];
   }, [userCoursesQueryData, isLoading]);

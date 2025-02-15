@@ -43,7 +43,7 @@ function Class() {
         <Divider />
         <Grid container spacing={3} sx={{ pt: 2 }}>
           {userCourseData.course.albums.map(
-            ({ id: albumId, name, photos, type }) => {
+            ({ id: albumId, name, photos, product_type }) => {
               return (
                 <Grid spacing={2} key={albumId} size={{ xs: 2 }}>
                   <Stack>
@@ -60,7 +60,9 @@ function Class() {
                           height: "100%",
                           aspectRatio: "2/3",
                           objectFit:
-                            type === "INDIVIDUAL" ? "cover" : "contain",
+                            product_type.type === "INDIVIDUAL"
+                              ? "cover"
+                              : "contain",
                         }}
                       />
                     </Button>
