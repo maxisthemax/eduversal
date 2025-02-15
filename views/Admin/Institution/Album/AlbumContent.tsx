@@ -33,6 +33,12 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
 import Divider from "@mui/material/Divider";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -41,6 +47,7 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 import { useAlbums } from "@/data/admin/institution/album";
 import { useCourses } from "@/data/admin/institution/course";
 import { usePhotos } from "@/data/admin/institution/photo";
+import { useProductVariation } from "@/data/admin/productVariation";
 
 //*utils
 import axios from "@/utils/axios";
@@ -58,6 +65,8 @@ function AlbumContent({ albumId }: { albumId: string }) {
   const { albumData, status } = useAlbums(albumId);
   const { courseData } = useCourses(courseId);
   const { addPhoto, photosData, deletePhoto } = usePhotos(albumId);
+  const { productVariationsById, status: productVariationsStatus } =
+    useProductVariation();
 
   //*upload hook
   const {
@@ -99,7 +108,8 @@ function AlbumContent({ albumId }: { albumId: string }) {
     }
   };
 
-  if (status === "pending") return <LinearProgress />;
+  if (status === "pending" || productVariationsStatus === "pending")
+    return <LinearProgress />;
 
   return (
     <OverlayBox isLoading={isDeleting || isUploading}>
@@ -407,7 +417,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
             <Grid size={{ xs: 12 }}>
               <Divider />
             </Grid>
-            <Grid size={{ xs: 10 }} sx={{ alignContent: "center" }}>
+            <Grid size={{ xs: 12 }} sx={{ alignContent: "center" }}>
               <Typography>
                 <b>Product Details</b>
               </Typography>
@@ -422,6 +432,53 @@ function AlbumContent({ albumId }: { albumId: string }) {
               name="Price"
               value={albumData.product_type.price_format}
             />
+            <Grid size={{ xs: 12 }}>
+              <Divider />
+            </Grid>
+            <Grid size={{ xs: 12 }} sx={{ alignContent: "center" }}>
+              <Typography>
+                <b>Product Variations</b>
+              </Typography>
+            </Grid>
+            {albumData.product_variations_id.map((productVariationId) => {
+              const { name, description, options } =
+                productVariationsById[productVariationId];
+              return (
+                <>
+                  <NameValue name="Name" value={name} />
+                  <NameValue name="Description" value={description} />
+                  <Grid
+                    size={{ xs: 12 }}
+                    sx={{ mb: 1 }}
+                    component={Paper}
+                    variant="outlined"
+                  >
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Description</TableCell>
+                          <TableCell width={100}>Price</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {options.map(
+                          ({ id, name, description, price_format }) => {
+                            return (
+                              <TableRow key={id}>
+                                <TableCell>{name}</TableCell>
+                                <TableCell>{description}</TableCell>
+                                <TableCell>{price_format}</TableCell>
+                              </TableRow>
+                            );
+                          }
+                        )}
+                      </TableBody>
+                    </Table>
+                  </Grid>
+                </>
+              );
+            })}
           </Grid>
         </Grid>
       </Grid>

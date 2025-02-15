@@ -24,6 +24,13 @@ import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -195,6 +202,51 @@ function AddEditAlbumDialogForm({
                     }}
                     onChange={(e, value) => {
                       setFieldValue("product_variations_id", value);
+                    }}
+                    renderOption={(props, option, state, ownerState) => {
+                      const { key, ...optionProps } = props;
+                      const findOption = find(productVariationsData, {
+                        id: option,
+                      });
+                      return (
+                        <Box
+                          key={key}
+                          component="li"
+                          {...optionProps}
+                          sx={{ mt: 1 }}
+                        >
+                          <Stack direction="column" spacing={1}>
+                            {ownerState.getOptionLabel(option)}
+                            <Table
+                              size="small"
+                              component={Paper}
+                              variant="outlined"
+                            >
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Name</TableCell>
+                                  <TableCell>Description</TableCell>
+                                  <TableCell width={100}>Price</TableCell>
+                                </TableRow>
+                              </TableHead>
+
+                              <TableBody>
+                                {findOption.options.map(
+                                  ({ id, name, description, price_format }) => {
+                                    return (
+                                      <TableRow key={id}>
+                                        <TableCell>{name}</TableCell>
+                                        <TableCell>{description}</TableCell>
+                                        <TableCell>{price_format}</TableCell>
+                                      </TableRow>
+                                    );
+                                  }
+                                )}
+                              </TableBody>
+                            </Table>
+                          </Stack>
+                        </Box>
+                      );
                     }}
                     value={values["product_variations_id"]}
                     renderInput={(params) => (
