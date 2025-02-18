@@ -43,7 +43,6 @@ import { useProductVariation } from "@/data/admin/productVariation";
 //*validation
 const validationSchema = yup.object({
   name: yup.string().required("Required"),
-  description: yup.string().required("Required"),
   product_type_id: yup.string().required("Required"),
 });
 
@@ -176,7 +175,7 @@ function AddEditAlbumDialogForm({
                     name="description"
                     label="Description"
                     formProps={formProps}
-                    props={{ required: true }}
+                    props={{ multiline: true, minRows: 3 }}
                   />
                   <TextFieldForm
                     name="product_type_id"

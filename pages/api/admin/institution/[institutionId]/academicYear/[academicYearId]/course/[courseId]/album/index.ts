@@ -63,13 +63,7 @@ export default async function albumHandler(
           req.body;
 
         // Validate required fields
-        if (
-          !validateRequiredFields(req, res, [
-            "name",
-            "description",
-            "product_type_id",
-          ])
-        ) {
+        if (!validateRequiredFields(req, res, ["name", "product_type_id"])) {
           return;
         }
 
