@@ -262,7 +262,7 @@ function AddEditPackagesDialogForm({
                   p={1}
                   direction="column"
                   spacing={2}
-                  sx={{ maxHeight: getFullHeightSize(25), overflow: "auto" }}
+                  sx={{ maxHeight: getFullHeightSize(27), overflow: "auto" }}
                 >
                   <TextFieldForm
                     name="name"
