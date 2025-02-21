@@ -113,6 +113,54 @@ async function main() {
       updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
     },
   });
+
+  /**
+   * Product Types
+   */
+  const productType = await prisma.productType.create({
+    data: {
+      name: "Individual",
+      type: "INDIVIDUAL",
+      currency: "RM",
+      price: 9,
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  /**
+   * Product Variations
+   */
+  const productVariation = await prisma.productVariation.create({
+    data: {
+      name: "Gold",
+      is_downloadable: true,
+      description: "",
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
+
+  /**
+   * Product Variation Options
+   */
+  await prisma.productVariationOption.create({
+    data: {
+      name: "Color",
+      currency: "RM",
+      price: 9,
+      description: "",
+      productVariation_id: productVariation.id,
+      created_by_user_id: userAdmin.id,
+      updated_by_user_id: userAdmin.id,
+      created_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+      updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
+    },
+  });
 }
 
 main()

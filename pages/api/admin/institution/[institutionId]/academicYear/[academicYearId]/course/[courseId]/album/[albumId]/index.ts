@@ -79,8 +79,6 @@ export default async function albumHandler(
             (id) => !existingVariationIds.includes(id)
           );
 
-          console.log(newVariations);
-
           if (newVariations.length > 0) {
             await prisma.albumProductVariation.createMany({
               data: newVariations.map((variationId) => ({

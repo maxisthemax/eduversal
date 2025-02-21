@@ -13,6 +13,7 @@ import PopupState from "material-ui-popup-state";
 import includes from "lodash/includes";
 
 //*components
+import useUpload from "@/components/useUpload";
 import { useCustomDialog } from "@/components/Dialog";
 import AddEditAlbumDialog from "./AddEditAlbumDialog";
 import { FlexBox, OverlayBox } from "@/components/Box";
@@ -51,7 +52,6 @@ import { useProductVariation } from "@/data/admin/productVariation";
 
 //*utils
 import axios from "@/utils/axios";
-import useUpload from "@/components/useUpload";
 
 function AlbumContent({ albumId }: { albumId: string }) {
   const params = useParams();

@@ -6,6 +6,7 @@ import useCustomTabs from "@/components/Box/useCustomTabs";
 import AlbumContent from "./AlbumContent";
 import AddEditAlbumDialog from "./AddEditAlbumDialog";
 import { useCustomDialog } from "@/components/Dialog";
+import AddEditPackagesDialog from "./AddEditPackagesDialog";
 
 //*data
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
@@ -67,6 +68,7 @@ function Album() {
         },
       ]}
       rightButton={[
+        <AddEditPackagesDialog key="addEditPackagesDialog" />,
         <AddEditAlbumDialog key={"addEditAlbumDialog"} />,
         albumsData.length > 0 && (
           <Button

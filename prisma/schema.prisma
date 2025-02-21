@@ -105,6 +105,7 @@ model Course {
   updated_by_name    String
   updated_at         DateTime     @updatedAt
   UserCourse         UserCourse[]
+  Package            Package[]
 
   @@index([institution_id])
   @@index([academic_year_id])
@@ -151,10 +152,11 @@ model Album {
 
   created_by_user_id String
   created_by_name    String
-  created_at         DateTime @default(now())
+  created_at         DateTime       @default(now())
   updated_by_user_id String
   updated_by_name    String
-  updated_at         DateTime @updatedAt
+  updated_at         DateTime       @updatedAt
+  packageAlbums      PackageAlbum[]
 
   @@index([institution_id])
   @@index([course_id])
@@ -272,6 +274,48 @@ model AlbumProductVariation {
   @@id([album_id, productVariation_id])
   @@index([album_id])
   @@index([productVariation_id])
+}
+
+model Package {
+  id              String  @id @default(cuid())
+  name            String
+  description     String
+  is_downloadable Boolean
+  preview_url     String?
+  preview_url_key String?
+  currency        String
+  price           Float
+  institution_id  String
+  course_id       String
+  course          Course  @relation(fields: [course_id], references: [id])
+
+  packageAlbums PackageAlbum[]
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
+}
+
+model PackageAlbum {
+  package_id String
+  album_id   String
+  quantity   Int
+  package    Package @relation(fields: [package_id], references: [id])
+  album      Album   @relation(fields: [album_id], references: [id])
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
+
+  @@id([package_id, album_id])
+  @@index([album_id])
+  @@index([package_id])
 }
 
 enum ProductTypeType {
