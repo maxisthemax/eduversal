@@ -7,12 +7,13 @@ import axios from "@/utils/axios";
 
 export default function useUpload(
   uploadPath: string,
-  options?: { multiple: boolean }
+  options?: { multiple?: boolean; watermark?: boolean }
 ) {
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const multiple = options?.multiple ?? true;
+  const watermark = options?.watermark ?? false;
 
   const onDropAccepted = useCallback(
     (acceptedFiles: File[]) => {
@@ -53,6 +54,7 @@ export default function useUpload(
 
   const handleUpload = async () => {
     const formData = new FormData();
+    formData.append("watermark", watermark.toString());
     formData.append("folderPath", uploadPath);
     files.forEach((file) => {
       formData.append("files", file);

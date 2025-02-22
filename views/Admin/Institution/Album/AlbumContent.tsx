@@ -76,7 +76,9 @@ function AlbumContent({ albumId }: { albumId: string }) {
     getRootProps,
     getInputProps,
     handleUpload,
-  } = useUpload(`institution/${institutionId}/album/${albumId}`);
+  } = useUpload(`institution/${institutionId}/album/${albumId}`, {
+    watermark: true,
+  });
 
   //*states
   const [isDeleting, setIsDeleting] = useState<boolean>(false);

@@ -66,6 +66,11 @@ export default async function handler(
             return res.status(400).json({ message: "No folder assigned." });
           }
 
+          const watermark = Array.isArray(fields.watermark)
+            ? fields.watermark[0]
+            : fields.watermark;
+          const addWatermark = watermark === "true";
+          console.log(addWatermark);
           const uploadPromises = fileArray.map(async (file) => {
             // Create a readable stream from the file path that formidable provides
             const fileStream = fs.createReadStream(file.filepath);
@@ -104,10 +109,10 @@ export default async function handler(
             );
 
             // Upload the original file to S3 (or DO Spaces)
-            await upload({
+            const originalRes = await upload({
               Key: `${folderPath}/${newFileName}`,
               Body: fileStream,
-              ACL: "private",
+              ACL: addWatermark ? "private" : "public-read",
               ContentType: file.mimetype,
             });
 
@@ -118,22 +123,28 @@ export default async function handler(
             );
 
             // Upload the watermark file to S3 (or DO Spaces)
-            const res = await upload({
-              Key: `${folderPath}/${newFileNameWatermark}`,
-              Body: watermarkedAndCompressedBuffer,
-              ACL: "public-read",
-              ContentType: file.mimetype,
-              Metadata: {
-                "Content-Disposition": "inline",
-              },
-            });
+            const watermarkRes = addWatermark
+              ? await upload({
+                  Key: `${folderPath}/${newFileNameWatermark}`,
+                  Body: watermarkedAndCompressedBuffer,
+                  ACL: "public-read",
+                  ContentType: file.mimetype,
+                  Metadata: {
+                    "Content-Disposition": "inline",
+                  },
+                })
+              : undefined;
 
             // Add the URLs to the fileUrls array
             fileUrls.push({
               name: newFileName,
               download_url: `${folderPath}/${newFileName}`,
-              download_watermark_url: `${folderPath}/${newFileNameWatermark}`,
-              display_url: res.Location,
+              download_watermark_url: addWatermark
+                ? `${folderPath}/${newFileNameWatermark}`
+                : ``,
+              display_url: addWatermark
+                ? watermarkRes.Location
+                : originalRes.Location,
             });
           });
 
