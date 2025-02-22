@@ -70,7 +70,7 @@ export default async function handler(
             ? fields.watermark[0]
             : fields.watermark;
           const addWatermark = watermark === "true";
-          console.log(addWatermark);
+
           const uploadPromises = fileArray.map(async (file) => {
             // Create a readable stream from the file path that formidable provides
             const fileStream = fs.createReadStream(file.filepath);
