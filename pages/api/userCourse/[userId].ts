@@ -72,14 +72,6 @@ export default async function courseHandler(
                         },
                       },
                     },
-                    packageAlbums: {
-                      select: {
-                        package: true,
-                        album: {
-                          select: { id: true },
-                        },
-                      },
-                    },
                   },
                 },
                 end_date: true,

@@ -94,9 +94,6 @@ export function useUserCourse(userCourseId?: string): {
                 },
               })
             ),
-            packages: album.packageAlbums.map((packageAlbum) => {
-              return { ...packageAlbum.package };
-            }),
           })),
         },
       }));
