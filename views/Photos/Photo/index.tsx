@@ -2,6 +2,7 @@ import { useParams } from "next/navigation";
 
 //*lodash
 import find from "lodash/find";
+import includes from "lodash/includes";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
@@ -36,6 +37,15 @@ function Photo() {
   const photo = album.photos.find((photo) => {
     return photo.id === photo_id;
   });
+
+  const albumPackage = userCourseData.course.package.filter(
+    ({ packageAlbums }) => {
+      return includes(
+        packageAlbums.map(({ album_id }) => album_id),
+        album_id as string
+      );
+    }
+  );
 
   return (
     <Container maxWidth="xl">
@@ -169,25 +179,29 @@ function Photo() {
                       </Typography>
                     </Stack>
                   </Button>
-                  <Paper
-                    fullWidth
-                    variant="outlined"
-                    component={Button}
-                    sx={{ p: 2, justifyContent: "start" }}
-                  >
-                    <Stack
-                      direction="row"
-                      spacing={2}
-                      sx={{ alignItems: "center" }}
-                    >
-                      <CustomIcon icon="check_circle" />
-                      <ListItemText
-                        sx={{ justifyItems: "start" }}
-                        primary="Package A"
-                        secondary="1 Individual + 1 Class - Formal"
-                      />
-                    </Stack>
-                  </Paper>
+                  {albumPackage.map(({ id, name }) => {
+                    return (
+                      <Paper
+                        key={id}
+                        fullWidth
+                        variant="outlined"
+                        component={Button}
+                        sx={{ p: 2, justifyContent: "start" }}
+                      >
+                        <Stack
+                          direction="row"
+                          spacing={2}
+                          sx={{ alignItems: "center" }}
+                        >
+                          <CustomIcon icon="check_circle" />
+                          <ListItemText
+                            sx={{ justifyItems: "start" }}
+                            primary={name}
+                          />
+                        </Stack>
+                      </Paper>
+                    );
+                  })}
                 </Stack>
               </Box>
             </Stack>

@@ -41,6 +41,7 @@ export default async function courseHandler(
                 academicYear: { select: { year: true } },
                 name: true,
                 standard: { select: { id: true, name: true } },
+                end_date: true,
                 albums: {
                   select: {
                     product_type: true,
@@ -74,7 +75,20 @@ export default async function courseHandler(
                     },
                   },
                 },
-                end_date: true,
+                package: {
+                  select: {
+                    course_id: true,
+                    currency: true,
+                    description: true,
+                    id: true,
+                    is_downloadable: true,
+                    name: true,
+                    preview_url: true,
+                    preview_url_key: true,
+                    price: true,
+                    packageAlbums: { select: { album_id: true } },
+                  },
+                },
               },
             },
           },

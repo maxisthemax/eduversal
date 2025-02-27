@@ -13,6 +13,7 @@ import axios from "@/utils/axios";
 import { useUser } from "@/data/user";
 import { ProductTypeData } from "../admin/productType";
 import { ProductVariationData } from "../admin/productVariation";
+import { PackageData } from "../admin/institution/packages";
 
 //*interface
 export interface UserCourseData {
@@ -36,6 +37,7 @@ export interface UserCourseData {
       name: string;
       id: string;
     }[];
+    package: PackageData[];
     end_date: string;
   };
   title_format: string;
