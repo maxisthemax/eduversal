@@ -20,7 +20,7 @@ import { useUser } from "@/data/user";
 function Main({ children }: { children: React.ReactNode }) {
   //*define
   const { push } = useRouter();
-  const pathName = usePathname();
+  const pathName = "/" + usePathname()?.split("/")[1];
 
   //*data
   const { data, status } = useUser();
