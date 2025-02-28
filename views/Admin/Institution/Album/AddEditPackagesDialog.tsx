@@ -131,6 +131,7 @@ function AddEditPackagesDialogForm({
               description,
               is_downloadable,
               price_format,
+              package_type_format,
             }) => {
               return (
                 <Grid
@@ -168,6 +169,9 @@ function AddEditPackagesDialogForm({
                     </Typography>
                     <Typography variant="caption">
                       Price: {price_format}
+                    </Typography>
+                    <Typography variant="caption">
+                      {package_type_format}
                     </Typography>
                   </Stack>
                 </Grid>

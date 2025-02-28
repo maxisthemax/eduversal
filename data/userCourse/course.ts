@@ -90,12 +90,24 @@ export function useUserCourse(userCourseId?: string): {
                     (option) => ({
                       ...option,
                       price_format:
-                        option.currency + " " + option.price.toString(),
+                        option.currency + " " + option.price.toFixed(2),
                     })
                   ),
                 },
               })
             ),
+          })),
+          package: data.course.package.map((pack) => ({
+            ...pack,
+            price_format: pack.currency + " " + pack.price.toFixed(2),
+            package_type_format: pack.packageAlbums
+              .map(({ album_id, quantity }) => {
+                const album = data.course.albums.find(
+                  (album) => album.id === album_id
+                );
+                return `${quantity} ${album.name} `;
+              })
+              .join(" + "),
           })),
         },
       }));

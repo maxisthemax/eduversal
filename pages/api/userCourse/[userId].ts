@@ -86,7 +86,9 @@ export default async function courseHandler(
                     preview_url: true,
                     preview_url_key: true,
                     price: true,
-                    packageAlbums: { select: { album_id: true } },
+                    packageAlbums: {
+                      select: { album_id: true, quantity: true },
+                    },
                   },
                 },
               },

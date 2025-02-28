@@ -1,8 +1,16 @@
 import { useMemo } from "react";
-import keyBy from "lodash/keyBy";
-import { useQueryFetch } from "@/helpers/queryHelpers";
-import axios from "@/utils/axios";
 import { useParams } from "next/navigation";
+
+//*lodash
+import keyBy from "lodash/keyBy";
+//*helpers
+import { useQueryFetch } from "@/helpers/queryHelpers";
+
+//*utils
+import axios from "@/utils/axios";
+
+//*data
+import { useAlbums } from "./album";
 
 //*interface
 export interface PackageData {
@@ -20,6 +28,7 @@ export interface PackageData {
   }[];
 
   price_format: string;
+  package_type_format: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -52,6 +61,7 @@ export function usePackage(packageId?: string): {
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
   const courseId = params.courseId as string;
+  const { albumsDataById } = useAlbums();
 
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "institutions", institutionId, "courses", courseId, "package"],
@@ -65,11 +75,16 @@ export function usePackage(packageId?: string): {
       return packagesQueryData.map((data) => ({
         ...data,
         price_format: data.currency + " " + data.price.toFixed(2),
+        package_type_format: data.packageAlbums
+          .map(({ album_id, quantity }) => {
+            return `${quantity} ${albumsDataById[album_id].name} `;
+          })
+          .join(" + "),
         created_at: new Date(data.created_at),
         updated_at: new Date(data.updated_at),
       }));
     } else return [];
-  }, [packagesQueryData, isLoading]);
+  }, [isLoading, packagesQueryData, albumsDataById]);
 
   const packagesById = useMemo(() => {
     return keyBy(packagesData, "id");

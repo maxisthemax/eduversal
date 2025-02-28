@@ -1,8 +1,10 @@
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
 //*lodash
 import find from "lodash/find";
 import includes from "lodash/includes";
+import sumBy from "lodash/sumBy";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
@@ -24,28 +26,99 @@ import Button from "@mui/material/Button";
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
 
-function Photo() {
+function PhotoCotent() {
   const { class_id, album_id, photo_id } = useParams();
   const { userCourseData, status } = useUserCourse(class_id as string);
-
-  if (status === "pending") return <LinearProgress />;
-
   const album = find(userCourseData.course.albums, {
     id: album_id as string,
   });
-
   const photo = album.photos.find((photo) => {
     return photo.id === photo_id;
   });
-
-  const albumPackage = userCourseData.course.package.filter(
-    ({ packageAlbums }) => {
+  const albumPackage = [
+    {
+      id: "none",
+      name: "No Package",
+      price: album.product_type.price,
+      price_format: `RM ${album.product_type.price.toFixed(2)}`,
+      package_type_format: "",
+    },
+    ...userCourseData.course.package.filter(({ packageAlbums }) => {
       return includes(
         packageAlbums.map(({ album_id }) => album_id),
         album_id as string
       );
-    }
-  );
+    }),
+  ];
+
+  console.log(albumPackage);
+
+  const [userPackage, setUserPackage] = useState<{
+    packageId: string;
+    packagePrice?: number;
+    itemsPrice?: number;
+    items: {
+      name: string | undefined;
+      photoId: string;
+      productVariationOptions: {
+        productVariationId: string;
+        productVariationOptionId: string;
+        name: string;
+        price: number;
+      }[];
+    }[];
+  }>({
+    packageId: "none",
+    packagePrice: album.product_type.price,
+    itemsPrice: 0,
+    items: [
+      {
+        name: userCourseData.names[0],
+        photoId: photo_id as string,
+        productVariationOptions: [],
+      },
+    ],
+  });
+
+  const handlePackage = (packageId: string) => {
+    setUserPackage((userPackage) => ({
+      ...userPackage,
+      packageId,
+      packagePrice:
+        find(userCourseData.course.package, { id: packageId })?.price ??
+        album.product_type.price,
+    }));
+  };
+
+  const handleProductVariationOption = (
+    productVariationId: string,
+    productVariationOptionId: string | null,
+    name?: string,
+    price?: number
+  ) => {
+    setUserPackage((userPackage) => {
+      const items = userPackage?.items;
+
+      items[0].productVariationOptions =
+        items[0].productVariationOptions.filter(
+          (option) => option.productVariationId !== productVariationId
+        );
+
+      // Then add the new option
+      items[0].productVariationOptions.push({
+        productVariationId,
+        productVariationOptionId,
+        name: name || "",
+        price: price || 0,
+      });
+
+      return {
+        ...userPackage,
+        itemsPrice: sumBy(items[0].productVariationOptions, "price"),
+        items,
+      };
+    });
+  };
 
   return (
     <Container maxWidth="xl">
@@ -93,20 +166,38 @@ function Photo() {
             <Stack sx={{ pl: 4, pr: 4 }} spacing={2}>
               <Box>
                 <Typography variant="body2" gutterBottom>
-                  {album.product_type.name}
+                  {album.name}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                   <b>{photo.name}</b>
                 </Typography>
                 <Typography variant="body1" color="primary" gutterBottom>
-                  RM 10.00
+                  RM{" "}
+                  {(userPackage.packagePrice + userPackage.itemsPrice).toFixed(
+                    2
+                  )}
                 </Typography>
               </Box>
               <Box>
                 <Typography variant="body2" gutterBottom>
                   {"Child's Name"}
                 </Typography>
-                <TextField select>
+                <TextField
+                  value={userPackage.items[0].name}
+                  select
+                  onChange={(event) => {
+                    setUserPackage((userPackage) => ({
+                      packageId: userPackage?.packageId,
+                      items: [
+                        {
+                          name: event.target.value,
+                          photoId: photo_id as string,
+                          productVariationOptions: [],
+                        },
+                      ],
+                    }));
+                  }}
+                >
                   {userCourseData.names.map((name) => {
                     return (
                       <MenuItem key={name} value={name}>
@@ -141,13 +232,32 @@ function Photo() {
                           },
                         }}
                       >
-                        <MenuItem value={undefined}>
+                        <MenuItem
+                          value={undefined}
+                          onClick={() => {
+                            handleProductVariationOption(
+                              productVariation.id,
+                              null
+                            );
+                          }}
+                        >
                           <ListItemText primary={`None`} />
                         </MenuItem>
                         {productVariation.options.map(
-                          ({ id, name, price_format, description }) => {
+                          ({ id, name, price_format, price, description }) => {
                             return (
-                              <MenuItem key={id} value={id}>
+                              <MenuItem
+                                key={id}
+                                value={id}
+                                onClick={() => {
+                                  handleProductVariationOption(
+                                    productVariation.id,
+                                    id,
+                                    name,
+                                    price
+                                  );
+                                }}
+                              >
                                 <ListItemText
                                   primary={`${name} - ${price_format}`}
                                   secondary={description}
@@ -166,42 +276,42 @@ function Photo() {
                   {"Packages"}
                 </Typography>
                 <Stack direction={"column"} spacing={2}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    sx={{ p: 2, justifyContent: "start" }}
-                    color="primary"
-                  >
-                    <Stack direction="row" spacing={2}>
-                      <CustomIcon icon="check_circle" />
-                      <Typography variant="body1" gutterBottom>
-                        No Package
-                      </Typography>
-                    </Stack>
-                  </Button>
-                  {albumPackage.map(({ id, name }) => {
-                    return (
-                      <Paper
-                        key={id}
-                        fullWidth
-                        variant="outlined"
-                        component={Button}
-                        sx={{ p: 2, justifyContent: "start" }}
-                      >
-                        <Stack
-                          direction="row"
-                          spacing={2}
-                          sx={{ alignItems: "center" }}
+                  {albumPackage.map(
+                    ({ id, name, price_format, package_type_format }) => {
+                      return (
+                        <Button
+                          key={id}
+                          fullWidth
+                          variant="outlined"
+                          sx={{ p: 2, justifyContent: "space-between" }}
+                          onClick={() => {
+                            handlePackage(id);
+                          }}
+                          color={
+                            userPackage?.packageId === id
+                              ? "primary"
+                              : "inherit"
+                          }
                         >
-                          <CustomIcon icon="check_circle" />
-                          <ListItemText
-                            sx={{ justifyItems: "start" }}
-                            primary={name}
-                          />
-                        </Stack>
-                      </Paper>
-                    );
-                  })}
+                          <Stack
+                            direction="row"
+                            spacing={2}
+                            sx={{ alignItems: "center" }}
+                          >
+                            <CustomIcon icon="check_circle" />
+                            <ListItemText
+                              sx={{ justifyItems: "start" }}
+                              primary={name}
+                              secondary={package_type_format}
+                            />
+                          </Stack>
+                          <Typography variant="body1" gutterBottom>
+                            {price_format}
+                          </Typography>
+                        </Button>
+                      );
+                    }
+                  )}
                 </Stack>
               </Box>
             </Stack>
@@ -210,6 +320,14 @@ function Photo() {
       </Page>
     </Container>
   );
+}
+
+function Photo() {
+  const { class_id } = useParams();
+  const { status } = useUserCourse(class_id as string);
+
+  if (status === "pending") return <LinearProgress />;
+  return <PhotoCotent />;
 }
 
 export default Photo;
