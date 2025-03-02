@@ -1,14 +1,15 @@
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 //*lodash
 import find from "lodash/find";
 import includes from "lodash/includes";
 import sumBy from "lodash/sumBy";
+import findIndex from "lodash/findIndex";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
-import { Page } from "@/components/Box";
+import { FlexBox, Page } from "@/components/Box";
 
 //*mui
 import Container from "@mui/material/Container";
@@ -25,10 +26,15 @@ import Button from "@mui/material/Button";
 
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
+import { useUserPackages } from "../UserPackage";
 
 function PhotoCotent() {
+  const { push } = useRouter();
   const { class_id, album_id, photo_id } = useParams();
   const { userCourseData, status } = useUserCourse(class_id as string);
+  const { userPackage, setUserPackage } = useUserPackages();
+
+  //*const
   const album = find(userCourseData.course.albums, {
     id: album_id as string,
   });
@@ -51,43 +57,15 @@ function PhotoCotent() {
     }),
   ];
 
-  console.log(albumPackage);
-
-  const [userPackage, setUserPackage] = useState<{
-    packageId: string;
-    packagePrice?: number;
-    itemsPrice?: number;
-    items: {
-      name: string | undefined;
-      photoId: string;
-      productVariationOptions: {
-        productVariationId: string;
-        productVariationOptionId: string;
-        name: string;
-        price: number;
-      }[];
-    }[];
-  }>({
-    packageId: "none",
-    packagePrice: album.product_type.price,
-    itemsPrice: 0,
-    items: [
-      {
-        name: userCourseData.names[0],
-        photoId: photo_id as string,
-        productVariationOptions: [],
-      },
-    ],
-  });
-
+  //*function
   const handlePackage = (packageId: string) => {
-    setUserPackage((userPackage) => ({
-      ...userPackage,
+    setUserPackage({
       packageId,
+      packageData: find(userCourseData.course.package, { id: packageId }),
       packagePrice:
         find(userCourseData.course.package, { id: packageId })?.price ??
         album.product_type.price,
-    }));
+    });
   };
 
   const handleProductVariationOption = (
@@ -96,29 +74,67 @@ function PhotoCotent() {
     name?: string,
     price?: number
   ) => {
-    setUserPackage((userPackage) => {
-      const items = userPackage?.items;
+    const items = userPackage.items;
 
-      items[0].productVariationOptions =
-        items[0].productVariationOptions.filter(
-          (option) => option.productVariationId !== productVariationId
-        );
+    items[0].productVariationOptions = items[0].productVariationOptions.filter(
+      (option) => option.productVariationId !== productVariationId
+    );
 
-      // Then add the new option
-      items[0].productVariationOptions.push({
-        productVariationId,
-        productVariationOptionId,
-        name: name || "",
-        price: price || 0,
-      });
+    // Then add the new option
+    items[0].productVariationOptions.push({
+      productVariationId,
+      productVariationOptionId,
+      name: name || "",
+      price: price || 0,
+    });
 
-      return {
-        ...userPackage,
-        itemsPrice: sumBy(items[0].productVariationOptions, "price"),
-        items,
-      };
+    setUserPackage({
+      itemsPrice: sumBy(items[0].productVariationOptions, "price"),
+      items,
     });
   };
+
+  const handleUserPackageName = (name: string) => {
+    const items = userPackage.items;
+    items[0].name = name;
+    setUserPackage({
+      items,
+    });
+  };
+
+  const handleSave = () => {
+    const expandedAlbums = [...userPackage.packageData.expandedAlbums];
+    const matchIndex = findIndex(expandedAlbums, {
+      id: userPackage.items[0].albumId,
+    });
+
+    if (matchIndex !== -1) {
+      expandedAlbums.splice(matchIndex, 1);
+    }
+
+    const items = [
+      userPackage.items[0],
+      ...expandedAlbums.map(({ id }) => ({
+        albumId: id,
+        display_url: "",
+        name: "",
+        photoId: "",
+        productVariationOptions: [],
+      })),
+    ];
+    if (userPackage.packageId !== "none") {
+      setUserPackage({ currentStage: 1, items });
+    }
+    push(`/photos/${class_id}/${album_id}/${photo_id}/package`);
+  };
+
+  useEffect(() => {
+    if (!userPackage) {
+      push(`/photos/${class_id}`);
+    }
+  }, [class_id, userPackage]);
+
+  if (!userPackage) return <></>;
 
   return (
     <Container maxWidth="xl">
@@ -150,9 +166,8 @@ function PhotoCotent() {
             <Paper
               variant="outlined"
               component="img"
-              src={photo.display_url ?? ""}
+              src={photo.display_url ?? null}
               sx={{
-                width: "80%",
                 height: "100%",
                 aspectRatio: "2/3",
                 objectFit:
@@ -183,19 +198,10 @@ function PhotoCotent() {
                   {"Child's Name"}
                 </Typography>
                 <TextField
-                  value={userPackage.items[0].name}
+                  value={userPackage.items[0]?.name}
                   select
                   onChange={(event) => {
-                    setUserPackage((userPackage) => ({
-                      packageId: userPackage?.packageId,
-                      items: [
-                        {
-                          name: event.target.value,
-                          photoId: photo_id as string,
-                          productVariationOptions: [],
-                        },
-                      ],
-                    }));
+                    handleUserPackageName(event.target.value);
                   }}
                 >
                   {userCourseData.names.map((name) => {
@@ -314,6 +320,20 @@ function PhotoCotent() {
                   )}
                 </Stack>
               </Box>
+              <Stack sx={{ width: "100%" }} spacing={2} direction="row">
+                <FlexBox />
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    push(`/photos/${class_id}/${album_id}`);
+                  }}
+                >
+                  Back
+                </Button>
+                <Button variant="contained" onClick={handleSave}>
+                  Next
+                </Button>
+              </Stack>
             </Stack>
           </Grid>
         </Grid>

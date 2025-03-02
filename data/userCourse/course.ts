@@ -15,14 +15,35 @@ import { ProductTypeData } from "../admin/productType";
 import { ProductVariationData } from "../admin/productVariation";
 import { PackageData } from "../admin/institution/packages";
 
+//*helpers
+import { expandByQuantity } from "@/helpers/arrayHelpers";
+
+export interface UserCoursePackageData extends PackageData {
+  expandedAlbums: UserCourseAlbumData[];
+}
+
 //*interface
+export interface UserCoursePhotoData {
+  id: string;
+  name: string;
+  display_url: string;
+}
+
+export interface UserCourseAlbumData {
+  albumProductVariations: { productVariation: ProductVariationData }[];
+  product_type: ProductTypeData;
+  photos: UserCoursePhotoData[];
+  name: string;
+  id: string;
+}
+
 export interface UserCourseData {
   id: string;
   names: string[];
   course_id: string;
   course: {
     academicYear: {
-      id: true;
+      id: string;
       year: number;
     };
     name: string;
@@ -30,14 +51,8 @@ export interface UserCourseData {
       id: string;
       name: string;
     };
-    albums: {
-      albumProductVariations: { productVariation: ProductVariationData }[];
-      product_type: ProductTypeData;
-      photos: { id: string; name: string; display_url: string }[];
-      name: string;
-      id: string;
-    }[];
-    package: PackageData[];
+    albums: UserCourseAlbumData[];
+    package: UserCoursePackageData[];
     end_date: string;
   };
   title_format: string;
@@ -54,7 +69,7 @@ export function useUserCourse(userCourseId?: string): {
   isUpdating: boolean;
 } {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isAdding, setIsAddng] = useState(false);
+  const [isAdding, setIsAdding] = useState(false); // Fix typo in function name
   const { data: userData } = useUser();
 
   // Fetch user courses data
@@ -68,49 +83,60 @@ export function useUserCourse(userCourseId?: string): {
   // Memoize user courses data
   const userCoursesData = useMemo(() => {
     if (!isLoading && userCoursesQueryData) {
-      return userCoursesQueryData.map((data) => ({
-        ...data,
-        title_format:
-          data.course.name +
-          " - " +
-          data.course.standard.name +
-          " (" +
-          data.course.academicYear.year.toString() +
-          ")",
-        course: {
-          ...data.course,
-          albums: data.course.albums.map((album) => ({
-            ...album,
-            albumProductVariations: album.albumProductVariations.map(
-              (albumProductVariation) => ({
-                ...albumProductVariation,
-                productVariation: {
-                  ...albumProductVariation.productVariation,
-                  options: albumProductVariation.productVariation.options.map(
-                    (option) => ({
-                      ...option,
-                      price_format:
-                        option.currency + " " + option.price.toFixed(2),
-                    })
-                  ),
-                },
-              })
-            ),
-          })),
-          package: data.course.package.map((pack) => ({
-            ...pack,
-            price_format: pack.currency + " " + pack.price.toFixed(2),
-            package_type_format: pack.packageAlbums
-              .map(({ album_id, quantity }) => {
-                const album = data.course.albums.find(
-                  (album) => album.id === album_id
-                );
-                return `${quantity} ${album.name} `;
-              })
-              .join(" + "),
-          })),
-        },
-      }));
+      return userCoursesQueryData.map((data) => {
+        const albums = data.course.albums.map((album) => ({
+          ...album,
+          albumProductVariations: album.albumProductVariations.map(
+            (albumProductVariation) => ({
+              ...albumProductVariation,
+              productVariation: {
+                ...albumProductVariation.productVariation,
+                options: albumProductVariation.productVariation.options.map(
+                  (option) => ({
+                    ...option,
+                    price_format:
+                      option.currency + " " + option.price.toFixed(2),
+                  })
+                ),
+              },
+            })
+          ),
+        }));
+        return {
+          ...data,
+          title_format:
+            data.course.name +
+            " - " +
+            data.course.standard.name +
+            " (" +
+            data.course.academicYear.year.toString() +
+            ")",
+          course: {
+            ...data.course,
+            albums,
+            package: data.course.package.map((pack) => ({
+              ...pack,
+              price_format: pack.currency + " " + pack.price.toFixed(2),
+              package_type_format: pack.packageAlbums
+                .map(({ album_id, quantity }) => {
+                  const album = data.course.albums.find(
+                    (album) => album.id === album_id
+                  );
+                  return `${quantity} ${album.name} `;
+                })
+                .join(" + "),
+              expandedAlbums: expandByQuantity(pack.packageAlbums).map(
+                ({ album_id }) => {
+                  const album = albums.find((album) => album.id === album_id);
+                  return {
+                    ...album,
+                  };
+                }
+              ),
+            })),
+          },
+        };
+      });
     } else return [];
   }, [userCoursesQueryData, isLoading]);
 
@@ -124,13 +150,13 @@ export function useUserCourse(userCourseId?: string): {
 
   // functions
   async function addUserCourse(child: string[], course_id: string) {
-    setIsAddng(true);
+    setIsAdding(true);
     await axios.post(`userCourse/${userData.id}`, {
       names: child,
       course_id,
     });
     refetch();
-    setIsAddng(false);
+    setIsAdding(false);
   }
 
   async function updateUserCourse(child: string[], user_course_id: string) {

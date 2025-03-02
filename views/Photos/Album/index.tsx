@@ -1,6 +1,6 @@
 import { useParams, useRouter } from "next/navigation";
 
-//*
+//*lodash
 import find from "lodash/find";
 
 //*components
@@ -10,7 +10,6 @@ import { Page } from "@/components/Box";
 import Container from "@mui/material/Container";
 import LinearProgress from "@mui/material/LinearProgress";
 import Grid from "@mui/material/Grid2";
-
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
@@ -19,17 +18,37 @@ import Box from "@mui/material/Box";
 
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
+import { useUserPackages } from "../UserPackage";
 
 function Album() {
   const { push } = useRouter();
   const { class_id, album_id } = useParams();
   const { userCourseData, status } = useUserCourse(class_id as string);
+  const { setUserPackage } = useUserPackages();
 
   if (status === "pending") return <LinearProgress />;
 
   const album = find(userCourseData.course.albums, {
     id: album_id as string,
   });
+
+  function handleSetPackage(photoId: string, display_url: string) {
+    setUserPackage({
+      packageId: "none",
+      packagePrice: album.product_type.price,
+      itemsPrice: 0,
+      currentStage: 0,
+      items: [
+        {
+          albumId: album_id as string,
+          display_url: display_url,
+          name: userCourseData.names[0],
+          photoId: photoId,
+          productVariationOptions: [],
+        },
+      ],
+    });
+  }
 
   return (
     <Container maxWidth="xl">
@@ -60,6 +79,7 @@ function Album() {
                   <Button
                     sx={{ p: 0, pl: 2, pr: 2, border: "1px solid #B8BDC4" }}
                     onClick={() => {
+                      handleSetPackage(photoId, display_url);
                       push(`/photos/${class_id}/${album_id}/${photoId}`);
                     }}
                   >
