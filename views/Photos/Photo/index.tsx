@@ -103,29 +103,31 @@ function PhotoCotent() {
   };
 
   const handleSave = () => {
-    const expandedAlbums = [...userPackage.packageData.expandedAlbums];
-    const matchIndex = findIndex(expandedAlbums, {
-      id: userPackage.items[0].albumId,
-    });
-
-    if (matchIndex !== -1) {
-      expandedAlbums.splice(matchIndex, 1);
-    }
-
-    const items = [
-      userPackage.items[0],
-      ...expandedAlbums.map(({ id }) => ({
-        albumId: id,
-        display_url: "",
-        name: "",
-        photoId: "",
-        productVariationOptions: [],
-      })),
-    ];
     if (userPackage.packageId !== "none") {
+      const expandedAlbums = [...userPackage.packageData.expandedAlbums];
+      const matchIndex = findIndex(expandedAlbums, {
+        id: userPackage.items[0].albumId,
+      });
+
+      if (matchIndex !== -1) {
+        expandedAlbums.splice(matchIndex, 1);
+      }
+
+      const items = [
+        userPackage.items[0],
+        ...expandedAlbums.map(({ id }) => ({
+          albumId: id,
+          display_url: "",
+          name: "",
+          photoId: "",
+          productVariationOptions: [],
+        })),
+      ];
       setUserPackage({ currentStage: 1, items });
+      push(`/photos/${class_id}/${album_id}/${photo_id}/package`);
+    } else {
+      setUserPackage({ currentStage: 0 });
     }
-    push(`/photos/${class_id}/${album_id}/${photo_id}/package`);
   };
 
   useEffect(() => {

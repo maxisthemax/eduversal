@@ -58,6 +58,8 @@ function UserPackages() {
     if (!userPackage) {
       push(`/photos/${class_id}`);
     }
+    if (userPackage?.packageId === "none") {
+    }
   }, [class_id, userPackage]);
 
   const packageData = userPackage?.packageData;
