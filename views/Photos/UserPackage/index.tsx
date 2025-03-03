@@ -222,7 +222,7 @@ function UserPackages() {
                   });
                 }}
               >
-                Clear
+                SELECT PACKAGE AGAIN
               </Button>
               <Button variant="contained" size="large" onClick={handleSave}>
                 Save
