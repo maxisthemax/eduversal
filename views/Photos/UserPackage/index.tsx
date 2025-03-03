@@ -213,8 +213,8 @@ function UserPackages() {
                 size="large"
                 onClick={() => {
                   handleOpenDialog({
-                    title: "Clear package",
-                    description: "Are you sure you want to clear the package?",
+                    title: "Reselect Package",
+                    description: "Are you sure you want to reselect package?",
                     onConfirm: () => {
                       removeUserPackage();
                       push(`/photos/${class_id}/${album_id}`);
@@ -222,10 +222,10 @@ function UserPackages() {
                   });
                 }}
               >
-                SELECT PACKAGE AGAIN
+                Reselect Package
               </Button>
               <Button variant="contained" size="large" onClick={handleSave}>
-                Save
+                ADD TO CART
               </Button>
             </Stack>
           </Container>
