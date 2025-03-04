@@ -38,6 +38,8 @@ function Album() {
       packagePrice: album.product_type.price,
       itemsPrice: 0,
       currentStage: 0,
+      packageData: undefined,
+      cartId: undefined,
       items: [
         {
           albumId: album_id as string,

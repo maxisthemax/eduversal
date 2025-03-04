@@ -1,8 +1,11 @@
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 //*lodash
 import find from "lodash/find";
+import filter from "lodash/filter";
+import uniqBy from "lodash/uniqBy";
 import includes from "lodash/includes";
 import sumBy from "lodash/sumBy";
 import findIndex from "lodash/findIndex";
@@ -27,9 +30,15 @@ import Button from "@mui/material/Button";
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
 import { useUserPackages } from "../UserPackage";
+import { useCart } from "@/views/Cart";
+
+//*helpers
+import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 function PhotoCotent() {
+  const path = usePathname();
   const { push } = useRouter();
+  const { upsertCart } = useCart();
   const { class_id, album_id, photo_id } = useParams();
   const { userCourseData, status } = useUserCourse(class_id as string);
   const { userPackage, setUserPackage } = useUserPackages();
@@ -76,17 +85,24 @@ function PhotoCotent() {
   ) => {
     const items = userPackage.items;
 
-    items[0].productVariationOptions = items[0].productVariationOptions.filter(
-      (option) => option.productVariationId !== productVariationId
-    );
-
     // Then add the new option
-    items[0].productVariationOptions.push({
-      productVariationId,
-      productVariationOptionId,
-      name: name || "",
-      price: price || 0,
-    });
+    items[0].productVariationOptions = filter(
+      uniqBy(
+        [
+          {
+            productVariationId,
+            productVariationOptionId,
+            name: name || "",
+            price: price || 0,
+          },
+          ...items[0].productVariationOptions,
+        ],
+        "productVariationId"
+      ),
+      ({ productVariationOptionId }) => {
+        return productVariationOptionId !== null;
+      }
+    );
 
     setUserPackage({
       itemsPrice: sumBy(items[0].productVariationOptions, "price"),
@@ -126,7 +142,22 @@ function PhotoCotent() {
       setUserPackage({ currentStage: 1, items });
       push(`/photos/${class_id}/${album_id}/${photo_id}/package`);
     } else {
-      setUserPackage({ currentStage: 0 });
+      setUserPackage(undefined);
+      const cartId = uuidv4();
+      upsertCart({
+        id: userPackage?.cartId ?? cartId,
+        userPackage: {
+          ...userPackage,
+          cartId: userPackage?.cartId ?? cartId,
+          currentStage: 0,
+          items: filter(userPackage.items, ({ photoId }) => {
+            return photoId !== "";
+          }),
+        },
+        packageUrl: path,
+        quantity: 1,
+      });
+      push(`/cart`);
     }
   };
 
@@ -162,6 +193,7 @@ function PhotoCotent() {
             sx={{
               justifyContent: "center",
               display: "flex",
+              height: getFullHeightSize(15),
             }}
             variant="outlined"
           >
@@ -179,7 +211,10 @@ function PhotoCotent() {
               }}
             />
           </Grid>
-          <Grid size={{ xs: 6 }}>
+          <Grid
+            size={{ xs: 6 }}
+            sx={{ height: getFullHeightSize(15), overflow: "auto" }}
+          >
             <Stack sx={{ pl: 4, pr: 4 }} spacing={2}>
               <Box>
                 <Typography variant="body2" gutterBottom>
@@ -232,6 +267,11 @@ function PhotoCotent() {
                       />
 
                       <TextField
+                        value={
+                          find(userPackage.items[0].productVariationOptions, {
+                            productVariationId: productVariation.id,
+                          })?.productVariationOptionId
+                        }
                         select
                         slotProps={{
                           select: {
@@ -333,7 +373,11 @@ function PhotoCotent() {
                   Back
                 </Button>
                 <Button variant="contained" onClick={handleSave}>
-                  Next
+                  {userPackage.cartId
+                    ? "Edit"
+                    : userPackage.packageId === "none"
+                    ? "Add To Cart"
+                    : "Next"}
                 </Button>
               </Stack>
             </Stack>

@@ -1,8 +1,12 @@
 import { create } from "zustand/react";
 import { persist } from "zustand/middleware";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+
+//*lodash
+import filter from "lodash/filter";
 
 //*components
 import { FlexBox } from "@/components/Box";
@@ -22,6 +26,7 @@ import Toolbar from "@mui/material/Toolbar";
 
 //*data
 import { UserCoursePackageData } from "@/data/userCourse/course";
+import { useCart } from "@/views/Cart";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -33,6 +38,7 @@ export interface UserPackageData {
   currentStage?: number;
   itemsPrice?: number;
   items?: UserPackageItemData[];
+  cartId?: string;
 }
 
 export interface UserPackageItemData {
@@ -49,6 +55,8 @@ export interface UserPackageItemData {
 }
 
 function UserPackages() {
+  const path = usePathname();
+  const { upsertCart } = useCart();
   const { handleOpenDialog } = useCustomDialog();
   const { class_id, album_id } = useParams();
   const { push } = useRouter();
@@ -72,6 +80,23 @@ function UserPackages() {
     ) {
       toast.error("Please select all photos");
       return;
+    } else {
+      const cartId = userPackage?.cartId ?? uuidv4();
+      setUserPackage(undefined);
+      upsertCart({
+        id: cartId,
+        userPackage: {
+          ...userPackage,
+          cartId: cartId,
+          currentStage: 0,
+          items: filter(userPackage.items, ({ photoId }) => {
+            return photoId !== "";
+          }),
+        },
+        packageUrl: path,
+        quantity: 1,
+      });
+      push("/cart");
     }
   };
 
@@ -225,7 +250,7 @@ function UserPackages() {
                 Reselect Package
               </Button>
               <Button variant="contained" size="large" onClick={handleSave}>
-                ADD TO CART
+                {userPackage.cartId ? "Edit" : "Add To Cart"}
               </Button>
             </Stack>
           </Container>
