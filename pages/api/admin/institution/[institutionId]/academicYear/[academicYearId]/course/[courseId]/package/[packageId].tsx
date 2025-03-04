@@ -56,7 +56,10 @@ export default async function packageHandler(
             select: { album_id: true },
           });
 
-          if (previousPackage?.preview_url_key !== preview_url_key) {
+          if (
+            previousPackage?.preview_url_key !== "" &&
+            previousPackage?.preview_url_key !== preview_url_key
+          ) {
             await deleteFile([previousPackage.preview_url_key]);
           }
 
