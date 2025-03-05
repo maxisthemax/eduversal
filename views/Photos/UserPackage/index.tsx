@@ -49,8 +49,10 @@ export interface UserPackageItemData {
   name: string | undefined;
   albumId: string;
   photoId: string;
+  photoName: string;
   display_url: string;
   productVariationOptions: {
+    productVariationName: string;
     productVariationId: string;
     productVariationOptionId: string;
     name: string;

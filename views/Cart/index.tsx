@@ -13,10 +13,9 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
-import ListItem from "@mui/material/ListItem";
+import Grid from "@mui/material/Grid2";
 
 interface CartData {
   id?: string;
@@ -27,7 +26,7 @@ interface CartData {
 
 function Cart() {
   const { push } = useRouter();
-  const { cart, clearCart, deleteCart } = useCart();
+  const { cart, deleteCart } = useCart();
   const { setUserPackage } = useUserPackages();
 
   return (
@@ -36,6 +35,7 @@ function Cart() {
         sx={{
           display: "flex",
           justifyContent: "center",
+          p: 2,
         }}
       >
         <Typography variant="h5">
@@ -46,21 +46,22 @@ function Cart() {
       <Box sx={{ pt: 2, pb: 2 }}>
         <Divider />
       </Box>
-      <Button onClick={clearCart}>Clear</Button>
-      <List disablePadding dense>
-        {cart &&
-          cart.length > 0 &&
-          cart.map((item) => {
-            if (item.userPackage.packageId === "none")
-              return (
-                <ListItem key={item.id} disableGutters>
-                  <Stack direction="row" spacing={2}>
+
+      {cart &&
+        cart.length > 0 &&
+        cart.map((item) => {
+          console.log(item);
+          return (
+            <>
+              <Grid container key={item.id} spacing={2}>
+                <Grid size={{ xs: 1.5 }}>
+                  {item.userPackage.packageId === "none" ? (
                     <Box
                       component="img"
                       src={item.userPackage.items[0].display_url ?? null}
                       sx={{
                         backgroundColor: "grey.300",
-                        height: "200px",
+                        width: "100%",
                         aspectRatio: "2/3",
                         objectFit:
                           item.userPackage.albumData?.product_type.type ===
@@ -69,41 +70,13 @@ function Cart() {
                             : "contain",
                       }}
                     />
-                    <Box>
-                      <Button
-                        onClick={() => {
-                          deleteCart(item.id);
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </Box>
-                    <Box>
-                      <Button
-                        onClick={() => {
-                          setUserPackage({
-                            ...item.userPackage,
-                            cartId: item.id,
-                          });
-                          push(item.packageUrl);
-                        }}
-                      >
-                        Edit
-                      </Button>
-                    </Box>
-                  </Stack>
-                </ListItem>
-              );
-            else
-              return (
-                <ListItem key={item.id} disableGutters>
-                  <Stack direction="row" spacing={2}>
+                  ) : (
                     <Box
                       component="img"
                       src={item.userPackage.packageData.preview_url ?? null}
                       sx={{
                         backgroundColor: "grey.300",
-                        height: "200px",
+                        width: "100%",
                         aspectRatio: "2/3",
                         objectFit:
                           item.userPackage.albumData?.product_type.type ===
@@ -112,24 +85,150 @@ function Cart() {
                             : "contain",
                       }}
                     />
-                    <Box>
-                      <Button
-                        onClick={() => {
-                          setUserPackage({
-                            ...item.userPackage,
-                            cartId: item.id,
-                          });
-                          push(item.packageUrl);
-                        }}
-                      >
-                        Edit
-                      </Button>
-                    </Box>
-                  </Stack>
-                </ListItem>
-              );
-          })}
-      </List>
+                  )}
+                </Grid>
+                <Grid size={{ xs: "grow" }}>
+                  {item.userPackage.packageId === "none" ? (
+                    <Stack
+                      direction="row"
+                      sx={{ width: "100%", justifyContent: "space-between" }}
+                    >
+                      <Stack>
+                        <Typography variant="h6" gutterBottom>
+                          {item.userPackage.items[0]?.photoName}
+                        </Typography>
+                        <Typography variant="body1">
+                          Child: {item.userPackage.items[0]?.name}
+                        </Typography>
+                        {item.userPackage.items[0]?.productVariationOptions.map(
+                          (option) => (
+                            <Typography
+                              variant="body2"
+                              key={option.productVariationOptionId}
+                            >
+                              {option.productVariationName} : {option.name}
+                            </Typography>
+                          )
+                        )}
+                      </Stack>
+                      <Box>
+                        <Button
+                          onClick={() => {
+                            setUserPackage({
+                              ...item.userPackage,
+                              cartId: item.id,
+                            });
+                            push(item.packageUrl);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                      </Box>
+                    </Stack>
+                  ) : (
+                    <Stack>
+                      <Typography variant="h6">
+                        {item.userPackage.packageData?.name}
+                      </Typography>
+                      <Typography variant="body1">
+                        Child: {item.userPackage.items[0]?.name}
+                      </Typography>
+                      {item.userPackage.items.map(
+                        (
+                          {
+                            photoId,
+                            photoName,
+                            display_url,
+                            productVariationOptions,
+                          },
+                          index
+                        ) => {
+                          return (
+                            <Grid container key={photoId} spacing={2}>
+                              <Grid size={{ xs: 1.5 }}>
+                                <Box
+                                  component="img"
+                                  src={display_url ?? null}
+                                  sx={{
+                                    backgroundColor: "grey.300",
+                                    width: "100%",
+                                    aspectRatio: "2/3",
+                                    objectFit:
+                                      item.userPackage.albumData?.product_type
+                                        .type === "INDIVIDUAL"
+                                        ? "cover"
+                                        : "contain",
+                                  }}
+                                />
+                              </Grid>
+                              <Grid size={{ xs: "grow" }}>
+                                <Stack
+                                  direction="row"
+                                  sx={{ justifyContent: "space-between" }}
+                                >
+                                  <Stack direction="column">
+                                    <Typography variant="h6" gutterBottom>
+                                      {photoName}
+                                    </Typography>
+                                    {productVariationOptions.map((option) => (
+                                      <Typography
+                                        variant="body2"
+                                        key={option.productVariationOptionId}
+                                      >
+                                        {option.productVariationName}:{" "}
+                                        {option.name}
+                                      </Typography>
+                                    ))}
+                                  </Stack>
+                                  <Box>
+                                    <Button
+                                      onClick={() => {
+                                        setUserPackage({
+                                          ...item.userPackage,
+                                          cartId: item.id,
+                                          currentStage: index,
+                                        });
+                                        push(item.packageUrl);
+                                      }}
+                                    >
+                                      Edit
+                                    </Button>
+                                  </Box>
+                                </Stack>
+                              </Grid>
+                              <Grid></Grid>
+                            </Grid>
+                          );
+                        }
+                      )}
+                    </Stack>
+                  )}
+                </Grid>
+                <Grid size={{ xs: 1 }}>
+                  <Button
+                    onClick={() => {
+                      deleteCart(item.id);
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </Grid>
+                <Grid size={{ xs: 1 }}>
+                  <Typography variant="h6">
+                    RM{" "}
+                    {(
+                      item.userPackage.itemsPrice +
+                      item.userPackage.packagePrice
+                    ).toFixed(2)}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Box sx={{ pt: 2, pb: 2 }}>
+                <Divider />
+              </Box>
+            </>
+          );
+        })}
     </Container>
   );
 }

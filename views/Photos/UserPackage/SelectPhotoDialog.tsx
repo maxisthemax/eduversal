@@ -97,11 +97,13 @@ function SelectPhotoDialogForm({
           name: photo.name,
           photoId: photo.id,
           albumId: album.id,
+          photoName: photo.name,
           display_url: photo.display_url,
           productVariationOptions: [],
         };
   const [productVariationOptions, setProductVariationOptions] = useState<
     {
+      productVariationName: string;
       productVariationId: string;
       productVariationOptionId: string;
       name: string;
@@ -208,6 +210,7 @@ function SelectPhotoDialogForm({
                                 [
                                   ...productVariationOptions,
                                   {
+                                    productVariationName: productVariation.name,
                                     productVariationId: productVariation.id,
                                     productVariationOptionId: id,
                                     name,

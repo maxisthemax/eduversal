@@ -32,7 +32,11 @@ function Album() {
     id: album_id as string,
   });
 
-  function handleSetPackage(photoId: string, display_url: string) {
+  function handleSetPackage(
+    photoId: string,
+    display_url: string,
+    name: string
+  ) {
     setUserPackage({
       packageId: "none",
       packagePrice: album.product_type.price,
@@ -44,6 +48,7 @@ function Album() {
         {
           albumId: album_id as string,
           display_url: display_url,
+          photoName: name,
           name: userCourseData.names[0],
           photoId: photoId,
           productVariationOptions: [],
@@ -74,14 +79,14 @@ function Album() {
         </Typography>
         <Divider />
         <Grid container spacing={3} sx={{ pt: 2 }}>
-          {album.photos.map(({ id: photoId, display_url }) => {
+          {album.photos.map(({ id: photoId, display_url, name }) => {
             return (
               <Grid spacing={2} key={photoId} size={{ xs: 2 }}>
                 <Stack>
                   <Button
                     sx={{ p: 0, pl: 2, pr: 2, border: "1px solid #B8BDC4" }}
                     onClick={() => {
-                      handleSetPackage(photoId, display_url);
+                      handleSetPackage(photoId, display_url, name);
                       push(`/photos/${class_id}/${album_id}/${photoId}`);
                     }}
                   >

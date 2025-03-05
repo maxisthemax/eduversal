@@ -78,6 +78,7 @@ function PhotoCotent() {
   };
 
   const handleProductVariationOption = (
+    productVariationName: string,
     productVariationId: string,
     productVariationOptionId: string | null,
     name?: string,
@@ -90,6 +91,7 @@ function PhotoCotent() {
       uniqBy(
         [
           {
+            productVariationName,
             productVariationId,
             productVariationOptionId,
             name: name || "",
@@ -135,6 +137,7 @@ function PhotoCotent() {
           albumId: id,
           display_url: "",
           name: "",
+          photoName: "",
           photoId: "",
           productVariationOptions: [],
         })),
@@ -204,6 +207,7 @@ function PhotoCotent() {
               src={photo.display_url ?? null}
               sx={{
                 height: "100%",
+                width: "100%",
                 aspectRatio: "2/3",
                 objectFit:
                   album.product_type.type === "INDIVIDUAL"
@@ -285,6 +289,7 @@ function PhotoCotent() {
                           value={undefined}
                           onClick={() => {
                             handleProductVariationOption(
+                              productVariation.name,
                               productVariation.id,
                               null
                             );
@@ -300,6 +305,7 @@ function PhotoCotent() {
                                 value={id}
                                 onClick={() => {
                                   handleProductVariationOption(
+                                    productVariation.name,
                                     productVariation.id,
                                     id,
                                     name,
