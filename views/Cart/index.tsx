@@ -46,14 +46,13 @@ function Cart() {
       <Box sx={{ pt: 2, pb: 2 }}>
         <Divider />
       </Box>
-
       {cart &&
         cart.length > 0 &&
         cart.map((item) => {
           console.log(item);
           return (
             <>
-              <Grid container key={item.id} spacing={2}>
+              <Grid container key={item.id} spacing={4}>
                 <Grid size={{ xs: 1.5 }}>
                   {item.userPackage.packageId === "none" ? (
                     <Box
@@ -213,7 +212,7 @@ function Cart() {
                     Remove
                   </Button>
                 </Grid>
-                <Grid size={{ xs: 1 }}>
+                <Grid size={{ xs: "auto" }}>
                   <Typography variant="h6">
                     RM{" "}
                     {(
