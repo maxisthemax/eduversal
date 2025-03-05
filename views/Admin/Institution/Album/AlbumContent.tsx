@@ -385,7 +385,14 @@ function AlbumContent({ albumId }: { albumId: string }) {
             ))}
           </Grid>
         </Grid>
-        <Grid size={{ xs: 4 }} sx={{ background: "#EBEBEB" }}>
+        <Grid
+          size={{ xs: 4 }}
+          sx={{
+            background: "#EBEBEB",
+            height: getFullHeightSize(23),
+            overflow: "auto",
+          }}
+        >
           <Grid container sx={{ p: 2 }} rowGap={0.5}>
             <Grid size={{ xs: 10 }} sx={{ alignContent: "center" }}>
               <Typography>

@@ -1,7 +1,7 @@
-//*mui
-import Box from "@mui/material/Box";
+import CartView from "@/views/Cart";
 
 function Cart() {
-  return <Box>Cart</Box>;
+  return <CartView />;
 }
+
 export default Cart;

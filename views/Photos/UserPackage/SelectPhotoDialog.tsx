@@ -54,7 +54,6 @@ function SelectPhotoDialog({
       >
         {mode === "edit" ? "Edit" : "Select"}
       </Button>
-
       <Dialog
         {...bindDialog(popupState)}
         maxWidth="sm"

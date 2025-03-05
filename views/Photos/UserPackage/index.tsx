@@ -25,7 +25,10 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 
 //*data
-import { UserCoursePackageData } from "@/data/userCourse/course";
+import {
+  UserCourseAlbumData,
+  UserCoursePackageData,
+} from "@/data/userCourse/course";
 import { useCart } from "@/views/Cart";
 
 //*helpers
@@ -34,6 +37,7 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 export interface UserPackageData {
   packageId?: string;
   packageData?: UserCoursePackageData;
+  albumData?: UserCourseAlbumData;
   packagePrice?: number;
   currentStage?: number;
   itemsPrice?: number;
@@ -92,6 +96,7 @@ function UserPackages() {
           items: filter(userPackage.items, ({ photoId }) => {
             return photoId !== "";
           }),
+          albumData: album,
         },
         packageUrl: path,
         quantity: 1,

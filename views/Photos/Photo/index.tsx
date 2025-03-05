@@ -153,6 +153,7 @@ function PhotoCotent() {
           items: filter(userPackage.items, ({ photoId }) => {
             return photoId !== "";
           }),
+          albumData: album,
         },
         packageUrl: path,
         quantity: 1,
@@ -362,7 +363,17 @@ function PhotoCotent() {
                   )}
                 </Stack>
               </Box>
-              <Stack sx={{ width: "100%" }} spacing={2} direction="row">
+              <Stack
+                sx={{
+                  width: "100%",
+                  position: "sticky",
+                  bottom: 0,
+                  backgroundColor: "white",
+                  pt: 1,
+                }}
+                spacing={2}
+                direction="row"
+              >
                 <FlexBox />
                 <Button
                   variant="outlined"
