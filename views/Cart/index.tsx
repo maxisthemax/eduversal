@@ -19,6 +19,7 @@ import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
+import TextField from "@mui/material/TextField";
 
 interface CartData {
   id?: string;
@@ -30,7 +31,7 @@ interface CartData {
 function Cart() {
   const { handleOpenDialog } = useCustomDialog();
   const { push } = useRouter();
-  const { cart, deleteCart } = useCart();
+  const { cart, deleteCart, updateCartQuantity } = useCart();
   const { setUserPackage } = useUserPackages();
 
   return (
@@ -184,8 +185,11 @@ function Cart() {
                                           variant="body2"
                                           key={option.productVariationOptionId}
                                         >
-                                          {option.productVariationName}:{" "}
-                                          {option.productVariationOptionName}
+                                          {option.productVariationName}
+                                          {option.productVariationDownloadable
+                                            ? ` (Downloadable)`
+                                            : ""}
+                                          : {option.productVariationOptionName}
                                         </Typography>
                                       ))}
                                     </Stack>
@@ -214,29 +218,44 @@ function Cart() {
                     </Stack>
                   )}
                 </Grid>
-                <Grid size={{ xs: 1 }}>
-                  <Button
-                    onClick={() => {
-                      handleOpenDialog({
-                        allowOutsideClose: false,
-                        title: "Are you to sure remove this from cart?",
-                        onConfirm: async () => {
-                          deleteCart(item.id);
-                        },
-                      });
-                    }}
+                <Grid size={{ xs: 2 }}>
+                  <Stack
+                    direction="row"
+                    sx={{ justifyContent: "space-between" }}
                   >
-                    Remove
-                  </Button>
-                </Grid>
-                <Grid size={{ xs: "auto" }}>
-                  <Typography variant="h6">
-                    RM{" "}
-                    {(
-                      item.userPackage.itemsPrice +
-                      item.userPackage.packagePrice
-                    ).toFixed(2)}
-                  </Typography>
+                    <Stack>
+                      <TextField
+                        type="number"
+                        value={item.quantity}
+                        sx={{ width: "65px" }}
+                        onChange={(e) => {
+                          if (Number(e.target.value) < 1) return;
+                          updateCartQuantity(item.id, Number(e.target.value));
+                        }}
+                      />
+                      <Button
+                        onClick={() => {
+                          handleOpenDialog({
+                            allowOutsideClose: false,
+                            title: "Are you to sure remove this from cart?",
+                            onConfirm: async () => {
+                              deleteCart(item.id);
+                            },
+                          });
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Stack>
+                    <Typography variant="h6">
+                      RM{" "}
+                      {(
+                        (item.userPackage.itemsPrice +
+                          item.userPackage.packagePrice) *
+                        item.quantity
+                      ).toFixed(2)}
+                    </Typography>
+                  </Stack>
                 </Grid>
               </Grid>
               <Box sx={{ pt: 2, pb: 2 }}>
@@ -245,6 +264,35 @@ function Cart() {
             </>
           );
         })}
+      <Grid container spacing={4}>
+        <Grid size={{ xs: "grow" }}></Grid>
+        <Grid size={{ xs: 2 }}>
+          <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+            <Typography variant="h6">Subtotal</Typography>
+            <Typography variant="h6">
+              RM{" "}
+              {cart
+                .reduce(
+                  (acc, item) =>
+                    acc +
+                    (item.userPackage.itemsPrice +
+                      item.userPackage.packagePrice) *
+                      item.quantity,
+                  0
+                )
+                .toFixed(2)}
+            </Typography>
+          </Stack>
+          <Box sx={{ pt: 2, pb: 2 }}>
+            <Divider />
+          </Box>
+          <Box sx={{ pb: 2 }}>
+            <Button variant="contained" fullWidth>
+              Check Out
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
     </Container>
   );
 }
@@ -256,6 +304,7 @@ interface CartState {
   upsertCart: (cart: CartData) => void;
   clearCart: () => void;
   deleteCart: (id: string) => void;
+  updateCartQuantity: (id: string, quantity: number) => void;
 }
 
 export const useCart = create<CartState>()(
@@ -271,6 +320,15 @@ export const useCart = create<CartState>()(
             state.cart = [...(state.cart || []), cart];
           }
           return state;
+        });
+      },
+      updateCartQuantity: (id: string, quantity: number) => {
+        set((state) => {
+          const index = findIndex(state.cart, { id });
+          if (index > -1) {
+            state.cart[index] = { ...state.cart[index], quantity };
+          }
+          return { ...state };
         });
       },
       deleteCart: (id: string) => {
