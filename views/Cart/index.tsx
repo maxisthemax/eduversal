@@ -2,6 +2,9 @@ import { create } from "zustand/react";
 import { persist } from "zustand/middleware";
 import { useRouter } from "next/navigation";
 
+//*components
+import { useCustomDialog } from "@/components/Dialog";
+
 //*lodash
 import findIndex from "lodash/findIndex";
 
@@ -25,6 +28,7 @@ interface CartData {
 }
 
 function Cart() {
+  const { handleOpenDialog } = useCustomDialog();
   const { push } = useRouter();
   const { cart, deleteCart } = useCart();
   const { setUserPackage } = useUserPackages();
@@ -49,7 +53,6 @@ function Cart() {
       {cart &&
         cart.length > 0 &&
         cart.map((item) => {
-          console.log(item);
           return (
             <>
               <Grid container key={item.id} spacing={4}>
@@ -57,13 +60,13 @@ function Cart() {
                   {item.userPackage.packageId === "none" ? (
                     <Box
                       component="img"
-                      src={item.userPackage.items[0].display_url ?? null}
+                      src={item.userPackage.items[0].photoUrl ?? null}
                       sx={{
                         backgroundColor: "grey.300",
                         width: "100%",
                         aspectRatio: "2/3",
                         objectFit:
-                          item.userPackage.albumData?.product_type.type ===
+                          item.userPackage.items[0].album.productType ===
                           "INDIVIDUAL"
                             ? "cover"
                             : "contain",
@@ -77,11 +80,7 @@ function Cart() {
                         backgroundColor: "grey.300",
                         width: "100%",
                         aspectRatio: "2/3",
-                        objectFit:
-                          item.userPackage.albumData?.product_type.type ===
-                          "INDIVIDUAL"
-                            ? "cover"
-                            : "contain",
+                        objectFit: "cover",
                       }}
                     />
                   )}
@@ -92,7 +91,7 @@ function Cart() {
                       direction="row"
                       sx={{ width: "100%", justifyContent: "space-between" }}
                     >
-                      <Stack>
+                      <Stack spacing={0.5}>
                         <Typography variant="h6" gutterBottom>
                           {item.userPackage.items[0]?.photoName}
                         </Typography>
@@ -100,14 +99,21 @@ function Cart() {
                           Child: {item.userPackage.items[0]?.name}
                         </Typography>
                         {item.userPackage.items[0]?.productVariationOptions.map(
-                          (option) => (
-                            <Typography
-                              variant="body2"
-                              key={option.productVariationOptionId}
-                            >
-                              {option.productVariationName} : {option.name}
-                            </Typography>
-                          )
+                          (option) =>
+                            option.productVariationOptionId ? (
+                              <Typography
+                                variant="body2"
+                                key={option.productVariationOptionId}
+                              >
+                                {option.productVariationName}
+                                {option.productVariationDownloadable
+                                  ? ` (Downloadable)`
+                                  : ""}
+                                : {option.productVariationOptionName}
+                              </Typography>
+                            ) : (
+                              <></>
+                            )
                         )}
                       </Stack>
                       <Box>
@@ -129,84 +135,95 @@ function Cart() {
                       <Typography variant="h6">
                         {item.userPackage.packageData?.name}
                       </Typography>
-                      <Typography variant="body1">
+                      <Typography variant="body1" gutterBottom>
                         Child: {item.userPackage.items[0]?.name}
                       </Typography>
-                      {item.userPackage.items.map(
-                        (
-                          {
-                            photoId,
-                            photoName,
-                            display_url,
-                            productVariationOptions,
-                          },
-                          index
-                        ) => {
-                          return (
-                            <Grid container key={photoId} spacing={2}>
-                              <Grid size={{ xs: 1.5 }}>
-                                <Box
-                                  component="img"
-                                  src={display_url ?? null}
-                                  sx={{
-                                    backgroundColor: "grey.300",
-                                    width: "100%",
-                                    aspectRatio: "2/3",
-                                    objectFit:
-                                      item.userPackage.albumData?.product_type
-                                        .type === "INDIVIDUAL"
-                                        ? "cover"
-                                        : "contain",
-                                  }}
-                                />
-                              </Grid>
-                              <Grid size={{ xs: "grow" }}>
-                                <Stack
-                                  direction="row"
-                                  sx={{ justifyContent: "space-between" }}
-                                >
-                                  <Stack direction="column">
-                                    <Typography variant="h6" gutterBottom>
-                                      {photoName}
-                                    </Typography>
-                                    {productVariationOptions.map((option) => (
-                                      <Typography
-                                        variant="body2"
-                                        key={option.productVariationOptionId}
-                                      >
-                                        {option.productVariationName}:{" "}
-                                        {option.name}
+                      <Stack spacing={2}>
+                        {item.userPackage.items.map(
+                          (
+                            {
+                              photoId,
+                              photoName,
+                              photoUrl,
+                              productVariationOptions,
+                              album,
+                            },
+                            index
+                          ) => {
+                            return (
+                              <Grid container key={photoId} spacing={2}>
+                                <Grid size={{ xs: 1.5 }}>
+                                  <Box
+                                    component="img"
+                                    src={photoUrl ?? null}
+                                    sx={{
+                                      backgroundColor: "grey.300",
+                                      width: "100%",
+                                      aspectRatio:
+                                        album.productType === "INDIVIDUAL"
+                                          ? "2/3"
+                                          : "3/2",
+                                      objectFit:
+                                        album.productType === "INDIVIDUAL"
+                                          ? "cover"
+                                          : "contain",
+                                    }}
+                                  />
+                                </Grid>
+                                <Grid size={{ xs: "grow" }}>
+                                  <Stack
+                                    direction="row"
+                                    sx={{ justifyContent: "space-between" }}
+                                  >
+                                    <Stack direction="column">
+                                      <Typography variant="h6" gutterBottom>
+                                        {photoName}
                                       </Typography>
-                                    ))}
+                                      {productVariationOptions.map((option) => (
+                                        <Typography
+                                          variant="body2"
+                                          key={option.productVariationOptionId}
+                                        >
+                                          {option.productVariationName}:{" "}
+                                          {option.productVariationOptionName}
+                                        </Typography>
+                                      ))}
+                                    </Stack>
+                                    <Box>
+                                      <Button
+                                        onClick={() => {
+                                          setUserPackage({
+                                            ...item.userPackage,
+                                            cartId: item.id,
+                                            currentStage: index,
+                                          });
+                                          push(item.packageUrl);
+                                        }}
+                                      >
+                                        Edit
+                                      </Button>
+                                    </Box>
                                   </Stack>
-                                  <Box>
-                                    <Button
-                                      onClick={() => {
-                                        setUserPackage({
-                                          ...item.userPackage,
-                                          cartId: item.id,
-                                          currentStage: index,
-                                        });
-                                        push(item.packageUrl);
-                                      }}
-                                    >
-                                      Edit
-                                    </Button>
-                                  </Box>
-                                </Stack>
+                                </Grid>
+                                <Grid></Grid>
                               </Grid>
-                              <Grid></Grid>
-                            </Grid>
-                          );
-                        }
-                      )}
+                            );
+                          }
+                        )}
+                      </Stack>
                     </Stack>
                   )}
                 </Grid>
                 <Grid size={{ xs: 1 }}>
                   <Button
                     onClick={() => {
-                      deleteCart(item.id);
+                      handleOpenDialog({
+                        allowOutsideClose: false,
+                        title: "Are you to sure remove this from cart?",
+                        onConfirm: async () => {
+                          deleteCart(item.id);
+                        },
+                      });
                     }}
                   >
                     Remove

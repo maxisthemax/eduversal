@@ -46,8 +46,18 @@ function Album() {
       cartId: undefined,
       items: [
         {
-          albumId: album_id as string,
-          display_url: display_url,
+          album: {
+            albumDescription: album.description,
+            albumId: album.id,
+            albumName: album.name,
+            productType: album.product_type.type,
+            productTypeId: album.product_type.id,
+            productTypeName: album.product_type.name,
+            productTypeDeliverable: album.product_type.is_deliverable,
+            productTypeCurrency: album.product_type.currency,
+            productTypePrice: album.product_type.price,
+          },
+          photoUrl: display_url,
           photoName: name,
           name: userCourseData.names[0],
           photoId: photoId,

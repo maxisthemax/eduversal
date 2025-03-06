@@ -50,6 +50,7 @@ export default async function courseHandler(
                       select: { id: true, name: true, display_url: true },
                     },
                     name: true,
+                    description: true,
                     albumProductVariations: {
                       select: {
                         productVariation: {

@@ -9,6 +9,7 @@ import {
 import sumBy from "lodash/sumBy";
 import uniqBy from "lodash/uniqBy";
 import find from "lodash/find";
+import findIndex from "lodash/findIndex";
 
 //*material
 import Dialog from "@mui/material/Dialog";
@@ -24,7 +25,11 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 
 //*data
-import { useUserPackages } from ".";
+import {
+  UserPackageItemData,
+  UserPackageItemDataProductVariationOption,
+  useUserPackages,
+} from ".";
 import {
   UserCourseAlbumData,
   UserCoursePhotoData,
@@ -90,25 +95,31 @@ function SelectPhotoDialogForm({
   handleClose: () => void;
 }) {
   const { userPackage, setUserPackage } = useUserPackages();
-  const item =
+  const item: UserPackageItemData =
     mode === "edit"
       ? userPackage?.items[userPackage.currentStage]
       : {
-          name: photo.name,
+          name: find(userPackage.items, ({ name }) => {
+            return name !== "";
+          }).name,
           photoId: photo.id,
-          albumId: album.id,
           photoName: photo.name,
-          display_url: photo.display_url,
+          photoUrl: photo.display_url,
           productVariationOptions: [],
+          album: {
+            albumDescription: album.description,
+            albumId: album.id,
+            albumName: album.name,
+            productType: album.product_type.type,
+            productTypeId: album.product_type.id,
+            productTypeName: album.product_type.name,
+            productTypeDeliverable: album.product_type.is_deliverable,
+            productTypeCurrency: album.product_type.currency,
+            productTypePrice: album.product_type.price,
+          },
         };
   const [productVariationOptions, setProductVariationOptions] = useState<
-    {
-      productVariationName: string;
-      productVariationId: string;
-      productVariationOptionId: string;
-      name: string;
-      price: number;
-    }[]
+    UserPackageItemDataProductVariationOption[]
   >(item.productVariationOptions);
 
   const handleProductVariationOption = () => {
@@ -121,13 +132,12 @@ function SelectPhotoDialogForm({
 
     setUserPackage({
       currentStage:
-        userPackage.items.length - 1 !== userPackage.currentStage &&
-        items[userPackage.currentStage + 1].photoId === ""
-          ? userPackage.currentStage + 1
+        findIndex(userPackage.items, { photoId: "" }) > -1
+          ? findIndex(userPackage.items, { photoId: "" })
           : userPackage.currentStage,
       itemsPrice: sumBy(items, (item) =>
         item.productVariationOptions.reduce(
-          (acc, option) => acc + option.price,
+          (acc, option) => acc + option.productVariationOptionPrice,
           0
         )
       ),
@@ -142,7 +152,7 @@ function SelectPhotoDialogForm({
         <Stack direction="row" spacing={2}>
           <Box
             component="img"
-            src={item.display_url}
+            src={item.photoUrl}
             sx={{
               backgroundColor: "grey.300",
               height: "200px",
@@ -199,7 +209,15 @@ function SelectPhotoDialogForm({
                     <ListItemText primary={`None`} />
                   </MenuItem>
                   {productVariation.options.map(
-                    ({ id, name, price_format, price, description }) => {
+                    ({
+                      id,
+                      name,
+                      price_format,
+                      price,
+                      description,
+                      currency,
+                      preview_url,
+                    }) => {
                       return (
                         <MenuItem
                           key={id}
@@ -212,9 +230,18 @@ function SelectPhotoDialogForm({
                                   {
                                     productVariationName: productVariation.name,
                                     productVariationId: productVariation.id,
+                                    productVariationDescription:
+                                      productVariation.description,
+                                    productVariationDownloadable:
+                                      productVariation.is_downloadable,
                                     productVariationOptionId: id,
-                                    name,
-                                    price,
+                                    productVariationOptionName: name,
+                                    productVariationOptionCurrency: currency,
+                                    productVariationOptionPrice: price,
+                                    productVariationOptionDescription:
+                                      description,
+                                    productVariationOptionPreviewUrl:
+                                      preview_url,
                                   },
                                 ],
                                 "productVariationId"

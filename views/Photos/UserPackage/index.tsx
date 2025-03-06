@@ -38,26 +38,44 @@ export interface UserPackageData {
   packageId?: string;
   packageData?: UserCoursePackageData;
   albumData?: UserCourseAlbumData;
-  packagePrice?: number;
   currentStage?: number;
+  packagePrice?: number;
   itemsPrice?: number;
   items?: UserPackageItemData[];
   cartId?: string;
 }
 
-export interface UserPackageItemData {
-  name: string | undefined;
+export interface UserPackageAlbum {
   albumId: string;
+  albumName: string;
+  albumDescription: string;
+  productTypeId: string;
+  productTypeName: string;
+  productType: string;
+  productTypeDeliverable: boolean;
+  productTypeCurrency: string;
+  productTypePrice: number;
+}
+export interface UserPackageItemDataProductVariationOption {
+  productVariationId: string;
+  productVariationName: string;
+  productVariationDescription: string;
+  productVariationDownloadable: boolean;
+  productVariationOptionId: string;
+  productVariationOptionName: string;
+  productVariationOptionPrice: number;
+  productVariationOptionDescription: string;
+  productVariationOptionPreviewUrl: string;
+  productVariationOptionCurrency: string;
+}
+
+export interface UserPackageItemData {
+  name: string;
   photoId: string;
   photoName: string;
-  display_url: string;
-  productVariationOptions: {
-    productVariationName: string;
-    productVariationId: string;
-    productVariationOptionId: string;
-    name: string;
-    price: number;
-  }[];
+  photoUrl: string;
+  album: UserPackageAlbum;
+  productVariationOptions: UserPackageItemDataProductVariationOption[];
 }
 
 function UserPackages() {
@@ -66,7 +84,7 @@ function UserPackages() {
   const { handleOpenDialog } = useCustomDialog();
   const { class_id, album_id } = useParams();
   const { push } = useRouter();
-  const { userPackage, setUserPackage, removeUserPackage } = useUserPackages();
+  const { userPackage, setUserPackage } = useUserPackages();
 
   useEffect(() => {
     if (!userPackage) {
@@ -98,7 +116,6 @@ function UserPackages() {
           items: filter(userPackage.items, ({ photoId }) => {
             return photoId !== "";
           }),
-          albumData: album,
         },
         packageUrl: path,
         quantity: 1,
@@ -191,7 +208,7 @@ function UserPackages() {
             >
               {items.map((item, index) => {
                 if (!item) return null;
-                const { display_url } = item;
+                const { photoUrl, album } = item;
 
                 return (
                   <>
@@ -211,13 +228,13 @@ function UserPackages() {
                     >
                       <Box
                         component="img"
-                        src={display_url ?? null}
+                        src={photoUrl ?? null}
                         sx={{
                           backgroundColor: "grey.300",
                           height: "80px",
                           aspectRatio: "2/3",
                           objectFit:
-                            album.product_type.type === "INDIVIDUAL"
+                            album.productType === "INDIVIDUAL"
                               ? "cover"
                               : "contain",
                         }}
@@ -248,8 +265,9 @@ function UserPackages() {
                     title: "Reselect Package",
                     description: "Are you sure you want to reselect package?",
                     onConfirm: () => {
-                      removeUserPackage();
-                      push(`/photos/${class_id}/${album_id}`);
+                      push(
+                        `/photos/${class_id}/${album_id}/${userPackage.items[0].photoId}`
+                      );
                     },
                   });
                 }}

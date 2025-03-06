@@ -34,6 +34,7 @@ export interface UserCourseAlbumData {
   product_type: ProductTypeData;
   photos: UserCoursePhotoData[];
   name: string;
+  description: string;
   id: string;
 }
 

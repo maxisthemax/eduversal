@@ -35,6 +35,12 @@ import { useCart } from "@/views/Cart";
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
+//*interface
+import {
+  ProductVariationData,
+  ProductVariationOption,
+} from "@/data/admin/productVariation";
+
 function PhotoCotent() {
   const path = usePathname();
   const { push } = useRouter();
@@ -78,11 +84,8 @@ function PhotoCotent() {
   };
 
   const handleProductVariationOption = (
-    productVariationName: string,
-    productVariationId: string,
-    productVariationOptionId: string | null,
-    name?: string,
-    price?: number
+    productVariation?: ProductVariationData,
+    option?: ProductVariationOption
   ) => {
     const items = userPackage.items;
 
@@ -91,11 +94,16 @@ function PhotoCotent() {
       uniqBy(
         [
           {
-            productVariationName,
-            productVariationId,
-            productVariationOptionId,
-            name: name || "",
-            price: price || 0,
+            productVariationName: productVariation.name,
+            productVariationId: productVariation.id,
+            productVariationDescription: productVariation.description,
+            productVariationDownloadable: productVariation.is_downloadable,
+            productVariationOptionId: option?.id ?? undefined,
+            productVariationOptionName: option?.name ?? undefined,
+            productVariationOptionCurrency: option?.currency ?? undefined,
+            productVariationOptionPrice: option?.price ?? 0,
+            productVariationOptionDescription: option?.description ?? undefined,
+            productVariationOptionPreviewUrl: option?.preview_url ?? undefined,
           },
           ...items[0].productVariationOptions,
         ],
@@ -107,7 +115,10 @@ function PhotoCotent() {
     );
 
     setUserPackage({
-      itemsPrice: sumBy(items[0].productVariationOptions, "price"),
+      itemsPrice: sumBy(
+        items[0].productVariationOptions,
+        "productVariationOptionPrice"
+      ),
       items,
     });
   };
@@ -124,25 +135,34 @@ function PhotoCotent() {
     if (userPackage.packageId !== "none") {
       const expandedAlbums = [...userPackage.packageData.expandedAlbums];
       const matchIndex = findIndex(expandedAlbums, {
-        id: userPackage.items[0].albumId,
+        id: userPackage.items[0].album.albumId,
       });
 
-      if (matchIndex !== -1) {
-        expandedAlbums.splice(matchIndex, 1);
-      }
-
       const items = [
-        userPackage.items[0],
-        ...expandedAlbums.map(({ id }) => ({
-          albumId: id,
-          display_url: "",
+        ...expandedAlbums.map((album) => ({
+          photoUrl: "",
           name: "",
           photoName: "",
           photoId: "",
+          album: {
+            albumDescription: album.description,
+            albumId: album.id,
+            albumName: album.name,
+            productType: album.product_type.type,
+            productTypeId: album.product_type.id,
+            productTypeName: album.product_type.name,
+            productTypeDeliverable: album.product_type.is_deliverable,
+            productTypeCurrency: album.product_type.currency,
+            productTypePrice: album.product_type.price,
+          },
           productVariationOptions: [],
         })),
       ];
-      setUserPackage({ currentStage: 1, items });
+      items[matchIndex] = userPackage.items[0];
+      setUserPackage({
+        currentStage: findIndex(items, { photoId: "" }),
+        items,
+      });
       push(`/photos/${class_id}/${album_id}/${photo_id}/package`);
     } else {
       setUserPackage(undefined);
@@ -153,10 +173,6 @@ function PhotoCotent() {
           ...userPackage,
           cartId: userPackage?.cartId ?? cartId,
           currentStage: 0,
-          items: filter(userPackage.items, ({ photoId }) => {
-            return photoId !== "";
-          }),
-          albumData: album,
         },
         packageUrl: path,
         quantity: 1,
@@ -289,38 +305,34 @@ function PhotoCotent() {
                           value={undefined}
                           onClick={() => {
                             handleProductVariationOption(
-                              productVariation.name,
-                              productVariation.id,
+                              productVariation,
                               null
                             );
                           }}
                         >
                           <ListItemText primary={`None`} />
                         </MenuItem>
-                        {productVariation.options.map(
-                          ({ id, name, price_format, price, description }) => {
-                            return (
-                              <MenuItem
-                                key={id}
-                                value={id}
-                                onClick={() => {
-                                  handleProductVariationOption(
-                                    productVariation.name,
-                                    productVariation.id,
-                                    id,
-                                    name,
-                                    price
-                                  );
-                                }}
-                              >
-                                <ListItemText
-                                  primary={`${name} - ${price_format}`}
-                                  secondary={description}
-                                />
-                              </MenuItem>
-                            );
-                          }
-                        )}
+                        {productVariation.options.map((option) => {
+                          const { id, name, price_format, description } =
+                            option;
+                          return (
+                            <MenuItem
+                              key={id}
+                              value={id}
+                              onClick={() => {
+                                handleProductVariationOption(
+                                  productVariation,
+                                  option
+                                );
+                              }}
+                            >
+                              <ListItemText
+                                primary={`${name} - ${price_format}`}
+                                secondary={description}
+                              />
+                            </MenuItem>
+                          );
+                        })}
                       </TextField>
                     </Box>
                   );
