@@ -287,7 +287,11 @@ function Cart() {
             <Divider />
           </Box>
           <Box sx={{ pb: 2 }}>
-            <Button variant="contained" fullWidth>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => push("/checkout")}
+            >
               Check Out
             </Button>
           </Box>

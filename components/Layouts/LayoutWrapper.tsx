@@ -27,6 +27,7 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
     return <AuthMain>{children}</AuthMain>;
   else if (startsWith(pathName, "/admin"))
     return <AdminMain>{children}</AdminMain>;
+  else if (includes(["/checkout"], pathName)) return <>{children}</>;
   else return <Main>{children}</Main>;
 }
 

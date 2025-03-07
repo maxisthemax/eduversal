@@ -8,6 +8,7 @@ import TextFieldForm from "./TextFieldForm";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
+import { TextFieldProps } from "@mui/material/TextField";
 
 interface FormProps {
   errors: FormikErrors<any>;
@@ -18,10 +19,12 @@ interface FormProps {
 }
 
 function StateSelectTextFieldForm({
+  props,
   formProps,
   label,
   name,
 }: {
+  props?: TextFieldProps;
   formProps: FormProps;
   label: string;
   name: string;
@@ -52,7 +55,11 @@ function StateSelectTextFieldForm({
       label={label}
       name={name}
       formProps={formProps}
-      props={{ select: true }}
+      props={{
+        select: true,
+        slotProps: { select: { size: props.size } },
+        ...props,
+      }}
     >
       {stateDate["Malaysia"].map((key) => {
         return (
