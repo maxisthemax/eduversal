@@ -1,6 +1,7 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 //*components
 import { FlexBox } from "@/components/Box";
@@ -54,7 +55,13 @@ const validationSchema = yup.object({
 });
 
 function Checkout() {
+  const { push } = useRouter();
   const { cart } = useCart();
+
+  const isDeliverable = cart?.some((item) =>
+    item.userPackage.items.some((item) => item.album.productTypeDeliverable)
+  );
+  console.log("🚀 ~ Cart ~ isDeliverable:", isDeliverable);
 
   const formik = useFormik({
     initialValues: {
@@ -153,41 +160,42 @@ function Checkout() {
                     />
                   </Stack>
                 </Button>
-                <Button
-                  onClick={() => {
-                    setFieldValue("shipping_method", "ship");
-                    setFieldValue("shipping_fee", 15);
-                  }}
-                  color={
-                    values?.shipping_method === "ship" ? "primary" : "inherit"
-                  }
-                  fullWidth
-                  variant="outlined"
-                  sx={{ p: 2, justifyContent: "space-between" }}
-                >
-                  <Stack
-                    direction="row"
-                    spacing={2}
-                    sx={{ alignItems: "center", width: "100%" }}
+                {isDeliverable && (
+                  <Button
+                    onClick={() => {
+                      setFieldValue("shipping_method", "ship");
+                      setFieldValue("shipping_fee", 15);
+                    }}
+                    color={
+                      values?.shipping_method === "ship" ? "primary" : "inherit"
+                    }
+                    fullWidth
+                    variant="outlined"
+                    sx={{ p: 2, justifyContent: "space-between" }}
                   >
-                    <CustomIcon icon="check_circle" />
-                    <ListItemText
-                      slotProps={{
-                        primary: { variant: "inherit" },
-                        secondary: { variant: "inherit" },
-                      }}
-                      sx={{ justifyItems: "start" }}
-                      primary={"Ship In"}
-                    />
-                    <FlexBox />
-                    <Typography>RM 15.00</Typography>
-                  </Stack>
-                </Button>
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      sx={{ alignItems: "center", width: "100%" }}
+                    >
+                      <CustomIcon icon="check_circle" />
+                      <ListItemText
+                        slotProps={{
+                          primary: { variant: "inherit" },
+                          secondary: { variant: "inherit" },
+                        }}
+                        sx={{ justifyItems: "start" }}
+                        primary={"Ship In"}
+                      />
+                      <FlexBox />
+                      <Typography variant="inherit">RM 15.00</Typography>
+                    </Stack>
+                  </Button>
+                )}
               </Stack>
               {values?.shipping_method === "ship" && (
                 <Stack sx={{ width: "100%" }} spacing={2}>
                   <Typography gutterBottom>Shipping Address</Typography>
-
                   <Stack spacing={2} sx={{ textAlign: "center" }}>
                     <Stack direction={"row"} spacing={2}>
                       <TextFieldForm
@@ -287,15 +295,16 @@ function Checkout() {
                 props={{ size: "medium", multiline: true, minRows: 4 }}
               />
             </Stack>
-            <Box
+            <Stack
               sx={{
                 position: "sticky",
                 bottom: 0,
                 zIndex: 1,
-                pt: 4,
+                pt: 2,
                 pb: 4,
                 background: "white",
               }}
+              spacing={2}
             >
               <Button
                 onClick={() => {
@@ -306,7 +315,16 @@ function Checkout() {
               >
                 Continue
               </Button>
-            </Box>
+              <Button
+                onClick={() => {
+                  push("/cart");
+                }}
+                variant="outlined"
+                fullWidth
+              >
+                Back
+              </Button>
+            </Stack>
           </Container>
         </Grid>
         <Grid
@@ -369,15 +387,26 @@ function Checkout() {
                           >
                             <Stack spacing={0.5} sx={{ width: "100%" }}>
                               <Stack direction="row">
-                                <Typography gutterBottom>
-                                  {item.userPackage.items[0]?.photoName}
-                                </Typography>
+                                <Stack>
+                                  <Typography gutterBottom>
+                                    {item.userPackage.items[0]?.photoName}
+                                  </Typography>
+                                  {!item.userPackage.items[0].album
+                                    .productTypeDeliverable && (
+                                    <Typography variant="inherit" color="error">
+                                      Please note that this product is available
+                                      for collection at the school by the
+                                      assigned teacher.
+                                    </Typography>
+                                  )}
+                                </Stack>
                                 <FlexBox />
-                                <Typography>
-                                  RM{" "}
+                                <Typography sx={{ whiteSpace: "nowrap" }}>
+                                  ({item.quantity}) RM{" "}
                                   {(
-                                    item.userPackage.packagePrice +
-                                    item.userPackage.itemsPrice
+                                    (item.userPackage.packagePrice +
+                                      item.userPackage.itemsPrice) *
+                                    item.quantity
                                   ).toFixed(2)}
                                 </Typography>
                               </Stack>
@@ -410,11 +439,12 @@ function Checkout() {
                                 {item.userPackage.packageData?.name}
                               </Typography>
                               <FlexBox />
-                              <Typography>
-                                RM{" "}
+                              <Typography sx={{ whiteSpace: "nowrap" }}>
+                                ({item.quantity}) RM{" "}
                                 {(
-                                  item.userPackage.packagePrice +
-                                  item.userPackage.itemsPrice
+                                  (item.userPackage.packagePrice +
+                                    item.userPackage.itemsPrice) *
+                                  item.quantity
                                 ).toFixed(2)}
                               </Typography>
                             </Stack>
@@ -465,9 +495,22 @@ function Checkout() {
                                           }}
                                         >
                                           <Stack direction="column">
-                                            <Typography gutterBottom>
-                                              {photoName}
-                                            </Typography>
+                                            <Stack>
+                                              <Typography gutterBottom>
+                                                {photoName}
+                                              </Typography>
+                                              {!album.productTypeDeliverable && (
+                                                <Typography
+                                                  variant="inherit"
+                                                  color="error"
+                                                >
+                                                  Please note that this product
+                                                  is available for collection at
+                                                  the school by the assigned
+                                                  teacher.
+                                                </Typography>
+                                              )}
+                                            </Stack>
                                             {productVariationOptions.map(
                                               (option) => (
                                                 <Typography
