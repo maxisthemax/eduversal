@@ -226,7 +226,6 @@ function PurchaseComponent({ status }) {
                                           </Stack>
                                         </Stack>
                                       </Grid>
-                                      <Grid></Grid>
                                     </Grid>
                                   );
                                 }

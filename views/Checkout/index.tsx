@@ -420,7 +420,7 @@ function Checkout() {
                                 </Stack>
                                 <FlexBox />
                                 <Typography sx={{ whiteSpace: "nowrap" }}>
-                                  ({item.quantity}) RM{" "}
+                                  x {item.quantity}&nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
                                   {(
                                     (item.userPackage.packagePrice +
                                       item.userPackage.itemsPrice) *
@@ -458,7 +458,7 @@ function Checkout() {
                               </Typography>
                               <FlexBox />
                               <Typography sx={{ whiteSpace: "nowrap" }}>
-                                ({item.quantity}) RM{" "}
+                                x {item.quantity}&nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
                                 {(
                                   (item.userPackage.packagePrice +
                                     item.userPackage.itemsPrice) *
