@@ -12,6 +12,7 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -242,16 +243,28 @@ function PurchaseComponent({ status }) {
                           <Typography variant="body1">
                             x {item.quantity}
                           </Typography>
-                          <Typography variant="body1">
-                            <b>
-                              RM{" "}
-                              {(
-                                (item.userPackage.itemsPrice +
-                                  item.userPackage.packagePrice) *
-                                item.quantity
-                              ).toFixed(2)}
-                            </b>
-                          </Typography>
+                          <Tooltip
+                            placement="top"
+                            title={`RM ${(
+                              item.userPackage.packagePrice +
+                              item.userPackage.itemsPrice
+                            ).toFixed(2)} x ${item.quantity} = ${(
+                              (item.userPackage.packagePrice +
+                                item.userPackage.itemsPrice) *
+                              item.quantity
+                            ).toFixed(2)}`}
+                          >
+                            <Typography variant="body1">
+                              <b>
+                                RM{" "}
+                                {(
+                                  (item.userPackage.itemsPrice +
+                                    item.userPackage.packagePrice) *
+                                  item.quantity
+                                ).toFixed(2)}
+                              </b>
+                            </Typography>
+                          </Tooltip>
                         </Stack>
                       </Grid>
                     </Grid>
