@@ -24,12 +24,13 @@ import Container from "@mui/material/Container";
 
 //*data
 import { useCart } from "../Cart";
+import { useOrder } from "@/data/order";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 const validationSchema = yup.object({
-  shipping_address: yup.object().when("shipping_method", {
+  shipping_address: yup.object().when("shipment_method", {
     is: "in-store",
     then: () =>
       yup.object().shape({
@@ -57,11 +58,11 @@ const validationSchema = yup.object({
 function Checkout() {
   const { push } = useRouter();
   const { cart } = useCart();
+  const { addOrder } = useOrder();
 
   const isDeliverable = cart?.some((item) =>
     item.userPackage.items.some((item) => item.album.productTypeDeliverable)
   );
-  console.log("🚀 ~ Cart ~ isDeliverable:", isDeliverable);
 
   const formik = useFormik({
     initialValues: {
@@ -80,7 +81,7 @@ function Checkout() {
         city: "",
       },
       payment_method: "",
-      shipping_method: "in-store",
+      shipment_method: "in-store",
       shipping_fee: 0,
       remark: "",
     },
@@ -88,7 +89,7 @@ function Checkout() {
     onSubmit: async ({
       shipping_address,
       payment_method,
-      shipping_method,
+      shipment_method,
       shipping_fee,
       remark,
     }) => {
@@ -96,13 +97,30 @@ function Checkout() {
         toast("Payment method required.", { type: "error" });
         return;
       }
-      console.log(
-        shipping_address,
+
+      const newCart = cart.map((item) => {
+        if (item?.userPackage?.packageData?.expandedAlbums)
+          delete item.userPackage.packageData.expandedAlbums;
+        return item;
+      });
+      await addOrder({
+        cart: newCart,
         payment_method,
-        shipping_method,
+        shipment_method,
         shipping_fee,
-        remark
-      );
+        remark,
+        shipping_address,
+        price:
+          cart.reduce(
+            (acc, item) =>
+              acc +
+              (item.userPackage.itemsPrice + item.userPackage.packagePrice) *
+                item.quantity,
+            0
+          ) + shipping_fee,
+        status: "PENDING",
+      });
+      push("/account/purchase");
     },
   });
   const values = formik.values;
@@ -131,13 +149,13 @@ function Checkout() {
                 <Typography gutterBottom>Shipping Method</Typography>
                 <Button
                   onClick={() => {
-                    setFieldValue("shipping_method", "in-store");
+                    setFieldValue("shipment_method", "in-store");
                     setFieldValue("shipping_fee", 0);
                   }}
                   fullWidth
                   variant="outlined"
                   color={
-                    values?.shipping_method === "in-store"
+                    values?.shipment_method === "in-store"
                       ? "primary"
                       : "inherit"
                   }
@@ -163,11 +181,11 @@ function Checkout() {
                 {isDeliverable && (
                   <Button
                     onClick={() => {
-                      setFieldValue("shipping_method", "ship");
+                      setFieldValue("shipment_method", "ship");
                       setFieldValue("shipping_fee", 15);
                     }}
                     color={
-                      values?.shipping_method === "ship" ? "primary" : "inherit"
+                      values?.shipment_method === "ship" ? "primary" : "inherit"
                     }
                     fullWidth
                     variant="outlined"
@@ -193,7 +211,7 @@ function Checkout() {
                   </Button>
                 )}
               </Stack>
-              {values?.shipping_method === "ship" && (
+              {values?.shipment_method === "ship" && (
                 <Stack sx={{ width: "100%" }} spacing={2}>
                   <Typography gutterBottom>Shipping Address</Typography>
                   <Stack spacing={2} sx={{ textAlign: "center" }}>
@@ -580,7 +598,7 @@ function Checkout() {
               <Grid size={{ xs: 12 }}>
                 <Stack direction="row" sx={{ justifyContent: "space-between" }}>
                   <Typography sx={{ fontWeight: 300 }}>Delivery Fee</Typography>
-                  {values.shipping_method === "ship" ? (
+                  {values.shipment_method === "ship" ? (
                     <Typography>RM {values.shipping_fee.toFixed(2)}</Typography>
                   ) : (
                     <Typography>Free</Typography>

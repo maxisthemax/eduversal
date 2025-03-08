@@ -63,7 +63,7 @@ function Main({ children }: { children: React.ReactNode }) {
               <Button
                 color={pathName === "/account" ? "primary" : "inherit"}
                 onClick={async () => {
-                  push("/account");
+                  push("/account/profile");
                 }}
               >
                 ACCOUNT

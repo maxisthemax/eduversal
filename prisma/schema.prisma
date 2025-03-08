@@ -27,6 +27,7 @@ model User {
   verification Verification?
   role         UserRole      @default(USER)
   userCourse   UserCourse[]
+  Order        Order[]
 
   @@index([email])
 }
@@ -316,6 +317,27 @@ model PackageAlbum {
   @@id([package_id, album_id])
   @@index([album_id])
   @@index([package_id])
+}
+
+model Order {
+  id               String  @id @default(cuid())
+  user_id          String
+  user             User    @relation(fields: [user_id], references: [id])
+  price            Float
+  status           String
+  payment_method   String
+  shipment_method  String
+  shipping_fee     Float
+  remark           String?
+  cart             Json
+  shipping_address Json
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
 }
 
 enum ProductTypeType {
