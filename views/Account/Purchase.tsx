@@ -45,6 +45,7 @@ function Purchase() {
     ],
     defaultTab: "all",
     isPaper: false,
+    variant: "fullWidth",
   });
 
   return (
@@ -69,9 +70,9 @@ function PurchaseComponent({ status }) {
             >
               <Stack direction="row" spacing={2}>
                 <CustomIcon icon="list_alt" />
-                <Typography>ORDER ID: {id}</Typography>
+                <Typography variant="body1">ORDER ID: {id}</Typography>
               </Stack>
-              <Typography>{startCase(status)}</Typography>
+              <Typography variant="body1">{startCase(status)}</Typography>
             </Stack>
             <Divider />
             {cart &&
@@ -79,8 +80,8 @@ function PurchaseComponent({ status }) {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               cart.map((item: any) => {
                 return (
-                  <Box key={item.id} sx={{ p: 2 }}>
-                    <Grid container key={item.id} spacing={4}>
+                  <Box key={item.id}>
+                    <Grid container key={item.id} spacing={4} sx={{ p: 2 }}>
                       <Grid size={{ xs: 1.5 }}>
                         {item.userPackage.packageId === "none" ? (
                           <Box
@@ -122,10 +123,10 @@ function PurchaseComponent({ status }) {
                             }}
                           >
                             <Stack spacing={0.5}>
-                              <Typography variant="h6" gutterBottom>
+                              <Typography variant="body1" gutterBottom>
                                 {item.userPackage.items[0]?.photoName}
                               </Typography>
-                              <Typography variant="body1">
+                              <Typography variant="body2">
                                 Child: {item.userPackage.items[0]?.name}
                               </Typography>
                               {item.userPackage.items[0]?.productVariationOptions.map(
@@ -149,10 +150,10 @@ function PurchaseComponent({ status }) {
                           </Stack>
                         ) : (
                           <Stack>
-                            <Typography variant="h6">
+                            <Typography variant="body1">
                               {item.userPackage.packageData?.name}
                             </Typography>
-                            <Typography variant="body1" gutterBottom>
+                            <Typography variant="body2" gutterBottom>
                               Child: {item.userPackage.items[0]?.name}
                             </Typography>
                             <Stack spacing={2}>
@@ -193,7 +194,7 @@ function PurchaseComponent({ status }) {
                                         >
                                           <Stack direction="column">
                                             <Typography
-                                              variant="h6"
+                                              variant="body1"
                                               gutterBottom
                                             >
                                               {photoName}
@@ -234,10 +235,10 @@ function PurchaseComponent({ status }) {
                           direction="row"
                           sx={{ justifyContent: "space-between" }}
                         >
-                          <Typography variant="h6">
+                          <Typography variant="body1">
                             x {item.quantity}
                           </Typography>
-                          <Typography variant="h6">
+                          <Typography variant="body1">
                             RM{" "}
                             {(
                               (item.userPackage.itemsPrice +
@@ -248,6 +249,7 @@ function PurchaseComponent({ status }) {
                         </Stack>
                       </Grid>
                     </Grid>
+                    <Divider />
                   </Box>
                 );
               })}

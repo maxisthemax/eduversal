@@ -107,8 +107,8 @@ function useCustomTabs({
           }}
         >
           <TabList
-            textColor="inherit"
-            indicatorColor="secondary"
+            textColor="primary"
+            indicatorColor="primary"
             onChange={handleChange}
             scrollButtons="auto"
             variant={variant}
