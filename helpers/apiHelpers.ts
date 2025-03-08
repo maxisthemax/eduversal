@@ -151,3 +151,8 @@ export async function getCreatedByUpdatedBy(
     },
   };
 }
+
+export async function getUserId(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getSession(req, res);
+  return session.id;
+}

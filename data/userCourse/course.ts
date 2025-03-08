@@ -76,7 +76,7 @@ export function useUserCourse(userCourseId?: string): {
   // Fetch user courses data
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["userCourse", userData?.id],
-    `userCourse/${userData?.id}`
+    `userCourse`
   );
 
   const userCoursesQueryData = data?.data as UserCourseData[];
@@ -152,7 +152,7 @@ export function useUserCourse(userCourseId?: string): {
   // functions
   async function addUserCourse(child: string[], course_id: string) {
     setIsAdding(true);
-    await axios.post(`userCourse/${userData.id}`, {
+    await axios.post(`userCourse`, {
       names: child,
       course_id,
     });
@@ -162,7 +162,7 @@ export function useUserCourse(userCourseId?: string): {
 
   async function updateUserCourse(child: string[], user_course_id: string) {
     setIsUpdating(true);
-    await axios.put(`userCourse/${userData.id}`, {
+    await axios.put(`userCourse`, {
       names: child,
       user_course_id,
     });

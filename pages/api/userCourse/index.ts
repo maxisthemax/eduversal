@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 //*helpers
 import {
   getCreatedByUpdatedBy,
+  getUserId,
   handleAllowedMethods,
   validateRequiredFields,
 } from "@/helpers/apiHelpers";
@@ -14,21 +15,14 @@ export default async function courseHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const userId = await getUserId(req, res);
   try {
     switch (req.method) {
       case "GET": {
-        // Get institutionId and academicYearId from query
-        const { userId } = req.query;
-
-        // Validate required fields
-        if (!validateRequiredFields(req, res, ["userId"])) {
-          return;
-        }
-
         // Fetch courses for the given institutionId and academicYearId
         const courses = await prisma.userCourse.findMany({
           where: {
-            user_id: userId as string,
+            user_id: userId,
             course: { end_date: { gte: new Date() } },
           },
           select: {
@@ -102,14 +96,6 @@ export default async function courseHandler(
       }
 
       case "POST": {
-        // Get institutionId and academicYearId from query
-        const { userId } = req.query;
-
-        // Validate required fields
-        if (!validateRequiredFields(req, res, ["userId"], "query")) {
-          return;
-        }
-
         // Get the names and course_id from the request body
         const { names, course_id } = req.body;
 
@@ -127,7 +113,7 @@ export default async function courseHandler(
         // Check if the user course already exists
         const userCourse = await prisma.userCourse.findFirst({
           where: {
-            user_id: userId as string,
+            user_id: userId,
             course_id,
           },
         });
@@ -143,7 +129,7 @@ export default async function courseHandler(
           data: {
             names,
             course_id,
-            user_id: userId as string,
+            user_id: userId,
             ...created_by,
             ...updated_by,
           },
@@ -154,11 +140,6 @@ export default async function courseHandler(
       }
 
       case "PUT": {
-        // Validate required fields
-        if (!validateRequiredFields(req, res, ["userId"], "query")) {
-          return;
-        }
-
         // Get the names and user_course_id from the request body
         const { names, user_course_id } = req.body;
 
