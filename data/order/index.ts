@@ -25,6 +25,7 @@ export interface OrderData {
   price: number;
   remark: string;
   status: string;
+  created_at: Date;
 }
 
 export interface OrderCreate {
@@ -63,6 +64,7 @@ export function useOrder(orderStatus?: string): {
       return orderQueryData.map((data) => {
         return {
           ...data,
+          created_at: new Date(data.created_at),
         };
       });
     } else return [];

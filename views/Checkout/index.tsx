@@ -603,7 +603,11 @@ function Checkout() {
               }}
             >
               <Grid size={{ xs: 12 }}>
-                <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+                <Stack
+                  direction="row"
+                  sx={{ justifyContent: "space-between" }}
+                  spacing={1}
+                >
                   <Typography sx={{ fontWeight: 300 }}>Subtotal</Typography>
                   <Typography sx={{ fontWeight: 300 }}>
                     RM{" "}

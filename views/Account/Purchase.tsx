@@ -1,3 +1,5 @@
+import { formatDate } from "date-fns";
+
 //*lodash
 import startCase from "lodash/startCase";
 
@@ -65,7 +67,7 @@ function PurchaseComponent({ status }) {
 
   return (
     <Stack sx={{ height: getFullHeightSize(30), p: 2 }} spacing={2}>
-      {orderDataByStatus.map(({ cart, id, status }) => {
+      {orderDataByStatus.map(({ cart, id, status, created_at, price }) => {
         return (
           <Paper key={id}>
             <Stack
@@ -272,6 +274,17 @@ function PurchaseComponent({ status }) {
                   </Box>
                 );
               })}
+            <Stack
+              direction="row"
+              sx={{ p: 2, justifyContent: "space-between" }}
+            >
+              <Typography variant="body1">
+                Placed on {formatDate(created_at, "dd MMMM yyyy")}
+              </Typography>
+              <Typography variant="body1">
+                <b>RM {price.toFixed(2)}</b>
+              </Typography>
+            </Stack>
           </Paper>
         );
       })}

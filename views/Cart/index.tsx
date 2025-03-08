@@ -280,7 +280,11 @@ function Cart() {
       <Grid container spacing={4}>
         <Grid size={{ xs: "grow" }}></Grid>
         <Grid size={{ xs: 2 }}>
-          <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+          <Stack
+            direction="row"
+            sx={{ justifyContent: "space-between" }}
+            spacing={1}
+          >
             <Typography variant="h6">Subtotal</Typography>
             <Typography variant="h6">
               RM{" "}
