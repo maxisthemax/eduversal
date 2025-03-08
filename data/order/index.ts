@@ -40,7 +40,7 @@ export interface OrderCreate {
   status: string;
 }
 
-export function useOrder(orderStatus: string): {
+export function useOrder(orderStatus?: string): {
   orderData: OrderData[];
   orderDataByStatus: OrderData[];
   status: string;
