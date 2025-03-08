@@ -20,6 +20,7 @@ import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
 import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
 
 interface CartData {
   id?: string;
@@ -247,14 +248,26 @@ function Cart() {
                         Remove
                       </Button>
                     </Stack>
-                    <Typography variant="h6">
-                      RM{" "}
-                      {(
-                        (item.userPackage.itemsPrice +
-                          item.userPackage.packagePrice) *
+                    <Tooltip
+                      placement="top"
+                      title={`RM ${(
+                        item.userPackage.packagePrice +
+                        item.userPackage.itemsPrice
+                      ).toFixed(2)} x ${item.quantity} = ${(
+                        (item.userPackage.packagePrice +
+                          item.userPackage.itemsPrice) *
                         item.quantity
-                      ).toFixed(2)}
-                    </Typography>
+                      ).toFixed(2)}`}
+                    >
+                      <Typography variant="h6">
+                        RM{" "}
+                        {(
+                          (item.userPackage.itemsPrice +
+                            item.userPackage.packagePrice) *
+                          item.quantity
+                        ).toFixed(2)}
+                      </Typography>
+                    </Tooltip>
                   </Stack>
                 </Grid>
               </Grid>

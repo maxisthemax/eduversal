@@ -21,6 +21,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import ListItemText from "@mui/material/ListItemText";
 import Container from "@mui/material/Container";
+import Tooltip from "@mui/material/Tooltip";
 
 //*data
 import { useCart } from "../Cart";
@@ -419,14 +420,26 @@ function Checkout() {
                                   )}
                                 </Stack>
                                 <FlexBox />
-                                <Typography sx={{ whiteSpace: "nowrap" }}>
-                                  x {item.quantity}&nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
-                                  {(
+                                <Tooltip
+                                  placement="top"
+                                  title={`RM ${(
+                                    item.userPackage.packagePrice +
+                                    item.userPackage.itemsPrice
+                                  ).toFixed(2)} x ${item.quantity} = ${(
                                     (item.userPackage.packagePrice +
                                       item.userPackage.itemsPrice) *
                                     item.quantity
-                                  ).toFixed(2)}
-                                </Typography>
+                                  ).toFixed(2)}`}
+                                >
+                                  <Typography sx={{ whiteSpace: "nowrap" }}>
+                                    x {item.quantity}&nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
+                                    {(
+                                      (item.userPackage.packagePrice +
+                                        item.userPackage.itemsPrice) *
+                                      item.quantity
+                                    ).toFixed(2)}
+                                  </Typography>
+                                </Tooltip>
                               </Stack>
                               <Typography variant="body1">
                                 Child: {item.userPackage.items[0]?.name}
@@ -457,14 +470,26 @@ function Checkout() {
                                 {item.userPackage.packageData?.name}
                               </Typography>
                               <FlexBox />
-                              <Typography sx={{ whiteSpace: "nowrap" }}>
-                                x {item.quantity}&nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
-                                {(
+                              <Tooltip
+                                placement="top"
+                                title={`RM ${(
+                                  item.userPackage.packagePrice +
+                                  item.userPackage.itemsPrice
+                                ).toFixed(2)} x ${item.quantity} = ${(
                                   (item.userPackage.packagePrice +
                                     item.userPackage.itemsPrice) *
                                   item.quantity
-                                ).toFixed(2)}
-                              </Typography>
+                                ).toFixed(2)}`}
+                              >
+                                <Typography sx={{ whiteSpace: "nowrap" }}>
+                                  x {item.quantity}&nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
+                                  {(
+                                    (item.userPackage.packagePrice +
+                                      item.userPackage.itemsPrice) *
+                                    item.quantity
+                                  ).toFixed(2)}
+                                </Typography>
+                              </Tooltip>
                             </Stack>
                             <Typography variant="body1" gutterBottom>
                               Child: {item.userPackage.items[0]?.name}
