@@ -453,7 +453,7 @@ function Checkout() {
                                     >
                                       {option.productVariationName}
                                       {option.productVariationDownloadable
-                                        ? ` (Downloadable)`
+                                        ? ` (Includes Soft Copy)`
                                         : ""}
                                       : {option.productVariationOptionName}
                                     </Typography>
@@ -564,7 +564,7 @@ function Checkout() {
                                                 >
                                                   {option.productVariationName}
                                                   {option.productVariationDownloadable
-                                                    ? ` (Downloadable)`
+                                                    ? ` (Includes Soft Copy)`
                                                     : ""}
                                                   :{" "}
                                                   {

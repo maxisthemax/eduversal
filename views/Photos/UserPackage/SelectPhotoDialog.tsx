@@ -176,7 +176,9 @@ function SelectPhotoDialogForm({
                   primary={
                     productVariation.name +
                     `${
-                      productVariation.is_downloadable ? " (Downloadable)" : ""
+                      productVariation.is_downloadable
+                        ? " (Includes Soft Copy)"
+                        : ""
                     }`
                   }
                   secondary={productVariation.description}

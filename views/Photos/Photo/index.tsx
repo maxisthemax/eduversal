@@ -282,7 +282,7 @@ function PhotoCotent() {
                           productVariation.name +
                           `${
                             productVariation.is_downloadable
-                              ? " (Downloadable)"
+                              ? " (Includes Soft Copy)"
                               : ""
                           }`
                         }
