@@ -19,6 +19,9 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 //*data
 import { useOrder } from "@/data/order";
 
+//*utils
+import { statusColor } from "@/utils/constant";
+
 function Purchase() {
   const { tabsComponent } = useCustomTabs({
     tabs: [
@@ -72,7 +75,9 @@ function PurchaseComponent({ status }) {
                 <CustomIcon icon="list_alt" />
                 <Typography variant="body1">ORDER ID: {id}</Typography>
               </Stack>
-              <Typography variant="body1">{startCase(status)}</Typography>
+              <Typography variant="body1" color={statusColor[status]}>
+                {startCase(status)}
+              </Typography>
             </Stack>
             <Divider />
             {cart &&
@@ -239,12 +244,14 @@ function PurchaseComponent({ status }) {
                             x {item.quantity}
                           </Typography>
                           <Typography variant="body1">
-                            RM{" "}
-                            {(
-                              (item.userPackage.itemsPrice +
-                                item.userPackage.packagePrice) *
-                              item.quantity
-                            ).toFixed(2)}
+                            <b>
+                              RM{" "}
+                              {(
+                                (item.userPackage.itemsPrice +
+                                  item.userPackage.packagePrice) *
+                                item.quantity
+                              ).toFixed(2)}
+                            </b>
                           </Typography>
                         </Stack>
                       </Grid>
