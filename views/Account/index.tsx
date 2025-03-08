@@ -1,6 +1,7 @@
 import { useParams, useRouter } from "next/navigation";
 
 //*components
+import Purchase from "./Purchase";
 import { CustomIcon } from "@/components/Icons";
 import { GoogleIcon } from "@/components/Icons/CustomIcon";
 
@@ -46,6 +47,9 @@ const menuItems: MenuItem[] = [
 function Account() {
   const { push } = useRouter();
   const { page } = useParams();
+
+  const pageComponent = { purchase: <Purchase /> };
+
   return (
     <Container maxWidth="xl" disableGutters>
       <Grid container>
@@ -55,7 +59,7 @@ function Account() {
             borderRight: "0.5px solid #B8BDC4",
             pl: 2,
             pr: 2,
-            height: getFullHeightSize(10),
+            height: getFullHeightSize(8),
             overflow: "auto",
           }}
         >
@@ -91,7 +95,7 @@ function Account() {
             })}
           </List>
         </Grid>
-        <Grid size={{ xs: 10 }}></Grid>
+        <Grid size={{ xs: 10 }}>{pageComponent[page as string]}</Grid>
       </Grid>
     </Container>
   );

@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
 
+//*lodash
+import filter from "lodash/filter";
+
 //*utils
 import axios from "@/utils/axios";
 
@@ -37,8 +40,9 @@ export interface OrderCreate {
   status: string;
 }
 
-export function useOrder(): {
+export function useOrder(orderStatus: string): {
   orderData: OrderData[];
+  orderDataByStatus: OrderData[];
   status: string;
   isAdding: boolean;
   addOrder: (order: OrderCreate) => Promise<void>;
@@ -64,6 +68,13 @@ export function useOrder(): {
     } else return [];
   }, [orderQueryData, isLoading]);
 
+  const orderDataByStatus = useMemo(() => {
+    return filter(orderData, ({ status }) => {
+      if (orderStatus === "ALL") return true;
+      return status === orderStatus;
+    });
+  }, [orderData, orderStatus]);
+
   async function addOrder(order: OrderCreate) {
     setIsAdding(true);
     await axios.post(`order`, order);
@@ -71,5 +82,5 @@ export function useOrder(): {
     setIsAdding(false);
   }
 
-  return { orderData, isAdding, addOrder, status };
+  return { orderData, orderDataByStatus, isAdding, addOrder, status };
 }

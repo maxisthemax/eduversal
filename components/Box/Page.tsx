@@ -25,11 +25,13 @@ function Page({
   rightButton,
   links,
   title,
+  subtitle,
   isLoading = false,
   disabledLinkButton = false,
   sx,
 }: {
   title?: string;
+  subtitle?: string;
   children: React.ReactNode;
   leftButton?: React.ReactNode[];
   rightButton?: React.ReactNode[];
@@ -45,6 +47,7 @@ function Page({
   return (
     <Box sx={{ pl: 2, pr: 2, pt: 1, pb: 1, ...sx }}>
       {title && <Typography variant="h6">{title}</Typography>}
+      {subtitle && <Typography variant="body2">{subtitle}</Typography>}
       <Head>
         <title>{title ?? findCurrentPathname?.title}</title>
       </Head>
