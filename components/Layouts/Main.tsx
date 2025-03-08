@@ -29,7 +29,7 @@ function Main({ children }: { children: React.ReactNode }) {
   else
     return (
       <Box>
-        <AppBar color="inherit" elevation={0} position="static">
+        <AppBar color="inherit" elevation={1} position="static">
           <Toolbar>
             <Stack direction="row" sx={{ width: "100%" }} spacing={2}>
               <Box component="img" src={"/image/logo.png"} height={"30px"} />

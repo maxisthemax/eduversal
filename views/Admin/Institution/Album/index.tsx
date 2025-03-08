@@ -1,8 +1,7 @@
 import { useParams } from "next/navigation";
 
 //*components
-import { Page } from "@/components/Box";
-import useCustomTabs from "@/components/Box/useCustomTabs";
+import { Page, useCustomTabs } from "@/components/Box";
 import AlbumContent from "./AlbumContent";
 import AddEditAlbumDialog from "./AddEditAlbumDialog";
 import { useCustomDialog } from "@/components/Dialog";

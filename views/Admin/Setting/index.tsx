@@ -1,6 +1,5 @@
 //*components
-import { Page } from "@/components/Box";
-import useCustomTabs from "@/components/Box/useCustomTabs";
+import { Page, useCustomTabs } from "@/components/Box";
 import Parameter from "./Parameter";
 
 function Setting() {
