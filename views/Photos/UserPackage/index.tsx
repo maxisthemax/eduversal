@@ -2,7 +2,7 @@ import { create } from "zustand/react";
 import { persist } from "zustand/middleware";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 //*lodash
@@ -13,6 +13,7 @@ import { FlexBox } from "@/components/Box";
 import { CustomIcon } from "@/components/Icons";
 import SelectPhotoDialog from "./SelectPhotoDialog";
 import { useCustomDialog } from "@/components/Dialog";
+import AddCartSuccessDialog from "@/views/Cart/AddCartSuccessDialog";
 
 //*mui
 import Grid from "@mui/material/Grid2";
@@ -79,6 +80,7 @@ export interface UserPackageItemData {
 }
 
 function UserPackages() {
+  const [addedToCart, setAddedToCart] = useState(false);
   const path = usePathname();
   const { upsertCart } = useCart();
   const { handleOpenDialog } = useCustomDialog();
@@ -120,7 +122,7 @@ function UserPackages() {
         packageUrl: path,
         quantity: 1,
       });
-      push("/cart");
+      setAddedToCart(true);
     }
   };
 
@@ -281,6 +283,7 @@ function UserPackages() {
           </Container>
         </Toolbar>
       </AppBar>
+      <AddCartSuccessDialog open={addedToCart} />
     </Box>
   );
 }

@@ -1,5 +1,5 @@
 import { useParams, useRouter, usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 //*lodash
@@ -13,6 +13,7 @@ import findIndex from "lodash/findIndex";
 //*components
 import { CustomIcon } from "@/components/Icons";
 import { FlexBox, Page } from "@/components/Box";
+import AddCartSuccessDialog from "@/views/Cart/AddCartSuccessDialog";
 
 //*mui
 import Container from "@mui/material/Container";
@@ -42,6 +43,7 @@ import {
 } from "@/data/admin/productVariation";
 
 function PhotoCotent() {
+  const [addedToCart, setAddedToCart] = useState(false);
   const path = usePathname();
   const { push } = useRouter();
   const { upsertCart } = useCart();
@@ -177,7 +179,7 @@ function PhotoCotent() {
         packageUrl: path,
         quantity: 1,
       });
-      push(`/cart`);
+      setAddedToCart(true);
     }
   };
 
@@ -413,6 +415,7 @@ function PhotoCotent() {
           </Grid>
         </Grid>
       </Page>
+      <AddCartSuccessDialog open={addedToCart} />
     </Container>
   );
 }

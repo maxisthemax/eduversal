@@ -10,6 +10,7 @@ export interface CustomIconProps {
   fontSize?: "inherit" | "large" | "medium" | "small";
   fontSizeSx?: string;
   type?: "rounded" | "outlined";
+  fill?: boolean;
 }
 
 function CustomIcon({
@@ -20,6 +21,7 @@ function CustomIcon({
   fontSize = "medium",
   fontSizeSx,
   type = "rounded",
+  fill = false,
 }: CustomIconProps) {
   return (
     <Icon
@@ -31,6 +33,7 @@ function CustomIcon({
             : "inherit"
           : iconColor || "inherit",
         ...(fontSizeSx ? { fontSize: `${fontSizeSx} !important` } : {}),
+        fontVariationSettings: fill ? "'FILL' 1" : "'FILL' 0",
       }}
       fontSize={fontSizeSx ? "inherit" : fontSize}
     >
