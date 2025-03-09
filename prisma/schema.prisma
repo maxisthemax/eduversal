@@ -331,6 +331,7 @@ model Order {
   remark           String?
   cart             Json
   shipping_address Json
+  order_no         Int     @unique @default(autoincrement())
 
   created_by_user_id String
   created_by_name    String

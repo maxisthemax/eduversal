@@ -99,29 +99,40 @@ function Checkout() {
         return;
       }
 
-      const newCart = cart.map((item) => {
-        if (item?.userPackage?.packageData?.expandedAlbums)
-          delete item.userPackage.packageData.expandedAlbums;
-        return item;
-      });
-      await addOrder({
-        cart: newCart,
-        payment_method,
-        shipment_method,
-        shipping_fee,
-        remark,
-        shipping_address,
-        price:
+      try {
+        const newCart = cart.map((item) => {
+          if (item?.userPackage?.packageData?.expandedAlbums)
+            delete item.userPackage.packageData.expandedAlbums;
+          return item;
+        });
+
+        // Calculate total price
+        const totalPrice =
           cart.reduce(
             (acc, item) =>
               acc +
               (item.userPackage.itemsPrice + item.userPackage.packagePrice) *
                 item.quantity,
             0
-          ) + shipping_fee,
-        status: "PENDING",
-      });
-      push("/account/purchase");
+          ) + shipping_fee;
+
+        // Create order first
+        await addOrder({
+          cart: newCart,
+          payment_method,
+          shipment_method,
+          shipping_fee,
+          remark,
+          shipping_address,
+          price: totalPrice,
+          status: "PENDING",
+        });
+      } catch (error) {
+        console.error("Checkout error:", error);
+        toast("An error occurred during checkout. Please try again.", {
+          type: "error",
+        });
+      }
     },
   });
   const values = formik.values;
