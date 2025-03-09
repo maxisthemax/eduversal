@@ -72,34 +72,49 @@ export default async function handler(
           const addWatermark = watermark === "true";
 
           const uploadPromises = fileArray.map(async (file) => {
-            // Create a readable stream from the file path that formidable provides
             const fileStream = fs.createReadStream(file.filepath);
-            const { format, width } = await sharp(file.filepath).metadata();
-            let newWidth = width;
-            while (newWidth > 500) {
-              newWidth *= 0.9; // Reduce width by 50% until it's less than 100px
-            }
-            const watermarkSvg = createWatermarkSVG("EXAMPLE");
-            let transform = sharp(file.filepath).resize(Math.floor(newWidth));
+            let watermarkedBuffer: Buffer | undefined;
+            if (watermark) {
+              // Create a readable stream from the file path that formidable provides
 
-            if (format === "png") {
-              // e.g. compressionLevel: 9 is the maximum compression
-              transform = transform.png({ quality: 80, compressionLevel: 9 });
-            } else if (format === "jpeg") {
-              transform = transform.jpeg({ quality: 80 });
-            } else if (format === "avif") {
-              transform = transform.avif({ quality: 80 });
-            } else {
-              // fallback: force everything else to JPEG or choose another path
-              transform = transform.jpeg({ quality: 80 });
+              const { format, width } = await sharp(file.filepath).metadata();
+              let newWidth = width;
+              while (newWidth > 500) {
+                newWidth *= 0.9; // Reduce width by 50% until it's less than 100px
+              }
+              let transform = sharp(file.filepath).resize(Math.floor(newWidth));
+
+              if (format === "png") {
+                // e.g. compressionLevel: 9 is the maximum compression
+                transform = transform.png({ quality: 80, compressionLevel: 9 });
+              } else if (format === "jpeg") {
+                transform = transform.jpeg({ quality: 80 });
+              } else if (format === "avif") {
+                transform = transform.avif({ quality: 80 });
+              } else {
+                // fallback: force everything else to JPEG or choose another path
+                transform = transform.jpeg({ quality: 80 });
+              }
+
+              const compressedBuffer = await transform.toBuffer();
+
+              //*generate watermark
+              const { height: watermarkHeight, width: watermarkWidth } =
+                await sharp(compressedBuffer).metadata();
+
+              const watermarkSvg = createPhotoversalWatermark(
+                watermarkWidth,
+                watermarkHeight
+              );
+
+              transform = sharp(compressedBuffer).composite([
+                {
+                  input: Buffer.from(watermarkSvg),
+                  gravity: "center", // place it bottom-right
+                },
+              ]);
+              watermarkedBuffer = await transform.toBuffer();
             }
-            transform = transform.composite([
-              {
-                input: Buffer.from(watermarkSvg),
-                gravity: "center", // place it bottom-right
-              },
-            ]);
-            const watermarkedAndCompressedBuffer = await transform.toBuffer();
 
             // Generate a new file name
             const newFileName = replaceStringAll(
@@ -126,7 +141,7 @@ export default async function handler(
             const watermarkRes = addWatermark
               ? await upload({
                   Key: `${folderPath}/${newFileNameWatermark}`,
-                  Body: watermarkedAndCompressedBuffer,
+                  Body: watermarkedBuffer,
                   ACL: "public-read",
                   ContentType: file.mimetype,
                   Metadata: {
@@ -168,32 +183,32 @@ export default async function handler(
   }
 }
 
-function createWatermarkSVG(text: string) {
-  // Example: a 400x100 SVG with black text (24px font) and some styling
-  // If you don't know the text length or want auto sizing, you can
-  // measure text or set 'width="100%" height="100%"', etc.
+function createPhotoversalWatermark(width: number, height: number) {
+  const watermarkText = "Photoversal Studio";
+  const textSpacing = 100; // Increased spacing to accommodate full text
+  const fontSize = 14;
+
   return `
-    <svg width="400" height="100" xmlns="http://www.w3.org/2000/svg">
-      <style>
-        .watermark {
-          font-family: Arial, sans-serif;
-          font-size: 60px;
-          fill: rgba(0, 0, 0, 0.8); /* white with 80% opacity */
-          font-weight: bold;
-        }
-      </style>
-      <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" class="watermark">
-        ${escapeForSVG(text)}
-      </text>
+    <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="watermark-pattern" 
+                 width="${textSpacing}" 
+                 height="${textSpacing}" 
+                 patternUnits="userSpaceOnUse">
+          <text x="50%" y="50%"
+                text-anchor="middle"
+                dominant-baseline="central"
+                transform="rotate(-45 ${textSpacing / 2} ${textSpacing / 2})"
+                font-family="Arial"
+                font-size="${fontSize}"
+                fill="rgba(0, 0, 0, 0.3)"
+                font-weight="bold">
+            ${watermarkText}
+          </text>
+        </pattern>
+      </defs>
+      
+      <rect width="100%" height="100%" fill="url(#watermark-pattern)" />
     </svg>
   `;
-}
-
-function escapeForSVG(str: string) {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
 }

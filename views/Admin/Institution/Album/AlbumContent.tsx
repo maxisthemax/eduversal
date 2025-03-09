@@ -358,7 +358,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                         <MenuItem
                           onClick={async () => {
                             const res = await axios.get(
-                              `admin/photo/getPhoto?fileKey=${item.download_url}`
+                              `admin/photo/downloadPhoto?fileKey=${item.download_url}`
                             );
                             const link = document.createElement("a");
                             link.href = res.data.url;
@@ -366,6 +366,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                             document.body.appendChild(link);
                             link.click();
                             document.body.removeChild(link);
+                            popupState.close();
                           }}
                         >
                           Download
