@@ -156,7 +156,6 @@ function SelectPhotoDialogForm({
             sx={{
               backgroundColor: "grey.300",
               height: "200px",
-              aspectRatio: "2/3",
               objectFit: "cover",
             }}
           />

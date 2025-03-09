@@ -66,12 +66,6 @@ function Cart() {
                       sx={{
                         backgroundColor: "grey.300",
                         width: "100%",
-                        aspectRatio: "2/3",
-                        objectFit:
-                          item.userPackage.items[0].album.productType ===
-                          "INDIVIDUAL"
-                            ? "cover"
-                            : "contain",
                       }}
                     />
                   ) : (
@@ -81,8 +75,6 @@ function Cart() {
                       sx={{
                         backgroundColor: "grey.300",
                         width: "100%",
-                        aspectRatio: "2/3",
-                        objectFit: "cover",
                       }}
                     />
                   )}
@@ -148,7 +140,6 @@ function Cart() {
                               photoName,
                               photoUrl,
                               productVariationOptions,
-                              album,
                             },
                             index
                           ) => {
@@ -161,14 +152,6 @@ function Cart() {
                                     sx={{
                                       backgroundColor: "grey.300",
                                       width: "100%",
-                                      aspectRatio:
-                                        album.productType === "INDIVIDUAL"
-                                          ? "2/3"
-                                          : "3/2",
-                                      objectFit:
-                                        album.productType === "INDIVIDUAL"
-                                          ? "cover"
-                                          : "contain",
                                     }}
                                   />
                                 </Grid>

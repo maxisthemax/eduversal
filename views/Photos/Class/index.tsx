@@ -41,7 +41,7 @@ function Class() {
           <b>{userCourseData.title_format}</b>
         </Typography>
         <Divider />
-        <Grid container spacing={3} sx={{ pt: 2 }}>
+        <Grid container spacing={2} sx={{ pt: 2 }}>
           {userCourseData.course.albums.map(
             ({ id: albumId, name, photos, product_type }) => {
               return (
@@ -69,6 +69,7 @@ function Class() {
                     <Typography
                       gutterBottom
                       sx={{
+                        pt: 0.5,
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",

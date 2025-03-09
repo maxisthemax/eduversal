@@ -40,6 +40,7 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import MenuList from "@mui/material/MenuList";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -117,7 +118,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
     <OverlayBox isLoading={isDeleting || isUploading}>
       <Grid container spacing={1}>
         <Grid
-          size={{ xs: 8 }}
+          size={{ xs: 8.5 }}
           sx={{ overflow: "auto", height: getFullHeightSize(23) }}
         >
           <Grid container spacing={2}>
@@ -208,10 +209,6 @@ function AlbumContent({ albumId }: { albumId: string }) {
                               src={URL.createObjectURL(file)}
                               alt={file.name}
                               sx={{
-                                aspectRatio:
-                                  albumData.product_type.type === "INDIVIDUAL"
-                                    ? "2/3"
-                                    : "3/2",
                                 display: "block",
                                 width: "100%",
                                 objectFit: "cover",
@@ -333,10 +330,6 @@ function AlbumContent({ albumId }: { albumId: string }) {
                           src={`${item.display_url}`}
                           alt={item.name}
                           sx={{
-                            aspectRatio:
-                              albumData.product_type.type === "INDIVIDUAL"
-                                ? "2/3"
-                                : "3/2",
                             display: "block",
                             width: "100%",
                             objectFit: "cover",
@@ -355,22 +348,24 @@ function AlbumContent({ albumId }: { albumId: string }) {
                         }}
                         sx={{ p: 0 }}
                       >
-                        <MenuItem
-                          onClick={async () => {
-                            const res = await axios.get(
-                              `admin/photo/downloadPhoto?fileKey=${item.download_url}`
-                            );
-                            const link = document.createElement("a");
-                            link.href = res.data.url;
-                            link.download = item.name;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                            popupState.close();
-                          }}
-                        >
-                          Download
-                        </MenuItem>
+                        <MenuList dense={true} disablePadding>
+                          <MenuItem
+                            onClick={async () => {
+                              const res = await axios.get(
+                                `admin/photo/downloadPhoto?fileKey=${item.download_url}`
+                              );
+                              const link = document.createElement("a");
+                              link.href = res.data.url;
+                              link.download = item.name;
+                              document.body.appendChild(link);
+                              link.click();
+                              document.body.removeChild(link);
+                              popupState.close();
+                            }}
+                          >
+                            Download
+                          </MenuItem>
+                        </MenuList>
                       </Menu>
                     </>
                   )}
@@ -387,7 +382,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
           </Grid>
         </Grid>
         <Grid
-          size={{ xs: 4 }}
+          size={{ xs: 3.5 }}
           sx={{
             background: "#EBEBEB",
             height: getFullHeightSize(23),

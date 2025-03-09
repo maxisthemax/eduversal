@@ -383,12 +383,6 @@ function Checkout() {
                             sx={{
                               backgroundColor: "grey.300",
                               width: "100%",
-                              aspectRatio: "2/3",
-                              objectFit:
-                                item.userPackage.items[0].album.productType ===
-                                "INDIVIDUAL"
-                                  ? "cover"
-                                  : "contain",
                             }}
                           />
                         ) : (
@@ -400,8 +394,6 @@ function Checkout() {
                             sx={{
                               backgroundColor: "grey.300",
                               width: "100%",
-                              aspectRatio: "2/3",
-                              objectFit: "cover",
                             }}
                           />
                         )}
@@ -530,14 +522,6 @@ function Checkout() {
                                           sx={{
                                             backgroundColor: "grey.300",
                                             width: "100%",
-                                            aspectRatio:
-                                              album.productType === "INDIVIDUAL"
-                                                ? "2/3"
-                                                : "3/2",
-                                            objectFit:
-                                              album.productType === "INDIVIDUAL"
-                                                ? "cover"
-                                                : "contain",
                                           }}
                                         />
                                       </Grid>

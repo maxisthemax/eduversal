@@ -352,7 +352,11 @@ function PhotoCotent() {
                           key={id}
                           fullWidth
                           variant="outlined"
-                          sx={{ p: 2, justifyContent: "space-between" }}
+                          sx={{
+                            p: 2,
+                            justifyContent: "space-between",
+                            textAlign: "start",
+                          }}
                           onClick={() => {
                             handlePackage(id);
                           }}
@@ -374,7 +378,10 @@ function PhotoCotent() {
                               secondary={package_type_format}
                             />
                           </Stack>
-                          <Typography variant="body1" gutterBottom>
+                          <Typography
+                            variant="body1"
+                            sx={{ whiteSpace: "nowrap" }}
+                          >
                             {price_format}
                           </Typography>
                         </Button>

@@ -91,7 +91,11 @@ function Album() {
         <Grid container spacing={3} sx={{ pt: 2 }}>
           {album.photos.map(({ id: photoId, display_url, name }) => {
             return (
-              <Grid spacing={2} key={photoId} size={{ xs: 2 }}>
+              <Grid
+                spacing={2}
+                key={photoId}
+                size={{ xs: album.product_type.type === "INDIVIDUAL" ? 2 : 3 }}
+              >
                 <Stack>
                   <Button
                     sx={{ p: 0, pl: 2, pr: 2, border: "1px solid #B8BDC4" }}
@@ -107,7 +111,6 @@ function Album() {
                         backgroundColor: "grey.300",
                         width: "100%",
                         height: "100%",
-                        aspectRatio: "2/3",
                         objectFit:
                           album.product_type.type === "INDIVIDUAL"
                             ? "cover"

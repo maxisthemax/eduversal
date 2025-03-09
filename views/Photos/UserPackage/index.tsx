@@ -156,7 +156,13 @@ function UserPackages() {
             {album.photos.map((photo) => {
               const { id: photoId, display_url } = photo;
               return (
-                <Grid spacing={2} key={photoId} size={{ xs: 2 }}>
+                <Grid
+                  spacing={2}
+                  key={photoId}
+                  size={{
+                    xs: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
+                  }}
+                >
                   <Stack spacing={2}>
                     <Box
                       sx={{
@@ -174,11 +180,6 @@ function UserPackages() {
                           backgroundColor: "grey.300",
                           width: "100%",
                           height: "100%",
-                          aspectRatio: "2/3",
-                          objectFit:
-                            album.product_type.type === "INDIVIDUAL"
-                              ? "cover"
-                              : "contain",
                         }}
                       />
                     </Box>
