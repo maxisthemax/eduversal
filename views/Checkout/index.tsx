@@ -42,11 +42,16 @@ const validationSchema = yup.object({
         postcode: yup.string(),
         state: yup.string(),
         city: yup.string(),
+        email: yup.string(),
       }),
     otherwise: () =>
       yup.object().shape({
         first_name: yup.string().required("First Name is required"),
         last_name: yup.string().required("Last Name is required"),
+        email: yup
+          .string()
+          .email("Invalid email format")
+          .required("Email is required"),
         phone_no: yup.string().required("Phone No is required"),
         address_1: yup.string().required("Address 1 No is required"),
         postcode: yup.string().required("Postcode is required"),
@@ -241,6 +246,12 @@ function Checkout() {
                         props={{ required: true, size: "medium" }}
                       />
                     </Stack>
+                    <TextFieldForm
+                      name="shipping_address.email"
+                      label="Email"
+                      formProps={formProps}
+                      props={{ required: true, size: "medium" }}
+                    />
                     <MobileNumberForm
                       name="shipping_address.phone_no"
                       label="Phone No"
@@ -267,19 +278,23 @@ function Checkout() {
                         label="Postcode"
                         formProps={formProps}
                         onlyNumber={true}
-                        props={{ size: "medium" }}
+                        props={{ required: true, size: "medium" }}
                       />
                       <StateSelectTextFieldForm
                         name="shipping_address.state"
                         label="State"
                         formProps={formProps}
-                        props={{ size: "medium", sx: { textAlign: "start" } }}
+                        props={{
+                          required: true,
+                          size: "medium",
+                          sx: { textAlign: "start" },
+                        }}
                       />
                       <TextFieldForm
                         name="shipping_address.city"
                         label="City"
                         formProps={formProps}
-                        props={{ size: "medium" }}
+                        props={{ required: true, size: "medium" }}
                       />
                     </Stack>
                   </Stack>
