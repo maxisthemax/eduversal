@@ -57,7 +57,7 @@ function StateSelectTextFieldForm({
       formProps={formProps}
       props={{
         select: true,
-        slotProps: { select: { size: props.size } },
+        slotProps: { select: props?.size ? { size: props.size } : {} },
         ...props,
       }}
     >
