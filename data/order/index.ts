@@ -26,6 +26,7 @@ export interface OrderData {
   remark: string;
   status: string;
   created_at: Date;
+  order_no: number;
 }
 
 export interface OrderCreate {
