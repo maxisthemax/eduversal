@@ -56,8 +56,8 @@ function Cart() {
         cart.length > 0 &&
         cart.map((item) => {
           return (
-            <>
-              <Grid container key={item.id} spacing={4}>
+            <Box key={item.id}>
+              <Grid container spacing={4}>
                 <Grid size={{ xs: 1.5 }}>
                   {item.userPackage.packageId === "none" ? (
                     <Box
@@ -257,7 +257,7 @@ function Cart() {
               <Box sx={{ pt: 2, pb: 2 }}>
                 <Divider />
               </Box>
-            </>
+            </Box>
           );
         })}
       <Grid container spacing={4}>

@@ -388,8 +388,8 @@ function Checkout() {
               cart.length > 0 &&
               cart.map((item) => {
                 return (
-                  <>
-                    <Grid container key={item.id} spacing={2}>
+                  <Box key={item.id}>
+                    <Grid container spacing={2}>
                       <Grid size={{ xs: 2 }}>
                         {item.userPackage.packageId === "none" ? (
                           <Box
@@ -598,7 +598,7 @@ function Checkout() {
                     <Box sx={{ pt: 2, pb: 2 }}>
                       <Divider />
                     </Box>
-                  </>
+                  </Box>
                 );
               })}
             <Grid
