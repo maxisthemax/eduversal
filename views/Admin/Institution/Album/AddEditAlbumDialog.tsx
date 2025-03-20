@@ -5,13 +5,16 @@ import {
   bindTrigger,
   usePopupState,
 } from "material-ui-popup-state/hooks";
+import { useParams } from "next/navigation";
 
 //*lodash
 import find from "lodash/find";
 
 //*components
+import { CustomIcon } from "@/components/Icons";
 import { OverlayBox } from "@/components/Box";
 import { TextFieldAutocompleteForm, TextFieldForm } from "@/components/Form";
+import useUpload from "@/components/useUpload";
 
 //*material
 import Dialog from "@mui/material/Dialog";
@@ -31,6 +34,7 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -93,10 +97,20 @@ function AddEditAlbumDialogForm({
   albumId?: string;
   handleClose: () => void;
 }) {
+  const params = useParams();
+  const institutionId = params.institutionId as string;
+  const courseId = params.courseId as string;
   const { albumData, addAlbum, updateAlbum } = useAlbums(albumId);
   const { productsData, status } = useProductType();
   const { productVariationsData, status: productVariationsDataStatus } =
     useProductVariation();
+  const { files, setFiles, getRootProps, getInputProps, handleUpload } =
+    useUpload(
+      `institution/${institutionId}/course/${courseId}/album/${albumId}`,
+      {
+        multiple: false,
+      }
+    );
 
   if (status === "pending" || productVariationsDataStatus === "pending")
     return <LinearProgress />;
@@ -110,16 +124,25 @@ function AddEditAlbumDialogForm({
               description: albumData.description,
               product_type_id: albumData.product_type_id,
               product_variations_id: albumData.product_variations_id,
+              preview_url: albumData.preview_url,
+              preview_url_key: albumData.preview_url_key,
             }
           : {
               name: "",
               description: "",
               product_type_id: productsData[0]?.id ?? "",
               product_variations_id: [],
+              preview_url: "",
+              preview_url_key: "",
             }
       }
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
+        if (files.length === 1) {
+          const res = await handleUpload();
+          values.preview_url = res[0].display_url;
+          values.preview_url_key = res[0].download_url;
+        }
         try {
           if (mode === "add") {
             await addAlbum(values);
@@ -258,6 +281,74 @@ function AddEditAlbumDialogForm({
                     )}
                     disableCloseOnSelect
                   />
+                  {(files.length > 0 || albumData?.preview_url) && (
+                    <Box
+                      sx={{
+                        textAlign: "center",
+                        position: "relative",
+                        "&:hover .delete": {
+                          display: "block",
+                        },
+                        height: "350px",
+                        width: "100%",
+                        background: "#EBEBEB",
+                        m: 2,
+                      }}
+                    >
+                      <Box
+                        className="delete"
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          display: "none",
+                        }}
+                      >
+                        {files.length > 0 && (
+                          <IconButton
+                            disableRipple
+                            disableTouchRipple
+                            disableFocusRipple
+                            sx={{ background: "white", m: 0.5 }}
+                            color="primary"
+                            size="small"
+                            onClick={() => {
+                              setFiles([]);
+                            }}
+                          >
+                            <CustomIcon icon="delete" fontSizeSx="20px" />
+                          </IconButton>
+                        )}
+                      </Box>
+                      <Box
+                        component="img"
+                        src={
+                          files.length > 0
+                            ? URL.createObjectURL(files[0])
+                            : albumData?.preview_url
+                        }
+                        alt={files[0]?.name ?? albumData?.preview_url}
+                        sx={{
+                          display: "block",
+                          width: "100%",
+                          height: "inherit",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </Box>
+                  )}
+                  <Box
+                    {...getRootProps()}
+                    sx={{
+                      cursor: "pointer",
+                      pb: 1,
+                    }}
+                  >
+                    <input {...getInputProps()} />
+                    <Button variant="contained" color="primary">
+                      Select Files
+                    </Button>
+                  </Box>
                 </Stack>
               </DialogContent>
               <DialogActions>

@@ -32,6 +32,7 @@ export interface UserCoursePhotoData {
 export interface UserCourseAlbumData {
   albumProductVariations: { productVariation: ProductVariationData }[];
   product_type: ProductTypeData;
+  preview_url: string;
   photos: UserCoursePhotoData[];
   name: string;
   description: string;

@@ -43,7 +43,7 @@ function Class() {
         <Divider />
         <Grid container spacing={2} sx={{ pt: 2 }}>
           {userCourseData.course.albums.map(
-            ({ id: albumId, name, photos, product_type }) => {
+            ({ id: albumId, name, photos, product_type, preview_url }) => {
               return (
                 <Grid spacing={2} key={albumId} size={{ xs: 2 }}>
                   <Stack>
@@ -53,7 +53,7 @@ function Class() {
                     >
                       <Box
                         component="img"
-                        src={photos[0]?.display_url ?? ""}
+                        src={preview_url ?? photos[0]?.display_url}
                         sx={{
                           backgroundColor: "grey.300",
                           width: "100%",

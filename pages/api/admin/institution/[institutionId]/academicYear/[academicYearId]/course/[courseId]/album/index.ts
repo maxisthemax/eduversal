@@ -59,8 +59,14 @@ export default async function albumHandler(
         }
 
         // Create a new album
-        const { name, description, product_type_id, product_variations_id } =
-          req.body;
+        const {
+          name,
+          description,
+          product_type_id,
+          product_variations_id,
+          preview_url,
+          preview_url_key,
+        } = req.body;
 
         // Validate required fields
         if (!validateRequiredFields(req, res, ["name", "product_type_id"])) {
@@ -83,6 +89,8 @@ export default async function albumHandler(
               product_type_id,
               institution_id: institutionId as string,
               course_id: courseId as string,
+              preview_url,
+              preview_url_key,
               ...created_by,
               ...updated_by,
             },

@@ -150,6 +150,8 @@ model Album {
   course_id              String?
   course                 Course?                 @relation(fields: [course_id], references: [id])
   albumProductVariations AlbumProductVariation[]
+  preview_url            String?
+  preview_url_key        String?
 
   created_by_user_id String
   created_by_name    String

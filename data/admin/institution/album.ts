@@ -40,6 +40,8 @@ export interface AlbumData {
   created_at: Date;
   updated_at: Date;
   photos: PhotoData[];
+  preview_url: string;
+  preview_url_key: string;
   created_by_name: string;
   updated_by_name: string;
 }
@@ -56,6 +58,8 @@ export interface AlbumCreate {
   product_variations_id: string[];
   institution_id?: string;
   course_id?: string;
+  preview_url?: string;
+  preview_url_key?: string;
 }
 
 type AlbumUpdate = Partial<AlbumCreate>;

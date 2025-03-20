@@ -38,6 +38,7 @@ export default async function courseHandler(
                 end_date: true,
                 albums: {
                   select: {
+                    preview_url: true,
                     product_type: true,
                     id: true,
                     photos: {
