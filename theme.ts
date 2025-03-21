@@ -17,6 +17,14 @@ const baseTheme: ThemeOptions = {
       defaultProps: { size: "small" },
     },
     MuiButton: { defaultProps: { size: "small" } },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          maxHeight: "unset",
+          overflowY: "unset",
+        },
+      },
+    },
   },
 };
 
