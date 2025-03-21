@@ -17,6 +17,7 @@ import {
   TextFieldForm,
   TextFieldPriceForm,
   TextFieldAutocompleteForm,
+  CheckboxForm,
 } from "@/components/Form";
 import { CustomIcon } from "@/components/Icons";
 import useUpload from "@/components/useUpload";
@@ -279,6 +280,11 @@ function AddEditPackagesDialogForm({
                     label="Description"
                     formProps={formProps}
                     props={{ minRows: 3, multiline: true }}
+                  />
+                  <CheckboxForm
+                    name="is_downloadable"
+                    label="Is Downloadable"
+                    formProps={formProps}
                   />
                   {(files.length > 0 || packageData?.preview_url) && (
                     <Box

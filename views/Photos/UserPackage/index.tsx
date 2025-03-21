@@ -75,6 +75,7 @@ export interface UserPackageItemData {
   photoId: string;
   photoName: string;
   photoUrl: string;
+  downloadUrl: string;
   album: UserPackageAlbum;
   productVariationOptions: UserPackageItemDataProductVariationOption[];
 }
@@ -98,7 +99,7 @@ function UserPackages() {
 
   const packageData = userPackage?.packageData;
   const items = userPackage?.items;
-  const album = packageData?.expandedAlbums[userPackage.currentStage];
+  const album = packageData?.expandedAlbums[userPackage?.currentStage ?? 0];
 
   const handleSave = () => {
     if (
@@ -145,7 +146,10 @@ function UserPackages() {
         }}
       >
         <Typography variant="h6" gutterBottom>
-          <b>{packageData.name}</b>
+          <b>
+            {packageData.name}{" "}
+            {packageData.is_downloadable ? `(Include SoftCopy)` : ""}
+          </b>
         </Typography>
         <Typography variant="h6">Select {album.name}</Typography>
       </Stack>

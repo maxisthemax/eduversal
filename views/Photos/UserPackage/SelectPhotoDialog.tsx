@@ -105,6 +105,7 @@ function SelectPhotoDialogForm({
           photoId: photo.id,
           photoName: photo.name,
           photoUrl: photo.display_url,
+          downloadUrl: photo.download_url,
           productVariationOptions: [],
           album: {
             albumDescription: album.description,

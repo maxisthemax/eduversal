@@ -42,7 +42,12 @@ export default async function courseHandler(
                     product_type: true,
                     id: true,
                     photos: {
-                      select: { id: true, name: true, display_url: true },
+                      select: {
+                        id: true,
+                        name: true,
+                        display_url: true,
+                        download_url: true,
+                      },
                     },
                     name: true,
                     description: true,
@@ -63,7 +68,6 @@ export default async function courseHandler(
                             },
                             name: true,
                             description: true,
-                            is_downloadable: true,
                             id: true,
                           },
                         },

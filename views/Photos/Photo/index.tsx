@@ -65,6 +65,7 @@ function PhotoCotent() {
       price: album.product_type.price,
       price_format: `RM ${album.product_type.price.toFixed(2)}`,
       package_type_format: "",
+      is_downloadable: false,
     },
     ...userCourseData.course.package.filter(({ packageAlbums }) => {
       return includes(
@@ -112,7 +113,7 @@ function PhotoCotent() {
         "productVariationId"
       ),
       ({ productVariationOptionId }) => {
-        return productVariationOptionId !== null;
+        return productVariationOptionId !== undefined;
       }
     );
 
@@ -142,6 +143,7 @@ function PhotoCotent() {
 
       const items = [
         ...expandedAlbums.map((album) => ({
+          downloadUrl: "",
           photoUrl: "",
           name: "",
           photoName: "",
@@ -346,7 +348,13 @@ function PhotoCotent() {
                 </Typography>
                 <Stack direction={"column"} spacing={2}>
                   {albumPackage.map(
-                    ({ id, name, price_format, package_type_format }) => {
+                    ({
+                      id,
+                      name,
+                      price_format,
+                      package_type_format,
+                      is_downloadable,
+                    }) => {
                       return (
                         <Button
                           key={id}
@@ -374,7 +382,10 @@ function PhotoCotent() {
                             <CustomIcon icon="check_circle" />
                             <ListItemText
                               sx={{ justifyItems: "start" }}
-                              primary={name}
+                              primary={
+                                name +
+                                (is_downloadable ? " (Includes Soft Copy)" : "")
+                              }
                               secondary={package_type_format}
                             />
                           </Stack>

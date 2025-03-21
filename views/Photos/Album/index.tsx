@@ -35,6 +35,7 @@ function Album() {
   function handleSetPackage(
     photoId: string,
     display_url: string,
+    download_url: string,
     name: string
   ) {
     setUserPackage({
@@ -57,10 +58,11 @@ function Album() {
             productTypeCurrency: album.product_type.currency,
             productTypePrice: album.product_type.price,
           },
+          photoId: photoId,
           photoUrl: display_url,
+          downloadUrl: download_url,
           photoName: name,
           name: userCourseData.names[0],
-          photoId: photoId,
           productVariationOptions: [],
         },
       ],
@@ -89,39 +91,48 @@ function Album() {
         </Typography>
         <Divider />
         <Grid container spacing={3} sx={{ pt: 2 }}>
-          {album.photos.map(({ id: photoId, display_url, name }) => {
-            return (
-              <Grid
-                spacing={2}
-                key={photoId}
-                size={{ xs: album.product_type.type === "INDIVIDUAL" ? 2 : 3 }}
-              >
-                <Stack>
-                  <Button
-                    sx={{ p: 0, pl: 2, pr: 2, border: "1px solid #B8BDC4" }}
-                    onClick={() => {
-                      handleSetPackage(photoId, display_url, name);
-                      push(`/photos/${class_id}/${album_id}/${photoId}`);
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={display_url ?? ""}
-                      sx={{
-                        backgroundColor: "grey.300",
-                        width: "100%",
-                        height: "100%",
-                        objectFit:
-                          album.product_type.type === "INDIVIDUAL"
-                            ? "cover"
-                            : "contain",
+          {album.photos.map(
+            ({ id: photoId, display_url, download_url, name }) => {
+              return (
+                <Grid
+                  spacing={2}
+                  key={photoId}
+                  size={{
+                    xs: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
+                  }}
+                >
+                  <Stack>
+                    <Button
+                      sx={{ p: 0, pl: 2, pr: 2, border: "1px solid #B8BDC4" }}
+                      onClick={() => {
+                        handleSetPackage(
+                          photoId,
+                          display_url,
+                          download_url,
+                          name
+                        );
+                        push(`/photos/${class_id}/${album_id}/${photoId}`);
                       }}
-                    />
-                  </Button>
-                </Stack>
-              </Grid>
-            );
-          })}
+                    >
+                      <Box
+                        component="img"
+                        src={display_url ?? ""}
+                        sx={{
+                          backgroundColor: "grey.300",
+                          width: "100%",
+                          height: "100%",
+                          objectFit:
+                            album.product_type.type === "INDIVIDUAL"
+                              ? "cover"
+                              : "contain",
+                        }}
+                      />
+                    </Button>
+                  </Stack>
+                </Grid>
+              );
+            }
+          )}
         </Grid>
       </Page>
     </Container>

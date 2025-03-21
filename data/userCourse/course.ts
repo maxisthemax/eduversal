@@ -27,6 +27,7 @@ export interface UserCoursePhotoData {
   id: string;
   name: string;
   display_url: string;
+  download_url: string;
 }
 
 export interface UserCourseAlbumData {

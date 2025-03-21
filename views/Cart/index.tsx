@@ -127,7 +127,10 @@ function Cart() {
                   ) : (
                     <Stack>
                       <Typography variant="h6">
-                        {item.userPackage.packageData?.name}
+                        {item.userPackage.packageData?.name}{" "}
+                        {item.userPackage.packageData?.is_downloadable
+                          ? `(Include SoftCopy)`
+                          : ""}
                       </Typography>
                       <Typography variant="body1" gutterBottom>
                         Child: {item.userPackage.items[0]?.name}
