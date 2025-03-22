@@ -1,9 +1,6 @@
 import { getSession, handleAllowedMethods } from "@/helpers/apiHelpers";
 import { NextApiRequest, NextApiResponse } from "next";
 
-//*lodash
-import uniqBy from "lodash/uniqBy";
-
 //*lib
 import prisma from "@/lib/prisma";
 
@@ -63,42 +60,8 @@ export default async function getUser(
         // Return the user data
         return res.status(200).json({ data: user });
       }
+
       case "POST": {
-        //create new order
-        const { download_images } = req.body;
-
-        // Create the new product type
-        const user = await prisma.user.findUnique({
-          where: { id: session.id },
-          select: {
-            download_images: true,
-          },
-        });
-        const userDownloadImage = user.download_images
-          ? (user.download_images as {
-              photoUrl: string;
-              photoId: string;
-              downloadUrl: string;
-            }[])
-          : [];
-
-        await prisma.user.update({
-          where: {
-            id: session.id,
-          },
-          data: {
-            download_images: uniqBy(
-              [...userDownloadImage, ...download_images],
-              "photoId"
-            ),
-          },
-        });
-
-        // Return the newly created product type
-        return res.status(201).json({ message: "Success" });
-      }
-
-      case "PATCH": {
         //create new order
         const {
           first_name,

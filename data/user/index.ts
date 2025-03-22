@@ -53,7 +53,7 @@ export const useUser = () => {
   const updateUserDownloadImages = async (
     downloadImages: { photoId: string; photoUrl: string; downloadUrl: string }[]
   ) => {
-    const resData = await axios.post("user", {
+    const resData = await axios.post("user/addDownloadPhoto", {
       download_images: downloadImages,
     });
     refetch();
@@ -61,7 +61,7 @@ export const useUser = () => {
   };
 
   const updateUserData = async (userData: UpdateUserData) => {
-    const resData = await axios.patch("user", {
+    const resData = await axios.post("user", {
       ...userData,
     });
     refetch();
