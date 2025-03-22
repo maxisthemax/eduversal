@@ -57,19 +57,6 @@ function Main({ children }: { children: React.ReactNode }) {
               >
                 PHOTOS
               </Button>
-              <IconButton onClick={() => push("/cart")} size="small">
-                <Badge
-                  badgeContent={cart?.length}
-                  color="primary"
-                  invisible={!cart}
-                >
-                  <CustomIcon
-                    fontSize="small"
-                    icon="shopping_basket"
-                    iconColor={pathName === "/cart" ? "#006DEE" : "inherit"}
-                  />
-                </Badge>
-              </IconButton>
               <Button
                 color={pathName === "/account" ? "primary" : "inherit"}
                 onClick={async () => {
@@ -78,6 +65,19 @@ function Main({ children }: { children: React.ReactNode }) {
               >
                 ACCOUNT
               </Button>
+              <IconButton onClick={() => push("/cart")} size="small">
+                <Badge
+                  badgeContent={cart?.length}
+                  color="primary"
+                  invisible={!cart}
+                >
+                  <CustomIcon
+                    fontSize="small"
+                    icon="shopping_bag"
+                    iconColor={pathName === "/cart" ? "primary" : "inherit"}
+                  />
+                </Badge>
+              </IconButton>
             </Stack>
           </Toolbar>
         </AppBar>

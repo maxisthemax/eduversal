@@ -1,4 +1,5 @@
 //*mui
+import theme from "@/theme";
 import Icon from "@mui/material/Icon";
 
 //*interface
@@ -23,15 +24,21 @@ function CustomIcon({
   type = "rounded",
   fill = false,
 }: CustomIconProps) {
+  let color = active
+    ? activeColor
+      ? activeColor
+      : "inherit"
+    : iconColor || "inherit";
+
+  if (iconColor === "primary") {
+    color = theme.palette.primary.main;
+  }
+
   return (
     <Icon
       className={`material-symbols-${type}`}
       sx={{
-        color: active
-          ? activeColor
-            ? activeColor
-            : "inherit"
-          : iconColor || "inherit",
+        color: color,
         ...(fontSizeSx ? { fontSize: `${fontSizeSx} !important` } : {}),
         fontVariationSettings: fill ? "'FILL' 1" : "'FILL' 0",
       }}
