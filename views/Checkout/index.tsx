@@ -71,7 +71,7 @@ function Checkout() {
   const { push } = useRouter();
   const { cart, clearCart } = useCart();
   const { addOrder } = useOrder();
-  const { updateUserImages } = useUser();
+  const { updateUserDownloadImages } = useUser();
 
   const isDeliverable = cart?.some((item) =>
     item.userPackage.items.some((item) => item.album.productTypeDeliverable)
@@ -159,6 +159,7 @@ function Checkout() {
                 temp.push({
                   photoId: value.userPackage.items[0].photoId,
                   photoUrl: value.userPackage.items[0].photoUrl,
+                  photoName: value.userPackage.items[0].photoName,
                   downloadUrl: value.userPackage.items[0].downloadUrl,
                 });
               }
@@ -168,6 +169,7 @@ function Checkout() {
                   return {
                     photoId: item.photoId,
                     photoUrl: item.photoUrl,
+                    photoName: item.photoName,
                     downloadUrl: item.downloadUrl,
                   };
                 });
@@ -182,6 +184,7 @@ function Checkout() {
                     temp.push({
                       photoId: item.photoId,
                       photoUrl: item.photoUrl,
+                      photoName: item.photoName,
                       downloadUrl: item.downloadUrl,
                     });
                   }
@@ -193,7 +196,7 @@ function Checkout() {
           },
           []
         );
-        await updateUserImages(allDownloadable);
+        await updateUserDownloadImages(allDownloadable);
         clearCart();
         push("/account/downloadable");
       } catch (error) {

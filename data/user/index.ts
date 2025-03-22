@@ -7,6 +7,13 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 import axios from "@/utils/axios";
 
 //*interface
+
+export interface DownloadImageData {
+  photoId: string;
+  photoUrl: string;
+  downloadUrl: string;
+  photoName: string;
+}
 interface UserData {
   id: number;
   name: string;
@@ -21,17 +28,13 @@ interface UserData {
   postcode: string;
   role: string;
   state: string;
-  download_images?: {
-    photoId: string;
-    photoUrl: string;
-    downloadUrl: string;
-  }[];
+  download_images?: DownloadImageData[];
 }
 
 export const useUser = () => {
   const { push } = useRouter();
   const queryClient = useQueryClient();
-  const { data, status } = useQueryFetch(["user"], "user");
+  const { data, status, refetch } = useQueryFetch(["user"], "user");
 
   const userData = data?.data as UserData;
 
@@ -45,14 +48,15 @@ export const useUser = () => {
     }
   }, [data, status]);
 
-  const updateUserImages = async (
+  const updateUserDownloadImages = async (
     downloadImages: { photoId: string; photoUrl: string; downloadUrl: string }[]
   ) => {
     const resData = await axios.post("user", {
       download_images: downloadImages,
     });
+    refetch();
     return resData;
   };
 
-  return { data: userData, status, updateUserImages };
+  return { data: userData, status, updateUserDownloadImages };
 };
