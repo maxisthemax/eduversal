@@ -2,9 +2,12 @@ import { useRouter, usePathname } from "next/navigation";
 
 //*components
 import { FlexBox } from "../Box";
+import { CustomIcon } from "@/components/Icons";
 
 //*mui
 import Toolbar from "@mui/material/Toolbar";
+import Badge from "@mui/material/Badge";
+import IconButton from "@mui/material/IconButton";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -16,6 +19,7 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
 import { useUser } from "@/data/user";
+import { useCart } from "@/views/Cart";
 
 function Main({ children }: { children: React.ReactNode }) {
   //*define
@@ -23,6 +27,7 @@ function Main({ children }: { children: React.ReactNode }) {
   const pathName = "/" + usePathname()?.split("/")[1];
 
   //*data
+  const { cart } = useCart();
   const { data, status } = useUser();
 
   if (status === "pending") return <LinearProgress />;
@@ -52,14 +57,19 @@ function Main({ children }: { children: React.ReactNode }) {
               >
                 PHOTOS
               </Button>
-              <Button
-                color={pathName === "/cart" ? "primary" : "inherit"}
-                onClick={async () => {
-                  push("/cart");
-                }}
-              >
-                CART
-              </Button>
+              <IconButton onClick={() => push("/cart")} size="small">
+                <Badge
+                  badgeContent={cart?.length}
+                  color="primary"
+                  invisible={!cart}
+                >
+                  <CustomIcon
+                    fontSize="small"
+                    icon="shopping_basket"
+                    iconColor={pathName === "/cart" ? "#006DEE" : "inherit"}
+                  />
+                </Badge>
+              </IconButton>
               <Button
                 color={pathName === "/account" ? "primary" : "inherit"}
                 onClick={async () => {
