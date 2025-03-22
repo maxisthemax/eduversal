@@ -2,9 +2,10 @@ import { useParams, useRouter } from "next/navigation";
 
 //*components
 import Purchase from "./Purchase";
+import Downloadable from "./Downloadable";
+import Profile from "./Profile";
 import { CustomIcon } from "@/components/Icons";
 import { GoogleIcon } from "@/components/Icons/CustomIcon";
-import Downloadable from "./Downloadable";
 
 //*mui
 import Grid from "@mui/material/Grid2";
@@ -50,6 +51,7 @@ function Account() {
   const { page } = useParams();
 
   const pageComponent = {
+    profile: <Profile />,
     purchase: <Purchase />,
     downloadable: <Downloadable />,
   };

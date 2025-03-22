@@ -1,6 +1,7 @@
 import { getSession, handleAllowedMethods } from "@/helpers/apiHelpers";
 import { NextApiRequest, NextApiResponse } from "next";
 
+//*lodash
 import uniqBy from "lodash/uniqBy";
 
 //*lib
@@ -90,6 +91,45 @@ export default async function getUser(
               [...userDownloadImage, ...download_images],
               "photoId"
             ),
+          },
+        });
+
+        // Return the newly created product type
+        return res.status(201).json({ message: "Success" });
+      }
+
+      case "PATCH": {
+        //create new order
+        const {
+          first_name,
+          last_name,
+          email,
+          country_code,
+          phone_no,
+          address_1,
+          address_2,
+          postcode,
+          state,
+          city,
+        } = req.body;
+
+        // Create the new product type
+
+        await prisma.user.update({
+          where: {
+            id: session.id,
+          },
+          data: {
+            first_name,
+            last_name,
+            email,
+            country_code,
+            phone_no,
+            address_1,
+            address_2,
+            postcode,
+            state,
+            city,
           },
         });
 

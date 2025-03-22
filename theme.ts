@@ -14,7 +14,7 @@ const baseTheme: ThemeOptions = {
       defaultProps: { size: "small", fullWidth: true },
     },
     MuiSelect: {
-      defaultProps: { size: "small" },
+      defaultProps: { size: "small", sx: { textAlign: "start" } },
     },
     MuiButton: { defaultProps: { size: "small" } },
     MuiDialog: {

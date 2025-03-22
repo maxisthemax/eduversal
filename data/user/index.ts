@@ -31,6 +31,8 @@ interface UserData {
   download_images?: DownloadImageData[];
 }
 
+type UpdateUserData = Partial<UserData>;
+
 export const useUser = () => {
   const { push } = useRouter();
   const queryClient = useQueryClient();
@@ -58,5 +60,13 @@ export const useUser = () => {
     return resData;
   };
 
-  return { data: userData, status, updateUserDownloadImages };
+  const updateUserData = async (userData: UpdateUserData) => {
+    const resData = await axios.patch("user", {
+      ...userData,
+    });
+    refetch();
+    return resData;
+  };
+
+  return { data: userData, status, updateUserDownloadImages, updateUserData };
 };
