@@ -21,6 +21,11 @@ interface UserData {
   postcode: string;
   role: string;
   state: string;
+  download_images?: {
+    photoId: string;
+    photoUrl: string;
+    downloadUrl: string;
+  }[];
 }
 
 export const useUser = () => {

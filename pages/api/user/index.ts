@@ -39,6 +39,7 @@ export default async function getUser(
             city: true,
             state: true,
             postcode: true,
+            download_images: true,
           },
         });
 

@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Purchase from "./Purchase";
 import { CustomIcon } from "@/components/Icons";
 import { GoogleIcon } from "@/components/Icons/CustomIcon";
+import Downloadable from "./Downloadable";
 
 //*mui
 import Grid from "@mui/material/Grid2";
@@ -48,7 +49,10 @@ function Account() {
   const { push } = useRouter();
   const { page } = useParams();
 
-  const pageComponent = { purchase: <Purchase /> };
+  const pageComponent = {
+    purchase: <Purchase />,
+    downloadable: <Downloadable />,
+  };
 
   return (
     <Container maxWidth="xl" disableGutters>
