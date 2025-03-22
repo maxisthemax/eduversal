@@ -68,5 +68,25 @@ export const useUser = () => {
     return resData;
   };
 
-  return { data: userData, status, updateUserDownloadImages, updateUserData };
+  const changePassword = async (
+    password: string,
+    new_password: string,
+    confirm_password: string
+  ) => {
+    const resData = await axios.post("user/changePassword", {
+      password,
+      new_password,
+      confirm_password,
+    });
+    refetch();
+    return resData;
+  };
+
+  return {
+    data: userData,
+    status,
+    updateUserDownloadImages,
+    updateUserData,
+    changePassword,
+  };
 };

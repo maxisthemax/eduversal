@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 //*lib
 import prisma from "@/lib/prisma";
 
-export default async function getUser(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

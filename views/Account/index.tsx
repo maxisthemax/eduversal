@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Purchase from "./Purchase";
 import Downloadable from "./Downloadable";
 import Profile from "./Profile";
+import ChangePassword from "./ChangePassword";
 import { CustomIcon } from "@/components/Icons";
 import { GoogleIcon } from "@/components/Icons/CustomIcon";
 
@@ -54,6 +55,7 @@ function Account() {
     profile: <Profile />,
     purchase: <Purchase />,
     downloadable: <Downloadable />,
+    "change-password": <ChangePassword />,
   };
 
   return (

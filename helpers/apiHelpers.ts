@@ -95,7 +95,8 @@ export async function getSession(
 }
 
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-export const passwordRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[A-Z]).{8,}$/;
+export const passwordRegex =
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9.,!?:;'"()\[\]{}\-_+=\/\\|@#$%^&*~]{8,16}$/;
 
 export async function checkRateLimit(
   req: NextApiRequest,

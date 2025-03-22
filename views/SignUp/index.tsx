@@ -33,14 +33,20 @@ const validationSchema = yup.object({
     .required("Email is required"),
   password: yup
     .string()
-    .min(8, "Password is less than 8")
-    .matches(/[0-9]/, "Password must contain a number")
-    .matches(/[a-zA-Z]/, "Password must contain an alphabet")
-    .matches(/[A-Z]/, "Password must contain an uppercase letter")
+    .min(8, "Password must be at least 8 characters")
+    .max(16, "Password must be at most 16 characters")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+    .matches(/[0-9]/, "Password must contain at least one number")
+    .matches(
+      /^[a-zA-Z0-9.,!?:;'"()\[\]{}\-_+=\/\\|@#$%^&*~]+$/,
+      "Password can only contain letters, numbers, and common punctuation"
+    )
     .required("Password is required"),
   confirm_password: yup
     .string()
-    .min(8, "Password is less than 8")
+    .min(8, "Password must be at least 8 characters")
+    .max(16, "Password must be at most 16 characters")
     .required("Password is required")
     .oneOf([yup.ref("password")], "Your passwords do not match."),
   phone_no: yup.string().required("Phone No is required"),

@@ -7,7 +7,6 @@ import {
   getSession,
   emailRegex,
   validateRequiredFields,
-  passwordRegex,
 } from "@/helpers/apiHelpers";
 
 //*lib
@@ -33,15 +32,6 @@ export default async function signIn(
     return res.status(400).json({
       message: "Invalid email format",
       type: "INVALID_EMAIL_FORMAT",
-    });
-  }
-
-  // Validate password strength
-  if (!passwordRegex.test(password)) {
-    return res.status(400).json({
-      message:
-        "Password must be at least 8 characters long, contain a number, an alphabet, and an uppercase letter",
-      type: "WEAK_PASSWORD",
     });
   }
 
