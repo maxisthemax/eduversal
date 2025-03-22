@@ -267,6 +267,8 @@ model AlbumProductVariation {
   album               Album            @relation(fields: [album_id], references: [id])
   productVariation_id String
   productVariation    ProductVariation @relation(fields: [productVariation_id], references: [id])
+  mandatory           Boolean          @default(false)
+  options             Boolean          @default(false)
 
   created_by_user_id String
   created_by_name    String

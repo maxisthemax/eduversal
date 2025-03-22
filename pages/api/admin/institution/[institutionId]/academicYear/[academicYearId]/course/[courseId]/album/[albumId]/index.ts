@@ -33,6 +33,7 @@ export default async function albumHandler(
           description,
           product_type_id,
           product_variations_id,
+          album_product_variations,
           preview_url,
           preview_url_key,
         } = req.body;
@@ -89,13 +90,51 @@ export default async function albumHandler(
 
           if (newVariations.length > 0) {
             await prisma.albumProductVariation.createMany({
-              data: newVariations.map((variationId) => ({
-                album_id: albumId as string,
-                productVariation_id: variationId,
-                ...created_by,
-                ...updated_by,
-              })),
+              data: newVariations.map((variationId) => {
+                const findOption = album_product_variations.find(
+                  (v) => v.productVariation_id === variationId
+                );
+
+                return {
+                  album_id: albumId as string,
+                  productVariation_id: findOption.productVariation_id,
+                  mandatory: findOption.mandatory,
+                  options: findOption.options,
+                  ...created_by,
+                  ...updated_by,
+                };
+              }),
             });
+          }
+
+          // Update existing variations
+
+          const updatedVariations = product_variations_id.filter((id) =>
+            existingVariationIds.includes(id)
+          );
+
+          if (updatedVariations.length > 0) {
+            await Promise.all(
+              updatedVariations.map(async (variationId) => {
+                const findOption = album_product_variations.find(
+                  (v) => v.productVariation_id === variationId
+                );
+
+                await prisma.albumProductVariation.update({
+                  where: {
+                    album_id_productVariation_id: {
+                      album_id: albumId as string,
+                      productVariation_id: findOption.productVariation_id,
+                    },
+                  },
+                  data: {
+                    mandatory: findOption.mandatory,
+                    options: findOption.options,
+                    ...updated_by,
+                  },
+                });
+              })
+            );
           }
         });
 

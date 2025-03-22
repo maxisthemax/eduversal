@@ -63,7 +63,7 @@ export default async function albumHandler(
           name,
           description,
           product_type_id,
-          product_variations_id,
+          album_product_variations,
           preview_url,
           preview_url_key,
         } = req.body;
@@ -97,14 +97,26 @@ export default async function albumHandler(
           });
 
           // If there are product variations, create them
-          if (product_variations_id && product_variations_id.length > 0) {
+          if (album_product_variations && album_product_variations.length > 0) {
             await prisma.albumProductVariation.createMany({
-              data: product_variations_id.map((variationId: string) => ({
-                album_id: newAlbum.id,
-                productVariation_id: variationId,
-                ...created_by,
-                ...updated_by,
-              })),
+              data: album_product_variations.map(
+                ({
+                  productVariation_id,
+                  mandatory,
+                  options,
+                }: {
+                  productVariation_id: string;
+                  mandatory: boolean;
+                  options: boolean;
+                }) => ({
+                  album_id: newAlbum.id,
+                  productVariation_id,
+                  mandatory,
+                  options,
+                  ...created_by,
+                  ...updated_by,
+                })
+              ),
             });
           }
 

@@ -12,8 +12,12 @@ import find from "lodash/find";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
-import { OverlayBox } from "@/components/Box";
-import { TextFieldAutocompleteForm, TextFieldForm } from "@/components/Form";
+import { FlexBox, OverlayBox } from "@/components/Box";
+import {
+  CheckboxForm,
+  TextFieldAutocompleteForm,
+  TextFieldForm,
+} from "@/components/Form";
 import useUpload from "@/components/useUpload";
 
 //*material
@@ -34,6 +38,7 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 
 //*helpers
@@ -124,6 +129,11 @@ function AddEditAlbumDialogForm({
               description: albumData.description,
               product_type_id: albumData.product_type_id,
               product_variations_id: albumData.product_variations_id,
+              album_product_variations: albumData.albumProductVariations.map(
+                ({ productVariation_id, album_id, options, mandatory }) => {
+                  return { productVariation_id, options, mandatory, album_id };
+                }
+              ),
               preview_url: albumData.preview_url,
               preview_url_key: albumData.preview_url_key,
             }
@@ -132,6 +142,7 @@ function AddEditAlbumDialogForm({
               description: "",
               product_type_id: productsData[0]?.id ?? "",
               product_variations_id: [],
+              album_product_variations: [],
               preview_url: "",
               preview_url_key: "",
             }
@@ -214,73 +225,6 @@ function AddEditAlbumDialogForm({
                       );
                     })}
                   </TextFieldForm>
-                  <Autocomplete
-                    fullWidth
-                    multiple
-                    options={productVariationsData.map(({ id }) => id)}
-                    getOptionLabel={(id) => {
-                      const findOption = find(productVariationsData, { id });
-                      return findOption?.name;
-                    }}
-                    onChange={(e, value) => {
-                      setFieldValue("product_variations_id", value);
-                    }}
-                    renderOption={(props, option, state, ownerState) => {
-                      const { key, ...optionProps } = props;
-                      const findOption = find(productVariationsData, {
-                        id: option,
-                      });
-                      return (
-                        <Box
-                          key={key}
-                          component="li"
-                          {...optionProps}
-                          sx={{ mt: 1 }}
-                        >
-                          <Stack direction="column" spacing={1}>
-                            {ownerState.getOptionLabel(option)}
-                            <Table
-                              size="small"
-                              component={Paper}
-                              variant="outlined"
-                            >
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Name</TableCell>
-                                  <TableCell>Description</TableCell>
-                                  <TableCell width={100}>Price</TableCell>
-                                </TableRow>
-                              </TableHead>
-
-                              <TableBody>
-                                {findOption.options.map(
-                                  ({ id, name, description, price_format }) => {
-                                    return (
-                                      <TableRow key={id}>
-                                        <TableCell>{name}</TableCell>
-                                        <TableCell>{description}</TableCell>
-                                        <TableCell>{price_format}</TableCell>
-                                      </TableRow>
-                                    );
-                                  }
-                                )}
-                              </TableBody>
-                            </Table>
-                          </Stack>
-                        </Box>
-                      );
-                    }}
-                    value={values["product_variations_id"]}
-                    renderInput={(params) => (
-                      <TextFieldAutocompleteForm
-                        params={params}
-                        name="product_variations_id"
-                        label="Product Variations"
-                        formProps={formProps}
-                      />
-                    )}
-                    disableCloseOnSelect
-                  />
                   {(files.length > 0 || albumData?.preview_url) && (
                     <Box
                       sx={{
@@ -349,6 +293,123 @@ function AddEditAlbumDialogForm({
                       Select Files
                     </Button>
                   </Box>
+                  <Autocomplete
+                    fullWidth
+                    multiple
+                    options={productVariationsData.map(({ id }) => id)}
+                    getOptionLabel={(id) => {
+                      const findOption = find(productVariationsData, { id });
+                      return findOption?.name;
+                    }}
+                    onChange={(e, value) => {
+                      setFieldValue("product_variations_id", value);
+
+                      setFieldValue(
+                        "album_product_variations",
+                        value.map((id) => {
+                          const findOption = find(
+                            values.album_product_variations,
+                            { productVariation_id: id }
+                          );
+                          return (
+                            findOption ?? {
+                              productVariation_id: id,
+                              mandatory: false,
+                              options: false,
+                            }
+                          );
+                        })
+                      );
+                    }}
+                    renderOption={(props, option, state, ownerState) => {
+                      const { key, ...optionProps } = props;
+                      const findOption = find(productVariationsData, {
+                        id: option,
+                      });
+                      return (
+                        <Box
+                          key={key}
+                          component="li"
+                          {...optionProps}
+                          sx={{ mt: 1 }}
+                        >
+                          <Stack direction="column" spacing={1}>
+                            {ownerState.getOptionLabel(option)}
+                            <Table
+                              size="small"
+                              component={Paper}
+                              variant="outlined"
+                            >
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Name</TableCell>
+                                  <TableCell>Description</TableCell>
+                                  <TableCell width={100}>Price</TableCell>
+                                </TableRow>
+                              </TableHead>
+
+                              <TableBody>
+                                {findOption.options.map(
+                                  ({ id, name, description, price_format }) => {
+                                    return (
+                                      <TableRow key={id}>
+                                        <TableCell>{name}</TableCell>
+                                        <TableCell>{description}</TableCell>
+                                        <TableCell>{price_format}</TableCell>
+                                      </TableRow>
+                                    );
+                                  }
+                                )}
+                              </TableBody>
+                            </Table>
+                          </Stack>
+                        </Box>
+                      );
+                    }}
+                    value={values["product_variations_id"]}
+                    renderInput={(params) => (
+                      <TextFieldAutocompleteForm
+                        params={params}
+                        name="product_variations_id"
+                        label="Product Variations"
+                        formProps={formProps}
+                      />
+                    )}
+                    disableCloseOnSelect
+                  />
+                  {values.album_product_variations.map(
+                    ({ productVariation_id }, index) => {
+                      return (
+                        <Stack
+                          direction="row"
+                          spacing={2}
+                          key={productVariation_id}
+                          sx={{ alignItems: "center", px: 2, py: 0.5 }}
+                          variant="outlined"
+                          component={Paper}
+                        >
+                          <Typography>
+                            {
+                              find(productVariationsData, {
+                                id: productVariation_id,
+                              })?.name
+                            }
+                          </Typography>
+                          <FlexBox />
+                          <CheckboxForm
+                            name={`album_product_variations.${index}.mandatory`}
+                            label="Manadatory"
+                            formProps={formProps}
+                          />
+                          <CheckboxForm
+                            name={`album_product_variations.${index}.options`}
+                            label="Options"
+                            formProps={formProps}
+                          />
+                        </Stack>
+                      );
+                    }
+                  )}
                 </Stack>
               </DialogContent>
               <DialogActions>

@@ -49,6 +49,8 @@ export interface AlbumData {
 export interface AlbumProductVariationData {
   album_id: string;
   productVariation_id: string;
+  mandatory: boolean;
+  options: boolean;
 }
 
 export interface AlbumCreate {
@@ -56,6 +58,7 @@ export interface AlbumCreate {
   description: string;
   product_type_id: string;
   product_variations_id: string[];
+  album_product_variations: AlbumProductVariationData[];
   institution_id?: string;
   course_id?: string;
   preview_url?: string;
