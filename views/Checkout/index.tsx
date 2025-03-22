@@ -226,7 +226,12 @@ function Checkout() {
         height: getFullHeightSize(0),
       }}
     >
-      <Typography variant="h4">Cart is empty</Typography>
+      <Stack direction="column" spacing={2}>
+        <Typography variant="h4">Cart is empty</Typography>
+        <Button onClick={() => push("/")} variant="contained">
+          Back
+        </Button>
+      </Stack>
     </Box>
   ) : (
     <form onSubmit={formik.handleSubmit}>
