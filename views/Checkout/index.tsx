@@ -3,6 +3,11 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
+//*lodash
+import omit from "lodash/omit";
+import reduce from "lodash/reduce";
+import some from "lodash/some";
+
 //*components
 import { FlexBox } from "@/components/Box";
 import { CustomIcon } from "@/components/Icons";
@@ -29,6 +34,7 @@ import { useOrder } from "@/data/order";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
+import { useUser } from "@/data/user";
 
 const validationSchema = yup.object({
   shipping_address: yup.object().when("shipment_method", {
@@ -63,8 +69,9 @@ const validationSchema = yup.object({
 
 function Checkout() {
   const { push } = useRouter();
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart();
   const { addOrder } = useOrder();
+  const { updateUserImages } = useUser();
 
   const isDeliverable = cart?.some((item) =>
     item.userPackage.items.some((item) => item.album.productTypeDeliverable)
@@ -107,7 +114,15 @@ function Checkout() {
       try {
         const newCart = cart.map((item) => {
           if (item?.userPackage?.packageData?.expandedAlbums)
-            delete item.userPackage.packageData.expandedAlbums;
+            return {
+              ...item,
+              userPackage: {
+                ...item.userPackage,
+                packageData: {
+                  ...omit(item.userPackage.packageData, ["expandedAlbums"]),
+                },
+              },
+            };
           return item;
         });
 
@@ -121,7 +136,6 @@ function Checkout() {
             0
           ) + shipping_fee;
 
-        // Create order first
         await addOrder({
           cart: newCart,
           payment_method,
@@ -132,6 +146,56 @@ function Checkout() {
           price: totalPrice,
           status: "PENDING",
         });
+
+        const allDownloadable = reduce(
+          newCart,
+          (temp, value) => {
+            if (value.userPackage.packageId === "none") {
+              if (
+                some(value.userPackage.items[0].productVariationOptions, {
+                  productVariationDownloadable: true,
+                })
+              ) {
+                temp.push({
+                  photoId: value.userPackage.items[0].photoId,
+                  photoUrl: value.userPackage.items[0].photoUrl,
+                  downloadUrl: value.userPackage.items[0].downloadUrl,
+                });
+              }
+            } else {
+              if (value.userPackage.packageData.is_downloadable) {
+                const images = value.userPackage.items.map((item) => {
+                  return {
+                    photoId: item.photoId,
+                    photoUrl: item.photoUrl,
+                    downloadUrl: item.downloadUrl,
+                  };
+                });
+                temp.push(...images);
+              } else {
+                value.userPackage.items.forEach((item) => {
+                  if (
+                    some(item.productVariationOptions, {
+                      productVariationDownloadable: true,
+                    })
+                  ) {
+                    temp.push({
+                      photoId: item.photoId,
+                      photoUrl: item.photoUrl,
+                      downloadUrl: item.downloadUrl,
+                    });
+                  }
+                });
+              }
+            }
+
+            return temp;
+          },
+          []
+        );
+        await updateUserImages(allDownloadable);
+        clearCart();
+        push("/account/downloadable");
       } catch (error) {
         console.error("Checkout error:", error);
         toast("An error occurred during checkout. Please try again.", {
@@ -150,7 +214,18 @@ function Checkout() {
     handleChange: formik.handleChange,
   };
 
-  return (
+  return !cart || cart.length === 0 ? (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: getFullHeightSize(0),
+      }}
+    >
+      <Typography variant="h4">Cart is empty</Typography>
+    </Box>
+  ) : (
     <form onSubmit={formik.handleSubmit}>
       <Grid container sx={{ height: getFullHeightSize(0), width: "100%" }}>
         <Grid
@@ -485,7 +560,10 @@ function Checkout() {
                           <Stack>
                             <Stack direction="row">
                               <Typography>
-                                {item.userPackage.packageData?.name}
+                                {item.userPackage.packageData?.name}{" "}
+                                {item.userPackage.packageData.is_downloadable
+                                  ? "(Downloadable)"
+                                  : ""}
                               </Typography>
                               <FlexBox />
                               <Tooltip

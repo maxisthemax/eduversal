@@ -1,6 +1,8 @@
 import { getSession, handleAllowedMethods } from "@/helpers/apiHelpers";
 import { NextApiRequest, NextApiResponse } from "next";
 
+import uniqBy from "lodash/uniqBy";
+
 //*lib
 import prisma from "@/lib/prisma";
 
@@ -9,7 +11,6 @@ export default async function getUser(
   res: NextApiResponse
 ) {
   // Use handleAllowedMethods for method validation
-  if (handleAllowedMethods(req, res, ["GET"])) return;
 
   const session = await getSession(req, res);
   if (!session?.id)
@@ -19,51 +20,105 @@ export default async function getUser(
     });
 
   try {
-    // Fetch user by ID
-    const user = await prisma.user.findUnique({
-      where: { id: session.id },
-      select: {
-        id: true,
-        email: true,
-        role: true,
-        first_name: true,
-        last_name: true,
-        country_code: true,
-        phone_no: true,
-        updated_at: true,
-        address_1: true,
-        address_2: true,
-        city: true,
-        state: true,
-        postcode: true,
-      },
-    });
+    switch (req.method) {
+      case "GET": {
+        // Fetch user by ID
+        const user = await prisma.user.findUnique({
+          where: { id: session.id },
+          select: {
+            id: true,
+            email: true,
+            role: true,
+            first_name: true,
+            last_name: true,
+            country_code: true,
+            phone_no: true,
+            updated_at: true,
+            address_1: true,
+            address_2: true,
+            city: true,
+            state: true,
+            postcode: true,
+          },
+        });
 
-    // Create a session and store user data
-    session.id = user.id;
-    session.email = user.email;
-    session.role = user.role;
-    session.name = user.last_name + " " + user.first_name;
-    session.isLoggedIn = true;
-    await session.save();
+        // Create a session and store user data
+        session.id = user.id;
+        session.email = user.email;
+        session.role = user.role;
+        session.name = user.last_name + " " + user.first_name;
+        session.isLoggedIn = true;
+        await session.save();
 
-    // Check if the user exists
-    if (!user) {
-      session.destroy();
-      return res
-        .status(404)
-        .json({ message: "User not found", type: "USER_NOT_FOUND" });
+        // Check if the user exists
+        if (!user) {
+          session.destroy();
+          return res
+            .status(404)
+            .json({ message: "User not found", type: "USER_NOT_FOUND" });
+        }
+
+        // Return the user data
+        return res.status(200).json({ data: user });
+      }
+      case "POST": {
+        //create new order
+        const { download_images } = req.body;
+
+        // Create the new product type
+        const user = await prisma.user.findUnique({
+          where: { id: session.id },
+          select: {
+            download_images: true,
+          },
+        });
+        const userDownloadImage = user.download_images
+          ? (user.download_images as {
+              photoUrl: string;
+              photoId: string;
+              downloadUrl: string;
+            }[])
+          : [];
+
+        await prisma.user.update({
+          where: {
+            id: session.id,
+          },
+          data: {
+            download_images: uniqBy(
+              [...userDownloadImage, ...download_images],
+              "photoId"
+            ),
+          },
+        });
+
+        // Return the newly created product type
+        return res.status(201).json({ message: "Success" });
+      }
+
+      default: {
+        // Handle unsupported methods
+        if (handleAllowedMethods(req, res, ["GET", "POST"])) return;
+      }
     }
-
-    // Return the user data
-    return res.status(200).json({ data: user });
   } catch (error) {
-    session.destroy();
-    // Handle any errors
+    switch (error.code) {
+      case "P2002":
+        // Handle duplicate field error
+        return res.status(500).json({
+          message: `Duplicate field: ${error.meta.target.join(", ")}`,
+          error,
+        });
+      default:
+        break;
+    }
+    // Handle other errors
     return res.status(500).json({
-      message: "Failed to fetch user data",
+      message: error.message ? error.message : "Failed to process request",
       error,
-      type: "FAILED_TO_FETCH_USER_DATA",
     });
+  } finally {
+    // Ensure the Prisma Client disconnects from the database
+    await prisma.$disconnect();
   }
 }

@@ -68,6 +68,7 @@ export default async function courseHandler(
                             },
                             name: true,
                             description: true,
+                            is_downloadable: true,
                             id: true,
                           },
                         },

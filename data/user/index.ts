@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 //*utils
 import { useQueryFetch } from "@/helpers/queryHelpers";
+import axios from "@/utils/axios";
 
 //*interface
 interface UserData {
@@ -39,5 +40,14 @@ export const useUser = () => {
     }
   }, [data, status]);
 
-  return { data: userData, status };
+  const updateUserImages = async (
+    downloadImages: { photoId: string; photoUrl: string; downloadUrl: string }[]
+  ) => {
+    const resData = await axios.post("user", {
+      download_images: downloadImages,
+    });
+    return resData;
+  };
+
+  return { data: userData, status, updateUserImages };
 };
