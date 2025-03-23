@@ -103,16 +103,16 @@ export default async function albumHandler(
                 ({
                   productVariation_id,
                   mandatory,
-                  options,
+                  disabled_options,
                 }: {
                   productVariation_id: string;
                   mandatory: boolean;
-                  options: boolean;
+                  disabled_options: string[];
                 }) => ({
                   album_id: newAlbum.id,
                   productVariation_id,
                   mandatory,
-                  options,
+                  disabled_options,
                   ...created_by,
                   ...updated_by,
                 })

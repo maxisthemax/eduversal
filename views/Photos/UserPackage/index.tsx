@@ -117,6 +117,7 @@ function UserPackages() {
           ...userPackage,
           cartId: cartId,
           currentStage: 0,
+          firstStage: 0,
           items: filter(userPackage.items, ({ photoId }) => {
             return photoId !== "";
           }),

@@ -99,7 +99,7 @@ export default async function albumHandler(
                   album_id: albumId as string,
                   productVariation_id: findOption.productVariation_id,
                   mandatory: findOption.mandatory,
-                  options: findOption.options,
+                  disabled_options: findOption.disabled_options,
                   ...created_by,
                   ...updated_by,
                 };
@@ -129,7 +129,7 @@ export default async function albumHandler(
                   },
                   data: {
                     mandatory: findOption.mandatory,
-                    options: findOption.options,
+                    disabled_options: findOption.disabled_options,
                     ...updated_by,
                   },
                 });

@@ -50,7 +50,7 @@ export interface AlbumProductVariationData {
   album_id: string;
   productVariation_id: string;
   mandatory: boolean;
-  options: boolean;
+  disabled_options: string[];
 }
 
 export interface AlbumCreate {

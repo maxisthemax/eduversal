@@ -40,6 +40,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -48,6 +51,7 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 import { useAlbums } from "@/data/admin/institution/album";
 import { useProductType } from "@/data/admin/productType";
 import { useProductVariation } from "@/data/admin/productVariation";
+import { Select } from "@mui/material";
 
 //*validation
 const validationSchema = yup.object({
@@ -75,7 +79,7 @@ function AddEditAlbumDialog({
       </Button>
       <Dialog
         {...bindDialog(popupState)}
-        maxWidth="sm"
+        maxWidth="md"
         fullWidth
         keepMounted={false}
         disableEnforceFocus={true}
@@ -130,8 +134,18 @@ function AddEditAlbumDialogForm({
               product_type_id: albumData.product_type_id,
               product_variations_id: albumData.product_variations_id,
               album_product_variations: albumData.albumProductVariations.map(
-                ({ productVariation_id, album_id, options, mandatory }) => {
-                  return { productVariation_id, options, mandatory, album_id };
+                ({
+                  productVariation_id,
+                  album_id,
+                  disabled_options,
+                  mandatory,
+                }) => {
+                  return {
+                    productVariation_id,
+                    disabled_options,
+                    mandatory,
+                    album_id,
+                  };
                 }
               ),
               preview_url: albumData.preview_url,
@@ -149,6 +163,7 @@ function AddEditAlbumDialogForm({
       }
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
+        console.log("🚀 ~ onSubmit={ ~ values:", values);
         if (files.length === 1) {
           const res = await handleUpload();
           values.preview_url = res[0].display_url;
@@ -315,7 +330,7 @@ function AddEditAlbumDialogForm({
                             findOption ?? {
                               productVariation_id: id,
                               mandatory: false,
-                              options: false,
+                              options: [],
                             }
                           );
                         })
@@ -381,31 +396,67 @@ function AddEditAlbumDialogForm({
                     ({ productVariation_id }, index) => {
                       return (
                         <Stack
-                          direction="row"
-                          spacing={2}
                           key={productVariation_id}
-                          sx={{ alignItems: "center", px: 2, py: 0.5 }}
-                          variant="outlined"
                           component={Paper}
+                          sx={{ px: 2, py: 1 }}
+                          variant="outlined"
+                          spacing={1}
                         >
-                          <Typography>
-                            {
-                              find(productVariationsData, {
-                                id: productVariation_id,
-                              })?.name
-                            }
-                          </Typography>
-                          <FlexBox />
-                          <CheckboxForm
-                            name={`album_product_variations.${index}.mandatory`}
-                            label="Manadatory"
-                            formProps={formProps}
-                          />
-                          <CheckboxForm
-                            name={`album_product_variations.${index}.options`}
-                            label="Options"
-                            formProps={formProps}
-                          />
+                          <Stack
+                            direction="row"
+                            spacing={2}
+                            sx={{ alignItems: "center" }}
+                          >
+                            <Typography>
+                              {
+                                find(productVariationsData, {
+                                  id: productVariation_id,
+                                })?.name
+                              }
+                            </Typography>
+                            <FlexBox />
+                            <CheckboxForm
+                              name={`album_product_variations.${index}.mandatory`}
+                              label="Manadatory"
+                              formProps={formProps}
+                            />
+                            <FormControl sx={{ width: 300 }}>
+                              <InputLabel size="small">
+                                Options Hide From User
+                              </InputLabel>
+                              <Select
+                                input={
+                                  <OutlinedInput label="Options Hide From User" />
+                                }
+                                multiple
+                                value={
+                                  values.album_product_variations[index]
+                                    .disabled_options ?? []
+                                }
+                                onChange={(e) => {
+                                  const {
+                                    target: { value },
+                                  } = e;
+                                  setFieldValue(
+                                    `album_product_variations.${index}.disabled_options`,
+                                    typeof value === "string"
+                                      ? value.split(",")
+                                      : value
+                                  );
+                                }}
+                              >
+                                {find(productVariationsData, {
+                                  id: productVariation_id,
+                                })?.options.map(({ id, name }) => {
+                                  return (
+                                    <MenuItem key={id} value={id}>
+                                      {name}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
+                          </Stack>
                         </Stack>
                       );
                     }

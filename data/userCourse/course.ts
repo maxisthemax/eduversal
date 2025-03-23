@@ -34,7 +34,7 @@ export interface UserCourseAlbumData {
   albumProductVariations: {
     productVariation: ProductVariationData;
     mandatory: boolean;
-    options: boolean;
+    disabled_options: string[];
     productVariation_id: string;
   }[];
   product_type: ProductTypeData;

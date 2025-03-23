@@ -74,7 +74,7 @@ export default async function courseHandler(
                         },
                         productVariation_id: true,
                         mandatory: true,
-                        options: true,
+                        disabled_options: true,
                       },
                     },
                   },

@@ -184,6 +184,7 @@ function PhotoCotent() {
           ...userPackage,
           cartId: userPackage?.cartId ?? cartId,
           currentStage: 0,
+          firstStage: 0,
         },
         packageUrl: path,
         quantity: 1,
@@ -314,7 +315,12 @@ function PhotoCotent() {
               </Box>
               {album.albumProductVariations.map(
                 (
-                  { productVariation, mandatory, productVariation_id },
+                  {
+                    productVariation,
+                    mandatory,
+                    productVariation_id,
+                    disabled_options,
+                  },
                   index
                 ) => {
                   return (
@@ -370,27 +376,32 @@ function PhotoCotent() {
                         >
                           <ListItemText primary={`None`} />
                         </MenuItem>
-                        {productVariation.options.map((option) => {
-                          const { id, name, price_format, description } =
-                            option;
-                          return (
-                            <MenuItem
-                              key={id}
-                              value={id}
-                              onClick={() => {
-                                handleProductVariationOption(
-                                  productVariation,
-                                  option
-                                );
-                              }}
-                            >
-                              <ListItemText
-                                primary={`${name} - ${price_format}`}
-                                secondary={description}
-                              />
-                            </MenuItem>
-                          );
-                        })}
+                        {productVariation.options
+                          .filter(({ id }) => {
+                            return !includes(disabled_options, id);
+                          })
+                          .map((option) => {
+                            const { id, name, price_format, description } =
+                              option;
+
+                            return (
+                              <MenuItem
+                                key={id}
+                                value={id}
+                                onClick={() => {
+                                  handleProductVariationOption(
+                                    productVariation,
+                                    option
+                                  );
+                                }}
+                              >
+                                <ListItemText
+                                  primary={`${name} - ${price_format}`}
+                                  secondary={description}
+                                />
+                              </MenuItem>
+                            );
+                          })}
                       </TextField>
                     </Box>
                   );
