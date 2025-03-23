@@ -50,6 +50,7 @@ function PhotoCotent() {
   const { class_id, album_id, photo_id } = useParams();
   const { userCourseData, status } = useUserCourse(class_id as string);
   const { userPackage, setUserPackage } = useUserPackages();
+  const [mandatoryField, setMandatoryField] = useState([]);
 
   //*const
   const album = find(userCourseData.course.albums, {
@@ -93,7 +94,7 @@ function PhotoCotent() {
     const items = userPackage.items;
 
     // Then add the new option
-    items[0].productVariationOptions = filter(
+    items[userPackage?.firstStage ?? 0].productVariationOptions = filter(
       uniqBy(
         [
           {
@@ -108,7 +109,7 @@ function PhotoCotent() {
             productVariationOptionDescription: option?.description ?? undefined,
             productVariationOptionPreviewUrl: option?.preview_url ?? undefined,
           },
-          ...items[0].productVariationOptions,
+          ...items[userPackage?.firstStage ?? 0].productVariationOptions,
         ],
         "productVariationId"
       ),
@@ -119,33 +120,37 @@ function PhotoCotent() {
 
     setUserPackage({
       itemsPrice: sumBy(
-        items[0].productVariationOptions,
+        items[userPackage?.firstStage ?? 0].productVariationOptions,
         "productVariationOptionPrice"
       ),
       items,
     });
+    handleCheckMandatory();
   };
 
   const handleUserPackageName = (name: string) => {
     const items = userPackage.items;
-    items[0].name = name;
+    items[userPackage?.firstStage ?? 0].name = name;
     setUserPackage({
       items,
     });
   };
 
   const handleSave = () => {
+    const check = handleCheckMandatory();
+    if (check) return;
+
     if (userPackage.packageId !== "none") {
       const expandedAlbums = [...userPackage.packageData.expandedAlbums];
       const matchIndex = findIndex(expandedAlbums, {
-        id: userPackage.items[0].album.albumId,
+        id: userPackage.items[userPackage?.firstStage ?? 0].album.albumId,
       });
 
       const items = [
         ...expandedAlbums.map((album) => ({
           downloadUrl: "",
           photoUrl: "",
-          name: "",
+          name: userPackage?.items[userPackage?.firstStage ?? 0]?.name,
           photoName: "",
           photoId: "",
           album: {
@@ -162,8 +167,10 @@ function PhotoCotent() {
           productVariationOptions: [],
         })),
       ];
-      items[matchIndex] = userPackage.items[0];
+      items[matchIndex] = userPackage.items[userPackage?.firstStage ?? 0];
+
       setUserPackage({
+        firstStage: matchIndex,
         currentStage: findIndex(items, { photoId: "" }),
         items,
       });
@@ -183,6 +190,36 @@ function PhotoCotent() {
       });
       setAddedToCart(true);
     }
+  };
+
+  const handleCheckMandatory = () => {
+    const mandatoryProductVariations = filter(
+      album.albumProductVariations,
+      "mandatory"
+    );
+    const missingProductVariations = filter(
+      mandatoryProductVariations,
+      ({ productVariation }) => {
+        return !find(
+          userPackage.items[userPackage?.firstStage ?? 0]
+            .productVariationOptions,
+          {
+            productVariationId: productVariation.id,
+          }
+        );
+      }
+    );
+
+    setMandatoryField(
+      missingProductVariations.map(
+        ({ productVariation_id }) => productVariation_id
+      )
+    );
+
+    if (missingProductVariations.length > 0) {
+      return true;
+    }
+    return false;
   };
 
   useEffect(() => {
@@ -256,11 +293,11 @@ function PhotoCotent() {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="body2" gutterBottom>
+                <Typography variant="body1" gutterBottom>
                   {"Child's Name"}
                 </Typography>
                 <TextField
-                  value={userPackage.items[0]?.name}
+                  value={userPackage.items[userPackage?.firstStage ?? 0]?.name}
                   select
                   onChange={(event) => {
                     handleUserPackageName(event.target.value);
@@ -276,7 +313,10 @@ function PhotoCotent() {
                 </TextField>
               </Box>
               {album.albumProductVariations.map(
-                ({ productVariation }, index) => {
+                (
+                  { productVariation, mandatory, productVariation_id },
+                  index
+                ) => {
                   return (
                     <Box key={index}>
                       <ListItemText
@@ -286,16 +326,30 @@ function PhotoCotent() {
                             productVariation.is_downloadable
                               ? " (Includes Soft Copy)"
                               : ""
-                          }`
+                          }` +
+                          (mandatory ? " *" : "")
                         }
-                        secondary={productVariation.description}
+                        sx={
+                          includes(mandatoryField, productVariation_id)
+                            ? { color: "#E74D3C" }
+                            : {}
+                        }
                       />
-
                       <TextField
+                        error={includes(mandatoryField, productVariation_id)}
+                        helperText={
+                          includes(mandatoryField, productVariation_id)
+                            ? "Required"
+                            : ""
+                        }
                         value={
-                          find(userPackage.items[0].productVariationOptions, {
-                            productVariationId: productVariation.id,
-                          })?.productVariationOptionId
+                          find(
+                            userPackage.items[userPackage?.firstStage ?? 0]
+                              .productVariationOptions,
+                            {
+                              productVariationId: productVariation.id,
+                            }
+                          )?.productVariationOptionId
                         }
                         select
                         slotProps={{
@@ -343,7 +397,7 @@ function PhotoCotent() {
                 }
               )}
               <Box sx={{ width: "100%" }}>
-                <Typography variant="body2" gutterBottom>
+                <Typography variant="body1" gutterBottom>
                   {"Packages"}
                 </Typography>
                 <Stack direction={"column"} spacing={2}>

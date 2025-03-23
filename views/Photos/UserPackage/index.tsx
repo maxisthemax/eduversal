@@ -40,6 +40,7 @@ export interface UserPackageData {
   packageData?: UserCoursePackageData;
   albumData?: UserCourseAlbumData;
   currentStage?: number;
+  firstStage?: number;
   packagePrice?: number;
   itemsPrice?: number;
   items?: UserPackageItemData[];
