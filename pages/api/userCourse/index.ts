@@ -23,7 +23,7 @@ export default async function courseHandler(
         const courses = await prisma.userCourse.findMany({
           where: {
             user_id: userId,
-            course: { end_date: { gte: new Date() } },
+            course: { end_date: { gte: new Date() }, force_disable: false },
           },
           select: {
             id: true,

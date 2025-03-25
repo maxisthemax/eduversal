@@ -28,6 +28,7 @@ export default async function courseHandler(
         const course = await prisma.course.findUnique({
           where: {
             access_code: code as string,
+            force_disable: false,
           },
           select: {
             academicYear: { select: { year: true, id: true } },
