@@ -171,7 +171,10 @@ function PhotoCotent() {
 
       setUserPackage({
         firstStage: matchIndex,
-        currentStage: findIndex(items, { photoId: "" }),
+        currentStage:
+          findIndex(items, { photoId: "" }) < 0
+            ? 0
+            : findIndex(items, { photoId: "" }),
         items,
       });
       push(`/photos/${class_id}/${album_id}/${photo_id}/package`);
