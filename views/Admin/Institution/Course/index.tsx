@@ -11,6 +11,7 @@ import { OverlayBox, Page } from "@/components/Box";
 import DataGrid from "@/components/Table/DataGrid";
 import AddEditCourseDialog from "./AddEditCourseDialog";
 import { CustomIcon } from "@/components/Icons";
+import { useCustomDialog } from "@/components/Dialog";
 
 //*mui
 import { GridColDef } from "@mui/x-data-grid";
@@ -22,14 +23,16 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+import Typography from "@mui/material/Typography";
 
 //*data
 import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
-import { useCourses } from "@/data/admin/institution/course";
+import { CourseData, useCourses } from "@/data/admin/institution/course";
 import { useAlbums } from "@/data/admin/institution/album";
 
 function Course() {
+  const { handleOpenDialog } = useCustomDialog();
   const params = useParams();
   const institutionId = params.institutionId as string;
   const academicYearId = params.academicYearId as string;
@@ -37,10 +40,10 @@ function Course() {
     useInstitutions(institutionId);
   const { academicYearData, status: academicYearStatus } =
     useAcademicYears(academicYearId);
-  const { coursesData, status: coursesStatus } = useCourses();
+  const { coursesData, status: coursesStatus, updateCourse } = useCourses();
 
   //*const
-  const columns: GridColDef<(typeof coursesData)[]>[] = [
+  const columns: GridColDef<CourseData>[] = [
     {
       field: "name",
       headerName: "Name",
@@ -67,9 +70,18 @@ function Course() {
       width: 200,
     },
     {
-      field: "valid_period_format",
-      headerName: "Valid Period",
-      width: 100,
+      field: "access_code_status",
+      headerName: "Access Code Status",
+      width: 200,
+      renderCell: ({ formattedValue }) => {
+        return (
+          <Typography
+            sx={{ color: formattedValue === "Disabled" ? "red" : "green" }}
+          >
+            {formattedValue}
+          </Typography>
+        );
+      },
     },
     {
       field: "start_date",
@@ -98,7 +110,7 @@ function Course() {
       field: "button",
       headerName: "",
       width: 60,
-      renderCell: ({ id }) => {
+      renderCell: ({ id, row }) => {
         return (
           <PopupState variant="popover" popupId="menu">
             {(popupState) => (
@@ -108,6 +120,33 @@ function Course() {
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
                   <AddEditCourseDialog mode="edit" courseId={id as string} />
+                  <MenuItem
+                    onClick={() => {
+                      handleOpenDialog(
+                        row.force_disable
+                          ? {
+                              title: "Enable this access code",
+                              description: "Are you sure you want to enable?",
+                              onConfirm: async () => {
+                                await updateCourse(id as string, {
+                                  force_disable: false,
+                                });
+                              },
+                            }
+                          : {
+                              title: "Disable this access code",
+                              description: "Are you sure you want to disable?",
+                              onConfirm: async () => {
+                                await updateCourse(id as string, {
+                                  force_disable: true,
+                                });
+                              },
+                            }
+                      );
+                    }}
+                  >
+                    {row.force_disable ? "Enable" : "Disable"}
+                  </MenuItem>
                   <DeleteDialog courseId={id as string} />
                 </Menu>
               </>

@@ -32,6 +32,7 @@ export default async function courseHandler(
           start_date,
           end_date,
           valid_period,
+          force_disable,
         } = req.body;
 
         // Get updatedBy
@@ -43,6 +44,7 @@ export default async function courseHandler(
           data: {
             name,
             access_code,
+            force_disable,
             standard_id,
             start_date,
             end_date,

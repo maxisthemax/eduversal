@@ -1,5 +1,6 @@
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
+import { differenceInDays } from "date-fns";
 
 //*lodash
 import keyBy from "lodash/keyBy";
@@ -22,12 +23,14 @@ export interface CourseData {
   institution_id: string;
   academic_year_id: string;
   access_code: string;
+  force_disable: boolean;
   created_at: Date;
   updated_at: Date;
   standard: { name: string };
   valid_period: "MONTH" | "QUARTER" | "HALF" | "YEAR" | "CUSTOM";
   standard_name_format: string;
   valid_period_format: string;
+  access_code_status: string;
 }
 
 export const validPeriodOptions = [
@@ -45,6 +48,7 @@ export interface CourseCreate {
   start_date: Date;
   end_date: Date;
   valid_period: string;
+  force_disable?: boolean;
 }
 
 type CourseUpdate = Partial<CourseCreate>;
@@ -97,6 +101,11 @@ export function useCourses(
         valid_period_format: find(validPeriodOptions, {
           value: data.valid_period,
         })?.label,
+        access_code_status:
+          data.force_disable ||
+          differenceInDays(new Date(data.end_date), new Date()) === 0
+            ? "Disabled"
+            : "Enabled",
       }));
     } else return [];
   }, [coursesQueryData, isLoading]);

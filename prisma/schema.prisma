@@ -99,6 +99,7 @@ model Course {
   end_date         DateTime
   valid_period     ValidType
   albums           Album[]
+  force_disable    Boolean?     @default(false)
 
   created_by_user_id String
   created_by_name    String
