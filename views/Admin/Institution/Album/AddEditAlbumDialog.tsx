@@ -163,7 +163,6 @@ function AddEditAlbumDialogForm({
       }
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
-        console.log("🚀 ~ onSubmit={ ~ values:", values);
         if (files.length === 1) {
           const res = await handleUpload();
           values.preview_url = res[0].display_url;
