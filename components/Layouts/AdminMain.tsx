@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { FlexBox } from "../Box";
 import { CustomIcon } from "../Icons";
 import { GoogleIcon } from "../Icons/CustomIcon";
+import { useCustomDialog } from "../Dialog";
 
 //*mui
 import Toolbar from "@mui/material/Toolbar";
@@ -25,8 +26,12 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 //*data
 import { useUser } from "@/data/user";
 
+//*utils
+import axios from "@/utils/axios";
+
 function AdminMain({ children }: { children: React.ReactNode }) {
   //*define
+  const { handleOpenDialog } = useCustomDialog();
   const pathname = usePathname();
   const [open, setOpen] = useState({
     restrictContent: pathname === "/admin/institution",
@@ -166,6 +171,21 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 </Box>
               );
             })}
+            <ListItemButton>
+              <ListItemText
+                primary="Logout"
+                onClick={() => {
+                  handleOpenDialog({
+                    title: "Logout",
+                    description: "Are you sure you want to logout?",
+                    onConfirm: async () => {
+                      await axios.post("auth/signOut");
+                      push("/signin");
+                    },
+                  });
+                }}
+              />
+            </ListItemButton>
           </List>
           <Box sx={{ overflow: "auto", width: "100%" }}>{children}</Box>
         </Stack>

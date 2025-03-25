@@ -179,7 +179,7 @@ function AddEditInstitutionDialogForm({
                     name="code"
                     label="Code"
                     formProps={formProps}
-                    props={{ required: true, disabled: true }}
+                    props={{ required: true, disabled: mode === "edit" }}
                   />
                 </Stack>
               </DialogContent>

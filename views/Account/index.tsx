@@ -16,9 +16,13 @@ import Container from "@mui/material/Container";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import LinearProgress from "@mui/material/LinearProgress";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
+
+//*data
+import { useUser } from "@/data/user";
 
 // Define types for menu items
 type MenuItem =
@@ -48,8 +52,11 @@ const menuItems: MenuItem[] = [
 ];
 
 function Account() {
+  const { status } = useUser();
   const { push } = useRouter();
   const { page } = useParams();
+
+  if (status === "pending") return <LinearProgress />;
 
   const pageComponent = {
     profile: <Profile />,
