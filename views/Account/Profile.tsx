@@ -15,6 +15,7 @@ import { useCustomDialog } from "@/components/Dialog/CustomDialog";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
 
 //*data
 import { useUser } from "@/data/user";
@@ -112,6 +113,7 @@ function Profile() {
                         props={{ required: true }}
                       />
                     </Stack>
+                    <TextField value={data.email} disabled={true} />
                     <MobileNumberForm
                       name="phone_no"
                       label="Phone No"
