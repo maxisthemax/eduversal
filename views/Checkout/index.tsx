@@ -83,8 +83,6 @@ function Checkout() {
         first_name: "",
         last_name: "",
         email: "",
-        password: "",
-        confirm_password: "",
         country_code: "+60",
         phone_no: "",
         address_1: "",
@@ -144,7 +142,7 @@ function Checkout() {
           remark,
           shipping_address,
           price: totalPrice,
-          status: "PENDING",
+          status: "COMPLETED", //temporarily completed
         });
 
         const allDownloadable = reduce(
@@ -385,7 +383,7 @@ function Checkout() {
               )}
               <Stack sx={{ width: "100%" }} spacing={2}>
                 <Typography gutterBottom>Payment Method</Typography>
-                {["fpx", "credit card", "e-wallet"].map((method) => (
+                {["fpx", "credit_debit", "e_wallet"].map((method) => (
                   <Button
                     onClick={() => {
                       setFieldValue("payment_method", method);
