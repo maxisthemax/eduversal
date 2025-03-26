@@ -38,7 +38,10 @@ function Downloadable() {
                 textAlign: "center",
               }}
             >
-              <Stack spacing={1}>
+              <Stack
+                spacing={1}
+                sx={{ justifyContent: "space-between", height: "100%" }}
+              >
                 <Box
                   component="img"
                   src={`${item.photoUrl}`}
@@ -47,36 +50,39 @@ function Downloadable() {
                     display: "block",
                     width: "100%",
                     objectFit: "cover",
+                    height: "100%",
                   }}
                 />
-                <Typography variant="body2">
-                  <b>{item.photoName}</b>
-                </Typography>
-                <Button
-                  startIcon={<CustomIcon icon="download" />}
-                  size="large"
-                  variant="outlined"
-                  onClick={async () => {
-                    setIsDownloading(true);
-                    try {
-                      const res = await axios.get(
-                        `user/downloadPhoto?fileKey=${item.downloadUrl}`
-                      );
-                      const link = document.createElement("a");
-                      link.href = res.data.url;
-                      link.download = item.photoName;
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                      setIsDownloading(false);
-                    } catch (error) {
-                      console.error(error);
-                      setIsDownloading(false);
-                    }
-                  }}
-                >
-                  Download
-                </Button>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    <b>{item.photoName}</b>
+                  </Typography>
+                  <Button
+                    startIcon={<CustomIcon icon="download" />}
+                    size="large"
+                    variant="outlined"
+                    onClick={async () => {
+                      setIsDownloading(true);
+                      try {
+                        const res = await axios.get(
+                          `user/downloadPhoto?fileKey=${item.downloadUrl}`
+                        );
+                        const link = document.createElement("a");
+                        link.href = res.data.url;
+                        link.download = item.photoName;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        setIsDownloading(false);
+                      } catch (error) {
+                        console.error(error);
+                        setIsDownloading(false);
+                      }
+                    }}
+                  >
+                    Download
+                  </Button>
+                </Box>
               </Stack>
             </Grid>
           ))}
