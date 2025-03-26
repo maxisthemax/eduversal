@@ -81,7 +81,7 @@ export default async function resendVerification(
 
     // Send verification email
     await sendEmail({
-      from: process.env.NEXT_EMAIL_USER,
+      from: process.env.NEXT_EMAIL_FROM,
       to: email,
       subject: "Email Verification",
       html: `<p>Please verify your email by clicking the following link:</p><p><a href="${verificationLink}">${verificationLink}</a></p>`,

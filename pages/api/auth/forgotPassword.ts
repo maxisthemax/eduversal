@@ -87,7 +87,7 @@ export default async function forgotPassword(
 
     // Send reset email using the helper function
     await sendEmail({
-      from: process.env.NEXT_EMAIL_USER,
+      from: process.env.NEXT_EMAIL_FROM,
       to: email,
       subject: "Password Reset",
       html: `<p>Please reset your password by clicking the following link:</p><p><a href="${resetLink}">${resetLink}</a></p>`,

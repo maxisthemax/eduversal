@@ -127,13 +127,13 @@ export default async function signUp(
     )}`;
 
     // Validate environment variables
-    if (!process.env.NEXT_EMAIL_USER || !process.env.NEXT_EMAIL_PASS) {
+    if (!process.env.NEXT_EMAIL_FROM || !process.env.NEXT_EMAIL_PASS) {
       throw new Error("Email environment variables are not set");
     }
 
     // Send verification email
     await sendEmail({
-      from: process.env.NEXT_EMAIL_USER,
+      from: process.env.NEXT_EMAIL_FROM,
       to: email,
       subject: "Email Verification",
       html: `<p>Please verify your email by clicking the following link:</p><p><a href="${verificationLink}">${verificationLink}</a></p>`,
