@@ -109,7 +109,10 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 id: "general",
                 title: "General",
                 icon: "globe",
-                list: [{ title: "Setting", href: "/admin/general/setting" }],
+                list: [
+                  { title: "Setting", href: "/admin/general/setting" },
+                  { title: "Banner", href: "/admin/banner" },
+                ],
               },
             ].map(({ title, list, id, icon }, index) => {
               return (

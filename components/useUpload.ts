@@ -52,12 +52,13 @@ export default function useUpload(
     },
   });
 
-  const handleUpload = async () => {
+  const handleUpload = async (name?: string) => {
     const formData = new FormData();
     formData.append("watermark", watermark.toString());
     formData.append("folderPath", uploadPath);
     files.forEach((file) => {
-      formData.append("files", file);
+      const myRenamedFile = new File([file], name, { type: file.type });
+      formData.append("files", name ? myRenamedFile : file);
     });
     try {
       setIsUploading(true);

@@ -19,7 +19,14 @@ function AuthMain({ children }: { children: React.ReactNode }) {
           maxWidth: "900px",
         }}
       >
-        <Box component="img" src={"/image/login_bg_1.png"} width={"100%"} />
+        <Box
+          component="img"
+          src={`https://${process.env.NEXT_PUBLIC_DO_SPACES_URL}/banner/banner_img`}
+          sx={{
+            objectFit: "cover",
+            height: "100%",
+          }}
+        />
       </Grid>
       <Grid size={{ xs: 12, sm: 12, md: 7.5 }}>
         <Stack
