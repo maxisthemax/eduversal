@@ -67,6 +67,7 @@ function PhotoCotent() {
       price_format: `RM ${album.product_type.price.toFixed(2)}`,
       package_type_format: "",
       is_downloadable: false,
+      preview_url: "",
     },
     ...userCourseData.course.package.filter(({ packageAlbums }) => {
       return includes(
@@ -254,28 +255,56 @@ function PhotoCotent() {
         <Grid container>
           <Grid
             size={{ xs: 6 }}
-            component={Paper}
             sx={{
               justifyContent: "center",
               display: "flex",
-              height: getFullHeightSize(15),
+              height: getFullHeightSize(16),
+              flexDirection: "column",
             }}
-            variant="outlined"
           >
             <Paper
               variant="outlined"
               component="img"
-              src={photo.display_url ?? null}
+              src={
+                (userPackage?.packageId === "none"
+                  ? photo.display_url
+                  : find(albumPackage, { id: userPackage?.packageId })
+                      .preview_url) ?? null
+              }
               sx={{
+                overflow: "hidden",
                 height: "100%",
                 width: "100%",
                 aspectRatio: "2/3",
-                objectFit:
-                  album.product_type.type === "INDIVIDUAL"
-                    ? "cover"
-                    : "contain",
+                objectFit: "contain",
               }}
             />
+            <Stack sx={{ pt: 2 }} direction="row" spacing={2}>
+              {albumPackage.map(({ preview_url, id }) => {
+                return (
+                  <Button
+                    variant="outlined"
+                    key={id}
+                    sx={{ p: 0.5 }}
+                    onClick={() => {
+                      handlePackage(id);
+                    }}
+                    color={
+                      userPackage?.packageId === id ? "primary" : "inherit"
+                    }
+                  >
+                    <Box
+                      component="img"
+                      sx={{ width: "100px" }}
+                      src={
+                        (id === "none" ? photo.display_url : preview_url) ??
+                        null
+                      }
+                    />
+                  </Button>
+                );
+              })}
+            </Stack>
           </Grid>
           <Grid
             size={{ xs: 6 }}
