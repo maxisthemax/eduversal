@@ -49,11 +49,19 @@ function CartDetails({ cart }) {
                     <Typography variant="body1" gutterBottom>
                       {item.userPackage.items[0]?.photoName}
                     </Typography>
+                    {!item.userPackage.items[0].album
+                      .productTypeDeliverable && (
+                      <Typography variant="inherit" color="error">
+                        Please note that this product is available for
+                        collection at the school by the assigned teacher.
+                      </Typography>
+                    )}
                     <Typography variant="body2">
                       Child: {item.userPackage.items[0]?.name}
                     </Typography>
                     {item.userPackage.items[0]?.productVariationOptions.map(
-                      (option) =>
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      (option: any) =>
                         option.productVariationOptionId ? (
                           <Typography
                             variant="body2"

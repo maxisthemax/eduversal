@@ -268,11 +268,17 @@ function Checkout() {
                     <ListItemText
                       slotProps={{
                         primary: { variant: "inherit" },
-                        secondary: { variant: "inherit" },
+                        secondary: {
+                          variant: "inherit",
+                          whiteSpace: "break-spaces",
+                          textAlign: "start",
+                        },
                       }}
                       sx={{ justifyItems: "start" }}
                       primary={"Pick up in store"}
-                      secondary={"Address"}
+                      secondary={
+                        "YS Photoversal Studio,\nLot 3267, Jalan 18/36,\nTaman Sri Serdang, 43300\nSeri Kembangan, Selangor"
+                      }
                     />
                   </Stack>
                 </Button>
