@@ -22,6 +22,7 @@ export async function middleware(req: NextRequest) {
   // Check if the request is for an authentication-related route
   if (
     [
+      "/admin/signin",
       "/signin",
       "/signup",
       "/verifyemail",
@@ -37,8 +38,18 @@ export async function middleware(req: NextRequest) {
   ) {
     // Redirect logged-in users away from auth routes
     if (session.isLoggedIn) {
-      nextUrl.pathname = "/";
-      return NextResponse.redirect(nextUrl);
+      if (pathname === "/admin/signin") {
+        if (session.role === "USER") {
+          nextUrl.pathname = "/unauthorized";
+          return NextResponse.redirect(nextUrl);
+        } else {
+          nextUrl.pathname = "/admin";
+          return NextResponse.redirect(nextUrl);
+        }
+      } else {
+        nextUrl.pathname = "/";
+        return NextResponse.redirect(nextUrl);
+      }
     } else return res;
   } else {
     // Handle non-auth routes
@@ -51,10 +62,17 @@ export async function middleware(req: NextRequest) {
         } else return res;
       } else return res;
     } else {
+      if (pathname === "/admin") {
+        nextUrl.pathname = "/admin/signin";
+        nextUrl.search = `?redirect=${encodeURIComponent(pathname)}`;
+        return NextResponse.redirect(nextUrl);
+      }
       // Redirect non-logged-in users to the sign-in page
-      nextUrl.pathname = "/signin";
-      nextUrl.search = `?redirect=${encodeURIComponent(pathname)}`;
-      return NextResponse.redirect(nextUrl);
+      else {
+        nextUrl.pathname = "/signin";
+        nextUrl.search = `?redirect=${encodeURIComponent(pathname)}`;
+        return NextResponse.redirect(nextUrl);
+      }
     }
   }
 }

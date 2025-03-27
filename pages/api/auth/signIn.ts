@@ -20,7 +20,7 @@ export default async function signIn(
   if (handleAllowedMethods(req, res, ["POST"])) return;
 
   // Extract from request body
-  const { email, password, remember_me = false } = req.body;
+  const { email, password, remember_me = false, is_admin = false } = req.body;
 
   // Validate email and password
   if (!validateRequiredFields(req, res, ["email", "password"])) {
@@ -40,7 +40,12 @@ export default async function signIn(
 
   try {
     // Find the user in the database
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+        role: is_admin ? { in: ["ADMIN", "SUPERADMIN"] } : "USER",
+      },
+    });
 
     // Validate user and password
     if (!user || !(await bcrypt.compare(password, user.password))) {

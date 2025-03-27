@@ -172,15 +172,18 @@ function AdminMain({ children }: { children: React.ReactNode }) {
               );
             })}
             <ListItemButton>
+              <CustomIcon icon="logout" fontSizeSx="14px" iconColor="black" />
               <ListItemText
-                primary="Logout"
+                sx={{ pl: 1 }}
+                primary={<b>Logout</b>}
+                slotProps={{ primary: { variant: "body1" } }}
                 onClick={() => {
                   handleOpenDialog({
                     title: "Logout",
                     description: "Are you sure you want to logout?",
                     onConfirm: async () => {
                       await axios.post("auth/signOut");
-                      push("/signin");
+                      push("/admin/signin");
                     },
                   });
                 }}

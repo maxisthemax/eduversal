@@ -8,6 +8,7 @@ import startsWith from "lodash/startsWith";
 import AuthMain from "./AuthMain";
 import Main from "./Main";
 import AdminMain from "./AdminMain";
+import Minimal from "./Minimal";
 
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();
@@ -25,6 +26,7 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
     )
   )
     return <AuthMain>{children}</AuthMain>;
+  else if (pathName === "/admin/signin") return <Minimal>{children}</Minimal>;
   else if (startsWith(pathName, "/admin"))
     return <AdminMain>{children}</AdminMain>;
   else if (includes(["/checkout"], pathName)) return <>{children}</>;
