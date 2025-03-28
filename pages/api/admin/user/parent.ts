@@ -29,15 +29,22 @@ export default async function handler(
                     { first_name: { contains: search, mode: "insensitive" } },
                     { last_name: { contains: search, mode: "insensitive" } },
                     {
-                      AND: [
-                        {
-                          country_code: {
-                            contains: search,
-                            mode: "insensitive",
-                          },
-                        },
-                        { phone_no: { contains: search, mode: "insensitive" } },
-                      ],
+                      phone_no: {
+                        contains: search,
+                        mode: "insensitive",
+                      },
+                    },
+                    {
+                      phone_no: {
+                        contains: search.split("+60")[1],
+                        mode: "insensitive",
+                      },
+                    },
+                    {
+                      phone_no: {
+                        contains: search.split("60")[1],
+                        mode: "insensitive",
+                      },
                     },
                   ],
                 }
@@ -56,15 +63,22 @@ export default async function handler(
                     { first_name: { contains: search, mode: "insensitive" } },
                     { last_name: { contains: search, mode: "insensitive" } },
                     {
-                      AND: [
-                        {
-                          country_code: {
-                            contains: search,
-                            mode: "insensitive",
-                          },
-                        },
-                        { phone_no: { contains: search, mode: "insensitive" } },
-                      ],
+                      phone_no: {
+                        contains: search,
+                        mode: "insensitive",
+                      },
+                    },
+                    {
+                      phone_no: {
+                        contains: search.split("+60")[1],
+                        mode: "insensitive",
+                      },
+                    },
+                    {
+                      phone_no: {
+                        contains: search.split("60")[1],
+                        mode: "insensitive",
+                      },
                     },
                   ],
                 }
