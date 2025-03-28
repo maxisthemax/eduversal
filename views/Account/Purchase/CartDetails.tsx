@@ -94,6 +94,7 @@ function CartDetails({ cart }) {
                         photoName,
                         photoUrl,
                         productVariationOptions,
+                        album,
                       }) => {
                         return (
                           <Grid container key={photoId} spacing={2}>
@@ -118,6 +119,13 @@ function CartDetails({ cart }) {
                                   <Typography variant="body1" gutterBottom>
                                     {photoName}
                                   </Typography>
+                                  {!album.productTypeDeliverable && (
+                                    <Typography variant="inherit" color="error">
+                                      Please note that this product is available
+                                      for collection at the school by the
+                                      assigned teacher.
+                                    </Typography>
+                                  )}
                                   {productVariationOptions.map((option) => (
                                     <Typography
                                       variant="body2"
