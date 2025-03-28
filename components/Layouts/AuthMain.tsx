@@ -25,6 +25,7 @@ function AuthMain({ children }: { children: React.ReactNode }) {
           sx={{
             objectFit: "cover",
             height: "100%",
+            width: "100%",
           }}
         />
       </Grid>
