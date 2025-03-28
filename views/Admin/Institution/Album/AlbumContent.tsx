@@ -399,6 +399,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
               <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
             </Grid>
             <NameValue name="Name" value={albumData.name} />
+            <NameValue name="Description" value={albumData.description} />
             <NameValue name="Total Files" value={photosData.length} />
             <NameValue
               name="Created"
