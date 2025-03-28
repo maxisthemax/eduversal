@@ -243,7 +243,6 @@ function AddEditPackagesDialogForm({
         values,
         errors,
         isSubmitting,
-        submitForm,
         handleChange,
         resetForm,
         touched,
@@ -465,7 +464,6 @@ function AddEditPackagesDialogForm({
                   loading={isSubmitting}
                   disabled={isSubmitting}
                   type="submit"
-                  onClick={submitForm}
                 >
                   OK
                 </LoadingButton>

@@ -168,7 +168,6 @@ function AddEditProductVariationDialogForm({
         values,
         errors,
         isSubmitting,
-        submitForm,
         handleChange,
         resetForm,
         touched,
@@ -397,7 +396,6 @@ function AddEditProductVariationDialogForm({
                   loading={isSubmitting}
                   disabled={isSubmitting}
                   type="submit"
-                  onClick={submitForm}
                 >
                   OK
                 </LoadingButton>

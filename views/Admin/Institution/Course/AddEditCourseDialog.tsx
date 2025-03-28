@@ -146,7 +146,6 @@ function AddEditCourseDialogForm({
         values,
         errors,
         isSubmitting,
-        submitForm,
         handleChange,
         resetForm,
         touched,
@@ -266,7 +265,6 @@ function AddEditCourseDialogForm({
                   loading={isSubmitting}
                   disabled={isSubmitting}
                   type="submit"
-                  onClick={submitForm}
                 >
                   OK
                 </LoadingButton>

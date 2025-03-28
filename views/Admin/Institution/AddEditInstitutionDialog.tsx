@@ -129,7 +129,6 @@ function AddEditInstitutionDialogForm({
         values,
         errors,
         isSubmitting,
-        submitForm,
         handleChange,
         resetForm,
         touched,
@@ -198,7 +197,6 @@ function AddEditInstitutionDialogForm({
                   loading={isSubmitting}
                   disabled={isSubmitting}
                   type="submit"
-                  onClick={submitForm}
                 >
                   OK
                 </LoadingButton>

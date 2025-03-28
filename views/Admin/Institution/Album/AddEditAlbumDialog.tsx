@@ -6,6 +6,7 @@ import {
   usePopupState,
 } from "material-ui-popup-state/hooks";
 import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 //*lodash
 import find from "lodash/find";
@@ -43,6 +44,7 @@ import IconButton from "@mui/material/IconButton";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -51,7 +53,6 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 import { useAlbums } from "@/data/admin/institution/album";
 import { useProductType } from "@/data/admin/productType";
 import { useProductVariation } from "@/data/admin/productVariation";
-import { Select } from "@mui/material";
 
 //*validation
 const validationSchema = yup.object({
@@ -163,6 +164,32 @@ function AddEditAlbumDialogForm({
       }
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
+        const mandatoryError = [];
+        values.album_product_variations.forEach((item) => {
+          if (
+            item.mandatory &&
+            item.disabled_options.length ===
+              find(productVariationsData, {
+                id: item.productVariation_id,
+              })?.options.length
+          ) {
+            mandatoryError.push(
+              `Product Variation ${
+                find(productVariationsData, {
+                  id: item.productVariation_id,
+                }).name
+              } is Mandatory, not allow to hide all options from user`
+            );
+          }
+        });
+
+        toast.error(
+          <Box sx={{ whiteSpace: "break-spaces" }}>
+            {mandatoryError.join("\n\n")}
+          </Box>,
+          { autoClose: 10000 }
+        );
+        if (mandatoryError.length > 0) return;
         if (files.length === 1) {
           const res = await handleUpload();
           values.preview_url = res[0].display_url;
@@ -185,7 +212,6 @@ function AddEditAlbumDialogForm({
         values,
         errors,
         isSubmitting,
-        submitForm,
         handleChange,
         resetForm,
         touched,
@@ -416,7 +442,7 @@ function AddEditAlbumDialogForm({
                             <FlexBox />
                             <CheckboxForm
                               name={`album_product_variations.${index}.mandatory`}
-                              label="Manadatory"
+                              label="Mandatory"
                               formProps={formProps}
                             />
                             <FormControl sx={{ width: 300 }}>
@@ -477,7 +503,6 @@ function AddEditAlbumDialogForm({
                   loading={isSubmitting}
                   disabled={isSubmitting}
                   type="submit"
-                  onClick={submitForm}
                 >
                   OK
                 </LoadingButton>

@@ -53,7 +53,11 @@ function Class() {
                     >
                       <Box
                         component="img"
-                        src={preview_url ?? photos[0]?.display_url}
+                        src={
+                          preview_url !== ""
+                            ? preview_url
+                            : photos[0]?.display_url
+                        }
                         sx={{
                           backgroundColor: "grey.300",
                           width: "100%",
