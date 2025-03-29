@@ -12,6 +12,7 @@ import prisma from "@/lib/prisma";
 import {
   getCreatedByUpdatedBy,
   handleAllowedMethods,
+  validateRequiredFields,
 } from "@/helpers/apiHelpers";
 
 //*functions
@@ -138,7 +139,48 @@ export default async function handler(
           return res.status(200).json({ data: result });
         });
         break;
+      case "DELETE": {
+        // Delete a product type
+        const { productVariationId } = req.query;
 
+        // Validate required fields
+        if (
+          !validateRequiredFields(req, res, ["productVariationId"], "query")
+        ) {
+          return;
+        }
+
+        const albumProductFound = await prisma.albumProductVariation.findMany({
+          where: { productVariation_id: productVariationId as string },
+          include: { album: { select: { name: true } } },
+        });
+
+        if (albumProductFound.length > 0) {
+          return res.status(400).json({
+            message: `Cannot delete this product variation type. ${albumProductFound
+              .map(({ album }) => {
+                return album.name;
+              })
+              .join(", ")} still using this product variation type.`,
+          });
+        }
+
+        // Delete the product type
+        await prisma.$transaction(async (prisma) => {
+          await prisma.productVariationOption.deleteMany({
+            where: { productVariation_id: productVariationId as string },
+          });
+
+          await prisma.productVariation.delete({
+            where: { id: productVariationId as string },
+          });
+        });
+
+        // Return the deleted product type
+        return res
+          .status(200)
+          .json({ message: "Product variation type deleted successfully" });
+      }
       default:
         // Use handleAllowedMethods for method validation
         if (handleAllowedMethods(req, res, ["PUT"])) return;

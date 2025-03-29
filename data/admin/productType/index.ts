@@ -48,8 +48,9 @@ export function useProductType(productTypeId?: string): {
   status: string;
   isDeleting: boolean;
 } {
-  // Fetch productTypes data
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Fetch productTypes data
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "producttype"],
     `admin/producttype`

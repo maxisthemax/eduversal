@@ -5,6 +5,7 @@ import DataGrid from "@/components/Table/DataGrid";
 import { CustomIcon } from "@/components/Icons";
 import { Page } from "@/components/Box";
 import AddEditProductVariationDialog from "./AddEditProductVariationDialog";
+import { useCustomDialog } from "@/components/Dialog/CustomDialog";
 
 //*mui
 import Menu from "@mui/material/Menu";
@@ -14,6 +15,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
+import MenuItem from "@mui/material/MenuItem";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
@@ -23,7 +25,9 @@ import {
 } from "@/data/admin/productVariation";
 
 function ProductVariation() {
-  const { productVariationsData, status } = useProductVariation();
+  const { productVariationsData, status, deleteProductVariation } =
+    useProductVariation();
+  const { handleOpenDialog } = useCustomDialog();
 
   const columns: GridColDef<ProductVariationData>[] = [
     {
@@ -87,6 +91,20 @@ function ProductVariation() {
                     mode="edit"
                     productVariationId={id as string}
                   />
+                  <MenuItem
+                    onClick={() => {
+                      handleOpenDialog({
+                        title: "Delete Product Variation",
+                        description: "Are you sure you want to delete this?",
+                        onConfirm: async () => {
+                          await deleteProductVariation(id as string);
+                          popupState.close();
+                        },
+                      });
+                    }}
+                  >
+                    Delete
+                  </MenuItem>
                 </Menu>
               </>
             )}
