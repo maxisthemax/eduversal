@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 import find from "lodash/find";
 
 //*components
-import { OverlayBox } from "@/components/Box";
+import { FlexBox, OverlayBox } from "@/components/Box";
 import {
   TextFieldForm,
   TextFieldPriceForm,
@@ -21,6 +21,7 @@ import {
 } from "@/components/Form";
 import { CustomIcon } from "@/components/Icons";
 import useUpload from "@/components/useUpload";
+import { useCustomDialog } from "@/components/Dialog";
 
 //*material
 import Dialog from "@mui/material/Dialog";
@@ -99,8 +100,14 @@ function AddEditPackagesDialogForm({
   const [addEdit, setAddEdit] = useState(false);
   const { albumsData, status } = useAlbums();
   const [packageId, setPackageId] = useState("");
-  const { packageData, packagesData, addPackage, updatePackage } =
-    usePackage(packageId);
+  const {
+    packageData,
+    packagesData,
+    addPackage,
+    updatePackage,
+    deletePackage,
+  } = usePackage(packageId);
+  const { handleOpenDialog } = useCustomDialog();
 
   const { files, setFiles, getRootProps, getInputProps, handleUpload } =
     useUpload(`institution/${institutionId}/course/${courseId}/package`, {
@@ -448,6 +455,27 @@ function AddEditPackagesDialogForm({
                 </Stack>
               </DialogContent>
               <DialogActions>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => {
+                    handleOpenDialog({
+                      title: "Delete Package",
+                      description:
+                        "Are you sure you want to delete this package?",
+                      onConfirm: async () => {
+                        await deletePackage(packageId);
+                        setAddEdit(false);
+                        resetForm();
+                        setPackageId("");
+                        setFiles([]);
+                      },
+                    });
+                  }}
+                >
+                  Delete
+                </Button>
+                <FlexBox />
                 <Button
                   disabled={isSubmitting}
                   onClick={() => {

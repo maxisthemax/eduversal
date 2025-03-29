@@ -129,8 +129,14 @@ export default async function packageHandler(
         }
 
         // Delete the package
-        await prisma.package.delete({
-          where: { id: packageId as string },
+
+        await prisma.$transaction(async (prisma) => {
+          await prisma.packageAlbum.deleteMany({
+            where: { package_id: packageId as string },
+          });
+          await prisma.package.delete({
+            where: { id: packageId as string },
+          });
         });
 
         // Return a success message

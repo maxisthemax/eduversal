@@ -55,6 +55,7 @@ export function usePackage(packageId?: string): {
   packageData: PackageData;
   addPackage: (packageData: PackageCreate) => Promise<void>;
   updatePackage: (id: string, packageData: PackageUpdate) => Promise<void>;
+  deletePackage: (id: string) => Promise<void>;
   status: string;
 } {
   const params = useParams();
@@ -108,6 +109,13 @@ export function usePackage(packageId?: string): {
     refetch();
   };
 
+  const deletePackage = async (id: string) => {
+    await axios.delete(
+      `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${courseId}/package/${id}`
+    );
+    refetch();
+  };
+
   return {
     packagesData,
     packagesById,
@@ -115,5 +123,6 @@ export function usePackage(packageId?: string): {
     packageData,
     addPackage,
     updatePackage,
+    deletePackage,
   };
 }
