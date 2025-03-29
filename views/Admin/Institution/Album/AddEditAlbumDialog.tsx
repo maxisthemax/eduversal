@@ -183,13 +183,15 @@ function AddEditAlbumDialogForm({
           }
         });
 
-        toast.error(
-          <Box sx={{ whiteSpace: "break-spaces" }}>
-            {mandatoryError.join("\n\n")}
-          </Box>,
-          { autoClose: 10000 }
-        );
-        if (mandatoryError.length > 0) return;
+        if (mandatoryError.length > 0) {
+          toast.error(
+            <Box sx={{ whiteSpace: "break-spaces" }}>
+              {mandatoryError.join("\n\n")}
+            </Box>,
+            { autoClose: 10000 }
+          );
+          return;
+        }
         if (files.length === 1) {
           const res = await handleUpload();
           values.preview_url = res[0].display_url;

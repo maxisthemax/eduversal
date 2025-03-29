@@ -144,8 +144,8 @@ model Album {
   id                     String                  @id @default(cuid())
   name                   String
   description            String
-  product_type_id        String?
-  product_type           ProductType?            @relation(fields: [product_type_id], references: [id])
+  product_type_id        String
+  product_type           ProductType             @relation(fields: [product_type_id], references: [id])
   photos                 Photo[]
   institution_id         String?
   institution            Institution?            @relation(fields: [institution_id], references: [id])

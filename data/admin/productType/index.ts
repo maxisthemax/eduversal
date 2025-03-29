@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 //*lodash
 import keyBy from "lodash/keyBy";
@@ -44,9 +44,12 @@ export function useProductType(productTypeId?: string): {
     id: string,
     productType: ProductTypeUpdate
   ) => Promise<void>;
+  deleteProductType: (id: string) => Promise<void>;
   status: string;
+  isDeleting: boolean;
 } {
   // Fetch productTypes data
+  const [isDeleting, setIsDeleting] = useState(false);
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "producttype"],
     `admin/producttype`
@@ -97,6 +100,19 @@ export function useProductType(productTypeId?: string): {
     refetch();
   };
 
+  const deleteProductType = async (id: string) => {
+    try {
+      setIsDeleting(true);
+      await axios.delete(`admin/producttype/${id}`);
+      setIsDeleting(false);
+    } catch (error) {
+      console.log(error);
+      setIsDeleting(false);
+    }
+
+    refetch();
+  };
+
   return {
     productsData,
     productsDataById,
@@ -104,5 +120,7 @@ export function useProductType(productTypeId?: string): {
     productData,
     addProductType,
     updateProductType,
+    deleteProductType,
+    isDeleting,
   };
 }

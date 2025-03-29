@@ -5,9 +5,11 @@ import DataGrid from "@/components/Table/DataGrid";
 import { CustomIcon } from "@/components/Icons";
 import { Page } from "@/components/Box";
 import AddEditProductTypeDialog from "./AddEditProductTypeDialog";
+import { useCustomDialog } from "@/components/Dialog/CustomDialog";
 
 //*mui
 import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import { GridColDef } from "@mui/x-data-grid";
 
@@ -15,7 +17,8 @@ import { GridColDef } from "@mui/x-data-grid";
 import { useProductType, ProductTypeData } from "@/data/admin/productType";
 
 function ProductType() {
-  const { productsData, status } = useProductType();
+  const { productsData, status, deleteProductType } = useProductType();
+  const { handleOpenDialog } = useCustomDialog();
 
   const columns: GridColDef<ProductTypeData>[] = [
     {
@@ -54,6 +57,20 @@ function ProductType() {
                     mode="edit"
                     productTypeId={id as string}
                   />
+                  <MenuItem
+                    onClick={() => {
+                      handleOpenDialog({
+                        title: "Delete Product Type",
+                        description: "Are you sure you want to delete this?",
+                        onConfirm: async () => {
+                          await deleteProductType(id as string);
+                          popupState.close();
+                        },
+                      });
+                    }}
+                  >
+                    Delete
+                  </MenuItem>
                 </Menu>
               </>
             )}

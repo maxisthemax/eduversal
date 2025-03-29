@@ -47,6 +47,39 @@ export default async function productTypeHandler(
         // Return the updated product type
         return res.status(200).json({ data: updatedProductType });
       }
+
+      case "DELETE": {
+        // Delete an existing product type
+        const { productTypeId } = req.query;
+        // Validate required fields
+        if (!validateRequiredFields(req, res, ["productTypeId"], "query")) {
+          return;
+        }
+
+        const albumFind = await prisma.album.findMany({
+          where: { product_type_id: productTypeId as string },
+        });
+
+        if (albumFind.length > 0) {
+          return res.status(400).json({
+            message: `Cannot delete this product type. ${albumFind
+              .map(({ name }) => {
+                return name;
+              })
+              .join(", ")} still using this product type.`,
+          });
+        }
+
+        // Delete the product type
+        await prisma.productType.delete({
+          where: { id: productTypeId as string },
+        });
+
+        // Return the deleted product type
+        return res
+          .status(200)
+          .json({ message: "Product type deleted successfully" });
+      }
       default:
         // Use handleAllowedMethods for method validation
         if (handleAllowedMethods(req, res, ["PUT"])) return;

@@ -52,7 +52,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     push("/");
                   }}
                 >
-                  BACK
+                  Go To User
                 </Button>
               )}
             </Stack>
