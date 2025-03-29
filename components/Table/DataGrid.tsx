@@ -65,13 +65,28 @@ function DataGrid({
         "& .MuiDataGrid-cell": {
           alignContent: "center",
         },
+        "& .stickyRight": {
+          position: "sticky",
+          right: 0,
+          zIndex: 99,
+          backgroundColor: "#fff", // keep it from overlapping with background
+        },
       }}
       loading={loading}
       disableColumnSelector
       disableDensitySelector
       density="compact"
       rows={data}
-      columns={columns}
+      columns={columns.map((column) => {
+        console.log(column);
+        if (column.field === "button") {
+          return {
+            ...column,
+            headerClassName: "stickyRight",
+            cellClassName: "stickyRight",
+          };
+        } else return column;
+      })}
       disableRowSelectionOnClick={true}
       slots={{ toolbar: GridToolbar }}
       slotProps={{
@@ -91,6 +106,7 @@ function DataGrid({
             ? "auto"
             : null;
       }}
+      columnBufferPx={1000}
     />
   );
 }
