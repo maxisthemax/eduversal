@@ -5,7 +5,6 @@ import { useRouter, usePathname } from "next/navigation";
 import { FlexBox } from "../Box";
 import { CustomIcon } from "../Icons";
 import { GoogleIcon } from "../Icons/CustomIcon";
-import { useCustomDialog } from "../Dialog";
 
 //*mui
 import Toolbar from "@mui/material/Toolbar";
@@ -26,12 +25,8 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 //*data
 import { useUser } from "@/data/user";
 
-//*utils
-import axios from "@/utils/axios";
-
 function AdminMain({ children }: { children: React.ReactNode }) {
   //*define
-  const { handleOpenDialog } = useCustomDialog();
   const pathname = usePathname();
   const [open, setOpen] = useState({
     restrictContent: pathname === "/admin/institution",
@@ -114,6 +109,18 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                   { title: "Banner", href: "/admin/banner" },
                 ],
               },
+              {
+                id: "account",
+                title: "Account",
+                icon: "person",
+                list: [
+                  { title: "Profile", href: "/admin/account/profile" },
+                  {
+                    title: "Change Password",
+                    href: "/admin/account/change-password",
+                  },
+                ],
+              },
             ].map(({ title, list, id, icon }, index) => {
               return (
                 <Box key={id}>
@@ -174,24 +181,6 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 </Box>
               );
             })}
-            <ListItemButton>
-              <CustomIcon icon="logout" fontSizeSx="14px" iconColor="black" />
-              <ListItemText
-                sx={{ pl: 1 }}
-                primary={<b>Logout</b>}
-                slotProps={{ primary: { variant: "body1" } }}
-                onClick={() => {
-                  handleOpenDialog({
-                    title: "Logout",
-                    description: "Are you sure you want to logout?",
-                    onConfirm: async () => {
-                      await axios.post("auth/signOut");
-                      push("/admin/signin");
-                    },
-                  });
-                }}
-              />
-            </ListItemButton>
           </List>
           <Box sx={{ overflow: "auto", width: "100%" }}>{children}</Box>
         </Stack>

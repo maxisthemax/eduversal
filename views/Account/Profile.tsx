@@ -33,7 +33,7 @@ const validationSchema = yup.object({
   city: yup.string().required("City is required"),
 });
 
-function Profile() {
+function Profile({ mode = "user" }: { mode?: "admin" | "user" }) {
   const { push } = useRouter();
   const { data, updateUserData } = useUser();
   const { handleOpenDialog } = useCustomDialog();
@@ -160,7 +160,8 @@ function Profile() {
                             description: "Are you sure you want to logout?",
                             onConfirm: async () => {
                               await axios.post("auth/signOut");
-                              push("/signin");
+                              if (mode === "user") push("/signin");
+                              else push("/admin/signin");
                             },
                           });
                         }}
