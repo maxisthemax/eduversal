@@ -56,7 +56,7 @@ function PermissionDialog({
   const staffData = staffDataById[staffId];
 
   return (
-    <Dialog open={staffId !== ""} maxWidth="md" fullWidth>
+    <Dialog open={staffId !== ""} maxWidth="md" fullWidth keepMounted={false}>
       <Formik
         initialValues={
           permissions.reduce((acc, permission) => {

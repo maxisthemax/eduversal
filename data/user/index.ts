@@ -15,28 +15,28 @@ export interface DownloadImageData {
   photoName: string;
 }
 
-export interface PermissionsData {
-  dashboard: Permission;
-  product_type: Permission;
-  product_variation: Permission;
-  album_package: Permission;
-  restrict_content_institution: Permission;
-  restrict_content_year: Permission;
-  restrict_content_class_club: Permission;
-  restrict_content_album: Permission;
-  sales_order_details: Permission;
-  sales_school_sales: Permission;
-  sales_over_time: Permission;
-  account_parent: Permission;
-  account_staff: Permission;
-  setting_banner: Permission;
-}
-
-interface Permission {
+interface PermissionAccess {
   view: boolean;
   add: boolean;
   edit: boolean;
   delete: boolean;
+}
+
+export interface PermissionsData {
+  dashboard: PermissionAccess;
+  product_type: PermissionAccess;
+  product_variation: PermissionAccess;
+  album_package: PermissionAccess;
+  restrict_content_institution: PermissionAccess;
+  restrict_content_year: PermissionAccess;
+  restrict_content_class_club: PermissionAccess;
+  restrict_content_album: PermissionAccess;
+  sales_order_details: PermissionAccess;
+  sales_school_sales: PermissionAccess;
+  sales_over_time: PermissionAccess;
+  account_parent: PermissionAccess;
+  account_staff: PermissionAccess;
+  setting_banner: PermissionAccess;
 }
 interface UserData {
   id: number;
