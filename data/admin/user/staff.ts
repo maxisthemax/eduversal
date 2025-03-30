@@ -10,6 +10,7 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 import axios from "@/utils/axios";
 
 //*interface
+import { PermissionsData } from "@/data/user";
 export interface StaffData {
   id: string;
   first_name: string;
@@ -18,6 +19,7 @@ export interface StaffData {
   updated_at: Date;
   country_code: string;
   phone_no: string;
+  permissions: PermissionsData;
 
   contact_number_format: string;
 }
@@ -30,6 +32,10 @@ export function useStaff(): {
     role: "USER" | "ADMIN",
     userId?: string,
     email?: string
+  ) => Promise<void>;
+  updateUserPermissions: (
+    staffId: string,
+    permissions: PermissionsData
   ) => Promise<void>;
 } {
   // Fetch staff data
@@ -67,10 +73,22 @@ export function useStaff(): {
     refetch();
   };
 
+  const updateUserPermissions = async (
+    staffId: string,
+    permissions: PermissionsData
+  ) => {
+    await axios.post("admin/user/updateStaffPermissions", {
+      staffId,
+      permissions,
+    });
+    refetch();
+  };
+
   return {
     staffData,
     staffDataById,
     status,
     updateUserRole,
+    updateUserPermissions,
   };
 }

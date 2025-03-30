@@ -14,6 +14,30 @@ export interface DownloadImageData {
   downloadUrl: string;
   photoName: string;
 }
+
+export interface PermissionsData {
+  dashboard: Permission;
+  product_type: Permission;
+  product_variation: Permission;
+  album_package: Permission;
+  restrict_content_institution: Permission;
+  restrict_content_year: Permission;
+  restrict_content_class_club: Permission;
+  restrict_content_album: Permission;
+  sales_order_details: Permission;
+  sales_school_sales: Permission;
+  sales_over_time: Permission;
+  account_parent: Permission;
+  account_staff: Permission;
+  setting_banner: Permission;
+}
+
+interface Permission {
+  view: boolean;
+  add: boolean;
+  edit: boolean;
+  delete: boolean;
+}
 interface UserData {
   id: number;
   name: string;
@@ -28,6 +52,7 @@ interface UserData {
   postcode: string;
   role: string;
   state: string;
+  permissions: PermissionsData;
   download_images?: DownloadImageData[];
 }
 

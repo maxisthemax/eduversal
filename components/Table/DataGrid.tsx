@@ -78,7 +78,6 @@ function DataGrid({
       density="compact"
       rows={data}
       columns={columns.map((column) => {
-        console.log(column);
         if (column.field === "button") {
           return {
             ...column,

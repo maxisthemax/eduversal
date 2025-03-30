@@ -1,22 +1,25 @@
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import { useState } from "react";
 
 //*components
 import DataGrid from "@/components/Table/DataGrid";
 import { CustomIcon } from "@/components/Icons";
 import { useCustomDialog } from "@/components/Dialog";
 import { Page } from "@/components/Box";
+import PermissionDialog from "./PermissionDialog";
 
 //*mui
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { GridColDef } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
+import { GridColDef } from "@mui/x-data-grid";
 
 //*data
 import { useStaff } from "@/data/admin/user/staff";
 
 function StaffUser() {
+  const [staffId, setStaffId] = useState<string>("");
   const { handleOpenDialog } = useCustomDialog();
   const { staffData, updateUserRole, status } = useStaff();
 
@@ -68,6 +71,13 @@ function StaffUser() {
                   >
                     Remove Admin
                   </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setStaffId(id as string);
+                    }}
+                  >
+                    Update Permission
+                  </MenuItem>
                 </Menu>
               </>
             )}
@@ -107,6 +117,7 @@ function StaffUser() {
         data={staffData}
         columns={columns}
       />
+      <PermissionDialog staffId={staffId} handleClose={() => setStaffId("")} />
     </Page>
   );
 }
