@@ -9,8 +9,10 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 //*utils
 import axios from "@/utils/axios";
 
+//*data
+import { PermissionAccess, PermissionsData, useUser } from "@/data/user";
+
 //*interface
-import { PermissionsData } from "@/data/user";
 export interface StaffData {
   id: string;
   first_name: string;
@@ -92,4 +94,22 @@ export function useStaff(): {
     updateUserRole,
     updateUserPermissions,
   };
+}
+
+export function useGetStaffAccess(
+  type: keyof PermissionsData
+): PermissionAccess {
+  const { permissions, data } = useUser();
+  const access = permissions?.[type] ?? {
+    view: false,
+    add: false,
+    edit: false,
+    delete: false,
+  };
+
+  if (data.role === "SUPERADMIN")
+    return { view: true, add: true, edit: true, delete: true };
+  if (data.role === "USER")
+    return { view: false, add: false, edit: false, delete: false };
+  else return access;
 }

@@ -6,6 +6,7 @@ import { CustomIcon } from "@/components/Icons";
 import { Page } from "@/components/Box";
 import AddEditProductVariationDialog from "./AddEditProductVariationDialog";
 import { useCustomDialog } from "@/components/Dialog/CustomDialog";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*mui
 import Menu from "@mui/material/Menu";
@@ -23,8 +24,10 @@ import {
   useProductVariation,
   ProductVariationData,
 } from "@/data/admin/productVariation";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function ProductVariation() {
+  const access = useGetStaffAccess("product_variation");
   const { productVariationsData, status, deleteProductVariation } =
     useProductVariation();
   const { handleOpenDialog } = useCustomDialog();
@@ -75,7 +78,7 @@ function ProductVariation() {
         );
       },
     },
-    {
+    (access.edit || access.delete) && {
       field: "button",
       headerName: "",
       renderCell: ({ id }) => {
@@ -87,24 +90,28 @@ function ProductVariation() {
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
-                  <AddEditProductVariationDialog
-                    mode="edit"
-                    productVariationId={id as string}
-                  />
-                  <MenuItem
-                    onClick={() => {
-                      handleOpenDialog({
-                        title: "Delete Product Variation",
-                        description: "Are you sure you want to delete this?",
-                        onConfirm: async () => {
-                          await deleteProductVariation(id as string);
-                          popupState.close();
-                        },
-                      });
-                    }}
-                  >
-                    Delete
-                  </MenuItem>
+                  {access.edit && (
+                    <AddEditProductVariationDialog
+                      mode="edit"
+                      productVariationId={id as string}
+                    />
+                  )}
+                  {access.delete && (
+                    <MenuItem
+                      onClick={() => {
+                        handleOpenDialog({
+                          title: "Delete Product Variation",
+                          description: "Are you sure you want to delete this?",
+                          onConfirm: async () => {
+                            await deleteProductVariation(id as string);
+                            popupState.close();
+                          },
+                        });
+                      }}
+                    >
+                      Delete
+                    </MenuItem>
+                  )}
                 </Menu>
               </>
             )}
@@ -115,10 +122,14 @@ function ProductVariation() {
     },
   ];
 
+  if (!access.view) return <NoAccess />;
+
   return (
     <Page
       rightButton={[
-        <AddEditProductVariationDialog key="addEditProductVariationDialog" />,
+        access.add && (
+          <AddEditProductVariationDialog key="addEditProductVariationDialog" />
+        ),
       ]}
     >
       <DataGrid

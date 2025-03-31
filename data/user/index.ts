@@ -15,7 +15,7 @@ export interface DownloadImageData {
   photoName: string;
 }
 
-interface PermissionAccess {
+export interface PermissionAccess {
   view: boolean;
   add: boolean;
   edit: boolean;
@@ -117,6 +117,7 @@ export const useUser = () => {
 
   return {
     data: userData,
+    permissions: userData?.permissions,
     status,
     updateUserDownloadImages,
     updateUserData,

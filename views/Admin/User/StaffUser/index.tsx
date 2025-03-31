@@ -58,6 +58,13 @@ function StaffUser() {
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
                   <MenuItem
+                    onClick={() => {
+                      setStaffId(id as string);
+                    }}
+                  >
+                    Update Permission
+                  </MenuItem>
+                  <MenuItem
                     onClick={async () => {
                       handleOpenDialog({
                         allowOutsideClose: false,
@@ -70,13 +77,6 @@ function StaffUser() {
                     }}
                   >
                     Remove Admin
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setStaffId(id as string);
-                    }}
-                  >
-                    Update Permission
                   </MenuItem>
                 </Menu>
               </>

@@ -77,15 +77,22 @@ function DataGrid({
       disableDensitySelector
       density="compact"
       rows={data}
-      columns={columns.map((column) => {
-        if (column.field === "button") {
-          return {
-            ...column,
-            headerClassName: "stickyRight",
-            cellClassName: "stickyRight",
-          };
-        } else return column;
-      })}
+      columns={columns
+        .filter((column) => {
+          return column;
+        })
+        .map((column) => {
+          if (column.field === "button") {
+            return {
+              ...column,
+              headerClassName: "stickyRight",
+              cellClassName: "stickyRight",
+              filterable: false,
+              sortable: false,
+              disableColumnMenu: true,
+            };
+          } else return column;
+        })}
       disableRowSelectionOnClick={true}
       slots={{ toolbar: GridToolbar }}
       slotProps={{

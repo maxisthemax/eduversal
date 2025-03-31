@@ -6,6 +6,7 @@ import { CustomIcon } from "@/components/Icons";
 import { Page } from "@/components/Box";
 import AddEditProductTypeDialog from "./AddEditProductTypeDialog";
 import { useCustomDialog } from "@/components/Dialog/CustomDialog";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*mui
 import Menu from "@mui/material/Menu";
@@ -15,8 +16,10 @@ import { GridColDef } from "@mui/x-data-grid";
 
 //*data
 import { useProductType, ProductTypeData } from "@/data/admin/productType";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function ProductType() {
+  const access = useGetStaffAccess("product_type");
   const { productsData, status, deleteProductType } = useProductType();
   const { handleOpenDialog } = useCustomDialog();
 
@@ -41,7 +44,7 @@ function ProductType() {
       headerName: "Is Deliverable",
       flex: 1,
     },
-    {
+    (access.edit || access.delete) && {
       field: "button",
       headerName: "",
       renderCell: ({ id }) => {
@@ -53,24 +56,28 @@ function ProductType() {
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
-                  <AddEditProductTypeDialog
-                    mode="edit"
-                    productTypeId={id as string}
-                  />
-                  <MenuItem
-                    onClick={() => {
-                      handleOpenDialog({
-                        title: "Delete Product Type",
-                        description: "Are you sure you want to delete this?",
-                        onConfirm: async () => {
-                          await deleteProductType(id as string);
-                          popupState.close();
-                        },
-                      });
-                    }}
-                  >
-                    Delete
-                  </MenuItem>
+                  {access.edit && (
+                    <AddEditProductTypeDialog
+                      mode="edit"
+                      productTypeId={id as string}
+                    />
+                  )}
+                  {access.delete && (
+                    <MenuItem
+                      onClick={() => {
+                        handleOpenDialog({
+                          title: "Delete Product Type",
+                          description: "Are you sure you want to delete this?",
+                          onConfirm: async () => {
+                            await deleteProductType(id as string);
+                            popupState.close();
+                          },
+                        });
+                      }}
+                    >
+                      Delete
+                    </MenuItem>
+                  )}
                 </Menu>
               </>
             )}
@@ -81,10 +88,14 @@ function ProductType() {
     },
   ];
 
+  if (!access.view) return <NoAccess />;
+
   return (
     <Page
       rightButton={[
-        <AddEditProductTypeDialog key="addEditProductTypeDialog" />,
+        access.add && (
+          <AddEditProductTypeDialog key="addEditProductTypeDialog" />
+        ),
       ]}
     >
       <DataGrid

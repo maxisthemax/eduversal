@@ -39,6 +39,7 @@ export default async function handler(
             postcode: true,
             download_images: true,
             is_disabled: true,
+            permissions: true,
           },
         });
 
