@@ -16,6 +16,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
+import LinearProgress from "@mui/material/LinearProgress";
 
 //*data
 import { useUser } from "@/data/user";
@@ -35,8 +36,10 @@ const validationSchema = yup.object({
 
 function Profile({ mode = "user" }: { mode?: "admin" | "user" }) {
   const { push } = useRouter();
-  const { data, updateUserData } = useUser();
+  const { data, updateUserData, status } = useUser();
   const { handleOpenDialog } = useCustomDialog();
+
+  if (status === "pending") return <LinearProgress />;
 
   return (
     <Page title="Profile" subtitle="Manage and protect your account">

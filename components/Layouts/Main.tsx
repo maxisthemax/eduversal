@@ -1,6 +1,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 //*components
 import { FlexBox } from "../Box";
@@ -28,6 +29,7 @@ import axios from "@/utils/axios";
 
 function Main({ children }: { children: React.ReactNode }) {
   //*define
+  const queryClient = useQueryClient();
   const { push } = useRouter();
   const pathName = "/" + usePathname()?.split("/")[1];
 
@@ -40,6 +42,7 @@ function Main({ children }: { children: React.ReactNode }) {
       if (data.is_disabled) {
         await axios.post("auth/signOut");
         toast.error("Your account has been disabled. Please contact support.");
+        queryClient.clear();
         push("/signin");
       }
     }

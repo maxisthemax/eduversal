@@ -67,7 +67,9 @@ type UpdateUserData = Partial<UserData>;
 export const useUser = () => {
   const { push } = useRouter();
   const queryClient = useQueryClient();
-  const { data, status, refetch } = useQueryFetch(["user"], "user");
+  const { data, status, refetch } = useQueryFetch(["user"], "user", {
+    refetchOnMount: true,
+  });
 
   const userData = data?.data as UserData;
 
