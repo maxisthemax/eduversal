@@ -10,15 +10,12 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 import { GridFilterModel } from "@mui/x-data-grid";
 
 //*interface
-export interface ParentData {
-  id: string;
-  first_name: string;
-  last_name: string;
-  created_at: Date;
-  updated_at: Date;
-  country_code: string;
-  phone_no: string;
+import { UserData } from "@/data/user";
 
+//*utils
+import axios from "@/utils/axios";
+
+export interface ParentData extends UserData {
   contact_number_format: string;
 }
 
@@ -38,13 +35,14 @@ export function useParent(): {
     filterModel: GridFilterModel;
     setFilterModel: React.Dispatch<React.SetStateAction<GridFilterModel>>;
   };
+  disabledUser: (id: string, isDisabled: boolean) => Promise<void>;
 } {
   const [pageModel, setPageModel] = useState({ page: 0, pageSize: 10 });
   const [filterModel, setFilterModel] = useState<GridFilterModel>();
 
   // Fetch parent data with pagination
   const searchQuery = filterModel?.quickFilterValues?.[0] || undefined;
-  const { data, status, isLoading } = useQueryFetch(
+  const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "user", "parent", "page", pageModel.page, searchQuery],
     `admin/user/parent?page=${pageModel.page}&pageSize=${pageModel.pageSize}${
       searchQuery ? `&search=${searchQuery}` : ""
@@ -64,6 +62,9 @@ export function useParent(): {
         created_at: new Date(data.created_at),
         updated_at: new Date(data.updated_at),
         contact_number_format: data.country_code + data.phone_no,
+        address_format: `${data?.address_1}${
+          data.address_2 ? ", \n" + data.address_2 : ""
+        },\n${data.city}, ${data.postcode}, ${data.state}`,
       }));
     } else return [];
   }, [parentQueryData, isLoading]);
@@ -73,11 +74,20 @@ export function useParent(): {
     return keyBy(parentData, "id");
   }, [parentData]);
 
+  const disabledUser = async (id: string, isDisabled: boolean) => {
+    await axios.post("/admin/user/disabledUser", {
+      staffId: id,
+      is_disabled: isDisabled,
+    });
+    refetch();
+  };
+
   return {
     parentData,
     parentDataById,
     status,
     pagination: { currentPage, totalCount, pageModel, setPageModel },
     filter: { filterModel, setFilterModel },
+    disabledUser,
   };
 }

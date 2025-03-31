@@ -29,6 +29,7 @@ model User {
   userCourse      UserCourse[]
   Order           Order[]
   download_images Json?
+  is_disabled     Boolean       @default(false)
   permissions     Json?         @default("{}")
 
   @@index([email])

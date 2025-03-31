@@ -44,6 +44,7 @@ export default async function signIn(
       where: {
         email,
         role: is_admin ? { in: ["ADMIN", "SUPERADMIN"] } : "USER",
+        is_disabled: false,
       },
     });
 

@@ -1,4 +1,6 @@
 import { useRouter, usePathname } from "next/navigation";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 //*components
 import { FlexBox } from "../Box";
@@ -21,6 +23,9 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 import { useUser } from "@/data/user";
 import { useCart } from "@/views/Cart";
 
+//*utils
+import axios from "@/utils/axios";
+
 function Main({ children }: { children: React.ReactNode }) {
   //*define
   const { push } = useRouter();
@@ -29,6 +34,20 @@ function Main({ children }: { children: React.ReactNode }) {
   //*data
   const { cart } = useCart();
   const { data, status } = useUser();
+
+  useEffect(() => {
+    async function accountDisableCheck() {
+      if (data.is_disabled) {
+        await axios.post("auth/signOut");
+        toast.error("Your account has been disabled. Please contact support.");
+        push("/signin");
+      }
+    }
+
+    if (data && status === "success") {
+      accountDisableCheck();
+    }
+  }, [data, status]);
 
   if (status === "pending") return <LinearProgress />;
   else

@@ -38,7 +38,7 @@ export interface PermissionsData {
   account_staff: PermissionAccess;
   setting_banner: PermissionAccess;
 }
-interface UserData {
+export interface UserData {
   id: number;
   name: string;
   email: string;
@@ -54,6 +54,12 @@ interface UserData {
   state: string;
   permissions: PermissionsData;
   download_images?: DownloadImageData[];
+  is_disabled: boolean;
+
+  created_at: Date;
+  updated_at: Date;
+  address_format: string;
+  contact_number_format: string;
 }
 
 type UpdateUserData = Partial<UserData>;
