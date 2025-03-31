@@ -32,7 +32,7 @@ export function useStaff(): {
     role: "USER" | "ADMIN",
     userId?: string,
     email?: string
-  ) => Promise<void>;
+  ) => Promise<string>;
   updateUserPermissions: (
     staffId: string,
     permissions: PermissionsData
@@ -68,9 +68,10 @@ export function useStaff(): {
     role: "USER" | "ADMIN",
     userId?: string,
     email?: string
-  ) => {
-    await axios.post(`admin/user/staff`, { role, userId, email });
+  ): Promise<string> => {
+    const res = await axios.post(`admin/user/staff`, { role, userId, email });
     refetch();
+    return res.data.staffId;
   };
 
   const updateUserPermissions = async (

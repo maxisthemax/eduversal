@@ -58,7 +58,7 @@ export default async function handler(
           data: { role },
         });
 
-        return res.status(201).json({ data: updatedUser });
+        return res.status(201).json({ data: { staffId: updatedUser.id } });
       }
       default: {
         // Handle unsupported methods

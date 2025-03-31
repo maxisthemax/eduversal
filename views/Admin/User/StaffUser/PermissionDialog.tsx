@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid2";
+import DialogTitle from "@mui/material/DialogTitle";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -50,13 +51,19 @@ function PermissionDialog({
   handleClose,
 }: {
   staffId: string;
-  handleClose;
+  handleClose: () => void;
 }) {
   const { updateUserPermissions, staffDataById } = useStaff();
   const staffData = staffDataById[staffId];
 
   return (
-    <Dialog open={staffId !== ""} maxWidth="md" fullWidth keepMounted={false}>
+    <Dialog
+      open={staffId !== ""}
+      maxWidth="md"
+      fullWidth
+      keepMounted={false}
+      onClose={() => {}}
+    >
       <Formik
         initialValues={
           permissions.reduce((acc, permission) => {
@@ -88,6 +95,7 @@ function PermissionDialog({
           return (
             <OverlayBox isLoading={isSubmitting}>
               <Form onSubmit={handleSubmit}>
+                <DialogTitle>Update Permissions</DialogTitle>
                 <DialogContent>
                   <Grid
                     container
@@ -204,7 +212,9 @@ function PermissionDialog({
                   </Grid>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleClose}>Cancel</Button>
+                  {staffData?.permissions && (
+                    <Button onClick={handleClose}>Cancel</Button>
+                  )}
                   <Button variant="contained" type="submit">
                     Save
                   </Button>
