@@ -7,6 +7,9 @@ import { CheckboxForm } from "@/components/Form";
 //*lodash
 import chunk from "lodash/chunk";
 import startCase from "lodash/startCase";
+import includes from "lodash/includes";
+
+//*mui
 import DialogContent from "@mui/material/DialogContent";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
@@ -45,6 +48,11 @@ const permissions = [
   "account_staff",
   "setting_banner",
 ];
+
+const disabledView = [];
+const disabledAdd = ["setting_banner"];
+const disabledEdit = [];
+const disabledDelete = ["setting_banner"];
 
 function PermissionDialog({
   staffId,
@@ -163,45 +171,55 @@ function PermissionDialog({
                                     {startCase(id)}
                                   </Typography>
                                 </Grid>
+
                                 <Grid
                                   size={{ xs: 1.5 }}
                                   sx={{ textAlign: "center" }}
                                 >
-                                  <CheckboxForm
-                                    size="small"
-                                    name={`${id}.view`}
-                                    formProps={formProps}
-                                  />
+                                  {!includes(disabledView, id) && (
+                                    <CheckboxForm
+                                      size="small"
+                                      name={`${id}.view`}
+                                      formProps={formProps}
+                                    />
+                                  )}
+                                </Grid>
+
+                                <Grid
+                                  size={{ xs: 1.5 }}
+                                  sx={{ textAlign: "center" }}
+                                >
+                                  {!includes(disabledAdd, id) && (
+                                    <CheckboxForm
+                                      size="small"
+                                      name={`${id}.add`}
+                                      formProps={formProps}
+                                    />
+                                  )}
                                 </Grid>
                                 <Grid
                                   size={{ xs: 1.5 }}
                                   sx={{ textAlign: "center" }}
                                 >
-                                  <CheckboxForm
-                                    size="small"
-                                    name={`${id}.add`}
-                                    formProps={formProps}
-                                  />
+                                  {!includes(disabledEdit, id) && (
+                                    <CheckboxForm
+                                      size="small"
+                                      name={`${id}.edit`}
+                                      formProps={formProps}
+                                    />
+                                  )}
                                 </Grid>
                                 <Grid
                                   size={{ xs: 1.5 }}
                                   sx={{ textAlign: "center" }}
                                 >
-                                  <CheckboxForm
-                                    size="small"
-                                    name={`${id}.edit`}
-                                    formProps={formProps}
-                                  />
-                                </Grid>
-                                <Grid
-                                  size={{ xs: 1.5 }}
-                                  sx={{ textAlign: "center" }}
-                                >
-                                  <CheckboxForm
-                                    size="small"
-                                    name={`${id}.delete`}
-                                    formProps={formProps}
-                                  />
+                                  {!includes(disabledDelete, id) && (
+                                    <CheckboxForm
+                                      size="small"
+                                      name={`${id}.delete`}
+                                      formProps={formProps}
+                                    />
+                                  )}
                                 </Grid>
                               </Grid>
                             );

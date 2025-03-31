@@ -1,5 +1,6 @@
 //*components
 import useUpload from "@/components/useUpload";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*mui
 import Box from "@mui/material/Box";
@@ -9,12 +10,16 @@ import Paper from "@mui/material/Paper";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function Banner() {
+  const access = useGetStaffAccess("setting_banner");
   const image = `https://${process.env.NEXT_PUBLIC_DO_SPACES_URL}/banner/banner_img`;
 
   const { getRootProps, getInputProps, handleUpload, files, setFiles } =
     useUpload("banner");
+
+  if (!access.view) return <NoAccess />;
 
   return (
     <Box sx={{ height: getFullHeightSize(22), p: 2 }}>
@@ -32,27 +37,29 @@ function Banner() {
         />
       </Paper>
       <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
-        <Box
-          {...getRootProps()}
-          sx={{
-            cursor: "pointer",
-          }}
-        >
-          <input {...getInputProps()} />
-          {files.length > 0 ? (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setFiles([])}
-            >
-              Re-Select
-            </Button>
-          ) : (
-            <Button variant="contained" color="primary">
-              Select Files
-            </Button>
-          )}
-        </Box>
+        {access.edit && (
+          <Box
+            {...getRootProps()}
+            sx={{
+              cursor: "pointer",
+            }}
+          >
+            <input {...getInputProps()} />
+            {files.length > 0 ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setFiles([])}
+              >
+                Re-Select
+              </Button>
+            ) : (
+              <Button variant="contained" color="primary">
+                Select Files
+              </Button>
+            )}
+          </Box>
+        )}
         {files.length > 0 && (
           <Button
             onClick={async () => {
