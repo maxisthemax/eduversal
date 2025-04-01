@@ -50,16 +50,17 @@ import { useAlbums } from "@/data/admin/institution/album";
 import { useCourses } from "@/data/admin/institution/course";
 import { usePhotos } from "@/data/admin/institution/photo";
 import { useProductVariation } from "@/data/admin/productVariation";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 //*utils
 import axios from "@/utils/axios";
 
 function AlbumContent({ albumId }: { albumId: string }) {
+  const access = useGetStaffAccess("restrict_content_album");
   const params = useParams();
   const institutionId = params.institutionId as string;
   const courseId = params.courseId as string;
   const { handleOpenDialog } = useCustomDialog();
-
   const popupState = usePopupState({ variant: "dialog", popupId: "upload" });
 
   //*data
@@ -134,14 +135,16 @@ function AlbumContent({ albumId }: { albumId: string }) {
                   width: "100%",
                 }}
               >
-                {selection.length > 0 && (
+                {selection.length > 0 && access.delete && (
                   <Button variant="contained" onClick={handleDelete}>
                     Delete
                   </Button>
                 )}
-                <Button variant="contained" {...bindTrigger(popupState)}>
-                  Upload
-                </Button>
+                {access.edit && (
+                  <Button variant="contained" {...bindTrigger(popupState)}>
+                    Upload
+                  </Button>
+                )}
               </Stack>
               <Dialog
                 maxWidth="lg"
@@ -390,13 +393,16 @@ function AlbumContent({ albumId }: { albumId: string }) {
           }}
         >
           <Grid container sx={{ p: 2 }} rowGap={0.5}>
-            <Grid size={{ xs: 10 }} sx={{ alignContent: "center" }}>
-              <Typography>
-                <b>Album Details</b>
-              </Typography>
-            </Grid>
-            <Grid size={{ xs: 2 }}>
-              <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
+            <Grid size={{ xs: 12 }} sx={{ alignContent: "center" }}>
+              <Stack direction="row" sx={{ alignItems: "center" }}>
+                <Typography>
+                  <b>Album Details</b>
+                </Typography>
+                <FlexBox />
+                {access.edit && (
+                  <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
+                )}
+              </Stack>
             </Grid>
             <NameValue name="Name" value={albumData.name} />
             <NameValue name="Description" value={albumData.description} />

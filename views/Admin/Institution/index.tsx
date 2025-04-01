@@ -10,6 +10,7 @@ import DataGrid from "@/components/Table/DataGrid";
 import { OverlayBox, Page } from "@/components/Box";
 import AddEditInstitutionDialog from "./AddEditInstitutionDialog";
 import { CustomIcon } from "@/components/Icons";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*mui
 import MenuItem from "@mui/material/MenuItem";
@@ -25,8 +26,11 @@ import { GridColDef } from "@mui/x-data-grid";
 //*data
 import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function Institution() {
+  const access = useGetStaffAccess("restrict_content_institution");
+
   //*data
   const { institutionsData, status } = useInstitutions();
 
@@ -61,7 +65,7 @@ function Institution() {
       type: "date",
       width: 100,
     },
-    {
+    (access.edit || access.delete) && {
       field: "button",
       headerName: "",
       renderCell: ({ id }) => {
@@ -73,11 +77,15 @@ function Institution() {
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
-                  <AddEditInstitutionDialog
-                    mode="edit"
-                    institutionId={id as string}
-                  />
-                  <DeleteDialog institutionId={id as string} />
+                  {access.edit && (
+                    <AddEditInstitutionDialog
+                      mode="edit"
+                      institutionId={id as string}
+                    />
+                  )}
+                  {access.delete && (
+                    <DeleteDialog institutionId={id as string} />
+                  )}
                 </Menu>
               </>
             )}
@@ -88,12 +96,16 @@ function Institution() {
     },
   ];
 
+  if (!access.view) return <NoAccess />;
+
   return (
     <Page
       leftButton={[]}
       links={[{ href: "/admin/institution", title: "Institutions" }]}
       rightButton={[
-        <AddEditInstitutionDialog key="AddEditInstitutionDialog" />,
+        access.add && (
+          <AddEditInstitutionDialog key="AddEditInstitutionDialog" />
+        ),
       ]}
       isLoading={status === "pending"}
     >

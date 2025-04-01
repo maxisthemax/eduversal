@@ -12,6 +12,7 @@ import DataGrid from "@/components/Table/DataGrid";
 import AddEditCourseDialog from "./AddEditCourseDialog";
 import { CustomIcon } from "@/components/Icons";
 import { useCustomDialog } from "@/components/Dialog";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*mui
 import { GridColDef } from "@mui/x-data-grid";
@@ -30,8 +31,10 @@ import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
 import { CourseData, useCourses } from "@/data/admin/institution/course";
 import { useAlbums } from "@/data/admin/institution/album";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function Course() {
+  const access = useGetStaffAccess("restrict_content_class_club");
   const { handleOpenDialog } = useCustomDialog();
   const params = useParams();
   const institutionId = params.institutionId as string;
@@ -106,7 +109,7 @@ function Course() {
       type: "date",
       width: 100,
     },
-    {
+    (access.edit || access.delete) && {
       field: "button",
       headerName: "",
       width: 60,
@@ -119,35 +122,40 @@ function Course() {
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
-                  <AddEditCourseDialog mode="edit" courseId={id as string} />
-                  <MenuItem
-                    onClick={() => {
-                      handleOpenDialog(
-                        row.force_disable
-                          ? {
-                              title: "Enable this access code",
-                              description: "Are you sure you want to enable?",
-                              onConfirm: async () => {
-                                await updateCourse(id as string, {
-                                  force_disable: false,
-                                });
-                              },
-                            }
-                          : {
-                              title: "Disable this access code",
-                              description: "Are you sure you want to disable?",
-                              onConfirm: async () => {
-                                await updateCourse(id as string, {
-                                  force_disable: true,
-                                });
-                              },
-                            }
-                      );
-                    }}
-                  >
-                    {row.force_disable ? "Enable" : "Disable"}
-                  </MenuItem>
-                  <DeleteDialog courseId={id as string} />
+                  {access.edit && (
+                    <AddEditCourseDialog mode="edit" courseId={id as string} />
+                  )}
+                  {access.edit && (
+                    <MenuItem
+                      onClick={() => {
+                        handleOpenDialog(
+                          row.force_disable
+                            ? {
+                                title: "Enable this access code",
+                                description: "Are you sure you want to enable?",
+                                onConfirm: async () => {
+                                  await updateCourse(id as string, {
+                                    force_disable: false,
+                                  });
+                                },
+                              }
+                            : {
+                                title: "Disable this access code",
+                                description:
+                                  "Are you sure you want to disable?",
+                                onConfirm: async () => {
+                                  await updateCourse(id as string, {
+                                    force_disable: true,
+                                  });
+                                },
+                              }
+                        );
+                      }}
+                    >
+                      {row.force_disable ? "Enable" : "Disable"}
+                    </MenuItem>
+                  )}
+                  {access.delete && <DeleteDialog courseId={id as string} />}
                 </Menu>
               </>
             )}
@@ -156,6 +164,8 @@ function Course() {
       },
     },
   ];
+
+  if (!access.view) return <NoAccess />;
 
   return (
     <Page
@@ -176,7 +186,9 @@ function Course() {
         },
       ]}
       leftButton={[]}
-      rightButton={[<AddEditCourseDialog key="addEditAcademicYearDialog" />]}
+      rightButton={[
+        access.add && <AddEditCourseDialog key="addEditAcademicYearDialog" />,
+      ]}
     >
       <DataGrid gap={16} columns={columns} data={coursesData} />
     </Page>

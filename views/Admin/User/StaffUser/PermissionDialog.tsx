@@ -32,7 +32,23 @@ const defaultPermissionAccess = {
   delete: false,
 };
 
-const permissions = [
+type PermissionKey =
+  | "dashboard"
+  | "product_type"
+  | "product_variation"
+  | "album_package"
+  | "restrict_content_institution"
+  | "restrict_content_year"
+  | "restrict_content_class_club"
+  | "restrict_content_album"
+  | "sales_order_details"
+  | "sales_school_sales"
+  | "sales_over_time"
+  | "account_parent"
+  | "account_staff"
+  | "setting_banner";
+
+const permissions: PermissionKey[] = [
   "dashboard",
   "product_type",
   "product_variation",
@@ -49,10 +65,10 @@ const permissions = [
   "setting_banner",
 ];
 
-const disabledView = [];
-const disabledAdd = ["setting_banner"];
-const disabledEdit = [];
-const disabledDelete = ["setting_banner"];
+const disabledView: PermissionKey[] = [];
+const disabledAdd: PermissionKey[] = ["setting_banner", "account_parent"];
+const disabledEdit: PermissionKey[] = [];
+const disabledDelete: PermissionKey[] = ["setting_banner", "account_parent"];
 
 function PermissionDialog({
   staffId,

@@ -7,6 +7,7 @@ import { CustomIcon } from "@/components/Icons";
 import { useCustomDialog } from "@/components/Dialog";
 import { Page } from "@/components/Box";
 import PermissionDialog from "./PermissionDialog";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*mui
 import IconButton from "@mui/material/IconButton";
@@ -17,8 +18,10 @@ import { GridColDef } from "@mui/x-data-grid";
 
 //*data
 import { useStaff } from "@/data/admin/user/staff";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function StaffUser() {
+  const access = useGetStaffAccess("account_staff");
   const [staffId, setStaffId] = useState<string>("");
   const { handleOpenDialog } = useCustomDialog();
   const { staffData, updateUserRole, status } = useStaff();
@@ -44,7 +47,7 @@ function StaffUser() {
       headerName: "Contact",
       flex: 1,
     },
-    {
+    (access.edit || access.delete) && {
       field: "button",
       headerName: "",
       width: 60,
@@ -57,27 +60,31 @@ function StaffUser() {
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
-                  <MenuItem
-                    onClick={() => {
-                      setStaffId(id as string);
-                    }}
-                  >
-                    Update Permission
-                  </MenuItem>
-                  <MenuItem
-                    onClick={async () => {
-                      handleOpenDialog({
-                        allowOutsideClose: false,
-                        title: "Remove Admin",
-                        description: "Are you sure you want to remove admin?",
-                        onConfirm: async () => {
-                          await updateUserRole("USER", id as string);
-                        },
-                      });
-                    }}
-                  >
-                    Remove Admin
-                  </MenuItem>
+                  {access.edit && (
+                    <MenuItem
+                      onClick={() => {
+                        setStaffId(id as string);
+                      }}
+                    >
+                      Update Permission
+                    </MenuItem>
+                  )}
+                  {access.delete && (
+                    <MenuItem
+                      onClick={async () => {
+                        handleOpenDialog({
+                          allowOutsideClose: false,
+                          title: "Remove Admin",
+                          description: "Are you sure you want to remove admin?",
+                          onConfirm: async () => {
+                            await updateUserRole("USER", id as string);
+                          },
+                        });
+                      }}
+                    >
+                      Remove Admin
+                    </MenuItem>
+                  )}
                 </Menu>
               </>
             )}
@@ -87,33 +94,37 @@ function StaffUser() {
     },
   ];
 
+  if (!access.view) return <NoAccess />;
+
   return (
     <Page
       rightButton={[
-        <Button
-          key="add-admin"
-          variant="contained"
-          onClick={() => {
-            handleOpenDialog({
-              allowOutsideClose: false,
-              title: "Add Admin",
-              description:
-                "Add admin with user email.\nMake sure email already registered.",
-              textField: { id: "text", defaultValue: "" },
-              placeholder: "User email",
-              onConfirm: async (value) => {
-                const staffid = await updateUserRole(
-                  "ADMIN",
-                  undefined,
-                  value as string
-                );
-                setStaffId(staffid);
-              },
-            });
-          }}
-        >
-          Add Admin
-        </Button>,
+        access.add && (
+          <Button
+            key="add-admin"
+            variant="contained"
+            onClick={() => {
+              handleOpenDialog({
+                allowOutsideClose: false,
+                title: "Add Admin",
+                description:
+                  "Add admin with user email.\nMake sure email already registered.",
+                textField: { id: "text", defaultValue: "" },
+                placeholder: "User email",
+                onConfirm: async (value) => {
+                  const staffid = await updateUserRole(
+                    "ADMIN",
+                    undefined,
+                    value as string
+                  );
+                  setStaffId(staffid);
+                },
+              });
+            }}
+          >
+            Add Admin
+          </Button>
+        ),
       ]}
     >
       <DataGrid

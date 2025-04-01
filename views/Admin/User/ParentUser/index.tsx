@@ -4,6 +4,7 @@ import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import DataGrid from "@/components/Table/DataGrid";
 import { CustomIcon } from "@/components/Icons";
 import { useCustomDialog } from "@/components/Dialog";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*lodash
 import debounce from "lodash/debounce";
@@ -18,8 +19,10 @@ import { GridColDef } from "@mui/x-data-grid";
 
 //*data
 import { useParent } from "@/data/admin/user/parent";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function ParentUser() {
+  const access = useGetStaffAccess("account_parent");
   const { handleOpenDialog } = useCustomDialog();
   const { parentData, pagination, status, filter, disabledUser } = useParent();
 
@@ -93,7 +96,7 @@ function ParentUser() {
       headerName: "State",
       minWidth: 100,
     },
-    {
+    access.edit && {
       field: "button",
       headerName: "",
       width: 60,
@@ -134,6 +137,8 @@ function ParentUser() {
   const handleFilterChange = debounce((model) => {
     filter.setFilterModel(model);
   }, 1000);
+
+  if (!access.view) return <NoAccess />;
 
   return (
     <Box sx={{ p: 2 }}>

@@ -11,6 +11,7 @@ import { OverlayBox, Page } from "@/components/Box";
 import DataGrid from "@/components/Table/DataGrid";
 import AddEditAcademicYearDialog from "./AddEditAcademicYearDialog";
 import { CustomIcon } from "@/components/Icons";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*mui
 import MenuItem from "@mui/material/MenuItem";
@@ -27,8 +28,10 @@ import { GridColDef } from "@mui/x-data-grid";
 import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
 import { useCourses } from "@/data/admin/institution/course";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function AcademicYear() {
+  const access = useGetStaffAccess("restrict_content_year");
   const params = useParams();
   const institutionId = params.institutionId as string;
   const { institutionData, status: institutionStatus } =
@@ -77,7 +80,7 @@ function AcademicYear() {
       type: "date",
       width: 100,
     },
-    {
+    (access.edit || access.delete) && {
       field: "button",
       headerName: "",
       width: 60,
@@ -90,11 +93,15 @@ function AcademicYear() {
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
-                  <AddEditAcademicYearDialog
-                    mode="edit"
-                    academicYearId={id as string}
-                  />
-                  <DeleteDialog academicYearId={id as string} />
+                  {access.edit && (
+                    <AddEditAcademicYearDialog
+                      mode="edit"
+                      academicYearId={id as string}
+                    />
+                  )}
+                  {access.delete && (
+                    <DeleteDialog academicYearId={id as string} />
+                  )}
                 </Menu>
               </>
             )}
@@ -103,6 +110,8 @@ function AcademicYear() {
       },
     },
   ];
+
+  if (!access.view) return <NoAccess />;
 
   return (
     <Page
@@ -118,7 +127,9 @@ function AcademicYear() {
       ]}
       leftButton={[]}
       rightButton={[
-        <AddEditAcademicYearDialog key="addEditAcademicYearDialog" />,
+        access.add && (
+          <AddEditAcademicYearDialog key="addEditAcademicYearDialog" />
+        ),
       ]}
     >
       <DataGrid gap={16} columns={columns} data={academicYearsData} />

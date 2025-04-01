@@ -47,6 +47,7 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 //*data
 import { useAlbums } from "@/data/admin/institution/album";
 import { usePackage } from "@/data/admin/institution/packages";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 //*validation
 const validationSchema = yup.object({
@@ -94,6 +95,7 @@ function AddEditPackagesDialogForm({
 }: {
   handleClose: () => void;
 }) {
+  const access = useGetStaffAccess("album_package");
   const params = useParams();
   const institutionId = params.institutionId as string;
   const courseId = params.courseId as string;
@@ -120,17 +122,19 @@ function AddEditPackagesDialogForm({
     <>
       <DialogContent>
         <Grid container spacing={2}>
-          <Grid
-            size={{ xs: 3 }}
-            component={Button}
-            variant="outlined"
-            sx={{ textAlign: "inherit", flexDirection: "column" }}
-            onClick={() => setAddEdit(true)}
-          >
-            <CustomIcon icon="add" fontSizeSx="60px" />
-            <Box sx={{ p: 1 }} />
-            <Typography variant="caption">Add New Package</Typography>
-          </Grid>
+          {access.add && (
+            <Grid
+              size={{ xs: 3 }}
+              component={Button}
+              variant="outlined"
+              sx={{ textAlign: "inherit", flexDirection: "column" }}
+              onClick={() => setAddEdit(true)}
+            >
+              <CustomIcon icon="add" fontSizeSx="60px" />
+              <Box sx={{ p: 1 }} />
+              <Typography variant="caption">Add New Package</Typography>
+            </Grid>
+          )}
           {packagesData.map(
             ({
               id,
@@ -149,9 +153,12 @@ function AddEditPackagesDialogForm({
                   color="inherit"
                   sx={{ textAlign: "inherit" }}
                   key={id}
+                  disableRipple={!access.edit}
                   onClick={() => {
-                    setPackageId(id);
-                    setAddEdit(true);
+                    if (access.edit) {
+                      setPackageId(id);
+                      setAddEdit(true);
+                    }
                   }}
                 >
                   <Stack spacing={1} sx={{ width: "100%" }}>
@@ -315,7 +322,7 @@ function AddEditPackagesDialogForm({
                           display: "none",
                         }}
                       >
-                        {files.length > 0 && (
+                        {files.length > 0 && access.delete && (
                           <IconButton
                             disableRipple
                             disableTouchRipple
@@ -437,44 +444,48 @@ function AddEditPackagesDialogForm({
                             fullWidth: false,
                           }}
                         />
-                        <Box>
-                          <IconButton
-                            onClick={() => {
-                              const newAlbums = values.albums.filter(
-                                (album, i) => i !== index
-                              );
-                              setFieldValue("albums", newAlbums);
-                            }}
-                          >
-                            <CustomIcon icon="delete" />
-                          </IconButton>
-                        </Box>
+                        {access.delete && (
+                          <Box>
+                            <IconButton
+                              onClick={() => {
+                                const newAlbums = values.albums.filter(
+                                  (album, i) => i !== index
+                                );
+                                setFieldValue("albums", newAlbums);
+                              }}
+                            >
+                              <CustomIcon icon="delete" />
+                            </IconButton>
+                          </Box>
+                        )}
                       </Stack>
                     );
                   })}
                 </Stack>
               </DialogContent>
               <DialogActions>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={() => {
-                    handleOpenDialog({
-                      title: "Delete Package",
-                      description:
-                        "Are you sure you want to delete this package?",
-                      onConfirm: async () => {
-                        await deletePackage(packageId);
-                        setAddEdit(false);
-                        resetForm();
-                        setPackageId("");
-                        setFiles([]);
-                      },
-                    });
-                  }}
-                >
-                  Delete
-                </Button>
+                {access.delete && (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      handleOpenDialog({
+                        title: "Delete Package",
+                        description:
+                          "Are you sure you want to delete this package?",
+                        onConfirm: async () => {
+                          await deletePackage(packageId);
+                          setAddEdit(false);
+                          resetForm();
+                          setPackageId("");
+                          setFiles([]);
+                        },
+                      });
+                    }}
+                  >
+                    Delete
+                  </Button>
+                )}
                 <FlexBox />
                 <Button
                   disabled={isSubmitting}

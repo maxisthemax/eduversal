@@ -6,17 +6,21 @@ import AlbumContent from "./AlbumContent";
 import AddEditAlbumDialog from "./AddEditAlbumDialog";
 import { useCustomDialog } from "@/components/Dialog";
 import AddEditPackagesDialog from "./AddEditPackagesDialog";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*data
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
 import { useCourses } from "@/data/admin/institution/course";
 import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAlbums } from "@/data/admin/institution/album";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 //*mui
 import Button from "@mui/material/Button";
 
 function Album() {
+  const access = useGetStaffAccess("restrict_content_album");
+  const packageAccess = useGetStaffAccess("album_package");
   const { handleOpenDialog } = useCustomDialog();
   const params = useParams();
   const institutionId = params.institutionId as string;
@@ -43,6 +47,8 @@ function Album() {
     isPaper: false,
   });
 
+  if (!access.view) return <NoAccess />;
+
   return (
     <Page
       isLoading={
@@ -67,9 +73,14 @@ function Album() {
         },
       ]}
       rightButton={[
-        <AddEditPackagesDialog key="addEditPackagesDialog" />,
-        <AddEditAlbumDialog key={"addEditAlbumDialog"} />,
-        albumsData.length > 0 && (
+        (packageAccess.view ||
+          packageAccess.edit ||
+          packageAccess.add ||
+          packageAccess.delete) && (
+          <AddEditPackagesDialog key="addEditPackagesDialog" />
+        ),
+        access.add && <AddEditAlbumDialog key={"addEditAlbumDialog"} />,
+        albumsData.length > 0 && access.delete && (
           <Button
             key="deleteAlbum"
             onClick={() => {
