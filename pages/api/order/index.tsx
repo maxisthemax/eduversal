@@ -118,7 +118,7 @@ export default async function handler(
             OrderNumber: newOrder.order_no,
             PaymentID: `${newOrder.order_no}_${formatDate(
               new Date(),
-              "yyyyMMddHHmmss"
+              "yyyyMMddHHmmssSS"
             )}`,
             Amount: price.toFixed(2),
             CurrencyCode: "MYR",
@@ -126,7 +126,7 @@ export default async function handler(
               ServiceID: SERVICE_ID,
               PaymentID: `${newOrder.order_no}_${formatDate(
                 new Date(),
-                "yyyyMMddHHmmss"
+                "yyyyMMddHHmmssSS"
               )}`,
               Amount: price.toFixed(2),
               CurrencyCode: "MYR",
