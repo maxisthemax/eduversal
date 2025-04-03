@@ -1,9 +1,11 @@
 import { formatDate } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 //*components
 import CartDetails from "./CartDetails";
+import PaymentDialog from "@/views/Checkout/PaymentDialog";
 import { Page } from "@/components/Box";
 
 //*mui
@@ -12,16 +14,24 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
-import { useOrder } from "@/data/order";
+import { PaymentData, useOrder } from "@/data/order";
 
 //*utils
 import { statusColor } from "@/utils/constant";
+import axios from "@/utils/axios";
+
+const eghlPymtMethod = {
+  fpx: "DD",
+  credit_debit: "CC",
+  e_wallet: "WA",
+};
 
 function PurchaseDetails() {
   const params = useSearchParams();
@@ -29,6 +39,7 @@ function PurchaseDetails() {
   const orderId = params.get("orderId");
   const { orderDataById, status } = useOrder();
   const orderData = orderDataById[orderId];
+  const [data, setData] = useState<PaymentData | undefined>();
 
   if (status === "pending") return <LinearProgress />;
 
@@ -44,7 +55,7 @@ function PurchaseDetails() {
       </Button>
       <Paper
         variant="outlined"
-        sx={{ p: 2, height: getFullHeightSize(20), overflowY: "auto" }}
+        sx={{ px: 2, pt: 2, height: getFullHeightSize(20), overflowY: "auto" }}
       >
         <Stack direction="column" spacing={2}>
           <Stack
@@ -60,10 +71,12 @@ function PurchaseDetails() {
             </Typography>
           </Stack>
           <Stack direction="row" sx={{ width: "100%" }} spacing={6}>
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{ whiteSpace: "break-spaces" }}>
               <b>Shipping Method:</b>
               <br />
               {orderData.shipment_method_format}
+              {orderData.shipment_method === "in-store" &&
+                "\nYS Photoversal Studio,\nLot 3267, Jalan 18/36,\nTaman Sri Serdang,43300\nSeri Kembangan, Selangor"}
             </Typography>
             <Typography variant="body1">
               <b>Remark:</b>
@@ -161,7 +174,47 @@ function PurchaseDetails() {
             </Stack>
           </Stack>
         </Stack>
+        {orderData.status === "PENDING" && (
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "end",
+              position: "sticky",
+              bottom: 0,
+              py: 1,
+              backgroundColor: "background.paper",
+            }}
+          >
+            <Button
+              variant="contained"
+              size="small"
+              onClick={async () => {
+                const res = await axios.post("payment/requestPayment", {
+                  PymtMethod: eghlPymtMethod[orderData.payment_method],
+                  OrderNumber: orderData.order_no,
+                  PaymentID: `${orderData.order_no}_${formatDate(
+                    new Date(),
+                    "yyyyMMddHHmmssSS"
+                  )}`,
+                  Amount: orderData.price.toFixed(2),
+                  CurrencyCode: "MYR",
+                });
+                setData({
+                  ...res.data,
+                  PaymentDesc: `${orderData.cart.length} item(s)`,
+                  CustEmail: orderData.cust_email,
+                  CustName: orderData.cust_name,
+                  CustPhone: orderData.cust_phone,
+                });
+              }}
+            >
+              Make Payment
+            </Button>
+          </Box>
+        )}
       </Paper>
+      {data && <PaymentDialog data={data} />}
     </Page>
   );
 }

@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import { GetServerSideProps } from "next";
 import qs from "querystring";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 //*lodash
@@ -11,42 +10,117 @@ import some from "lodash/some";
 //*mui
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
-function Payment({ orderId }: { orderId: string }) {
+function Payment({
+  orderId,
+  status,
+  message,
+}: {
+  orderId?: string;
+  status?: string;
+  message?: string;
+}) {
   const { push } = useRouter();
 
-  useEffect(() => {
-    if (orderId) {
-      push("http://localhost:5000/account/purchase?orderId=" + orderId);
-    } else push("http://localhost:5000/account/purchase");
-  }, [orderId]);
-
-  return (
-    <Dialog open={Boolean(orderId)} disableEscapeKeyDown={true}>
-      <DialogContent sx={{ p: 4, textAlign: "center" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            my: 4,
-          }}
-        >
-          <CircularProgress size={80} thickness={4} />
-          <Typography variant="h6" sx={{ mt: 4 }}>
-            Processing Payment
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-            Please do not close this window. You will be redirected to the
-            payment gateway...
-          </Typography>
-        </Box>
-      </DialogContent>
-    </Dialog>
-  );
+  if (status === "SUCCESS") {
+    return (
+      <Dialog
+        open={Boolean(orderId)}
+        disableEscapeKeyDown={true}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogContent sx={{ p: 4, textAlign: "center" }}>
+          <Stack
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              p: 4,
+            }}
+            spacing={3}
+          >
+            <Typography variant="h5">
+              <b>Payment Successful</b>
+            </Typography>
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              sx={{ whiteSpace: "break-spaces" }}
+            >
+              {
+                "Your payment has been processed successfully.\nYou can now view your order details and\ndownload any purchased items."
+              }
+            </Typography>
+            <Button
+              size="large"
+              variant="contained"
+              onClick={() => {
+                push(
+                  `${process.env.NEXT_PUBLIC_URL}/account/purchase?orderId=` +
+                    orderId
+                );
+              }}
+            >
+              View Order Details
+            </Button>
+          </Stack>
+        </DialogContent>
+      </Dialog>
+    );
+  } else
+    return (
+      <Dialog
+        open={Boolean(orderId)}
+        disableEscapeKeyDown={true}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogContent sx={{ p: 4, textAlign: "center" }}>
+          <Stack
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              p: 4,
+            }}
+            spacing={3}
+          >
+            <Box>
+              <Typography variant="h5" gutterBottom>
+                <b>Payment Failed</b>
+              </Typography>
+              <Typography variant="body1" color="error">
+                {message}
+              </Typography>
+            </Box>
+            <Typography variant="body1" color="text.secondary">
+              {
+                "Your payment was not successful.\nPlease try again or contact support for assistance."
+              }
+            </Typography>
+            <Button
+              size="large"
+              variant="contained"
+              onClick={() => {
+                if (orderId) {
+                  push(
+                    `${process.env.NEXT_PUBLIC_URL}/account/purchase?orderId=` +
+                      orderId
+                  );
+                } else push(`${process.env.NEXT_PUBLIC_URL}/account/purchase`);
+              }}
+            >
+              Back To Order
+            </Button>
+          </Stack>
+        </DialogContent>
+      </Dialog>
+    );
 }
 
 export default Payment;
@@ -62,7 +136,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (!rawBody) {
       return {
-        props: {},
+        props: { status: "FAILED", message: "No data received" },
       };
     }
 
@@ -72,18 +146,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       where: { order_no: Number(formData.OrderNumber) },
     });
 
+    const payment = await prisma.payment.findFirst({
+      where: { payment_id: formData.PaymentId as string },
+    });
+
+    if (!payment?.id) {
+      return {
+        props: {
+          orderId: findOrder.id,
+          status: "FAILED",
+          message: "Payment not found",
+        },
+      };
+    }
+
     if (formData.TxnStatus === "0") {
       await prisma.$transaction(async (prisma) => {
-        const payment = await prisma.payment.findFirst({
-          where: { hashValue: formData.hashValue as string },
-        });
-
-        if (!payment) {
-          return {
-            props: { orderId: findOrder.id },
-          };
-        }
-
         await prisma.payment.update({
           where: { id: payment.id },
           data: { payment_detail: formData, updated_at: new Date() },
@@ -91,7 +169,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
         const order = await prisma.order.update({
           where: { order_no: Number(formData.OrderNumber) },
-          data: { status: "COMPLETED" },
+          data: { status: "COMPLETED", success_payment_id: payment.id },
         });
 
         const allDownloadable = reduce(
@@ -152,17 +230,31 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           },
         });
       });
+    } else if (formData.TxnStatus === "1") {
+      await prisma.$transaction(async (prisma) => {
+        await prisma.payment.update({
+          where: { id: payment.id },
+          data: { payment_detail: formData, updated_at: new Date() },
+        });
+      });
     }
 
     // Pass to your page as props
     return {
-      props: { orderId: findOrder.id },
+      props: {
+        orderId: findOrder.id,
+        status: { "0": "SUCCESS", "1": "FAILED" }[formData.TxnStatus as string],
+        message: {
+          "0": "Payment Successful",
+          "1": "Transaction failed",
+        }[formData.TxnStatus as string],
+      },
     };
   } else {
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
+      props: {
+        status: "FAILED",
+        message: "Invalid request method",
       },
     };
   }

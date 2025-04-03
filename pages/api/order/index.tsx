@@ -61,6 +61,9 @@ export default async function handler(
           price,
           remark,
           status,
+          cust_name,
+          cust_email,
+          cust_phone,
         } = req.body;
 
         // Validate required fields
@@ -76,6 +79,9 @@ export default async function handler(
               "shipping_fee",
               "price",
               "status",
+              "cust_name",
+              "cust_email",
+              "cust_phone",
             ],
             "body"
           )
@@ -102,6 +108,9 @@ export default async function handler(
               price,
               remark,
               status,
+              cust_name,
+              cust_email,
+              cust_phone,
               ...created_by,
               ...updated_by,
             },
@@ -111,23 +120,22 @@ export default async function handler(
             "https://api64.ipify.org?format=json"
           );
 
+          const paymentId = `${newOrder.order_no}_${formatDate(
+            new Date(),
+            "yyyyMMddHHmmssSS"
+          )}`;
+
           const queryData = {
             TransactionType: "SALE",
             PymtMethod: eghlPymtMethod[payment_method],
             ServiceID: SERVICE_ID,
             OrderNumber: newOrder.order_no,
-            PaymentID: `${newOrder.order_no}_${formatDate(
-              new Date(),
-              "yyyyMMddHHmmssSS"
-            )}`,
+            PaymentID: paymentId,
             Amount: price.toFixed(2),
             CurrencyCode: "MYR",
             HashValue: generateHash({
               ServiceID: SERVICE_ID,
-              PaymentID: `${newOrder.order_no}_${formatDate(
-                new Date(),
-                "yyyyMMddHHmmssSS"
-              )}`,
+              PaymentID: paymentId,
               Amount: price.toFixed(2),
               CurrencyCode: "MYR",
               CustIP: publicIp.data.ip,
@@ -139,6 +147,7 @@ export default async function handler(
 
           const paymentData = await prisma.payment.create({
             data: {
+              payment_id: queryData.PaymentID,
               order_id: newOrder.id,
               hashValue: queryData.HashValue,
               request_detail: queryData,

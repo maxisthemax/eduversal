@@ -42,6 +42,9 @@ export interface OrderData {
   status: string;
   created_at: Date;
   order_no: number;
+  cust_name: string;
+  cust_email: string;
+  cust_phone: string;
 
   payment_method_format: string;
   shipment_method_format: string;
@@ -69,6 +72,9 @@ export interface OrderCreate {
   price: number;
   remark: string;
   status: string;
+  cust_name: string;
+  cust_email: string;
+  cust_phone: string;
 }
 
 export interface PaymentData {
