@@ -147,7 +147,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     });
 
     const payment = await prisma.payment.findFirst({
-      where: { payment_id: formData.PaymentId as string },
+      where: { payment_id: formData.PaymentID as string },
     });
 
     if (!payment?.id) {

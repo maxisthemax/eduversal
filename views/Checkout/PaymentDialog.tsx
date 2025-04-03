@@ -29,8 +29,10 @@ function PaymentDialog({ data }: { data: PaymentData }) {
         const form = formRef.current;
 
         if (form) {
+          if (data.order_id) {
+            push(`/account/purchase?orderId=${data.order_id}`);
+          }
           form.submit();
-          push(`/account/purchase?orderId=${data.order_id}`);
           setIsPaying(false);
           clearCart();
         } else {
