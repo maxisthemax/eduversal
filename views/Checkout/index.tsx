@@ -2,13 +2,13 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 //*lodash
 import omit from "lodash/omit";
-import reduce from "lodash/reduce";
-import some from "lodash/some";
 
 //*components
+import PaymentDialog from "./PaymentDialog";
 import { FlexBox } from "@/components/Box";
 import { CustomIcon } from "@/components/Icons";
 import {
@@ -30,11 +30,14 @@ import Tooltip from "@mui/material/Tooltip";
 
 //*data
 import { useCart } from "../Cart";
-import { useOrder } from "@/data/order";
+import { PaymentData, useOrder } from "@/data/order";
+import { useUser } from "@/data/user";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
-import { useUser } from "@/data/user";
+
+//*utils
+import { paymentLabel } from "@/utils/constant";
 
 const validationSchema = yup.object({
   shipping_address: yup.object().when("shipment_method", {
@@ -68,10 +71,11 @@ const validationSchema = yup.object({
 });
 
 function Checkout() {
+  const { data: userData } = useUser();
   const { push } = useRouter();
-  const { cart, clearCart } = useCart();
+  const { cart } = useCart();
   const { addOrder } = useOrder();
-  const { updateUserDownloadImages } = useUser();
+  const [data, setData] = useState<PaymentData | undefined>();
 
   const isDeliverable = cart?.some((item) =>
     item.userPackage.items.some((item) => item.album.productTypeDeliverable)
@@ -124,7 +128,7 @@ function Checkout() {
           return item;
         });
 
-        // Calculate total price
+        //*Calculate total price
         const totalPrice =
           cart.reduce(
             (acc, item) =>
@@ -134,7 +138,8 @@ function Checkout() {
             0
           ) + shipping_fee;
 
-        await addOrder({
+        //*add order to database
+        const res = await addOrder({
           cart: newCart,
           payment_method,
           shipment_method,
@@ -142,61 +147,16 @@ function Checkout() {
           remark,
           shipping_address,
           price: totalPrice,
-          status: "COMPLETED", //temporarily completed
+          status: "PENDING",
         });
 
-        const allDownloadable = reduce(
-          newCart,
-          (temp, value) => {
-            if (value.userPackage.packageId === "none") {
-              if (
-                some(value.userPackage.items[0].productVariationOptions, {
-                  productVariationDownloadable: true,
-                })
-              ) {
-                temp.push({
-                  photoId: value.userPackage.items[0].photoId,
-                  photoUrl: value.userPackage.items[0].photoUrl,
-                  photoName: value.userPackage.items[0].photoName,
-                  downloadUrl: value.userPackage.items[0].downloadUrl,
-                });
-              }
-            } else {
-              if (value.userPackage.packageData.is_downloadable) {
-                const images = value.userPackage.items.map((item) => {
-                  return {
-                    photoId: item.photoId,
-                    photoUrl: item.photoUrl,
-                    photoName: item.photoName,
-                    downloadUrl: item.downloadUrl,
-                  };
-                });
-                temp.push(...images);
-              } else {
-                value.userPackage.items.forEach((item) => {
-                  if (
-                    some(item.productVariationOptions, {
-                      productVariationDownloadable: true,
-                    })
-                  ) {
-                    temp.push({
-                      photoId: item.photoId,
-                      photoUrl: item.photoUrl,
-                      photoName: item.photoName,
-                      downloadUrl: item.downloadUrl,
-                    });
-                  }
-                });
-              }
-            }
-
-            return temp;
-          },
-          []
-        );
-        await updateUserDownloadImages(allDownloadable);
-        clearCart();
-        push("/account/downloadable");
+        setData({
+          ...res.data,
+          PaymentDesc: `${newCart.length} item(s)`,
+          CustEmail: userData.email,
+          CustName: userData.name,
+          CustPhone: userData.contact_number_format,
+        });
       } catch (error) {
         console.error("Checkout error:", error);
         toast("An error occurred during checkout. Please try again.", {
@@ -414,7 +374,7 @@ function Checkout() {
                           secondary: { variant: "inherit" },
                         }}
                         sx={{ justifyItems: "start" }}
-                        primary={method}
+                        primary={paymentLabel[method]}
                       />
                     </Stack>
                   </Button>
@@ -756,6 +716,7 @@ function Checkout() {
           </Container>
         </Grid>
       </Grid>
+      {data && <PaymentDialog data={data} />}
     </form>
   );
 }

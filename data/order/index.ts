@@ -14,6 +14,9 @@ import { useUser } from "../user";
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
 
+//*utils
+import { paymentLabel } from "@/utils/constant";
+
 //*interface
 export interface OrderData {
   id: string;
@@ -68,12 +71,30 @@ export interface OrderCreate {
   status: string;
 }
 
+export interface PaymentData {
+  order_id: string;
+  PymtMethod?: string;
+  OrderNumber?: string;
+  PaymentID?: string;
+  PaymentDesc?: string;
+  MerchantReturnURL?: string;
+  MerchantCallBackURL?: string;
+  Amount?: string;
+  CurrencyCode?: string;
+  CustIP?: string;
+  HashValue?: string;
+  CustName?: string;
+  CustEmail?: string;
+  CustPhone?: string;
+}
+
 export function useOrder(orderStatus?: string): {
   orderData: OrderData[];
   orderDataByStatus: OrderData[];
   status: string;
   isAdding: boolean;
-  addOrder: (order: OrderCreate) => Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  addOrder: (order: OrderCreate) => Promise<any>;
   orderDataById: Record<string, OrderData>;
 } {
   const { data: userData } = useUser();
@@ -110,11 +131,7 @@ export function useOrder(orderStatus?: string): {
                     data.shipping_address.postcode
                   }, ${data.shipping_address.state}`
                 : "",
-            payment_method_format: {
-              e_wallet: "E-Wallet",
-              credit_debit: "Credit/Debit Card",
-              fpx: "FPX",
-            }[data.payment_method],
+            payment_method_format: paymentLabel[data.payment_method],
           };
         }),
         ["created_at"],
@@ -135,11 +152,20 @@ export function useOrder(orderStatus?: string): {
     return keyBy(orderData, "id");
   }, [orderData]);
 
-  async function addOrder(order: OrderCreate) {
-    setIsAdding(true);
-    await axios.post(`order`, order);
-    await refetch();
-    setIsAdding(false);
+  async function addOrder(
+    order: OrderCreate
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> {
+    try {
+      setIsAdding(true);
+      const res = await axios.post(`order`, order);
+      await refetch();
+      setIsAdding(false);
+      return res;
+    } catch (error) {
+      console.error("Error adding order:", error);
+      setIsAdding(false);
+    }
   }
 
   return {

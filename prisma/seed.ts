@@ -117,7 +117,7 @@ async function main() {
   /**
    * Product Types
    */
-  const productType = await prisma.productType.create({
+  await prisma.productType.create({
     data: {
       name: "Individual",
       type: "INDIVIDUAL",
@@ -161,6 +161,10 @@ async function main() {
       updated_by_name: userAdmin.first_name + " " + userAdmin.last_name,
     },
   });
+
+  await prisma.$executeRawUnsafe(`
+    TRUNCATE TABLE "Order" RESTART IDENTITY CASCADE;
+  `);
 }
 
 main()

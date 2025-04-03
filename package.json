@@ -35,6 +35,7 @@
     "flat": "^6.0.1",
     "formidable": "^3.5.2",
     "formik": "^2.4.6",
+    "ip": "^2.0.1",
     "iron-session": "^8.0.4",
     "lodash": "^4.17.21",
     "material-ui-popup-state": "^5.3.3",

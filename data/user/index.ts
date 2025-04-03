@@ -116,7 +116,11 @@ export const useUser = () => {
   };
 
   return {
-    data: userData,
+    data: {
+      ...userData,
+      name: userData?.first_name + " " + userData?.last_name,
+      contact_number_format: userData?.country_code + userData?.phone_no,
+    },
     permissions: userData?.permissions,
     status,
     updateUserDownloadImages,

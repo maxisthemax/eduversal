@@ -22,7 +22,7 @@ import Grid from "@mui/material/Grid2";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 
-interface CartData {
+export interface CartData {
   id?: string;
   userPackage: UserPackageData;
   quantity?: number;

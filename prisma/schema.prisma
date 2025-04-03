@@ -328,9 +328,9 @@ model PackageAlbum {
 }
 
 model Order {
-  id               String  @id @default(cuid())
+  id               String    @id @default(cuid())
   user_id          String
-  user             User    @relation(fields: [user_id], references: [id])
+  user             User      @relation(fields: [user_id], references: [id])
   price            Float
   status           String
   payment_method   String
@@ -339,7 +339,8 @@ model Order {
   remark           String?
   cart             Json
   shipping_address Json
-  order_no         Int     @unique @default(autoincrement())
+  order_no         Int       @unique @default(autoincrement())
+  payments         Payment[]
 
   created_by_user_id String
   created_by_name    String
@@ -347,6 +348,29 @@ model Order {
   updated_by_user_id String
   updated_by_name    String
   updated_at         DateTime @updatedAt
+
+  @@index([id])
+  @@index([order_no])
+}
+
+model Payment {
+  id             String @id @default(cuid())
+  order_id       String
+  order          Order  @relation(fields: [order_id], references: [id])
+  hashValue      String @unique
+  request_detail Json?
+  payment_detail Json?
+
+  created_by_user_id String
+  created_by_name    String
+  created_at         DateTime @default(now())
+  updated_by_user_id String
+  updated_by_name    String
+  updated_at         DateTime @updatedAt
+
+  @@index([id])
+  @@index([order_id])
+  @@index([hashValue])
 }
 
 enum ProductTypeType {

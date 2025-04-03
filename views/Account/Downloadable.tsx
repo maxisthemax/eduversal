@@ -28,7 +28,7 @@ function Downloadable() {
     >
       <OverlayBox isLoading={isDownloading}>
         <Grid container spacing={2}>
-          {data.download_images.map((item, index) => (
+          {data.download_images?.map((item, index) => (
             <Grid
               size={{
                 xs: 2.5,

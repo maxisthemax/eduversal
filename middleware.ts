@@ -34,6 +34,7 @@ export async function middleware(req: NextRequest) {
       "/api/auth/signIn",
       "/api/auth/signUp",
       "/api/auth/verifyEmail",
+      "/payment",
     ].includes(pathname)
   ) {
     // Redirect logged-in users away from auth routes
