@@ -328,6 +328,7 @@ function AddEditAlbumDialogForm({
                     sx={{
                       cursor: "pointer",
                       pb: 1,
+                      width: "max-content",
                     }}
                   >
                     <input {...getInputProps()} />

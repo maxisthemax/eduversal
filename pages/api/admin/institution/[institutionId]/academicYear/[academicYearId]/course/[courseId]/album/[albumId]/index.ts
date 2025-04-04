@@ -174,6 +174,10 @@ export default async function albumHandler(
             },
           });
 
+          await prisma.albumProductVariation.deleteMany({
+            where: { album_id: albumId as string },
+          });
+
           // Delete an existing album
           await prisma.album.delete({
             where: { id: albumId as string },
