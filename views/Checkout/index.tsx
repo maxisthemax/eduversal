@@ -2,13 +2,12 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 //*lodash
 import omit from "lodash/omit";
 
 //*components
-import PaymentDialog from "./PaymentDialog";
+import { usePaymentStore } from "./PaymentDialog";
 import { FlexBox, OverlayBox } from "@/components/Box";
 import { CustomIcon } from "@/components/Icons";
 import {
@@ -30,7 +29,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 //*data
 import { useCart } from "../Cart";
-import { PaymentData, useOrder } from "@/data/order";
+import { useOrder } from "@/data/order";
 import { useUser } from "@/data/user";
 
 //*helpers
@@ -75,7 +74,7 @@ function Checkout() {
   const { push } = useRouter();
   const { cart, clearCart } = useCart();
   const { addOrder } = useOrder();
-  const [data, setData] = useState<PaymentData | undefined>();
+  const { setPaymentData } = usePaymentStore();
 
   const isDeliverable = cart?.some((item) =>
     item.userPackage.items.some((item) => item.album.productTypeDeliverable)
@@ -153,13 +152,14 @@ function Checkout() {
           cust_phone: userData.contact_number_format,
         });
 
-        setData({
+        setPaymentData({
           ...res.data,
           PaymentDesc: `${newCart.length} item(s)`,
           CustEmail: userData.email,
           CustName: userData.name,
           CustPhone: userData.contact_number_format,
         });
+        push(`/account/purchase?orderId=${res.data.order_id}`);
         clearCart();
       } catch (error) {
         console.error("Checkout error:", error);
@@ -191,9 +191,12 @@ function Checkout() {
           }}
         >
           <Stack direction="column" spacing={2}>
-            <Typography variant="h4">Cart is empty</Typography>
-            <Button onClick={() => push("/")} variant="contained">
-              Back
+            <Typography variant="h4">Check Your Order</Typography>
+            <Button
+              onClick={() => push("/account/purchase")}
+              variant="contained"
+            >
+              Go To Your Order
             </Button>
           </Stack>
         </Box>
@@ -778,7 +781,6 @@ function Checkout() {
           </form>
         </OverlayBox>
       )}
-      {data && <PaymentDialog data={data} />}
     </>
   );
 }

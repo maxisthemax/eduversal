@@ -1,11 +1,10 @@
 import { formatDate } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 //*components
 import CartDetails from "./CartDetails";
-import PaymentDialog from "@/views/Checkout/PaymentDialog";
+import PaymentDialog, { usePaymentStore } from "@/views/Checkout/PaymentDialog";
 import { Page } from "@/components/Box";
 
 //*mui
@@ -21,7 +20,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
-import { PaymentData, useOrder } from "@/data/order";
+import { useOrder } from "@/data/order";
 
 //*utils
 import { statusColor } from "@/utils/constant";
@@ -39,7 +38,7 @@ function PurchaseDetails() {
   const orderId = params.get("orderId");
   const { orderDataById, status } = useOrder();
   const orderData = orderDataById[orderId];
-  const [data, setData] = useState<PaymentData | undefined>();
+  const { paymentData, setPaymentData } = usePaymentStore();
 
   if (status === "pending") return <LinearProgress />;
 
@@ -200,7 +199,7 @@ function PurchaseDetails() {
                   Amount: orderData.price.toFixed(2),
                   CurrencyCode: "MYR",
                 });
-                setData({
+                setPaymentData({
                   ...res.data,
                   PaymentDesc: `${orderData.cart.length} item(s)`,
                   CustEmail: orderData.cust_email,
@@ -214,7 +213,7 @@ function PurchaseDetails() {
           </Box>
         )}
       </Paper>
-      {data && <PaymentDialog data={data} />}
+      {paymentData && <PaymentDialog />}
     </Page>
   );
 }

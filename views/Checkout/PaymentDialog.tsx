@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { create } from "zustand";
 
 //*mui
 import Dialog from "@mui/material/Dialog";
@@ -12,8 +12,8 @@ import Box from "@mui/material/Box";
 import { PaymentData } from "@/data/order";
 import { useCart } from "../Cart";
 
-function PaymentDialog({ data }: { data: PaymentData }) {
-  const { push } = useRouter();
+function PaymentDialog() {
+  const { paymentData, clearPaymentData } = usePaymentStore();
   const { clearCart } = useCart();
   const [isPaying, setIsPaying] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -29,9 +29,7 @@ function PaymentDialog({ data }: { data: PaymentData }) {
         const form = formRef.current;
 
         if (form) {
-          if (data.order_id) {
-            push(`/account/purchase?orderId=${data.order_id}`);
-          }
+          clearPaymentData();
           form.submit();
           setIsPaying(false);
           clearCart();
@@ -47,7 +45,7 @@ function PaymentDialog({ data }: { data: PaymentData }) {
 
     // Cleanup function to clear the timeout if component unmounts
     return () => clearTimeout(timer);
-  }, [data]); // Re-run if payment data changes
+  }, [paymentData]); // Re-run if payment data changes
 
   return (
     <Dialog open={true} fullWidth maxWidth="sm" disableEscapeKeyDown={isPaying}>
@@ -75,32 +73,47 @@ function PaymentDialog({ data }: { data: PaymentData }) {
           name="frmPayment"
           method="post"
           action="https://pay.e-ghl.com/IPGSG/Payment.aspx"
-          style={{ display: "none" }} // Hide the form
-          target="_self" // Open in a new tab
+          target="_self"
         >
           <input type="hidden" name="TransactionType" value="SALE" />
-          <input type="hidden" name="PymtMethod" value={data.PymtMethod} />
+          <input
+            type="hidden"
+            name="PymtMethod"
+            value={paymentData.PymtMethod}
+          />
           <input type="hidden" name="ServiceID" value={"sit"} />
-          <input type="hidden" name="OrderNumber" value={data.OrderNumber} />
-          <input type="hidden" name="PaymentID" value={data.PaymentID} />
-          <input type="hidden" name="PaymentDesc" value={data.PaymentDesc} />
+          <input
+            type="hidden"
+            name="OrderNumber"
+            value={paymentData.OrderNumber}
+          />
+          <input type="hidden" name="PaymentID" value={paymentData.PaymentID} />
+          <input
+            type="hidden"
+            name="PaymentDesc"
+            value={paymentData.PaymentDesc}
+          />
           <input
             type="hidden"
             name="MerchantReturnURL"
-            value={data.MerchantReturnURL}
+            value={paymentData.MerchantReturnURL}
           />
           <input
             type="hidden"
             name="MerchantCallBackURL"
-            value={data.MerchantCallBackURL}
+            value={paymentData.MerchantCallBackURL}
           />
-          <input type="hidden" name="Amount" value={data.Amount} />
-          <input type="hidden" name="CurrencyCode" value={data.CurrencyCode} />
-          <input type="hidden" name="CustIP" value={data.CustIP} />
-          <input type="hidden" name="CustName" value={data.CustName} />
-          <input type="hidden" name="CustEmail" value={data.CustEmail} />
-          <input type="hidden" name="CustPhone" value={data.CustPhone} />
-          <input type="hidden" name="HashValue" value={data.HashValue} />
+          <input type="hidden" name="Amount" value={paymentData.Amount} />
+          <input
+            type="hidden"
+            name="CurrencyCode"
+            value={paymentData.CurrencyCode}
+          />
+          <input type="hidden" name="CustIP" value={paymentData.CustIP} />
+          <input type="hidden" name="CustName" value={paymentData.CustName} />
+          <input type="hidden" name="CustEmail" value={paymentData.CustEmail} />
+          <input type="hidden" name="CustPhone" value={paymentData.CustPhone} />
+          <input type="hidden" name="HashValue" value={paymentData.HashValue} />
         </form>
       </DialogContent>
     </Dialog>
@@ -108,3 +121,15 @@ function PaymentDialog({ data }: { data: PaymentData }) {
 }
 
 export default PaymentDialog;
+
+interface PaymentStore {
+  paymentData: PaymentData | undefined;
+  setPaymentData: (data: PaymentData | undefined) => void;
+  clearPaymentData: () => void;
+}
+
+export const usePaymentStore = create<PaymentStore>((set) => ({
+  paymentData: undefined,
+  setPaymentData: (data) => set({ paymentData: data }),
+  clearPaymentData: () => set({ paymentData: undefined }),
+}));
