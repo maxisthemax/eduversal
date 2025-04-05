@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { formatDate } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -26,6 +27,14 @@ import { useOrder } from "@/data/order";
 import { statusColor } from "@/utils/constant";
 import axios from "@/utils/axios";
 
+declare global {
+  interface Window {
+    TrackButton?: {
+      track: (options: { tracking_number: string }) => void;
+    };
+  }
+}
+
 const eghlPymtMethod = {
   fpx: "DD",
   credit_debit: "CC",
@@ -39,6 +48,27 @@ function PurchaseDetails() {
   const { orderDataById, status } = useOrder();
   const orderData = orderDataById[orderId];
   const { paymentData, setPaymentData } = usePaymentStore();
+
+  useEffect(() => {
+    // Dynamically load the script
+    const script = document.createElement("script");
+    script.src = "//www.tracking.my/track-button.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Clean up
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const linkTrack = () => {
+    if (window.TrackButton) {
+      window.TrackButton.track({ tracking_number: orderData.tracking_no });
+    } else {
+      console.warn("Tracking script not loaded yet");
+    }
+  };
 
   if (status === "pending") return <LinearProgress />;
 
@@ -74,6 +104,19 @@ function PurchaseDetails() {
               <b>Shipping Method:</b>
               <br />
               {orderData.shipment_method_format}
+              <br />
+              {orderData.tracking_no &&
+                orderData.shipment_method === "ship" && (
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      linkTrack();
+                    }}
+                  >
+                    {orderData.tracking_no}
+                  </a>
+                )}
               {orderData.shipment_method === "in-store" &&
                 "\nYS Photoversal Studio,\nLot 3267, Jalan 18/36,\nTaman Sri Serdang,43300\nSeri Kembangan, Selangor"}
             </Typography>

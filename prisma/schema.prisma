@@ -344,6 +344,8 @@ model Order {
   cust_email         String?
   cust_phone         String?
   success_payment_id String?
+  transaction_no     String?
+  tracking_no        String?
   payments           Payment[]
 
   created_by_user_id String

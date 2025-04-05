@@ -45,6 +45,8 @@ export interface OrderData {
   cust_name: string;
   cust_email: string;
   cust_phone: string;
+  tracking_no: string;
+  transaction_no: string;
 
   payment_method_format: string;
   shipment_method_format: string;
@@ -75,6 +77,8 @@ export interface OrderCreate {
   cust_name: string;
   cust_email: string;
   cust_phone: string;
+  tracking_no?: string;
+  transaction_no?: string;
 }
 
 export interface PaymentData {
