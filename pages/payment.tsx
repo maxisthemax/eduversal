@@ -169,7 +169,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
         const order = await prisma.order.update({
           where: { order_no: Number(formData.OrderNumber) },
-          data: { status: "COMPLETED", success_payment_id: payment.id },
+          data: {
+            status: "COMPLETED",
+            success_payment_id: payment.id,
+            transaction_no: formData.TxnID as string,
+          },
         });
 
         const allDownloadable = reduce(
