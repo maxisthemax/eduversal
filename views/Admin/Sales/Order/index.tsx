@@ -13,11 +13,15 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
 import { useGetStaffAccess } from "@/data/admin/user/staff";
 import { OrderFilter, useOrder } from "@/data/admin/sales/order";
+
+//*constant
+import { statusColor } from "@/utils/constant";
 
 function Order() {
   const access = useGetStaffAccess("sales_order_details");
@@ -66,6 +70,17 @@ function Order() {
       field: "status",
       headerName: "Status",
       minWidth: 200,
+      renderCell: (params) => {
+        return (
+          <Typography
+            sx={{
+              color: statusColor[params.row.status],
+            }}
+          >
+            {params.row.status}
+          </Typography>
+        );
+      },
     },
     {
       field: "transaction_id",
@@ -202,7 +217,7 @@ function Order() {
           height="maxHeight"
           data={orderData}
           columns={columns}
-          gap={12.1}
+          gap={26.1}
           pagination={{
             paginationModel: pagination.pageModel,
             onPaginationModelChange: pagination.setPageModel,
