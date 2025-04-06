@@ -25,6 +25,7 @@ function DataGrid({
   height = "height",
   filter,
   autoRowHeightColumn,
+  showQuickFilter = true,
 }: {
   data: any[];
   columns: any[];
@@ -45,6 +46,7 @@ function DataGrid({
     onFilterChange: (model: GridFilterModel) => void;
   };
   autoRowHeightColumn?: string[];
+  showQuickFilter?: boolean;
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -97,7 +99,7 @@ function DataGrid({
       slots={{ toolbar: GridToolbar }}
       slotProps={{
         toolbar: {
-          showQuickFilter: true,
+          showQuickFilter: showQuickFilter,
         },
       }}
       filterMode={filterMode}

@@ -171,8 +171,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           where: { order_no: Number(formData.OrderNumber) },
           data: {
             status: "COMPLETED",
+            status_index: 1,
             success_payment_id: payment.id,
             transaction_no: formData.TxnID as string,
+            priority:
+              findOrder.shipment_method === "ship" &&
+              findOrder.tracking_no === null
+                ? 1
+                : 0,
           },
         });
 

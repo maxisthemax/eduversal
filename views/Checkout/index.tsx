@@ -147,6 +147,7 @@ function Checkout() {
           shipping_address,
           price: totalPrice,
           status: "PENDING",
+          status_index: 0,
           cust_name: userData.name,
           cust_email: userData.email,
           cust_phone: userData.contact_number_format,

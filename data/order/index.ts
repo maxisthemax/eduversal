@@ -40,6 +40,7 @@ export interface OrderData {
   price: number;
   remark: string;
   status: string;
+  status_index: number;
   created_at: Date;
   order_no: number;
   cust_name: string;
@@ -74,6 +75,7 @@ export interface OrderCreate {
   price: number;
   remark: string;
   status: string;
+  status_index: number;
   cust_name: string;
   cust_email: string;
   cust_phone: string;

@@ -333,6 +333,7 @@ model Order {
   user               User      @relation(fields: [user_id], references: [id])
   price              Float
   status             String
+  status_index       Int
   payment_method     String
   shipment_method    String
   shipping_fee       Float
@@ -347,6 +348,7 @@ model Order {
   transaction_no     String?
   tracking_no        String?
   payments           Payment[]
+  priority           Int
 
   created_by_user_id String
   created_by_name    String

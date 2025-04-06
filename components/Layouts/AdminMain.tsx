@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
+//*lodash
+import includes from "lodash/includes";
+
 //*components
 import { FlexBox } from "../Box";
 import { CustomIcon } from "../Icons";
@@ -29,8 +32,19 @@ function AdminMain({ children }: { children: React.ReactNode }) {
   //*define
   const pathname = usePathname();
   const [open, setOpen] = useState({
-    restrictContent: pathname === "/admin/institution",
-    userlist: pathname === "/admin/parentuser",
+    restrictContent: includes(
+      ["/admin/institution", "/admin/producttype", "/admin/productvariation"],
+      pathname
+    ),
+    userlist: includes(
+      ["/admin/user/parentuser", "/admin/user/staffuser"],
+      pathname
+    ),
+    sales_management: includes(["/admin/sales/order"], pathname),
+    account: includes(
+      ["/admin/account/profile", "/admin/account/change-password"],
+      pathname
+    ),
   });
   const { push } = useRouter();
 
@@ -101,13 +115,10 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 ],
               },
               {
-                id: "general",
-                title: "General",
-                icon: "globe",
-                list: [
-                  { title: "Setting", href: "/admin/general/setting" },
-                  { title: "Banner", href: "/admin/banner" },
-                ],
+                id: "sales_management",
+                title: "Sales Management",
+                icon: "point_of_sale",
+                list: [{ title: "Orders", href: "/admin/sales/order" }],
               },
               {
                 id: "account",

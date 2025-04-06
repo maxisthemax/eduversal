@@ -1,0 +1,131 @@
+import { useMemo, useState } from "react";
+import qs from "querystring";
+
+//*lodash
+import keyBy from "lodash/keyBy";
+
+//*helpers
+import { useQueryFetch } from "@/helpers/queryHelpers";
+
+export interface OrderData {
+  id: string;
+  shipping_address: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    country_code: string;
+    phone_no: string;
+    address_1: string;
+    address_2: string;
+    postcode: string;
+    state: string;
+    city: string;
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cart: any;
+  payment_method: string;
+  shipment_method: string;
+  shipping_fee: number;
+  price: number;
+  remark: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+  order_no: number;
+  cust_name: string;
+  cust_email: string;
+  cust_phone: string;
+  tracking_no: string;
+  transaction_no: string;
+
+  payment_method_format: string;
+  shipment_method_format: string;
+  shipping_address_format: string;
+}
+
+export interface OrderFilter {
+  order_no?: string;
+  cust_name?: string;
+  cust_phone?: string;
+  tracking_no?: string;
+  transaction_no?: string;
+  [key: string]: string | undefined;
+}
+
+export function useOrder(): {
+  orderData: OrderData[];
+  orderDataById: Record<string, OrderData>;
+  status: string;
+  pagination?: {
+    currentPage: number;
+    totalCount: number;
+    pageModel: { page: number; pageSize: number };
+    setPageModel: React.Dispatch<
+      React.SetStateAction<{ page: number; pageSize: number }>
+    >;
+  };
+  filter?: OrderFilter;
+  setFilter?: React.Dispatch<React.SetStateAction<OrderFilter>>;
+  isRefetching?: boolean;
+} {
+  const [pageModel, setPageModel] = useState({ page: 0, pageSize: 20 });
+  const [filter, setFilter] = useState<OrderFilter>();
+
+  // Fetch order data with pagination
+  const { data, status, isLoading, isRefetching } = useQueryFetch(
+    [
+      "admin",
+      "sales",
+      "order",
+      "page",
+      pageModel.page,
+      "order_no",
+      filter?.order_no,
+      "cust_name",
+      filter?.cust_name,
+      "cust_phone",
+      filter?.cust_phone,
+      "tracking_no",
+      filter?.tracking_no,
+      "transaction_no",
+      filter?.transaction_no,
+    ],
+    `admin/sales/order?page=${pageModel.page}&pageSize=${
+      pageModel.pageSize
+    }&${qs.stringify(filter)}`,
+    { isKeepPreviousData: true }
+  );
+
+  const orderQueryData = data?.data as OrderData[];
+  const currentPage = data?.currentPage || 0;
+  const totalCount = data?.totalCount || 0;
+
+  // Memoize order data
+  const orderData = useMemo(() => {
+    if (!isLoading && orderQueryData) {
+      return orderQueryData.map((data) => ({
+        ...data,
+        created_at: new Date(data.created_at),
+        updated_at: new Date(data.updated_at),
+        shipment_method_format:
+          data.shipment_method === "ship" ? "Ship In" : "Pick up in store",
+        price_format: `RM ${data.price.toFixed(2)}`,
+      }));
+    } else return [];
+  }, [orderQueryData, isLoading]);
+
+  // Memoize order data by id
+  const orderDataById = useMemo(() => {
+    return keyBy(orderData, "id");
+  }, [orderData]);
+
+  return {
+    orderData,
+    orderDataById,
+    status,
+    pagination: { currentPage, totalCount, pageModel, setPageModel },
+    filter,
+    setFilter,
+    isRefetching,
+  };
+}
