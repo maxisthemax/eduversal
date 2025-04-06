@@ -42,6 +42,7 @@ function Order() {
     setFilter,
     isRefetching,
     updateOrder,
+    isUpdating,
   } = useOrder();
 
   useEffect(() => {
@@ -97,8 +98,16 @@ function Order() {
             <PopupState variant="popover" popupId="menu">
               {(popupState) => (
                 <>
-                  <Link href="#" {...bindTrigger(popupState)}>
-                    {params?.row.tracking_no ?? "Update"}
+                  <Link
+                    href="#"
+                    {...bindTrigger(popupState)}
+                    color={
+                      Boolean(params?.row.tracking_no) ? "primary" : "error"
+                    }
+                  >
+                    {Boolean(params?.row.tracking_no)
+                      ? params?.row.tracking_no
+                      : "Need Update !!"}
                   </Link>
                   <Popover
                     anchorOrigin={{
@@ -109,10 +118,15 @@ function Order() {
                       vertical: "top",
                       horizontal: "left",
                     }}
+                    onClose={() => {
+                      if (isUpdating) return;
+                      popupState.close();
+                    }}
                     {...bindPopover(popupState)}
                   >
                     <Box sx={{ width: 200, p: 1 }}>
                       <TextField
+                        disabled={isUpdating}
                         id="tracking_no"
                         autoFocus
                         defaultValue={params?.row.tracking_no}
@@ -120,6 +134,7 @@ function Order() {
                       <Stack direction={"row"} spacing={1} sx={{ pt: 1 }}>
                         <FlexBox />
                         <Button
+                          disabled={isUpdating}
                           variant="outlined"
                           onClick={() => {
                             linkTrack(params?.row.tracking_no);
@@ -128,6 +143,7 @@ function Order() {
                           Check
                         </Button>
                         <Button
+                          disabled={isUpdating}
                           variant="contained"
                           onClick={async () => {
                             const trackingNo = document.getElementById(

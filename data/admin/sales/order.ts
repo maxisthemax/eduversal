@@ -74,7 +74,9 @@ export function useOrder(): {
   setFilter?: React.Dispatch<React.SetStateAction<OrderFilter>>;
   isRefetching?: boolean;
   updateOrder: (id: string, data: UpdateOrderData) => Promise<UpdateOrderData>;
+  isUpdating: boolean;
 } {
+  const [isUpdating, setIsUpdating] = useState(false);
   const [pageModel, setPageModel] = useState({ page: 0, pageSize: 20 });
   const [filter, setFilter] = useState<OrderFilter>();
 
@@ -127,9 +129,16 @@ export function useOrder(): {
   }, [orderData]);
 
   const updateOrder = async (id: string, data: UpdateOrderData) => {
-    await axios.put(`admin/sales/order/${id}`, data);
-    refetch();
-    return data;
+    try {
+      setIsUpdating(true);
+      await axios.put(`admin/sales/order/${id}`, data);
+      setIsUpdating(false);
+      refetch();
+      return data;
+    } catch (error) {
+      console.log(error);
+      setIsUpdating(false);
+    }
   };
 
   return {
@@ -141,5 +150,6 @@ export function useOrder(): {
     setFilter,
     isRefetching,
     updateOrder,
+    isUpdating,
   };
 }
