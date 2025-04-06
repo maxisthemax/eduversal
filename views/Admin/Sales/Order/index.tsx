@@ -135,6 +135,7 @@ function Order() {
                             ) as HTMLInputElement;
                             await updateOrder(params.row.id, {
                               tracking_no: trackingNo.value,
+                              priority: 0,
                             });
                             popupState.close();
                           }}

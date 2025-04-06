@@ -26,7 +26,7 @@ export default async function productTypeHandler(
         }
 
         // Update an existing product type
-        const { tracking_no } = req.body;
+        const { tracking_no, priority } = req.body;
 
         // Get updatedBy
         const { updated_by } = await getCreatedByUpdatedBy(req, res);
@@ -36,6 +36,7 @@ export default async function productTypeHandler(
           where: { id: orderId as string },
           data: {
             tracking_no,
+            priority,
             ...updated_by,
           },
         });
