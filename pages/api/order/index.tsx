@@ -64,6 +64,8 @@ export default async function handler(
           cust_name,
           cust_email,
           cust_phone,
+          status_index,
+          priority,
         } = req.body;
 
         // Validate required fields
@@ -82,6 +84,8 @@ export default async function handler(
               "cust_name",
               "cust_email",
               "cust_phone",
+              "status_index",
+              "priority",
             ],
             "body"
           )
@@ -111,6 +115,8 @@ export default async function handler(
               cust_name,
               cust_email,
               cust_phone,
+              status_index,
+              priority,
               ...created_by,
               ...updated_by,
             },

@@ -151,6 +151,7 @@ function Checkout() {
           cust_name: userData.name,
           cust_email: userData.email,
           cust_phone: userData.contact_number_format,
+          priority: 0,
         });
 
         setPaymentData({

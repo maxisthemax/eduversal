@@ -53,6 +53,8 @@ export interface OrderFilter {
   cust_phone?: string;
   tracking_no?: string;
   transaction_no?: string;
+  from_date?: string;
+  to_date?: string;
   [key: string]: string | undefined;
 }
 
@@ -80,28 +82,18 @@ export function useOrder(): {
   const [pageModel, setPageModel] = useState({ page: 0, pageSize: 20 });
   const [filter, setFilter] = useState<OrderFilter>();
 
+  const filteredFilter = filter
+    ? Object.fromEntries(
+        Object.entries(filter).filter(([, value]) => value !== "")
+      )
+    : {};
+
   // Fetch order data with pagination
   const { data, status, isLoading, isRefetching, refetch } = useQueryFetch(
-    [
-      "admin",
-      "sales",
-      "order",
-      "page",
-      pageModel.page,
-      "order_no",
-      filter?.order_no,
-      "cust_name",
-      filter?.cust_name,
-      "cust_phone",
-      filter?.cust_phone,
-      "tracking_no",
-      filter?.tracking_no,
-      "transaction_no",
-      filter?.transaction_no,
-    ],
+    ["admin", "sales", "order", "page", qs.stringify(filteredFilter)],
     `admin/sales/order?page=${pageModel.page}&pageSize=${
       pageModel.pageSize
-    }&${qs.stringify(filter)}`,
+    }&${qs.stringify(filteredFilter)}`,
     { isKeepPreviousData: true }
   );
 

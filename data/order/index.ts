@@ -48,6 +48,7 @@ export interface OrderData {
   cust_phone: string;
   tracking_no: string;
   transaction_no: string;
+  priority: number;
 
   payment_method_format: string;
   shipment_method_format: string;
@@ -81,6 +82,7 @@ export interface OrderCreate {
   cust_phone: string;
   tracking_no?: string;
   transaction_no?: string;
+  priority: number;
 }
 
 export interface PaymentData {

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
-
-//*/lodash
-import some from "lodash/some";
+import { format, isValid } from "date-fns";
 
 //*components
 import DataGrid from "@/components/Table/DataGrid";
 import NoAccess from "@/components/Box/NoAccess";
+import DatePicker from "@/components/Date/DatePicker";
 import { FlexBox, OverlayBox } from "@/components/Box";
 
 //*mui
@@ -34,6 +33,8 @@ function Order() {
     cust_phone: "",
     tracking_no: "",
     transaction_no: "",
+    from_date: "",
+    to_date: "",
   });
   const {
     orderData,
@@ -191,7 +192,7 @@ function Order() {
       },
     },
     {
-      field: "transaction_id",
+      field: "transaction_no",
       headerName: "Transaction No.",
       minWidth: 200,
     },
@@ -248,6 +249,7 @@ function Order() {
               }
             }}
             onChange={handleTextFieldChange}
+            sx={{ width: 100 }}
           />
           <TextField
             label="Parent"
@@ -263,33 +265,97 @@ function Order() {
             value={orderFilter?.cust_phone}
             fullWidth={false}
             onChange={handleTextFieldChange}
-            sx={{ width: 240 }}
+            sx={{ width: 160 }}
           />
-        </Stack>
-        <Stack direction={"row"} gap={2} flexWrap={"wrap"} sx={{ pb: 2 }}>
           <TextField
             label="Transaction No"
             name="transaction_no"
             value={orderFilter?.transaction_no}
             fullWidth={false}
             onChange={handleTextFieldChange}
-            sx={{ width: 300 }}
+            sx={{ width: 250 }}
           />
           <TextField
             label="Tracking No"
             name="tracking_no"
-            sx={{ width: 300 }}
+            sx={{ width: 220 }}
             value={orderFilter?.tracking_no}
             fullWidth={false}
             onChange={handleTextFieldChange}
           />
-          <Button
-            disabled={
-              !(
-                some(orderFilter, (value) => value === "") &&
-                some(orderFilter, (value) => value !== "")
-              )
+          <DatePicker
+            fullWidth={false}
+            label="From Date"
+            value={
+              orderFilter?.from_date !== ""
+                ? new Date(orderFilter?.from_date)
+                : null
             }
+            onChange={(newValue) => {
+              setOrderFilter((prev) => ({
+                ...prev,
+                from_date: isValid(newValue)
+                  ? format(newValue, "yyyy-MM-dd")
+                  : "",
+              }));
+            }}
+            slotProps={{
+              textField: {
+                fullWidth: false,
+                onKeyDown: (e) => {
+                  if (e.key === "Backspace" || e.key === "Delete") {
+                    e.preventDefault();
+                  }
+                },
+              },
+              field: {
+                clearable: true,
+                onClear: () => {
+                  setOrderFilter((prev) => ({
+                    ...prev,
+                    from_date: "",
+                  }));
+                },
+              },
+            }}
+          />
+          <DatePicker
+            fullWidth={false}
+            label="To Date"
+            value={
+              orderFilter?.to_date !== ""
+                ? new Date(orderFilter?.to_date)
+                : null
+            }
+            onChange={(newValue) => {
+              setOrderFilter((prev) => ({
+                ...prev,
+                to_date: isValid(newValue)
+                  ? format(newValue, "yyyy-MM-dd")
+                  : "",
+              }));
+            }}
+            slotProps={{
+              textField: {
+                fullWidth: false,
+                onKeyDown: (e) => {
+                  if (e.key === "Backspace" || e.key === "Delete") {
+                    e.preventDefault();
+                  }
+                },
+              },
+              field: {
+                clearable: true,
+                onClear: () => {
+                  setOrderFilter((prev) => ({
+                    ...prev,
+                    to_date: "",
+                  }));
+                },
+              },
+            }}
+          />
+          <Button
             variant="contained"
             onClick={() => {
               console.log(orderFilter);
@@ -307,6 +373,8 @@ function Order() {
                 cust_phone: "",
                 tracking_no: "",
                 transaction_no: "",
+                from_date: "",
+                to_date: "",
               });
               setFilter({
                 order_no: "",
@@ -314,6 +382,8 @@ function Order() {
                 cust_phone: "",
                 tracking_no: "",
                 transaction_no: "",
+                from_date: "",
+                to_date: "",
               });
             }}
           >

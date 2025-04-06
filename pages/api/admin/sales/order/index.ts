@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
+import { endOfDay, startOfDay } from "date-fns";
 
 //*lib
 import prisma from "@/lib/prisma";
@@ -21,6 +22,8 @@ export default async function handler(
         const cust_phone = req.query.cust_phone as string;
         const tracking_no = req.query.tracking_no as string;
         const transaction_no = req.query.transaction_no as string;
+        const from_date = req.query.from_date as string;
+        const to_date = req.query.to_date as string;
 
         const where: Prisma.OrderWhereInput = {
           ...(order_no && order_no !== ""
@@ -51,6 +54,29 @@ export default async function handler(
                 },
               }
             : {}),
+          ...(from_date && from_date !== "" && to_date && to_date !== ""
+            ? {
+                created_at: {
+                  gte: startOfDay(new Date(from_date)),
+                  lte: endOfDay(new Date(to_date)),
+                },
+              }
+            : {}),
+          ...(from_date && from_date !== "" && (!to_date || to_date === "")
+            ? {
+                created_at: {
+                  gte: startOfDay(new Date(from_date)),
+                },
+              }
+            : {}),
+
+          ...(to_date && to_date !== "" && (!from_date || from_date === "")
+            ? {
+                created_at: {
+                  lte: startOfDay(new Date(to_date)),
+                },
+              }
+            : {}),
         };
 
         // Fetch total count of users
@@ -63,9 +89,6 @@ export default async function handler(
           orderBy: [
             {
               priority: "desc",
-            },
-            {
-              status_index: "asc",
             },
             {
               created_at: "desc",
