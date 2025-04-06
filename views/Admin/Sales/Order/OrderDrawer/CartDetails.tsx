@@ -14,6 +14,12 @@ function CartDetails({ cart }) {
     cart.map((item: any, index) => {
       return (
         <Box key={item.id}>
+          <Typography>
+            <b>
+              {item.institutionName} - {item.academicYearName} -{" "}
+              {item.courseName}
+            </b>
+          </Typography>
           <Grid container key={item.id} spacing={4} sx={{ p: 2 }}>
             <Grid size={{ xs: 1.5 }}>
               {item.userPackage.packageId === "none" ? (

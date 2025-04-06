@@ -31,6 +31,7 @@ export default async function courseHandler(
             course_id: true,
             course: {
               select: {
+                institution: { select: { name: true } },
                 id: true,
                 academicYear: { select: { year: true } },
                 name: true,

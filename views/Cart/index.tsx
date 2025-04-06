@@ -27,6 +27,9 @@ export interface CartData {
   userPackage: UserPackageData;
   quantity?: number;
   packageUrl: string;
+  institutionName?: string;
+  academicYearName?: string;
+  courseName?: string;
 }
 
 function Cart() {

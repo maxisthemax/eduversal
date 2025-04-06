@@ -192,6 +192,9 @@ function PhotoCotent() {
         },
         packageUrl: path,
         quantity: 1,
+        institutionName: userCourseData.institution_name,
+        academicYearName: userCourseData.academic_year_name,
+        courseName: userCourseData.course.name,
       });
       setAddedToCart(true);
     }
