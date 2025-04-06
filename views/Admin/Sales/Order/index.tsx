@@ -68,16 +68,17 @@ function Order() {
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
+      field: "order_no",
+      headerName: "Order No",
+      minWidth: 100,
+    },
+    {
       field: "created_at",
       headerName: "Created At",
       type: "dateTime",
       width: 180,
     },
-    {
-      field: "order_no",
-      headerName: "Order No",
-      minWidth: 100,
-    },
+
     {
       field: "cust_name",
       headerName: "Parent",
