@@ -9,6 +9,7 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 
 //*utils
 import axios from "@/utils/axios";
+import { paymentLabel } from "@/utils/constant";
 
 export interface OrderData {
   id: string;
@@ -111,6 +112,7 @@ export function useOrder(): {
         shipment_method_format:
           data.shipment_method === "ship" ? "Ship In" : "Pick up in store",
         price_format: `RM ${data.price.toFixed(2)}`,
+        payment_method_format: paymentLabel[data.payment_method],
       }));
     } else return [];
   }, [orderQueryData, isLoading]);
