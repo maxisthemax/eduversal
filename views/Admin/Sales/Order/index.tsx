@@ -7,6 +7,7 @@ import DataGrid from "@/components/Table/DataGrid";
 import NoAccess from "@/components/Box/NoAccess";
 import DatePicker from "@/components/Date/DatePicker";
 import { FlexBox, OverlayBox } from "@/components/Box";
+import PurchaseDetails from "./PurchaseDetails";
 
 //*mui
 import Box from "@mui/material/Box";
@@ -17,10 +18,11 @@ import Typography from "@mui/material/Typography";
 import Popover from "@mui/material/Popover";
 import { GridColDef } from "@mui/x-data-grid";
 import Link from "@mui/material/Link";
+import Drawer from "@mui/material/Drawer";
 
 //*data
 import { useGetStaffAccess } from "@/data/admin/user/staff";
-import { OrderFilter, useOrder } from "@/data/admin/sales/order";
+import { OrderFilter, useOrder, OrderData } from "@/data/admin/sales/order";
 
 //*constant
 import { statusColor } from "@/utils/constant";
@@ -72,6 +74,9 @@ function Order() {
       field: "order_no",
       headerName: "Order No",
       minWidth: 100,
+      renderCell: (params) => {
+        return <OrderDrawer orderData={params.row} />;
+      },
     },
     {
       field: "created_at",
@@ -410,3 +415,29 @@ function Order() {
 }
 
 export default Order;
+
+function OrderDrawer({ orderData }: { orderData: OrderData }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Link
+        href="#"
+        onClick={() => {
+          setOpen(!open);
+        }}
+      >
+        {orderData.order_no}
+      </Link>
+      <Drawer
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+        anchor="right"
+        PaperProps={{ sx: { width: "50%" } }}
+      >
+        <PurchaseDetails orderData={orderData} />
+      </Drawer>
+    </>
+  );
+}
