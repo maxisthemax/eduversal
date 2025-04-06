@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
 
 //*/lodash
 import some from "lodash/some";
@@ -6,7 +7,7 @@ import some from "lodash/some";
 //*components
 import DataGrid from "@/components/Table/DataGrid";
 import NoAccess from "@/components/Box/NoAccess";
-import { OverlayBox } from "@/components/Box";
+import { FlexBox, OverlayBox } from "@/components/Box";
 
 //*mui
 import Box from "@mui/material/Box";
@@ -14,7 +15,9 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import Popover from "@mui/material/Popover";
 import { GridColDef } from "@mui/x-data-grid";
+import Link from "@mui/material/Link";
 
 //*data
 import { useGetStaffAccess } from "@/data/admin/user/staff";
@@ -32,7 +35,35 @@ function Order() {
     tracking_no: "",
     transaction_no: "",
   });
-  const { orderData, pagination, status, setFilter, isRefetching } = useOrder();
+  const {
+    orderData,
+    pagination,
+    status,
+    setFilter,
+    isRefetching,
+    updateOrder,
+  } = useOrder();
+
+  useEffect(() => {
+    // Dynamically load the script
+    const script = document.createElement("script");
+    script.src = "//www.tracking.my/track-button.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Clean up
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const linkTrack = (tracking_no: string) => {
+    if (window.TrackButton) {
+      window.TrackButton.track({ tracking_number: tracking_no });
+    } else {
+      console.warn("Tracking script not loaded yet");
+    }
+  };
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
@@ -60,6 +91,65 @@ function Order() {
       field: "tracking_no",
       headerName: "Tracking No",
       minWidth: 200,
+      renderCell: (params) => {
+        return (
+          params.row.shipment_method === "ship" && (
+            <PopupState variant="popover" popupId="menu">
+              {(popupState) => (
+                <>
+                  <Link href="#" {...bindTrigger(popupState)}>
+                    {params?.row.tracking_no ?? "Update"}
+                  </Link>
+                  <Popover
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    {...bindPopover(popupState)}
+                  >
+                    <Box sx={{ width: 200, p: 1 }}>
+                      <TextField
+                        id="tracking_no"
+                        autoFocus
+                        defaultValue={params?.row.tracking_no}
+                      />
+                      <Stack direction={"row"} spacing={1} sx={{ pt: 1 }}>
+                        <FlexBox />
+                        <Button
+                          variant="outlined"
+                          onClick={() => {
+                            linkTrack(params?.row.tracking_no);
+                          }}
+                        >
+                          Check
+                        </Button>
+                        <Button
+                          variant="contained"
+                          onClick={async () => {
+                            const trackingNo = document.getElementById(
+                              "tracking_no"
+                            ) as HTMLInputElement;
+                            await updateOrder(params.row.id, {
+                              tracking_no: trackingNo.value,
+                            });
+                            popupState.close();
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </Stack>
+                    </Box>
+                  </Popover>
+                </>
+              )}
+            </PopupState>
+          )
+        );
+      },
     },
     {
       field: "shipment_method_format",

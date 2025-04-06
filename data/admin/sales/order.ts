@@ -7,6 +7,9 @@ import keyBy from "lodash/keyBy";
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
 
+//*utils
+import axios from "@/utils/axios";
+
 export interface OrderData {
   id: string;
   shipping_address: {
@@ -52,6 +55,8 @@ export interface OrderFilter {
   [key: string]: string | undefined;
 }
 
+type UpdateOrderData = Partial<OrderData>;
+
 export function useOrder(): {
   orderData: OrderData[];
   orderDataById: Record<string, OrderData>;
@@ -67,12 +72,13 @@ export function useOrder(): {
   filter?: OrderFilter;
   setFilter?: React.Dispatch<React.SetStateAction<OrderFilter>>;
   isRefetching?: boolean;
+  updateOrder: (id: string, data: UpdateOrderData) => Promise<UpdateOrderData>;
 } {
   const [pageModel, setPageModel] = useState({ page: 0, pageSize: 20 });
   const [filter, setFilter] = useState<OrderFilter>();
 
   // Fetch order data with pagination
-  const { data, status, isLoading, isRefetching } = useQueryFetch(
+  const { data, status, isLoading, isRefetching, refetch } = useQueryFetch(
     [
       "admin",
       "sales",
@@ -119,6 +125,12 @@ export function useOrder(): {
     return keyBy(orderData, "id");
   }, [orderData]);
 
+  const updateOrder = async (id: string, data: UpdateOrderData) => {
+    await axios.put(`admin/sales/order/${id}`, data);
+    refetch();
+    return data;
+  };
+
   return {
     orderData,
     orderDataById,
@@ -127,5 +139,6 @@ export function useOrder(): {
     filter,
     setFilter,
     isRefetching,
+    updateOrder,
   };
 }
