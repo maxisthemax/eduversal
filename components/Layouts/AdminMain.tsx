@@ -115,6 +115,15 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 ],
               },
               {
+                id: "general",
+                title: "General",
+                icon: "globe",
+                list: [
+                  { title: "Setting", href: "/admin/general/setting" },
+                  { title: "Banner", href: "/admin/banner" },
+                ],
+              },
+              {
                 id: "sales_management",
                 title: "Sales Management",
                 icon: "point_of_sale",
