@@ -65,9 +65,9 @@ export interface UserCourseData {
     institution: { name: string };
   };
   title_format: string;
-  institution_name: string;
-  academic_year_name: string;
-  course_name: string;
+  institution_name?: string;
+  academic_year_name?: string;
+  course_name?: string;
 }
 
 export function useUserCourse(userCourseId?: string): {
