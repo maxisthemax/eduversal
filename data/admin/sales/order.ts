@@ -113,6 +113,20 @@ export function useOrder(): {
           data.shipment_method === "ship" ? "Ship In" : "Pick up in store",
         price_format: `RM ${data.price.toFixed(2)}`,
         payment_method_format: paymentLabel[data.payment_method],
+        shipping_address_format:
+          data.shipment_method === "ship"
+            ? `${data.shipping_address.first_name} ${
+                data.shipping_address.last_name
+              } | ${data.shipping_address.country_code}${
+                data.shipping_address.phone_no
+              },\n${data.shipping_address.address_1}${
+                data.shipping_address.address_2
+                  ? ", \n" + data.shipping_address.address_2
+                  : ""
+              },\n${data.shipping_address.city}, ${
+                data.shipping_address.postcode
+              }, ${data.shipping_address.state}`
+            : "",
       }));
     } else return [];
   }, [orderQueryData, isLoading]);
