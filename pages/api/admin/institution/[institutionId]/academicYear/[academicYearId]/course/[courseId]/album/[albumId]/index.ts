@@ -156,6 +156,20 @@ export default async function albumHandler(
           return;
         }
 
+        const findPackages = await prisma.packageAlbum.findMany({
+          where: {
+            album_id: albumId as string,
+          },
+          select: { package: { select: { name: true } } },
+        });
+        if (findPackages.length > 0) {
+          return res.status(400).json({
+            message: `Album is associated with packages ${findPackages
+              .map((item) => item.package.name)
+              .join(", ")} and cannot be deleted`,
+          });
+        }
+
         // Use Prisma transaction
         await prisma.$transaction(async (prisma) => {
           // Get the photos associated with the album
@@ -184,12 +198,14 @@ export default async function albumHandler(
           });
 
           const keys = [];
-          photos.forEach(({ download_url, download_watermark_url }) => {
-            keys.push(download_url);
-            keys.push(download_watermark_url);
-          });
+          if (photos.length > 0) {
+            photos.forEach(({ download_url, download_watermark_url }) => {
+              keys.push(download_url);
+              keys.push(download_watermark_url);
+            });
 
-          await deleteFile(keys);
+            await deleteFile(keys);
+          }
         });
 
         return res.status(200).json({

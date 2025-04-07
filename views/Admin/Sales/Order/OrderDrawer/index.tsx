@@ -29,9 +29,9 @@ function OrderDrawer({ orderData }: { orderData: OrderData }) {
             setOpen(false);
           }}
           anchor="right"
-          PaperProps={{ sx: { width: "50%" } }}
+          PaperProps={{ sx: { width: "60%" } }}
         >
-          <PurchaseDetails orderData={orderData} />
+          <PurchaseDetails orderId={orderData.id} />
         </Drawer>
       )}
     </>

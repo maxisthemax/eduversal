@@ -148,22 +148,24 @@ function Order() {
                         >
                           Check
                         </Button>
-                        <Button
-                          disabled={isUpdating}
-                          variant="contained"
-                          onClick={async () => {
-                            const trackingNo = document.getElementById(
-                              "tracking_no"
-                            ) as HTMLInputElement;
-                            await updateOrder(params.row.id, {
-                              tracking_no: trackingNo.value,
-                              priority: 0,
-                            });
-                            popupState.close();
-                          }}
-                        >
-                          Update
-                        </Button>
+                        {access.edit && (
+                          <Button
+                            disabled={isUpdating}
+                            variant="contained"
+                            onClick={async () => {
+                              const trackingNo = document.getElementById(
+                                "tracking_no"
+                              ) as HTMLInputElement;
+                              await updateOrder(params.row.id, {
+                                tracking_no: trackingNo.value,
+                                priority: 0,
+                              });
+                              popupState.close();
+                            }}
+                          >
+                            Update
+                          </Button>
+                        )}
                       </Stack>
                     </Box>
                   </Popover>

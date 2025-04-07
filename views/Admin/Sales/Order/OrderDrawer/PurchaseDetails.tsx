@@ -10,12 +10,15 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 //*utils
 import { statusColor } from "@/utils/constant";
 
-//*interface
-import { OrderData } from "@/data/admin/sales/order";
+//*data
+import { useOrder } from "@/data/admin/sales/order";
+import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 declare global {
   interface Window {
@@ -25,7 +28,11 @@ declare global {
   }
 }
 
-function PurchaseDetails({ orderData }: { orderData: OrderData }) {
+function PurchaseDetails({ orderId }: { orderId: string }) {
+  const access = useGetStaffAccess("sales_order_details");
+  const { orderDataById, updateOrder, status } = useOrder();
+  const orderData = orderDataById[orderId];
+
   useEffect(() => {
     // Dynamically load the script
     const script = document.createElement("script");
@@ -57,12 +64,33 @@ function PurchaseDetails({ orderData }: { orderData: OrderData }) {
           sx={{ justifyContent: "space-between", width: "100%" }}
         >
           <Typography variant="h6">ORDER #{orderData.order_no}</Typography>
-          <Typography
-            variant="h6"
+          <Select
+            disabled={!access.edit}
+            value={orderData.status}
             sx={{ color: statusColor[orderData.status] }}
+            onChange={async (e) => {
+              await updateOrder(orderId, { status: e.target.value });
+            }}
           >
-            {orderData.status}
-          </Typography>
+            <MenuItem value="PENDING" sx={{ color: statusColor["PENDING"] }}>
+              PENDING
+            </MenuItem>
+            <MenuItem
+              value="COMPLETED"
+              sx={{ color: statusColor["COMPLETED"] }}
+            >
+              COMPLETED
+            </MenuItem>
+            <MenuItem
+              value="CANCELLED"
+              sx={{ color: statusColor["CANCELLED"] }}
+            >
+              CANCELLED
+            </MenuItem>
+            <MenuItem value="REFUND" sx={{ color: statusColor["REFUND"] }}>
+              REFUND
+            </MenuItem>
+          </Select>
         </Stack>
         <Stack direction="row" sx={{ width: "100%" }} spacing={6}>
           <Typography variant="body1" sx={{ whiteSpace: "break-spaces" }}>

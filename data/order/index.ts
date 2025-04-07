@@ -157,6 +157,11 @@ export function useOrder(orderStatus?: string): {
   const orderDataByStatus = useMemo(() => {
     return filter(orderData, ({ status }) => {
       if (orderStatus === "ALL") return true;
+
+      if (orderStatus === "CANCELLED/REFUND") {
+        return status === "CANCELLED" || status === "REFUND";
+      }
+
       return status === orderStatus;
     });
   }, [orderData, orderStatus]);
