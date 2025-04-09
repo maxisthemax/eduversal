@@ -233,10 +233,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           []
         );
 
+        const findUser = await prisma.user.findFirst({
+          where: { id: order.user_id },
+          select: {
+            download_images: true,
+          },
+        });
+
+        const exisitingAllDownloadable = (findUser?.download_images ??
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          []) as any[];
+
         await prisma.user.update({
           where: { id: order.user_id },
           data: {
-            download_images: allDownloadable,
+            download_images: [...allDownloadable, ...exisitingAllDownloadable],
           },
         });
       });
