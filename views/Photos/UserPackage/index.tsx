@@ -29,6 +29,7 @@ import Toolbar from "@mui/material/Toolbar";
 import {
   UserCourseAlbumData,
   UserCoursePackageData,
+  useUserCourse,
 } from "@/data/userCourse/course";
 import { useCart } from "@/views/Cart";
 
@@ -89,6 +90,7 @@ function UserPackages() {
   const { class_id, album_id } = useParams();
   const { push } = useRouter();
   const { userPackage, setUserPackage } = useUserPackages();
+  const { userCourseData } = useUserCourse(class_id as string);
 
   useEffect(() => {
     if (!userPackage) {
@@ -124,6 +126,9 @@ function UserPackages() {
         },
         packageUrl: path,
         quantity: 1,
+        institutionName: userCourseData.institution_name,
+        academicYearName: userCourseData.academic_year_name,
+        courseName: userCourseData.course.name,
       });
       setAddedToCart(true);
     }
