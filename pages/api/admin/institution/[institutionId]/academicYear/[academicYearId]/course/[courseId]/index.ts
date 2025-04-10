@@ -71,7 +71,7 @@ export default async function courseHandler(
         });
 
         // Return a success message
-        return res.status(200).json({ message: "Course deleted successfully" });
+        return res.status(200).json({ message: "Class deleted successfully" });
       }
 
       default:

@@ -190,7 +190,20 @@ function Course() {
         access.add && <AddEditCourseDialog key="addEditAcademicYearDialog" />,
       ]}
     >
-      <DataGrid gap={16} columns={columns} data={coursesData} />
+      <DataGrid
+        gap={16}
+        columns={columns}
+        data={coursesData}
+        firstToolbarText={
+          <Typography
+            variant="inherit"
+            sx={{ px: 1, fontWeight: 500 }}
+            color="primary"
+          >
+            Total Classes: <b>{coursesData?.length ?? 0}</b>
+          </Typography>
+        }
+      />
     </Page>
   );
 }

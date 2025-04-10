@@ -442,10 +442,10 @@ function UploadGrid({
       );
     },
     validator: (file) => {
-      if (file.size > 10 * 1024 * 1024) {
+      if (file.size > 30 * 1024 * 1024) {
         return {
           code: "size-too-large",
-          message: `file is larger than 10MB`,
+          message: `file is larger than 30MB`,
         };
       }
       return null;

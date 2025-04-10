@@ -6,11 +6,13 @@ import some from "lodash/some";
 //*mui
 import {
   DataGrid as DataGridMui,
-  GridToolbar,
   GridFeatureMode,
   GridPaginationModel,
   GridCallbackDetails,
   GridFilterModel,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 
 //*helpers
@@ -26,6 +28,7 @@ function DataGrid({
   filter,
   autoRowHeightColumn,
   showQuickFilter = true,
+  firstToolbarText,
 }: {
   data: any[];
   columns: any[];
@@ -47,6 +50,7 @@ function DataGrid({
   };
   autoRowHeightColumn?: string[];
   showQuickFilter?: boolean;
+  firstToolbarText?: React.ReactNode;
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -96,10 +100,11 @@ function DataGrid({
           } else return column;
         })}
       disableRowSelectionOnClick={true}
-      slots={{ toolbar: GridToolbar }}
+      slots={{ toolbar: CustomToolbar }}
       slotProps={{
         toolbar: {
           showQuickFilter: showQuickFilter,
+          ...({ firstToolbarText } as any),
         },
       }}
       filterMode={filterMode}
@@ -120,3 +125,15 @@ function DataGrid({
 }
 
 export default DataGrid;
+
+function CustomToolbar(props: { firstToolbarText?: React.ReactNode }) {
+  const firstToolbarText = props.firstToolbarText;
+
+  return (
+    <GridToolbarContainer>
+      {firstToolbarText ? firstToolbarText : <></>}
+      <GridToolbarFilterButton />
+      <GridToolbarExport />
+    </GridToolbarContainer>
+  );
+}

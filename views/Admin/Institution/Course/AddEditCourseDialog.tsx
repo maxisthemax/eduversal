@@ -61,7 +61,7 @@ function AddEditCourseDialog({
         <MenuItem {...bindTrigger(popupState)}>Edit</MenuItem>
       ) : (
         <Button variant={"contained"} {...bindTrigger(popupState)}>
-          Add Course
+          Add Class
         </Button>
       )}
       <Dialog
@@ -164,7 +164,7 @@ function AddEditCourseDialogForm({
           <OverlayBox isLoading={isSubmitting}>
             <Form>
               <DialogTitle>
-                {mode === "edit" ? "Edit Course" : "Add Course"}
+                {mode === "edit" ? "Edit Class" : "Add Class"}
               </DialogTitle>
               <DialogContent>
                 <Stack

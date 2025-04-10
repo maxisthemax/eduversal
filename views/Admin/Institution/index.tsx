@@ -21,6 +21,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
@@ -114,6 +115,15 @@ function Institution() {
         data={institutionsData}
         columns={columns}
         loading={status === "pending"}
+        firstToolbarText={
+          <Typography
+            variant="inherit"
+            sx={{ px: 1, fontWeight: 500 }}
+            color="primary"
+          >
+            Total Institutions: <b>{institutionsData?.length ?? 0}</b>
+          </Typography>
+        }
       />
     </Page>
   );

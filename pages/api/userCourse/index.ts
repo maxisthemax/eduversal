@@ -132,7 +132,7 @@ export default async function courseHandler(
 
         if (userCourse) {
           return res.status(400).json({
-            message: "User Course already exists",
+            message: "User Class already exists",
           });
         }
 

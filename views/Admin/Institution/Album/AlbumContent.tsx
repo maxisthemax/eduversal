@@ -120,7 +120,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
       <Grid container spacing={1}>
         <Grid
           size={{ xs: 8.5 }}
-          sx={{ overflow: "auto", height: getFullHeightSize(23) }}
+          sx={{ overflow: "auto", height: getFullHeightSize(23.1) }}
         >
           <Grid container spacing={2}>
             <Grid size={{ xs: 12 }}>
@@ -388,7 +388,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
           size={{ xs: 3.5 }}
           sx={{
             background: "#EBEBEB",
-            height: getFullHeightSize(23),
+            height: getFullHeightSize(23.1),
             overflow: "auto",
           }}
         >

@@ -22,6 +22,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
@@ -132,7 +133,20 @@ function AcademicYear() {
         ),
       ]}
     >
-      <DataGrid gap={16} columns={columns} data={academicYearsData} />
+      <DataGrid
+        gap={16}
+        columns={columns}
+        data={academicYearsData}
+        firstToolbarText={
+          <Typography
+            variant="inherit"
+            sx={{ px: 1, fontWeight: 500 }}
+            color="primary"
+          >
+            Total Academic Years: <b>{academicYearsData?.length ?? 0}</b>
+          </Typography>
+        }
+      />
     </Page>
   );
 }
