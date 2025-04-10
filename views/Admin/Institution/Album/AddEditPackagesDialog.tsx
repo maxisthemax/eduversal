@@ -246,6 +246,7 @@ function AddEditPackagesDialogForm({
 
         if (inValid) {
           toast.error("Album is disabled, please enable it first.");
+          return;
         }
 
         if (files.length === 1) {
