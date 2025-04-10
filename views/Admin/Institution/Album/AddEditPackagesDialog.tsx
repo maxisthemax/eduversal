@@ -7,9 +7,11 @@ import {
   usePopupState,
 } from "material-ui-popup-state/hooks";
 import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 //*find
 import find from "lodash/find";
+import some from "lodash/some";
 
 //*components
 import { FlexBox, OverlayBox } from "@/components/Box";
@@ -234,6 +236,18 @@ function AddEditPackagesDialogForm({
       }
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
+        const inValid = some(
+          albumsData.map((album) => {
+            const findAlbum = albumsData.find((item) => item.id === album.id);
+            return findAlbum.is_disabled;
+          }),
+          Boolean
+        );
+
+        if (inValid) {
+          toast.error("Album is disabled, please enable it first.");
+        }
+
         if (files.length === 1) {
           const res = await handleUpload();
           values.preview_url = res[0].display_url;
@@ -394,7 +408,10 @@ function AddEditPackagesDialogForm({
                     options={albumsData.map(({ id }) => id)}
                     getOptionLabel={(id) => {
                       const findOption = find(albumsData, { id });
-                      return findOption?.name;
+                      return (
+                        findOption?.name +
+                        `${findOption.is_disabled ? " (Disabled)" : ""}`
+                      );
                     }}
                     onChange={(e, value) => {
                       const album = value.map((id) => {
@@ -417,7 +434,9 @@ function AddEditPackagesDialogForm({
                     disableCloseOnSelect
                   />
                   {values.albums.map((album, index) => {
-                    const findOption = find(albumsData, { id: album.album_id });
+                    const findOption = find(albumsData, {
+                      id: album.album_id,
+                    });
                     return (
                       <Stack key={index} direction="row" spacing={2}>
                         <Stack
