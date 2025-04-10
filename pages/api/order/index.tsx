@@ -3,6 +3,9 @@ import { formatDate } from "date-fns";
 import crypto from "crypto";
 import axios from "axios";
 
+//*lodash
+import uniq from "lodash/uniq";
+
 //*lib
 import prisma from "@/lib/prisma";
 
@@ -99,6 +102,78 @@ export default async function handler(
           res
         );
 
+        const cartInstitutionId: string[] = uniq(
+          cart.map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (item: any) => item.institutionId
+          )
+        );
+        const cartAcademicYearId: string[] = uniq(
+          cart.map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (item: any) => item.academicYearId
+          )
+        );
+        const cartCourseId: string[] = uniq(
+          cart.map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (item: any) => item.courseId
+          )
+        );
+        const cartAlbumId: string[] = uniq(
+          cart
+            .map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (item: any) => item.albumId
+            )
+            .flat()
+        );
+
+        const institutionCount = await prisma.institution.count({
+          where: {
+            id: { in: cartInstitutionId },
+          },
+        });
+        const academicYearCount = await prisma.academicYear.count({
+          where: {
+            id: { in: cartAcademicYearId },
+          },
+        });
+        const courseCount = await prisma.course.count({
+          where: {
+            id: { in: cartCourseId },
+          },
+        });
+        const albumCount = await prisma.album.count({
+          where: {
+            id: { in: cartAlbumId },
+            is_disabled: false,
+          },
+        });
+        if (institutionCount !== cartInstitutionId.length) {
+          return res.status(400).json({
+            message: "Invalid institutionId",
+          });
+        }
+
+        if (academicYearCount !== cartAcademicYearId.length) {
+          return res.status(400).json({
+            message: "Invalid academicYearId",
+          });
+        }
+
+        if (courseCount !== cartCourseId.length) {
+          return res.status(400).json({
+            message: "Invalid courseId",
+          });
+        }
+
+        if (albumCount !== cartAlbumId.length) {
+          return res.status(400).json({
+            message: "Invalid albumId",
+          });
+        }
+
         const queryData = await prisma.$transaction(async (prisma) => {
           // Create the new product type
           const newOrder = await prisma.order.create({
@@ -120,6 +195,15 @@ export default async function handler(
               ...created_by,
               ...updated_by,
             },
+          });
+
+          await prisma.orderCart.createMany({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            data: cart.map((item: any) => ({
+              id: item.id,
+              orderId: newOrder.id,
+              ...item,
+            })),
           });
 
           const publicIp = await axios.get(

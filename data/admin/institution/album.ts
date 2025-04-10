@@ -40,10 +40,13 @@ export interface AlbumData {
   created_at: Date;
   updated_at: Date;
   photos: PhotoData[];
+  is_disabled: boolean;
   preview_url: string;
   preview_url_key: string;
   created_by_name: string;
   updated_by_name: string;
+
+  is_disabled_format: string;
 }
 
 export interface AlbumProductVariationData {
@@ -63,6 +66,7 @@ export interface AlbumCreate {
   course_id?: string;
   preview_url?: string;
   preview_url_key?: string;
+  is_disabled?: boolean;
 }
 
 type AlbumUpdate = Partial<AlbumCreate>;
@@ -76,6 +80,7 @@ export function useAlbums(
   albumData: AlbumData | undefined;
   addAlbum: (album: AlbumCreate) => Promise<void>;
   updateAlbum: (id: string, album: AlbumUpdate) => Promise<void>;
+  disableAlbum: (id: string, isDisabled: boolean) => Promise<void>;
   deleteAlbum: (id: string) => Promise<void>;
   status: string;
 } {
@@ -121,6 +126,7 @@ export function useAlbums(
         ),
         created_at: new Date(data.created_at),
         updated_at: new Date(data.updated_at),
+        is_disabled_format: data.is_disabled ? "Disabled" : "Enabled",
       }));
     } else return [];
   }, [albumsQueryData, isLoading]);
@@ -155,6 +161,14 @@ export function useAlbums(
     refetch();
   };
 
+  const disableAlbum = async (id: string, isDisabled: boolean) => {
+    await axios.patch(
+      `admin/institution/${institutionId}/academicYear/${academicYearId}/course/${courseId}/album/${id}`,
+      { is_disabled: isDisabled }
+    );
+    refetch();
+  };
+
   // Delete album
   const deleteAlbum = async (id: string) => {
     await axios.delete(
@@ -169,6 +183,7 @@ export function useAlbums(
     albumData,
     addAlbum,
     updateAlbum,
+    disableAlbum,
     status,
     deleteAlbum,
   };

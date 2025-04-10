@@ -50,6 +50,7 @@ export interface UserCourseData {
   names: string[];
   course_id: string;
   course: {
+    id: string;
     academicYear: {
       id: string;
       year: number;
@@ -62,10 +63,12 @@ export interface UserCourseData {
     albums: UserCourseAlbumData[];
     package: UserCoursePackageData[];
     end_date: string;
-    institution: { name: string };
+    institution: { id: string; name: string };
   };
   title_format: string;
+  institution_id: string;
   institution_name?: string;
+  academic_year_id?: string;
   academic_year_name?: string;
   course_name?: string;
 }
@@ -147,7 +150,9 @@ export function useUserCourse(userCourseId?: string): {
               ),
             })),
           },
+          institution_id: data.course.institution.id,
           institution_name: data.course.institution.name,
+          academic_year_id: data.course.academicYear.id,
           academic_year_name: data.course.academicYear.year.toString(),
         };
       });

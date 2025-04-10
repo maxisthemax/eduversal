@@ -27,9 +27,15 @@ export interface CartData {
   userPackage: UserPackageData;
   quantity?: number;
   packageUrl: string;
+  institutionId?: string;
   institutionName?: string;
+  academicYearId?: string;
   academicYearName?: string;
+  courseId?: string;
   courseName?: string;
+  albumId: string[];
+  price: number;
+  total_price: number;
 }
 
 function Cart() {
@@ -363,7 +369,17 @@ export const useCart = create<CartState>()(
         set((state) => {
           const index = findIndex(state.cart, { id });
           if (index > -1) {
-            state.cart[index] = { ...state.cart[index], quantity };
+            state.cart[index] = {
+              ...state.cart[index],
+              quantity,
+              price:
+                state.cart[index].userPackage.itemsPrice +
+                state.cart[index].userPackage.packagePrice,
+              total_price:
+                (state.cart[index].userPackage.itemsPrice +
+                  state.cart[index].userPackage.packagePrice) *
+                quantity,
+            };
           }
           return { ...state };
         });

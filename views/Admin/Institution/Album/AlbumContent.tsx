@@ -6,7 +6,7 @@ import {
   bindTrigger,
   usePopupState,
 } from "material-ui-popup-state/hooks";
-import { useState } from "react";
+import { useState, isValidElement } from "react";
 import PopupState from "material-ui-popup-state";
 
 //*lodash
@@ -405,6 +405,18 @@ function AlbumContent({ albumId }: { albumId: string }) {
               </Stack>
             </Grid>
             <NameValue name="Name" value={albumData.name} />
+            <NameValue
+              name="Status"
+              value={
+                <Typography
+                  variant="subtitle2"
+                  fontWeight={400}
+                  color={albumData.is_disabled ? "error" : "success"}
+                >
+                  {albumData.is_disabled_format}
+                </Typography>
+              }
+            />
             <NameValue name="Description" value={albumData.description} />
             <NameValue name="Total Files" value={photosData.length} />
             <NameValue
@@ -500,7 +512,13 @@ function AlbumContent({ albumId }: { albumId: string }) {
 
 export default AlbumContent;
 
-function NameValue({ name, value }: { name: string; value: string | number }) {
+function NameValue({
+  name,
+  value,
+}: {
+  name: string;
+  value: string | number | React.ReactNode;
+}) {
   return (
     <>
       <Grid size={{ xs: 4 }}>
@@ -509,9 +527,13 @@ function NameValue({ name, value }: { name: string; value: string | number }) {
         </Typography>
       </Grid>
       <Grid size={{ xs: 8 }}>
-        <Typography variant="subtitle2" fontWeight={400}>
-          {value}
-        </Typography>
+        {isValidElement(value) ? (
+          value
+        ) : (
+          <Typography variant="subtitle2" fontWeight={400}>
+            {value}
+          </Typography>
+        )}
       </Grid>
     </>
   );

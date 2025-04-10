@@ -19,6 +19,34 @@ export default async function albumHandler(
 ) {
   try {
     switch (req.method) {
+      case "PATCH": {
+        const { albumId } = req.query;
+
+        // Validate required fields
+        if (!validateRequiredFields(req, res, ["albumId"], "query")) {
+          return;
+        }
+
+        // Update an existing album
+        const { is_disabled } = req.body;
+
+        // Get updatedBy
+        const { updated_by } = await getCreatedByUpdatedBy(req, res);
+
+        // Update the album
+        const result = await prisma.$transaction(async (prisma) => {
+          await prisma.album.update({
+            where: { id: albumId as string },
+            data: {
+              is_disabled,
+              ...updated_by,
+            },
+          });
+        });
+
+        // Return the updated album
+        return res.status(200).json({ data: result });
+      }
       case "PUT": {
         const { albumId } = req.query;
 
@@ -36,6 +64,7 @@ export default async function albumHandler(
           album_product_variations,
           preview_url,
           preview_url_key,
+          is_disabled,
         } = req.body;
 
         // Get updatedBy
@@ -54,6 +83,7 @@ export default async function albumHandler(
               product_type_id,
               preview_url,
               preview_url_key,
+              is_disabled,
               ...updated_by,
             },
           });
@@ -156,6 +186,16 @@ export default async function albumHandler(
           return;
         }
 
+        const findOrder = await prisma.orderCart.findFirst({
+          where: { albumId: { has: albumId as string } },
+        });
+
+        if (findOrder) {
+          return res.status(400).json({
+            message: `Album is associated with exisiting order and cannot be deleted and only can disable`,
+          });
+        }
+
         const findPackages = await prisma.packageAlbum.findMany({
           where: {
             album_id: albumId as string,
@@ -214,7 +254,7 @@ export default async function albumHandler(
       }
       default:
         // Use handleAllowedMethods for method validation
-        if (handleAllowedMethods(req, res, ["PUT", "DELETE"])) return;
+        if (handleAllowedMethods(req, res, ["PUT", "DELETE", "PATCH"])) return;
     }
   } catch (error) {
     // Handle any errors

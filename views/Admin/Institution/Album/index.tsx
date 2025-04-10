@@ -1,5 +1,8 @@
 import { useParams } from "next/navigation";
 
+//*lodash
+import find from "lodash/find";
+
 //*components
 import { Page, useCustomTabs } from "@/components/Box";
 import AlbumContent from "./AlbumContent";
@@ -33,7 +36,12 @@ function Album() {
   const { academicYearData, status: academicYearStatus } =
     useAcademicYears(academicYearId);
   const { courseData, status: courseStatus } = useCourses(courseId);
-  const { albumsData, status: albumStatus, deleteAlbum } = useAlbums();
+  const {
+    albumsData,
+    status: albumStatus,
+    deleteAlbum,
+    disableAlbum,
+  } = useAlbums();
 
   const { tabsComponent, value } = useCustomTabs({
     tabs: albumsData.map(({ id, name }) => {
@@ -86,7 +94,7 @@ function Album() {
             onClick={() => {
               handleOpenDialog({
                 allowOutsideClose: false,
-                title: "Delete This Album",
+                title: "Delete Album",
                 description:
                   "Are you sure you want to delete this album?\n All photo related to this album will be deleted and cannot be recovered.",
                 onConfirm: async () => {
@@ -96,9 +104,35 @@ function Album() {
             }}
             variant="contained"
           >
-            Delete This ALbum
+            Delete Album
           </Button>
         ),
+        <Button
+          key="disabledAlbum"
+          onClick={() => {
+            const isDisabled = find(albumsData, { id: value })?.is_disabled;
+
+            handleOpenDialog({
+              allowOutsideClose: false,
+              title: isDisabled ? "Enable Album" : "Disable Album",
+              description: isDisabled
+                ? "Are you sure you want to enable this album?"
+                : "Are you sure you want to disable this album?",
+              onConfirm: async () => {
+                if (isDisabled) {
+                  await disableAlbum(value, false);
+                } else {
+                  await disableAlbum(value, true);
+                }
+              },
+            });
+          }}
+          variant="contained"
+        >
+          {find(albumsData, { id: value })?.is_disabled
+            ? "Enable Album"
+            : "Disable Album"}
+        </Button>,
       ]}
     >
       {tabsComponent}

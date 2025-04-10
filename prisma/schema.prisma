@@ -61,10 +61,11 @@ model Institution {
 
   created_by_user_id String
   created_by_name    String
-  created_at         DateTime @default(now())
+  created_at         DateTime    @default(now())
   updated_by_user_id String
   updated_by_name    String
-  updated_at         DateTime @updatedAt
+  updated_at         DateTime    @updatedAt
+  OrderCart          OrderCart[]
 }
 
 model AcademicYear {
@@ -79,10 +80,11 @@ model AcademicYear {
 
   created_by_user_id String
   created_by_name    String
-  created_at         DateTime @default(now())
+  created_at         DateTime    @default(now())
   updated_by_user_id String
   updated_by_name    String
-  updated_at         DateTime @updatedAt
+  updated_at         DateTime    @updatedAt
+  OrderCart          OrderCart[]
 
   @@index([institution_id])
 }
@@ -111,6 +113,7 @@ model Course {
   updated_at         DateTime     @updatedAt
   userCourse         UserCourse[]
   package            Package[]
+  OrderCart          OrderCart[]
 
   @@index([institution_id])
   @@index([academic_year_id])
@@ -156,6 +159,7 @@ model Album {
   albumProductVariations AlbumProductVariation[]
   preview_url            String?
   preview_url_key        String?
+  is_disabled            Boolean                 @default(false)
 
   created_by_user_id String
   created_by_name    String
@@ -352,13 +356,37 @@ model Order {
 
   created_by_user_id String
   created_by_name    String
-  created_at         DateTime @default(now())
+  created_at         DateTime    @default(now())
   updated_by_user_id String
   updated_by_name    String
-  updated_at         DateTime @updatedAt
+  updated_at         DateTime    @updatedAt
+  OrderCart          OrderCart[]
 
   @@index([id])
   @@index([order_no])
+}
+
+model OrderCart {
+  id               String       @id
+  orderId          String
+  order            Order        @relation(fields: [orderId], references: [id])
+  academicYearId   String
+  academicYear     AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearName String
+  courseId         String
+  course           Course       @relation(fields: [courseId], references: [id])
+  courseName       String
+  institutionId    String
+  institution      Institution  @relation(fields: [institutionId], references: [id])
+  institutionName  String
+  albumId          String[]
+  packageUrl       String
+  quantity         Int
+  userPackage      Json
+  price            Float
+  total_price      Float?
+
+  @@index([id])
 }
 
 model Payment {
