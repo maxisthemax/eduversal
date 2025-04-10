@@ -66,7 +66,7 @@ export interface UserCourseData {
     institution: { id: string; name: string };
   };
   title_format: string;
-  institution_id: string;
+  institution_id?: string;
   institution_name?: string;
   academic_year_id?: string;
   academic_year_name?: string;
