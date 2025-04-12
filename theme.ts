@@ -16,7 +16,13 @@ const baseTheme: ThemeOptions = {
     MuiSelect: {
       defaultProps: { size: "small", sx: { textAlign: "start" } },
     },
-    MuiButton: { defaultProps: { size: "small" } },
+    MuiButton: {
+      defaultProps: {
+        size: "small",
+        sx: { textTransform: "none" },
+        disableElevation: true,
+      },
+    },
     MuiDialog: {
       styleOverrides: {
         paper: {
