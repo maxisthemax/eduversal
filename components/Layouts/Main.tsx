@@ -8,14 +8,11 @@ import { FlexBox } from "../Box";
 import { CustomIcon } from "@/components/Icons";
 
 //*mui
-import Toolbar from "@mui/material/Toolbar";
-import Badge from "@mui/material/Badge";
-import IconButton from "@mui/material/IconButton";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import LinearProgress from "@mui/material/LinearProgress";
+import Container from "@mui/material/Container";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -26,6 +23,9 @@ import { useCart } from "@/views/Cart";
 
 //*utils
 import axios from "@/utils/axios";
+import { Tab, Typography } from "@mui/material";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
 
 function Main({ children }: { children: React.ReactNode }) {
   //*define
@@ -56,57 +56,78 @@ function Main({ children }: { children: React.ReactNode }) {
   else
     return (
       <Box>
-        <AppBar color="inherit" elevation={1} position="static">
-          <Toolbar>
+        <AppBar
+          color="inherit"
+          elevation={0}
+          position="static"
+          variant="outlined"
+        >
+          <Container maxWidth="lg">
             <Stack direction="row" sx={{ width: "100%" }} spacing={2}>
-              <Box component="img" src={"/image/logo.png"} height={"30px"} />
+              <Box
+                component="img"
+                src={"/image/logo.png"}
+                height={"30px"}
+                sx={{ alignSelf: "center", pl: 2 }}
+              />
               <FlexBox />
-              {data?.role !== "USER" && (
-                <Button
-                  color={pathName === "/admin" ? "primary" : "inherit"}
-                  onClick={async () => {
-                    push("/admin");
+              <TabContext value={pathName}>
+                <TabList
+                  onChange={(e, value) => {
+                    if (value === "/account") push("/account/profile");
+                    else push(value);
                   }}
                 >
-                  ADMIN
-                </Button>
-              )}
-              <Button
-                color={pathName === "/photos" ? "primary" : "inherit"}
-                onClick={async () => {
-                  push("/photos");
-                }}
-              >
-                PHOTOS
-              </Button>
-              <Button
-                color={pathName === "/account" ? "primary" : "inherit"}
-                onClick={async () => {
-                  push("/account/profile");
-                }}
-              >
-                ACCOUNT
-              </Button>
-              <IconButton onClick={() => push("/cart")} size="small">
-                <Badge
-                  badgeContent={cart?.length}
-                  color="primary"
-                  invisible={!cart}
-                >
-                  <CustomIcon
-                    fontSize="small"
-                    icon="shopping_bag"
-                    iconColor={pathName === "/cart" ? "primary" : "inherit"}
+                  {data?.role !== "USER" && (
+                    <Tab
+                      disableRipple
+                      label="Admin"
+                      value="/admin"
+                      sx={{ fontSize: "16px", height: "60px" }}
+                    />
+                  )}
+                  <Tab
+                    disableRipple
+                    label="Photos"
+                    value="/photos"
+                    sx={{ fontSize: "16px" }}
                   />
-                </Badge>
-              </IconButton>
+                  <Tab
+                    disableRipple
+                    label="Account"
+                    value="/account"
+                    sx={{ fontSize: "16px" }}
+                  />
+                  <Tab
+                    disableRipple
+                    label={
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        sx={{ alignItems: "center" }}
+                      >
+                        <CustomIcon
+                          icon="shopping_bag"
+                          fontSizeSx="20px"
+                          fill={pathName === "/cart" ? true : false}
+                        />
+                        <Typography variant="inherit" sx={{ fontSize: "16px" }}>
+                          Cart {`${cart?.length > 0 ? `(${cart.length})` : ""}`}
+                        </Typography>
+                      </Stack>
+                    }
+                    value="/cart"
+                  />
+                </TabList>
+              </TabContext>
             </Stack>
-          </Toolbar>
+          </Container>
         </AppBar>
         <Stack
           direction="row"
           sx={{
-            height: getFullHeightSize(10),
+            background: "#F8F8F8",
+            height: getFullHeightSize(8),
             width: "100%",
           }}
         >

@@ -19,7 +19,6 @@ import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -54,7 +53,11 @@ function AddEditUserCourseDialog({
           Edit
         </Link>
       ) : (
-        <Button variant={"contained"} {...bindTrigger(popupState)}>
+        <Button
+          variant={"contained"}
+          {...bindTrigger(popupState)}
+          startIcon={<CustomIcon icon="add" />}
+        >
           Add Class
         </Button>
       )}
@@ -129,36 +132,46 @@ function AddEditUserCourseDialogForm({
                 have more than one child in this class, you can add their names
                 too.
               </Typography>
-              <Box
-                sx={{
-                  background: "#ECEDEF",
-                  p: 2,
-                  placeItems: "center",
-                }}
-              >
-                <Grid container spacing={0.5}>
-                  <Grid size={{ xs: 6 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                      <b>Class Name :</b>
-                    </Typography>
-                  </Grid>
-                  <Grid size={{ xs: 6 }} sx={{ justifyItems: "start" }}>
-                    <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                      {data.title_format}
-                    </Typography>
-                  </Grid>
-                  <Grid size={{ xs: 6 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                      <b>Expiration Date :</b>
-                    </Typography>
-                  </Grid>
-                  <Grid size={{ xs: 6 }} sx={{ justifyItems: "start" }}>
-                    <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                      {formatDate(data.course.end_date, "dd MMM yyyy")}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Box>
+
+              <Stack sx={{ background: "#ECEDEF", p: 2 }} spacing={1}>
+                <Stack direction={"row"} spacing={2}>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 300, width: "120px", textAlign: "end" }}
+                  >
+                    <b>Class Name :</b>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 300,
+                      textAlign: "start",
+                      maxWidth: "300px",
+                    }}
+                  >
+                    {data.title_format}
+                  </Typography>
+                </Stack>
+                <Stack direction={"row"} spacing={2} sx={{ width: "100%" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 300, width: "120px", textAlign: "end" }}
+                  >
+                    <b>Expiration Date :</b>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 300,
+                      textAlign: "start",
+                      maxWidth: "300px",
+                    }}
+                  >
+                    {formatDate(data.course.end_date, "dd MMM yyyy")}
+                  </Typography>
+                </Stack>
+              </Stack>
+
               <Stack sx={{ alignItems: "start", width: "100%" }} spacing={2}>
                 <Typography>{"Child's Name"}</Typography>
                 {child.map((name, index) => (
@@ -200,7 +213,7 @@ function AddEditUserCourseDialogForm({
               </Stack>
             </Stack>
           </DialogContent>
-          <DialogActions>
+          <DialogActions sx={{ px: 2, pb: 2 }}>
             <Button
               onClick={() =>
                 mode === "add" ? setData(undefined) : handleClose()
@@ -238,7 +251,7 @@ function AddEditUserCourseDialogForm({
           >
             <Box
               component="img"
-              src={"/image/locked.png"}
+              src={"/image/locked.svg"}
               sx={{ width: "136px", height: "106px" }}
             />
             <Typography variant="h5">

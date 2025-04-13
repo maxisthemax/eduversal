@@ -247,7 +247,7 @@ function PhotoCotent() {
   if (!userPackage) return <></>;
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="lg">
       <Page
         isLoading={status === "pending"}
         disabledLinkButton={true}
@@ -472,15 +472,19 @@ function PhotoCotent() {
                             p: 2,
                             justifyContent: "space-between",
                             textAlign: "start",
+                            border:
+                              userPackage?.packageId === id
+                                ? "2px solid #006DEE"
+                                : "2px solid #E0E0E0",
+
+                            color:
+                              userPackage?.packageId === id
+                                ? "#006DEE"
+                                : "black",
                           }}
                           onClick={() => {
                             handlePackage(id);
                           }}
-                          color={
-                            userPackage?.packageId === id
-                              ? "primary"
-                              : "inherit"
-                          }
                         >
                           <Stack
                             direction="row"
@@ -515,21 +519,19 @@ function PhotoCotent() {
                   position: "sticky",
                   bottom: 0,
                   backgroundColor: "white",
-                  pt: 1,
                 }}
-                spacing={2}
                 direction="row"
               >
                 <FlexBox />
-                <Button
+                {/* <Button
                   variant="outlined"
                   onClick={() => {
                     push(`/photos/${class_id}/${album_id}`);
                   }}
                 >
                   Back
-                </Button>
-                <Button variant="contained" onClick={handleSave}>
+                </Button> */}
+                <Button variant="contained" onClick={handleSave} fullWidth>
                   {userPackage.cartId
                     ? "Edit"
                     : userPackage.packageId === "none"

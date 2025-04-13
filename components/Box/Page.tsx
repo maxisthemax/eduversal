@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 //*lodash
@@ -17,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import LinearProgress from "@mui/material/LinearProgress";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 import { SxProps, Theme } from "@mui/material";
 
 function Page({
@@ -82,19 +82,24 @@ function Page({
             )}
           </Box>
         )}
-        <Breadcrumbs separator=">">
+        <Breadcrumbs separator=">" sx={{ color: "black" }}>
           {links &&
             links.length > 0 &&
             links.map(({ href, title }) => {
               if (findCurrentPathname?.href === href) {
                 return (
-                  <Typography key={href} color="primary">
+                  <Typography key={href} color="inherit">
                     {title}
                   </Typography>
                 );
               } else {
                 return (
-                  <Link key={href} href={href}>
+                  <Link
+                    key={href}
+                    href={href}
+                    underline="hover"
+                    color="inherit"
+                  >
                     {title}
                   </Link>
                 );

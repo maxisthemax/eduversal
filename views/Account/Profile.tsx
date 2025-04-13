@@ -116,7 +116,11 @@ function Profile({ mode = "user" }: { mode?: "admin" | "user" }) {
                         props={{ required: true }}
                       />
                     </Stack>
-                    <TextField value={data.email} disabled={true} />
+                    <TextField
+                      value={data.email}
+                      disabled={true}
+                      label="Email"
+                    />
                     <MobileNumberForm
                       name="phone_no"
                       label="Phone No"

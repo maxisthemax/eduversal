@@ -228,7 +228,7 @@ function Checkout() {
               sx={{ pt: 4, pl: 4, pr: 4, height: "100%", overflow: "auto" }}
             >
               <Container
-                maxWidth="md"
+                maxWidth="sm"
                 disableGutters
                 sx={{ marginRight: "0px" }}
               >
@@ -476,7 +476,7 @@ function Checkout() {
               }}
             >
               <Container
-                maxWidth="md"
+                maxWidth="sm"
                 disableGutters
                 sx={{ marginLeft: "0px" }}
               >

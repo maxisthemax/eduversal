@@ -25,7 +25,7 @@ function Class() {
 
   if (status === "pending") return <LinearProgress />;
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="lg">
       <Page
         isLoading={status === "pending"}
         disabledLinkButton={true}

@@ -170,7 +170,7 @@ function UserPackages() {
       </Stack>
 
       <Box sx={{ p: 2, background: "white", height: getFullHeightSize(25) }}>
-        <Container maxWidth="xl">
+        <Container maxWidth="lg">
           <Grid container spacing={2}>
             {album.photos.map((photo) => {
               const { id: photoId, display_url } = photo;
@@ -216,7 +216,7 @@ function UserPackages() {
         sx={{ top: "auto", bottom: 0, background: "white" }}
       >
         <Toolbar disableGutters>
-          <Container maxWidth="xl">
+          <Container maxWidth="lg">
             <Stack
               direction="row"
               spacing={2}

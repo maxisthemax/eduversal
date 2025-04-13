@@ -119,13 +119,7 @@ export function useUserCourse(userCourseId?: string): {
         }));
         return {
           ...data,
-          title_format:
-            data.course.name +
-            " - " +
-            data.course.standard.name +
-            " (" +
-            data.course.academicYear.year.toString() +
-            ")",
+          title_format: data.course.name + " - " + data.course.standard.name,
           course: {
             ...data.course,
             albums,

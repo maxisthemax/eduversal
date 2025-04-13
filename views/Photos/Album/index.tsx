@@ -71,7 +71,7 @@ function Album() {
   }
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="lg">
       <Page
         isLoading={status === "pending"}
         disabledLinkButton={true}

@@ -45,7 +45,7 @@ function Cart() {
   const { setUserPackage } = useUserPackages();
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="lg">
       <Box
         sx={{
           display: "flex",

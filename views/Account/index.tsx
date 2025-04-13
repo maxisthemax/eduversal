@@ -66,7 +66,7 @@ function Account() {
   };
 
   return (
-    <Container maxWidth="xl" disableGutters>
+    <Container maxWidth="lg" disableGutters>
       <Grid container>
         <Grid
           size={{ xs: 2 }}
