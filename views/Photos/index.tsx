@@ -26,7 +26,12 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 function Photos() {
   const { userCoursesData, status } = useUserCourse();
-  if (status === "pending") return <LinearProgress />;
+  if (status === "pending")
+    return (
+      <Box sx={{ width: "100%" }}>
+        <LinearProgress />
+      </Box>
+    );
   return (
     <Container maxWidth="lg">
       <Stack
@@ -44,14 +49,7 @@ function Photos() {
         spacing={2}
         sx={{ py: 2, overflow: "auto", height: getFullHeightSize(26) }}
       >
-        {[
-          ...userCoursesData,
-          ...userCoursesData,
-          ...userCoursesData,
-          ...userCoursesData,
-          ...userCoursesData,
-          ...userCoursesData,
-        ].map((userCourse, index) => {
+        {userCoursesData.map((userCourse, index) => {
           return <UserCourseItem key={index} userCourse={userCourse} />;
         })}
       </Stack>
