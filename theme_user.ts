@@ -13,17 +13,37 @@ const baseTheme: ThemeOptions = {
     MuiTextField: {
       defaultProps: {
         fullWidth: true,
+        slotProps: {
+          input: {
+            sx: {
+              height: "55px",
+              fontSize: "16px",
+              py: "18px",
+            },
+          },
+        },
       },
     },
     MuiSelect: {
       defaultProps: {
         size: "small",
+        sx: {
+          textAlign: "start",
+          height: "55px",
+          fontSize: "16px",
+          py: "18px",
+        },
       },
     },
     MuiButton: {
       defaultProps: {
         sx: {
           textTransform: "none",
+          fontSize: "16px",
+          height: "55px",
+          minWidth: "120px",
+          px: "36px",
+          py: "18px",
         },
         disableElevation: true,
       },

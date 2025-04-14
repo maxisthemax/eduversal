@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 
 //*components
 import LayoutWrapper from "@/components/Layouts/LayoutWrapper";
@@ -12,6 +13,7 @@ import { ThemeProvider } from "@mui/material/styles";
 
 //*theme
 import theme from "theme";
+import themeuser from "theme_user";
 
 //*css
 import "@fontsource/roboto/300.css";
@@ -29,10 +31,12 @@ const queryClient = new QueryClient({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const pathName = usePathname().split("/")[1];
+
   return (
     <QueryClientProvider client={queryClient}>
       <AppCacheProvider {...pageProps}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={pathName === "admin" ? theme : themeuser}>
           <CustomDialog />
           <ToastContainer
             limit={3}
