@@ -1,4 +1,5 @@
 import { useParams } from "next/navigation";
+import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
 
 //*lodash
 import find from "lodash/find";
@@ -20,8 +21,9 @@ import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 //*mui
 import Button from "@mui/material/Button";
-import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
-import { Popover, Stack, Typography } from "@mui/material";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 
 function Album() {
   const access = useGetStaffAccess("restrict_content_album");

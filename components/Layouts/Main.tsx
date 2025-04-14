@@ -13,6 +13,10 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -23,9 +27,6 @@ import { useCart } from "@/views/Cart";
 
 //*utils
 import axios from "@/utils/axios";
-import { Tab, Typography } from "@mui/material";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
 
 function Main({ children }: { children: React.ReactNode }) {
   //*define
