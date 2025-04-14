@@ -455,9 +455,20 @@ function UploadGrid({
   return (
     <Grid size={{ xs: 1 }} {...getRootProps()}>
       <input {...getInputProps()} />
-      <IconButton>
-        <CustomIcon icon="upload" />
-      </IconButton>
+      <Button
+        variant="contained"
+        startIcon={
+          <CustomIcon icon="upload" iconColor="inherit" fontSize="inherit" />
+        }
+      >
+        <Typography
+          variant="body1"
+          color="inherit"
+          sx={{ whiteSpace: "nowrap" }}
+        >
+          Preview Image
+        </Typography>
+      </Button>
     </Grid>
   );
 }

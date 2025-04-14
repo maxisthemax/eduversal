@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+//*components
+import { FlexBox } from "../Box";
 
 //*lodash
 import some from "lodash/some";
@@ -13,7 +15,9 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
   GridToolbarFilterButton,
+  GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
+import Stack from "@mui/material/Stack";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -103,8 +107,8 @@ function DataGrid({
       slots={{ toolbar: CustomToolbar }}
       slotProps={{
         toolbar: {
-          showQuickFilter: showQuickFilter,
           ...({ firstToolbarText } as any),
+          showQuickFilter: showQuickFilter,
         },
       }}
       filterMode={filterMode}
@@ -126,14 +130,31 @@ function DataGrid({
 
 export default DataGrid;
 
-function CustomToolbar(props: { firstToolbarText?: React.ReactNode }) {
+function CustomToolbar(props: {
+  firstToolbarText?: React.ReactNode;
+  showQuickFilter?: boolean;
+}) {
   const firstToolbarText = props.firstToolbarText;
+  const showQuickFilter = props.showQuickFilter;
 
   return (
     <GridToolbarContainer>
-      {firstToolbarText ? firstToolbarText : <></>}
-      <GridToolbarFilterButton />
-      <GridToolbarExport />
+      <Stack
+        sx={{
+          display: "flex",
+          width: "100%",
+          alignItems: "center",
+          paddingBottom: 0.5,
+        }}
+        direction="row"
+        spacing={1}
+      >
+        {firstToolbarText ? firstToolbarText : <></>}
+        <GridToolbarFilterButton />
+        <GridToolbarExport />
+        <FlexBox />
+        {showQuickFilter && <GridToolbarQuickFilter />}
+      </Stack>
     </GridToolbarContainer>
   );
 }

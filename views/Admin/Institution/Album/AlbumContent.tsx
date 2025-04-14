@@ -120,7 +120,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
       <Grid container spacing={1}>
         <Grid
           size={{ xs: 8.5 }}
-          sx={{ overflow: "auto", height: getFullHeightSize(23.1) }}
+          sx={{ overflow: "auto", height: getFullHeightSize(24.1) }}
         >
           <Grid container spacing={2}>
             <Grid size={{ xs: 12 }}>
@@ -226,7 +226,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                     </Grid>
                     <Stack sx={{ pt: 1 }}>
                       <Typography variant="caption">
-                        * Maximum file size is 10MB are allowed
+                        * Maximum file size is 30MB are allowed
                       </Typography>
                       <Typography variant="caption">
                         * Only .jpeg and .png files are allowed
@@ -388,7 +388,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
           size={{ xs: 3.5 }}
           sx={{
             background: "#EBEBEB",
-            height: getFullHeightSize(23.1),
+            height: getFullHeightSize(24.1),
             overflow: "auto",
           }}
         >
@@ -428,7 +428,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
               value={format(albumData.updated_at, "PP")}
             />
             <NameValue
-              name="Available Unitl"
+              name="Available Until"
               value={format(courseData.end_date, "PP")}
             />
             <NameValue

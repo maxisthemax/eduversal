@@ -85,7 +85,7 @@ function Album() {
         },
       ]}
       leftButton={[
-        <Typography key="title" variant="body1" color="primary">
+        <Typography key="title" variant="body1" color="inherit">
           (Total Albums: <b>{albumsData.length}</b>)
         </Typography>,
       ]}

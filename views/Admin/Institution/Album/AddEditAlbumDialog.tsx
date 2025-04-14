@@ -267,74 +267,79 @@ function AddEditAlbumDialogForm({
                       );
                     })}
                   </TextFieldForm>
-                  {(files.length > 0 || albumData?.preview_url) && (
-                    <Box
-                      sx={{
-                        textAlign: "center",
-                        position: "relative",
-                        "&:hover .delete": {
-                          display: "block",
-                        },
-                        height: "350px",
-                        width: "100%",
-                        background: "#EBEBEB",
-                        m: 2,
-                      }}
-                    >
+                  <Box>
+                    <Typography gutterBottom variant="body1">
+                      Cover Photo
+                    </Typography>
+                    {(files.length > 0 || albumData?.preview_url) && (
                       <Box
-                        className="delete"
                         sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          display: "none",
+                          textAlign: "center",
+                          position: "relative",
+                          "&:hover .delete": {
+                            display: "block",
+                          },
+                          height: "350px",
+                          width: "100%",
+                          background: "#EBEBEB",
+                          mb: 2,
                         }}
                       >
-                        {files.length > 0 && (
-                          <IconButton
-                            disableRipple
-                            disableTouchRipple
-                            disableFocusRipple
-                            sx={{ background: "white", m: 0.5 }}
-                            color="primary"
-                            size="small"
-                            onClick={() => {
-                              setFiles([]);
-                            }}
-                          >
-                            <CustomIcon icon="delete" fontSizeSx="20px" />
-                          </IconButton>
-                        )}
+                        <Box
+                          className="delete"
+                          sx={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            display: "none",
+                          }}
+                        >
+                          {files.length > 0 && (
+                            <IconButton
+                              disableRipple
+                              disableTouchRipple
+                              disableFocusRipple
+                              sx={{ background: "white", m: 0.5 }}
+                              color="primary"
+                              size="small"
+                              onClick={() => {
+                                setFiles([]);
+                              }}
+                            >
+                              <CustomIcon icon="delete" fontSizeSx="20px" />
+                            </IconButton>
+                          )}
+                        </Box>
+                        <Box
+                          component="img"
+                          src={
+                            files.length > 0
+                              ? URL.createObjectURL(files[0])
+                              : albumData?.preview_url
+                          }
+                          alt={files[0]?.name ?? albumData?.preview_url}
+                          sx={{
+                            display: "block",
+                            width: "100%",
+                            height: "inherit",
+                            objectFit: "contain",
+                          }}
+                        />
                       </Box>
-                      <Box
-                        component="img"
-                        src={
-                          files.length > 0
-                            ? URL.createObjectURL(files[0])
-                            : albumData?.preview_url
-                        }
-                        alt={files[0]?.name ?? albumData?.preview_url}
-                        sx={{
-                          display: "block",
-                          width: "100%",
-                          height: "inherit",
-                          objectFit: "contain",
-                        }}
-                      />
+                    )}
+                    <Box
+                      {...getRootProps()}
+                      sx={{
+                        cursor: "pointer",
+                        pb: 1,
+                        width: "max-content",
+                      }}
+                    >
+                      <input {...getInputProps()} />
+                      <Button variant="contained" color="primary">
+                        Select Files
+                      </Button>
                     </Box>
-                  )}
-                  <Box
-                    {...getRootProps()}
-                    sx={{
-                      cursor: "pointer",
-                      pb: 1,
-                      width: "max-content",
-                    }}
-                  >
-                    <input {...getInputProps()} />
-                    <Button variant="contained" color="primary">
-                      Select Files
-                    </Button>
                   </Box>
                   <Autocomplete
                     fullWidth
