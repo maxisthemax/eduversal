@@ -31,7 +31,7 @@ const queryClient = new QueryClient({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
-  const pathName = usePathname().split("/")[1];
+  const pathName = usePathname()?.split("/")[1];
 
   return (
     <QueryClientProvider client={queryClient}>
