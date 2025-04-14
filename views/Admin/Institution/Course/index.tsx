@@ -182,7 +182,9 @@ function Course() {
         },
         {
           href: `/admin/institution/${institutionId}/${academicYearId}`,
-          title: academicYearData?.name,
+          title: `${
+            academicYearData?.name ?? ""
+          } (${academicYearData.year.toString()})`,
         },
       ]}
       leftButton={[]}

@@ -31,7 +31,7 @@ export default async function courseHandler(
             force_disable: false,
           },
           select: {
-            academicYear: { select: { year: true, id: true } },
+            academicYear: { select: { year: true, id: true, name: true } },
             standard: { select: { name: true, id: true } },
             end_date: true,
             name: true,

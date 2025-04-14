@@ -33,7 +33,7 @@ export default async function courseHandler(
               select: {
                 institution: { select: { id: true, name: true } },
                 id: true,
-                academicYear: { select: { id: true, year: true } },
+                academicYear: { select: { id: true, year: true, name: true } },
                 name: true,
                 standard: { select: { id: true, name: true } },
                 end_date: true,

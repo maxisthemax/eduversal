@@ -285,6 +285,8 @@ function AddEditUserCourseDialogForm({
                         data.data.name +
                         " - " +
                         data.data.standard.name +
+                        " - " +
+                        data.data.academicYear.name +
                         " (" +
                         data.data.academicYear.year.toString() +
                         ")",

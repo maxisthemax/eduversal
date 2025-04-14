@@ -54,6 +54,7 @@ export interface UserCourseData {
     academicYear: {
       id: string;
       year: number;
+      name: string;
     };
     name: string;
     standard: {
@@ -147,7 +148,9 @@ export function useUserCourse(userCourseId?: string): {
           institution_id: data.course.institution.id,
           institution_name: data.course.institution.name,
           academic_year_id: data.course.academicYear.id,
-          academic_year_name: data.course.academicYear.year.toString(),
+          academic_year_name:
+            data.course.academicYear.name +
+            ` (${data.course.academicYear.year.toString()})`,
         };
       });
     } else return [];
