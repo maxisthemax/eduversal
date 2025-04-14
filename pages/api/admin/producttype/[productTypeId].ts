@@ -38,7 +38,7 @@ export default async function productTypeHandler(
             name,
             type,
             currency,
-            price,
+            price: parseFloat(price),
             is_deliverable,
             ...updated_by,
           },

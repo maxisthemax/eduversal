@@ -100,7 +100,7 @@ export default async function handler(
                     preview_url: option.preview_url,
                     preview_url_key: option.preview_url_key,
                     currency: option.currency,
-                    price: option.price,
+                    price: parseFloat(option.price),
                     productVariation_id: productVariationId as string,
                     ...created_by,
                     ...updated_by,
@@ -111,7 +111,7 @@ export default async function handler(
                     preview_url: option.preview_url,
                     preview_url_key: option.preview_url_key,
                     currency: option.currency,
-                    price: option.price,
+                    price: parseFloat(option.price),
                     ...updated_by,
                   },
                 });

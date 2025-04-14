@@ -31,13 +31,13 @@ import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 
 //*data
 import {
   ProductVariationOptionCreate,
   useProductVariation,
 } from "@/data/admin/productVariation";
-import { Divider } from "@mui/material";
 
 //*validation
 const validationSchema = yup.object({

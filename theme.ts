@@ -13,6 +13,7 @@ const baseTheme: ThemeOptions = {
     MuiTextField: {
       defaultProps: {
         fullWidth: true,
+        size: "small",
       },
     },
     MuiSelect: {

@@ -69,7 +69,7 @@ export default async function packageHandler(
             data: {
               name,
               description,
-              price,
+              price: parseFloat(price),
               currency,
               is_downloadable,
               preview_url,

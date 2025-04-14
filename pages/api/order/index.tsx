@@ -184,7 +184,7 @@ export default async function handler(
               shipment_method,
               shipping_fee,
               user_id: userId,
-              price,
+              price: parseFloat(price),
               remark,
               status,
               cust_name,

@@ -55,7 +55,7 @@ export default async function handler(
             name,
             type,
             currency,
-            price,
+            price: parseFloat(price),
             is_deliverable,
             ...created_by,
             ...updated_by,
