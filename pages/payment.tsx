@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 //*lodash
 import reduce from "lodash/reduce";
 import some from "lodash/some";
+import uniq from "lodash/uniq";
+import uniqBy from "lodash/uniqBy";
 
 //*mui
 import Box from "@mui/material/Box";
@@ -182,6 +184,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           },
         });
 
+        const allPhotoIds = reduce(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          order.cart as any,
+          (temp, value) => {
+            if (value.userPackage.packageId === "none") {
+              temp.push(value.userPackage.items[0].photoId);
+            } else {
+              const images = value.userPackage.items.map((item) => {
+                return item.photoId;
+              });
+              temp.push(...images);
+            }
+
+            return temp;
+          },
+          []
+        );
+
         const allDownloadable = reduce(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           order.cart as any,
@@ -244,10 +264,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           []) as any[];
 
+        await prisma.photo.updateMany({
+          where: {
+            id: {
+              in: uniq(allPhotoIds.map((photoId) => photoId)),
+            },
+          },
+          data: {
+            purchase_count: {
+              increment: 1,
+            },
+          },
+        });
+
         await prisma.user.update({
           where: { id: order.user_id },
           data: {
-            download_images: [...allDownloadable, ...exisitingAllDownloadable],
+            download_images: uniqBy(
+              [...allDownloadable, ...exisitingAllDownloadable],
+              "photoId"
+            ),
           },
         });
       });

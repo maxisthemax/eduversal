@@ -8,8 +8,10 @@ import {
 } from "material-ui-popup-state/hooks";
 import { useState, isValidElement } from "react";
 import PopupState from "material-ui-popup-state";
+import { toast } from "react-toastify";
 
 //*lodash
+import some from "lodash/some";
 import includes from "lodash/includes";
 
 //*components
@@ -93,6 +95,20 @@ function AlbumContent({ albumId }: { albumId: string }) {
       title: "Are you to sure delete?",
       onConfirm: async () => {
         try {
+          const photosToDelete = photosData.filter((photo) =>
+            selection.includes(photo.id)
+          );
+
+          if (some(photosToDelete, (photo) => photo.purchase_count > 0)) {
+            toast.error(
+              `You cannot delete purchased photos, ${photosToDelete
+                .map((photo) => photo.name)
+                .join(",")}`
+            );
+
+            return;
+          }
+
           setIsDeleting(true);
           await deletePhoto(selection);
           setSelection([]);

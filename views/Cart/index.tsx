@@ -236,7 +236,7 @@ function Cart() {
                         </Stack>
                       )}
                     </Grid>
-                    <Grid size={{ xs: 2 }}>
+                    <Grid size={{ xs: 3 }}>
                       <Stack
                         direction="row"
                         sx={{ justifyContent: "space-between" }}
@@ -279,7 +279,10 @@ function Cart() {
                             item.quantity
                           ).toFixed(2)}`}
                         >
-                          <Typography variant="h6">
+                          <Typography
+                            variant="h6"
+                            sx={{ whiteSpace: "nowrap" }}
+                          >
                             RM{" "}
                             {(
                               (item.userPackage.itemsPrice +
@@ -306,7 +309,7 @@ function Cart() {
                 spacing={1}
               >
                 <Typography variant="h6">Subtotal</Typography>
-                <Typography variant="h6">
+                <Typography variant="h6" sx={{ whiteSpace: "nowrap" }}>
                   RM{" "}
                   {cart
                     .reduce(

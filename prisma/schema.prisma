@@ -184,6 +184,7 @@ model Photo {
   album                  Album        @relation(fields: [album_id], references: [id])
   institution_id         String?
   institution            Institution? @relation(fields: [institution_id], references: [id])
+  purchase_count         Int          @default(0)
 
   created_by_user_id String
   created_by_name    String

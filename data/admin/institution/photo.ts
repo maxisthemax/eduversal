@@ -18,6 +18,7 @@ export interface PhotoData {
   download_url: string;
   download_watermark_url: string;
   display_url: string;
+  purchase_count: number;
   created_by_name: string;
   updated_by_name: string;
   created_at: Date;
