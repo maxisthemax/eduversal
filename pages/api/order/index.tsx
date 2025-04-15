@@ -184,7 +184,7 @@ export default async function handler(
               shipment_method,
               shipping_fee,
               user_id: userId,
-              price: parseFloat(price),
+              price: price !== undefined ? parseFloat(price) : undefined,
               remark,
               status,
               cust_name,

@@ -55,7 +55,7 @@ export default async function handler(
             name,
             type,
             currency,
-            price: parseFloat(price),
+            price: price !== undefined ? parseFloat(price) : undefined,
             is_deliverable,
             ...created_by,
             ...updated_by,

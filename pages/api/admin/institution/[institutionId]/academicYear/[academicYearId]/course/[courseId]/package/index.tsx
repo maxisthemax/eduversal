@@ -105,7 +105,7 @@ export default async function handler(
               preview_url_key,
               is_downloadable,
               currency,
-              price: parseFloat(price),
+              price: price !== undefined ? parseFloat(price) : undefined,
               institution_id: institutionId as string,
               course_id: courseId as string,
               ...created_by,

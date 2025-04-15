@@ -38,7 +38,7 @@ export default async function productTypeHandler(
             name,
             type,
             currency,
-            price: parseFloat(price),
+            price: price !== undefined ? parseFloat(price) : undefined,
             is_deliverable,
             ...updated_by,
           },
