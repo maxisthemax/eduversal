@@ -44,6 +44,35 @@ export default async function handler(
         // Return the updated institution
         return res.status(200).json({ data: updatedInstitutionType });
       }
+      case "DELETE": {
+        // Delete an existing product type
+        const { institutionTypeId } = req.query;
+
+        // Validate required fields
+        if (!validateRequiredFields(req, res, ["institutionTypeId"], "query")) {
+          return;
+        }
+
+        const courseFind = await prisma.institution.findFirst({
+          where: { type_id: institutionTypeId as string },
+        });
+
+        if (courseFind) {
+          return res.status(400).json({
+            message: `Cannot delete this institution type, as it is associated with institution.`,
+          });
+        }
+
+        // Delete the product type
+        await prisma.institutionType.delete({
+          where: { id: institutionTypeId as string },
+        });
+
+        // Return the deleted product type
+        return res
+          .status(200)
+          .json({ message: "Product type deleted successfully" });
+      }
       default: {
         // Handle unsupported methods
         if (handleAllowedMethods(req, res, ["PUT"])) return;

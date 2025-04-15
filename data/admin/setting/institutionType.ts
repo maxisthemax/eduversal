@@ -32,6 +32,7 @@ export function useInstitutionTypes(): {
     id: string,
     institutionType: InstitutionTypeUpdate
   ) => Promise<void>;
+  deleteInstitutionType: (id: string) => Promise<void>;
   status: string;
 } {
   // Fetch institution types data
@@ -82,11 +83,17 @@ export function useInstitutionTypes(): {
     refetch();
   };
 
+  const deleteInstitutionType = async (id: string) => {
+    await axios.delete(`admin/setting/institutionType/${id}`);
+    refetch();
+  };
+
   return {
     institutionTypesData,
     institutionTypesDataById,
     addInstitutionType,
     updateInstitutionType,
+    deleteInstitutionType,
     status,
   };
 }

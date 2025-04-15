@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 
+//*components
+import { FlexBox } from "../Box";
+
 //*mui
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -33,6 +36,8 @@ interface DialogProps {
         value: string | number | undefined
       ) => Promise<void | boolean> | (void | boolean))
     | undefined;
+  onSecondTitle?: string;
+  onSecondConfirm?: (() => Promise<void>) | undefined;
   content?: React.ReactNode | React.ReactNode[];
   fieldValue?: string;
 }
@@ -56,6 +61,12 @@ function CustomDialog() {
   const content = useCustomDialog((state) => state.dialogProps.content);
   const description = useCustomDialog((state) => state.dialogProps.description);
   const onConfirm = useCustomDialog((state) => state.dialogProps.onConfirm);
+  const onSecondTitle = useCustomDialog(
+    (state) => state.dialogProps.onSecondTitle
+  );
+  const onSecondConfirm = useCustomDialog(
+    (state) => state.dialogProps.onSecondConfirm
+  );
   const handleCloseDialog = useCustomDialog((state) => state.handleCloseDialog);
   const fieldValue = useCustomDialog((state) => state.dialogProps.fieldValue);
 
@@ -150,6 +161,29 @@ function CustomDialog() {
         )}
       </DialogContent>
       <DialogActions>
+        {onSecondConfirm && (
+          <LoadingButton
+            variant="contained"
+            loading={isConfirming}
+            onClick={async () => {
+              try {
+                setIsConfirming(true);
+                const res = await onSecondConfirm();
+                setIsConfirming(false);
+                if (res === undefined || res) {
+                  handleCloseDialog();
+                  setValue(undefined);
+                }
+              } catch (error) {
+                console.error("Confirmation failed:", error);
+                setIsConfirming(false);
+              }
+            }}
+          >
+            {onSecondTitle ?? "Delete"}
+          </LoadingButton>
+        )}
+        <FlexBox />
         {allowClose && (
           <Button
             disabled={isConfirming}

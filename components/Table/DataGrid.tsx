@@ -97,7 +97,6 @@ function DataGrid({
           return column;
         })
         .map((column) => {
-          console.log(column);
           const newColumn = {
             ...column,
             filterOperators: [

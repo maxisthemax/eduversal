@@ -44,6 +44,36 @@ export default async function handler(
         // Return the updated standard
         return res.status(200).json({ data: updatedStandard });
       }
+
+      case "DELETE": {
+        // Delete an existing product type
+        const { standardId } = req.query;
+
+        // Validate required fields
+        if (!validateRequiredFields(req, res, ["standardId"], "query")) {
+          return;
+        }
+
+        const courseFind = await prisma.course.findFirst({
+          where: { standard_id: standardId as string },
+        });
+
+        if (courseFind) {
+          return res.status(400).json({
+            message: `Cannot delete this standard, as it is associated with class.`,
+          });
+        }
+
+        // Delete the product type
+        await prisma.standard.delete({
+          where: { id: standardId as string },
+        });
+
+        // Return the deleted product type
+        return res
+          .status(200)
+          .json({ message: "Product type deleted successfully" });
+      }
       default: {
         // Handle unsupported methods
         if (handleAllowedMethods(req, res, ["PUT"])) return;

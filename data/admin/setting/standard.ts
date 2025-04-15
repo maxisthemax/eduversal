@@ -29,6 +29,7 @@ export function useStandard(): {
   standardsDataById: Record<string, StandardData>;
   addStandard: (standard: StandardCreate) => Promise<void>;
   updateStandard: (id: string, standard: StandardUpdate) => Promise<void>;
+  deleteStandard: (id: string) => Promise<void>;
   status: string;
 } {
   // Fetch standards data
@@ -73,11 +74,17 @@ export function useStandard(): {
     refetch();
   };
 
+  const deleteStandard = async (id: string) => {
+    await axios.delete(`admin/setting/standard/${id}`);
+    refetch();
+  };
+
   return {
     standardsData,
     standardsDataById,
     addStandard,
     updateStandard,
+    deleteStandard,
     status,
   };
 }

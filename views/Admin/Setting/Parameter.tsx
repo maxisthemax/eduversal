@@ -19,12 +19,14 @@ export default function ChipsArray() {
     status: institutionTypesStatus,
     addInstitutionType,
     updateInstitutionType,
+    deleteInstitutionType,
   } = useInstitutionTypes();
   const {
     standardsData,
     status: standardStatus,
     addStandard,
     updateStandard,
+    deleteStandard,
   } = useStandard();
   const { handleOpenDialog } = useCustomDialog();
 
@@ -64,6 +66,10 @@ export default function ChipsArray() {
                     },
                     placeholder: "Institution Type",
                     fieldValue: name,
+                    onSecondTitle: "Delete",
+                    onSecondConfirm: async () => {
+                      await deleteInstitutionType(id);
+                    },
                   });
                 }}
               />
@@ -105,6 +111,10 @@ export default function ChipsArray() {
                     },
                     placeholder: "Standard",
                     fieldValue: name,
+                    onSecondTitle: "Delete",
+                    onSecondConfirm: async () => {
+                      await deleteStandard(id);
+                    },
                   });
                 }}
               />
