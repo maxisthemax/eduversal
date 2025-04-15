@@ -273,9 +273,7 @@ function Checkout() {
                           }}
                           sx={{ justifyItems: "start" }}
                           primary={"Pick up in store"}
-                          secondary={
-                            "YS Photoversal Studio,\nLot 3267, Jalan 18/36,\nTaman Sri Serdang, 43300\nSeri Kembangan, Selangor"
-                          }
+                          secondary={"Collect From Teacher"}
                         />
                       </Stack>
                     </Button>

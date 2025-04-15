@@ -16,6 +16,11 @@ import {
   GridToolbarExport,
   GridToolbarFilterButton,
   GridToolbarQuickFilter,
+  getGridNumericOperators,
+  getGridStringOperators,
+  getGridDateOperators,
+  getGridBooleanOperators,
+  getGridSingleSelectOperators,
 } from "@mui/x-data-grid";
 import Stack from "@mui/material/Stack";
 
@@ -92,7 +97,24 @@ function DataGrid({
           return column;
         })
         .map((column) => {
-          if (column.field === "button") {
+          console.log(column);
+          const newColumn = {
+            ...column,
+            filterOperators: [
+              ...((column?.type ?? "string") === "string"
+                ? getGridStringOperators().filter(
+                    (operator) => operator.value === "contains"
+                  )
+                : []),
+              ...(column.type === "number" ? getGridNumericOperators() : []),
+              ...(column.type === "date" ? getGridDateOperators() : []),
+              ...(column.type === "boolean" ? getGridBooleanOperators() : []),
+              ...(column.type === "singleSelect"
+                ? getGridSingleSelectOperators()
+                : []),
+            ],
+          };
+          if (newColumn.field === "button") {
             return {
               ...column,
               headerClassName: "stickyRight",
@@ -101,7 +123,7 @@ function DataGrid({
               sortable: false,
               disableColumnMenu: true,
             };
-          } else return column;
+          } else return newColumn;
         })}
       disableRowSelectionOnClick={true}
       slots={{ toolbar: CustomToolbar }}

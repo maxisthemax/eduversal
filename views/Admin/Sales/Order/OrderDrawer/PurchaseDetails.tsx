@@ -110,7 +110,7 @@ function PurchaseDetails({ orderId }: { orderId: string }) {
               </a>
             )}
             {orderData.shipment_method === "in-store" &&
-              "\nYS Photoversal Studio,\nLot 3267, Jalan 18/36,\nTaman Sri Serdang,43300\nSeri Kembangan, Selangor"}
+              "\nCollect From Teacher"}
           </Typography>
           <Typography variant="body1">
             <b>Remark:</b>
