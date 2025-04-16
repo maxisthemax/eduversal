@@ -63,7 +63,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
               {data?.role !== "USER" && (
                 <Button
                   onClick={async () => {
-                    push("/");
+                    push("/photos");
                   }}
                 >
                   Go To User

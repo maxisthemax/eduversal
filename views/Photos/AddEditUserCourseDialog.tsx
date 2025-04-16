@@ -48,7 +48,11 @@ function AddEditUserCourseDialog({
           variant="body2"
           underline="hover"
           sx={{ cursor: "pointer" }}
-          {...bindTrigger(popupState)}
+          onClick={(e) => {
+            popupState.open(e);
+            e.preventDefault();
+            e.stopPropagation();
+          }}
         >
           Edit
         </Link>
@@ -68,6 +72,10 @@ function AddEditUserCourseDialog({
         keepMounted={false}
         disableEnforceFocus={true}
         onClose={() => {}}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
       >
         <AddEditUserCourseDialogForm
           mode={mode}

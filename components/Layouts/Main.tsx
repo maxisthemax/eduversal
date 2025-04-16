@@ -73,14 +73,10 @@ function Main({ children }: { children: React.ReactNode }) {
               />
               <FlexBox />
               <TabContext value={pathName}>
-                <TabList
-                  onChange={(e, value) => {
-                    if (value === "/account") push("/account/profile");
-                    else push(value);
-                  }}
-                >
+                <TabList>
                   {data?.role !== "USER" && (
                     <Tab
+                      onClick={() => push("/admin")}
                       disableRipple
                       label="Admin"
                       value="/admin"
@@ -88,18 +84,21 @@ function Main({ children }: { children: React.ReactNode }) {
                     />
                   )}
                   <Tab
+                    onClick={() => push("/photos")}
                     disableRipple
                     label="Photos"
                     value="/photos"
                     sx={{ fontSize: "16px" }}
                   />
                   <Tab
+                    onClick={() => push("/account/profile")}
                     disableRipple
                     label="Account"
                     value="/account"
                     sx={{ fontSize: "16px" }}
                   />
                   <Tab
+                    onClick={() => push("/cart")}
                     disableRipple
                     label={
                       <Stack

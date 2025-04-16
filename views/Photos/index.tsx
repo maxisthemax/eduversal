@@ -73,6 +73,11 @@ function UserCourseItem({ userCourse }) {
 
   return (
     <Paper
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        push(`/photos/${id}`);
+      }}
       ref={hoverRef}
       key={id}
       elevation={0}
@@ -80,7 +85,6 @@ function UserCourseItem({ userCourse }) {
         p: 3,
         background: isHovered ? "#E9F0FE" : "background.paper",
         cursor: "pointer",
-
         "&:hover .MuiFab-root .MuiIcon-root": {
           transform: "rotate(45deg)",
           transition: "transform 0.3s ease-in-out",
