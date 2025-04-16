@@ -85,8 +85,10 @@ function Cart() {
                           component="img"
                           src={item.userPackage.items[0].photoUrl ?? null}
                           sx={{
-                            backgroundColor: "grey.300",
                             width: "100%",
+                            aspectRatio: "1/1",
+                            objectFit: "contain",
+                            backgroundColor: "#f2f2f2",
                           }}
                         />
                       ) : (
@@ -94,8 +96,10 @@ function Cart() {
                           component="img"
                           src={item.userPackage.packageData.preview_url ?? null}
                           sx={{
-                            backgroundColor: "grey.300",
                             width: "100%",
+                            aspectRatio: "1/1",
+                            objectFit: "contain",
+                            backgroundColor: "#f2f2f2",
                           }}
                         />
                       )}
@@ -177,8 +181,10 @@ function Cart() {
                                         component="img"
                                         src={photoUrl ?? null}
                                         sx={{
-                                          backgroundColor: "grey.300",
                                           width: "100%",
+                                          aspectRatio: "1/1",
+                                          objectFit: "contain",
+                                          backgroundColor: "#f2f2f2",
                                         }}
                                       />
                                     </Grid>

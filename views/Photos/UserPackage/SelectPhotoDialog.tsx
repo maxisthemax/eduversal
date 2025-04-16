@@ -189,9 +189,10 @@ function SelectPhotoDialogForm({
             component="img"
             src={item.photoUrl}
             sx={{
-              backgroundColor: "grey.300",
-              height: "200px",
-              objectFit: "cover",
+              width: "50%",
+              aspectRatio: "1/1",
+              objectFit: "contain",
+              backgroundColor: "#f2f2f2",
             }}
           />
           <Stack direction="column" spacing={1}>

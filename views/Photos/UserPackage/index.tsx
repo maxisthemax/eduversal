@@ -186,19 +186,19 @@ function UserPackages() {
                     <Box
                       sx={{
                         p: 0,
-                        pl: 2,
-                        pr: 2,
-                        border: "1px solid #B8BDC4",
+                        border: "1px solid #f2f2f2",
                         display: "flex",
+                        backgroundColor: "#f2f2f2",
                       }}
                     >
                       <Box
                         component="img"
                         src={display_url ?? null}
                         sx={{
-                          backgroundColor: "grey.300",
                           width: "100%",
-                          height: "100%",
+                          aspectRatio: "1/1",
+                          objectFit: "contain",
+                          backgroundColor: "#f2f2f2",
                         }}
                       />
                     </Box>
@@ -230,7 +230,7 @@ function UserPackages() {
             >
               {items.map((item, index) => {
                 if (!item) return null;
-                const { photoUrl, album } = item;
+                const { photoUrl } = item;
 
                 return (
                   <>
@@ -240,27 +240,34 @@ function UserPackages() {
                       }}
                       sx={{
                         p: 0,
-                        pl: 2,
-                        pr: 2,
                         border:
                           index === userPackage.currentStage
-                            ? "1px solid #006DEE"
-                            : "1px solid #B8BDC4",
+                            ? "2px solid #006DEE"
+                            : "2px solid #f2f2f2",
+                        backgroundColor: "#f2f2f2",
                       }}
                     >
-                      <Box
-                        component="img"
-                        src={photoUrl ?? null}
-                        sx={{
-                          backgroundColor: "grey.300",
-                          height: "80px",
-                          aspectRatio: "2/3",
-                          objectFit:
-                            album.productType === "INDIVIDUAL"
-                              ? "cover"
-                              : "contain",
-                        }}
-                      />
+                      {photoUrl ? (
+                        <Box
+                          component="img"
+                          src={photoUrl ?? null}
+                          sx={{
+                            backgroundColor: "#f2f2f2",
+                            height: "80px",
+                            width: "80px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      ) : (
+                        <Box
+                          sx={{
+                            backgroundColor: "#f2f2f2",
+                            height: "80px",
+                            width: "80px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      )}
                     </Button>
                     {items.length - 1 !== index && (
                       <CustomIcon icon="add" iconColor="black" />
