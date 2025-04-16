@@ -74,7 +74,7 @@ function Account() {
             borderRight: "0.5px solid #B8BDC4",
             pl: 2,
             pr: 2,
-            height: getFullHeightSize(8),
+            height: getFullHeightSize(17),
             overflow: "auto",
           }}
         >
@@ -110,7 +110,12 @@ function Account() {
             })}
           </List>
         </Grid>
-        <Grid size={{ xs: 10 }}>{pageComponent[page as string]}</Grid>
+        <Grid
+          size={{ xs: 10 }}
+          sx={{ overflow: "auto", height: getFullHeightSize(17) }}
+        >
+          {pageComponent[page as string]}
+        </Grid>
       </Grid>
     </Container>
   );

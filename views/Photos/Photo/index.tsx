@@ -272,7 +272,7 @@ function PhotoCotent() {
                 justifyContent: "start",
                 display: "flex",
                 flexDirection: "column",
-                height: getFullHeightSize(22),
+                height: getFullHeightSize(31),
               }}
             >
               {userPackage?.packageId === "none" ? (
@@ -381,7 +381,10 @@ function PhotoCotent() {
                 })}
               </Stack>
             </Grid>
-            <Grid size={{ xs: 6 }}>
+            <Grid
+              size={{ xs: 6 }}
+              sx={{ height: getFullHeightSize(31), overflow: "auto" }}
+            >
               <Stack sx={{ pl: 4, pr: 4 }} spacing={2}>
                 <Box>
                   <Typography variant="body2">{album.name}</Typography>

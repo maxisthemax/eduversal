@@ -51,7 +51,7 @@ function Photos() {
       </Stack>
       <Stack
         spacing={2}
-        sx={{ py: 2, overflow: "auto", height: getFullHeightSize(26) }}
+        sx={{ py: 2, overflow: "auto", height: getFullHeightSize(32) }}
       >
         {userCoursesData && userCoursesData?.length > 0 ? (
           userCoursesData.map((userCourse, index) => {

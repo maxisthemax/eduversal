@@ -46,7 +46,7 @@ function Class() {
         <Paper
           variant="elevation"
           elevation={0}
-          sx={{ p: 4, overflow: "auto", height: getFullHeightSize(30) }}
+          sx={{ p: 4, overflow: "auto", height: getFullHeightSize(38) }}
         >
           <Stack direction={"row"}>
             <Typography sx={{ fontSize: "22px" }} gutterBottom>

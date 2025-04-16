@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
+import Divider from "@mui/material/Divider";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -127,12 +128,40 @@ function Main({ children }: { children: React.ReactNode }) {
           direction="row"
           sx={{
             background: "#F8F8F8",
-            height: getFullHeightSize(8),
+            height: getFullHeightSize(14.9),
             width: "100%",
           }}
         >
           {children}
         </Stack>
+        <Box
+          sx={{
+            background: "#F8F8F8",
+            width: "100%",
+          }}
+        >
+          <Container maxWidth="lg">
+            <Stack
+              spacing={2}
+              sx={{
+                background: "#F8F8F8",
+                width: "100%",
+                pb: 2,
+              }}
+            >
+              <Divider />
+              <Typography
+                variant="body1"
+                sx={{
+                  textAlign: "center",
+                  color: "#6b6f74",
+                }}
+              >
+                {`Copyright © ${new Date().getFullYear()} Photoversal Studio. All rights reserved.`}
+              </Typography>
+            </Stack>
+          </Container>
+        </Box>
       </Box>
     );
 }
