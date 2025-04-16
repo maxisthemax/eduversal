@@ -3,20 +3,23 @@ import { formatDate } from "date-fns";
 import { useRouter } from "next/navigation";
 
 //*components
-import { Page } from "@/components/Box";
+import { FlexBox, Page } from "@/components/Box";
 
 //*mui
 import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid2";
 import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
 
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
+
+//*helpers
+import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 function Class() {
   const { push } = useRouter();
@@ -37,66 +40,83 @@ function Class() {
           },
         ]}
       >
-        <Typography variant="h6" gutterBottom>
-          <b>{userCourseData.title_format}</b>
+        <Typography sx={{ fontSize: "28px" }} gutterBottom>
+          <b>Albums</b>
         </Typography>
-        <Divider />
-        <Grid container spacing={2} sx={{ pt: 2 }}>
-          {userCourseData.course.albums.map(
-            ({ id: albumId, name, photos, product_type, preview_url }) => {
-              return (
-                <Grid spacing={2} key={albumId} size={{ xs: 2 }}>
-                  <Stack>
-                    <Button
-                      onClick={() => push(`/photos/${class_id}/${albumId}`)}
-                      sx={{ p: 0, pl: 2, pr: 2, border: "1px solid #B8BDC4" }}
-                    >
-                      <Box
-                        component="img"
-                        src={
-                          preview_url !== ""
-                            ? preview_url
-                            : photos[0]?.display_url
-                        }
+        <Paper
+          variant="elevation"
+          elevation={0}
+          sx={{ p: 4, overflow: "auto", height: getFullHeightSize(30) }}
+        >
+          <Stack direction={"row"}>
+            <Typography sx={{ fontSize: "22px" }} gutterBottom>
+              <b>
+                {userCourseData.title_format} (
+                {userCourseData.course.academicYear.year.toString()})
+              </b>
+            </Typography>
+            <FlexBox />
+            <Typography variant="body1" color="error">
+              Available until{" "}
+              {formatDate(userCourseData.course.end_date, "dd MMM yyyy")}
+            </Typography>
+          </Stack>
+          <Grid container spacing={4} sx={{ pt: 2 }}>
+            {userCourseData.course.albums.map(
+              ({ id: albumId, name, photos, product_type, preview_url }) => {
+                return (
+                  <Grid key={albumId} size={{ xs: 3 }}>
+                    <Stack>
+                      <Button
+                        disableRipple
+                        onClick={() => push(`/photos/${class_id}/${albumId}`)}
                         sx={{
-                          backgroundColor: "grey.300",
-                          width: "100%",
-                          height: "100%",
-                          aspectRatio: "2/3",
-                          objectFit:
-                            product_type.type === "INDIVIDUAL"
-                              ? "cover"
-                              : "contain",
+                          p: 0,
+                          pl: 4,
+                          pr: 4,
+                          backgroundColor: "#f2f2f2",
+                          ":hover": { backgroundColor: "#d9d9d9" },
                         }}
-                      />
-                    </Button>
-                    <Typography
-                      gutterBottom
-                      sx={{
-                        pt: 0.5,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      <b>{name}</b>
-                    </Typography>
-                    <Typography variant="caption">
-                      {photos?.length ?? 0} Photos
-                    </Typography>
-                    <Typography variant="caption">
-                      Available until{" "}
-                      {formatDate(
-                        userCourseData.course.end_date,
-                        "dd MMM yyyy"
-                      )}
-                    </Typography>
-                  </Stack>
-                </Grid>
-              );
-            }
-          )}
-        </Grid>
+                      >
+                        <Box
+                          component="img"
+                          src={
+                            preview_url !== ""
+                              ? preview_url
+                              : photos[0]?.display_url
+                          }
+                          sx={{
+                            width: "100%",
+                            height: "100%",
+                            aspectRatio: "2/3",
+                            objectFit:
+                              product_type.type === "INDIVIDUAL"
+                                ? "cover"
+                                : "contain",
+                          }}
+                        />
+                      </Button>
+                      <Typography
+                        sx={{
+                          pt: 0.5,
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          fontSize: "18px",
+                        }}
+                      >
+                        <b>{name}</b>
+                      </Typography>
+                      <Typography variant="caption" sx={{ fontSize: "16px" }}>
+                        {photos?.length ?? 0} Photos
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                );
+              }
+            )}
+          </Grid>
+        </Paper>
       </Page>
     </Container>
   );

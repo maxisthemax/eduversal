@@ -1,24 +1,28 @@
 import { useParams, useRouter } from "next/navigation";
+import { formatDate } from "date-fns";
 
 //*lodash
 import find from "lodash/find";
 
 //*components
-import { Page } from "@/components/Box";
+import { FlexBox, Page } from "@/components/Box";
 
 //*mui
 import Container from "@mui/material/Container";
 import LinearProgress from "@mui/material/LinearProgress";
 import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
 import { useUserPackages } from "../UserPackage";
+
+//*helpers
+import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 function Album() {
   const { push } = useRouter();
@@ -83,28 +87,61 @@ function Album() {
           },
           {
             href: `/photos/${class_id}/${album_id}`,
-            title: "Photo",
+            title: "Photos",
           },
         ]}
       >
-        <Typography variant="h6" gutterBottom>
-          <b>{userCourseData.title_format}</b>
+        <Typography sx={{ fontSize: "28px" }} gutterBottom>
+          <b>Photos</b>
         </Typography>
-        <Divider />
-        <Grid container spacing={3} sx={{ pt: 2 }}>
-          {album.photos.map(
-            ({ id: photoId, display_url, download_url, name }) => {
+        <Paper
+          variant="elevation"
+          elevation={0}
+          sx={{ p: 4, overflow: "auto", height: getFullHeightSize(30) }}
+        >
+          <Stack direction={"row"}>
+            <Typography sx={{ fontSize: "22px" }} gutterBottom>
+              <b>
+                {userCourseData.title_format} (
+                {userCourseData.course.academicYear.year.toString()})
+              </b>
+            </Typography>
+            <FlexBox />
+            <Typography variant="body1" color="error">
+              Available until{" "}
+              {formatDate(userCourseData.course.end_date, "dd MMM yyyy")}
+            </Typography>
+          </Stack>
+          <Grid container spacing={4} sx={{ pt: 2 }}>
+            {[
+              ...album.photos,
+              ...album.photos,
+              ...album.photos,
+              ...album.photos,
+              ...album.photos,
+              ...album.photos,
+              ...album.photos,
+              ...album.photos,
+              ...album.photos,
+              ...album.photos,
+            ].map(({ id: photoId, display_url, download_url, name }) => {
               return (
                 <Grid
                   spacing={2}
                   key={photoId}
                   size={{
-                    xs: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
+                    xs: album.product_type.type === "INDIVIDUAL" ? 3 : 4,
                   }}
                 >
                   <Stack>
                     <Button
-                      sx={{ p: 0, pl: 2, pr: 2, border: "1px solid #B8BDC4" }}
+                      sx={{
+                        p: 0,
+                        pl: 4,
+                        pr: 4,
+                        backgroundColor: "#f2f2f2",
+                        ":hover": { backgroundColor: "#d9d9d9" },
+                      }}
                       onClick={() => {
                         handleSetPackage(
                           photoId,
@@ -132,9 +169,9 @@ function Album() {
                   </Stack>
                 </Grid>
               );
-            }
-          )}
-        </Grid>
+            })}
+          </Grid>
+        </Paper>
       </Page>
     </Container>
   );

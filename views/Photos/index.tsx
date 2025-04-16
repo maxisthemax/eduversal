@@ -21,7 +21,11 @@ import Collapse from "@mui/material/Collapse";
 
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
+
+//*utils
 import { useHover } from "@/utils/function";
+
+//*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 function Photos() {
@@ -40,8 +44,8 @@ function Photos() {
         alignItems="center"
         sx={{ p: 2 }}
       >
-        <Typography variant="h6">
-          Class ({userCoursesData?.length ?? 0})
+        <Typography sx={{ fontSize: "28px" }}>
+          <b>Class ({userCoursesData?.length ?? 0})</b>
         </Typography>
         <AddEditUserCourseDialog />
       </Stack>
@@ -49,9 +53,40 @@ function Photos() {
         spacing={2}
         sx={{ py: 2, overflow: "auto", height: getFullHeightSize(26) }}
       >
-        {userCoursesData.map((userCourse, index) => {
-          return <UserCourseItem key={index} userCourse={userCourse} />;
-        })}
+        {userCoursesData && userCoursesData?.length > 0 ? (
+          userCoursesData.map((userCourse, index) => {
+            return <UserCourseItem key={index} userCourse={userCourse} />;
+          })
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Stack
+              spacing={1}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                maxWidth: "400px",
+              }}
+            >
+              <Box component="img" src="/image/no_class.svg" width={"50%"} />
+              <Typography variant="h5">
+                <b>No Class Available</b>
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                No classes available or the class may have expired. Click ‘Add
+                Class’ to access the class photo using the passcode from the
+                teacher.
+              </Typography>
+            </Stack>
+          </Box>
+        )}
       </Stack>
     </Container>
   );
@@ -92,7 +127,12 @@ function UserCourseItem({ userCourse }) {
       }}
     >
       <Stack direction={"row"} spacing={3} sx={{ alignItems: "center" }}>
-        <Box sx={{ width: "119px", height: "119px" }}>
+        <Box
+          sx={{
+            width: "119px",
+            height: "119px",
+          }}
+        >
           <Collapse
             in={isHovered}
             timeout={{ appear: 500, enter: 500, exit: 0 }}
