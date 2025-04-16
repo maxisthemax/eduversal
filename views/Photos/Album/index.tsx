@@ -113,63 +113,54 @@ function Album() {
             </Typography>
           </Stack>
           <Grid container spacing={4} sx={{ pt: 2 }}>
-            {[
-              ...album.photos,
-              ...album.photos,
-              ...album.photos,
-              ...album.photos,
-              ...album.photos,
-              ...album.photos,
-              ...album.photos,
-              ...album.photos,
-              ...album.photos,
-              ...album.photos,
-            ].map(({ id: photoId, display_url, download_url, name }) => {
-              return (
-                <Grid
-                  spacing={2}
-                  key={photoId}
-                  size={{
-                    xs: album.product_type.type === "INDIVIDUAL" ? 3 : 4,
-                  }}
-                >
-                  <Stack>
-                    <Button
-                      sx={{
-                        p: 0,
-                        pl: 4,
-                        pr: 4,
-                        backgroundColor: "#f2f2f2",
-                        ":hover": { backgroundColor: "#d9d9d9" },
-                      }}
-                      onClick={() => {
-                        handleSetPackage(
-                          photoId,
-                          display_url,
-                          download_url,
-                          name
-                        );
-                        push(`/photos/${class_id}/${album_id}/${photoId}`);
-                      }}
-                    >
-                      <Box
-                        component="img"
-                        src={display_url ?? ""}
+            {album.photos.map(
+              ({ id: photoId, display_url, download_url, name }) => {
+                return (
+                  <Grid
+                    spacing={2}
+                    key={photoId}
+                    size={{
+                      xs: album.product_type.type === "INDIVIDUAL" ? 3 : 4,
+                    }}
+                  >
+                    <Stack>
+                      <Button
                         sx={{
-                          backgroundColor: "grey.300",
-                          width: "100%",
-                          height: "100%",
-                          objectFit:
-                            album.product_type.type === "INDIVIDUAL"
-                              ? "cover"
-                              : "contain",
+                          p: 0,
+                          pl: 4,
+                          pr: 4,
+                          backgroundColor: "#f2f2f2",
+                          ":hover": { backgroundColor: "#d9d9d9" },
                         }}
-                      />
-                    </Button>
-                  </Stack>
-                </Grid>
-              );
-            })}
+                        onClick={() => {
+                          handleSetPackage(
+                            photoId,
+                            display_url,
+                            download_url,
+                            name
+                          );
+                          push(`/photos/${class_id}/${album_id}/${photoId}`);
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={display_url ?? ""}
+                          sx={{
+                            backgroundColor: "grey.300",
+                            width: "100%",
+                            height: "100%",
+                            objectFit:
+                              album.product_type.type === "INDIVIDUAL"
+                                ? "cover"
+                                : "contain",
+                          }}
+                        />
+                      </Button>
+                    </Stack>
+                  </Grid>
+                );
+              }
+            )}
           </Grid>
         </Paper>
       </Page>
