@@ -127,8 +127,6 @@ function Album() {
                       <Button
                         sx={{
                           p: 0,
-                          pl: 4,
-                          pr: 4,
                           backgroundColor: "#f2f2f2",
                           ":hover": { backgroundColor: "#d9d9d9" },
                         }}
@@ -146,13 +144,9 @@ function Album() {
                           component="img"
                           src={display_url ?? ""}
                           sx={{
-                            backgroundColor: "grey.300",
                             width: "100%",
-                            height: "100%",
-                            objectFit:
-                              album.product_type.type === "INDIVIDUAL"
-                                ? "cover"
-                                : "contain",
+                            aspectRatio: "1/1",
+                            objectFit: "contain",
                           }}
                         />
                       </Button>

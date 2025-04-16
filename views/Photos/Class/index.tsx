@@ -63,7 +63,7 @@ function Class() {
           </Stack>
           <Grid container spacing={4} sx={{ pt: 2 }}>
             {userCourseData.course.albums.map(
-              ({ id: albumId, name, photos, product_type, preview_url }) => {
+              ({ id: albumId, name, photos, preview_url }) => {
                 return (
                   <Grid key={albumId} size={{ xs: 3 }}>
                     <Stack>
@@ -72,8 +72,6 @@ function Class() {
                         onClick={() => push(`/photos/${class_id}/${albumId}`)}
                         sx={{
                           p: 0,
-                          pl: 4,
-                          pr: 4,
                           backgroundColor: "#f2f2f2",
                           ":hover": { backgroundColor: "#d9d9d9" },
                         }}
@@ -87,12 +85,8 @@ function Class() {
                           }
                           sx={{
                             width: "100%",
-                            height: "100%",
-                            aspectRatio: "2/3",
-                            objectFit:
-                              product_type.type === "INDIVIDUAL"
-                                ? "cover"
-                                : "contain",
+                            aspectRatio: "1/1",
+                            objectFit: "contain",
                           }}
                         />
                       </Button>

@@ -47,10 +47,10 @@ function Downloadable() {
                   src={`${item.photoUrl}`}
                   alt={item.photoUrl}
                   sx={{
-                    display: "block",
                     width: "100%",
-                    objectFit: "cover",
-                    height: "100%",
+                    aspectRatio: "1/1",
+                    objectFit: "contain",
+                    backgroundColor: "#f2f2f2",
                   }}
                 />
                 <Box>

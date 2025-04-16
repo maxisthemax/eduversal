@@ -12,7 +12,7 @@ import findIndex from "lodash/findIndex";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
-import { FlexBox, Page } from "@/components/Box";
+import { Page } from "@/components/Box";
 import AddCartSuccessDialog from "@/views/Cart/AddCartSuccessDialog";
 
 //*mui
@@ -263,285 +263,340 @@ function PhotoCotent() {
           },
         ]}
       >
-        <Grid container>
-          <Grid
-            size={{ xs: 6 }}
-            sx={{
-              justifyContent: "center",
-              display: "flex",
-              height: getFullHeightSize(16),
-              flexDirection: "column",
-            }}
-          >
-            <Paper
-              variant="outlined"
-              component="img"
-              src={
-                (userPackage?.packageId === "none"
-                  ? photo.display_url
-                  : find(albumPackage, { id: userPackage?.packageId })
-                      .preview_url) ?? null
-              }
+        <Paper sx={{ p: 4, height: "100%" }} elevation={0}>
+          <Grid container>
+            <Grid
+              size={{ xs: 6 }}
               sx={{
-                overflow: "hidden",
-                height: "100%",
-                width: "100%",
-                aspectRatio: "2/3",
-                objectFit: "contain",
+                overflow: "auto",
+                justifyContent: "start",
+                display: "flex",
+                flexDirection: "column",
+                height: getFullHeightSize(22),
               }}
-            />
-            <Stack sx={{ pt: 2 }} direction="row" spacing={2}>
-              {albumPackage.map(({ preview_url, id }) => {
-                return (
-                  <Button
-                    variant="outlined"
-                    key={id}
-                    sx={{ p: 0.5 }}
-                    onClick={() => {
-                      handlePackage(id);
-                    }}
-                    color={
-                      userPackage?.packageId === id ? "primary" : "inherit"
-                    }
-                  >
-                    <Box
-                      component="img"
-                      sx={{ width: "100px" }}
-                      src={
-                        (id === "none" ? photo.display_url : preview_url) ??
-                        null
-                      }
-                    />
-                  </Button>
-                );
-              })}
-            </Stack>
-          </Grid>
-          <Grid
-            size={{ xs: 6 }}
-            sx={{ height: getFullHeightSize(15), overflow: "auto" }}
-          >
-            <Stack sx={{ pl: 4, pr: 4 }} spacing={2}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  {album.name}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  <b>{photo.name}</b>
-                </Typography>
-                <Typography variant="body1" color="primary" gutterBottom>
-                  RM{" "}
-                  {(userPackage.packagePrice + userPackage.itemsPrice).toFixed(
-                    2
-                  )}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="body1" gutterBottom>
-                  {"Child's Name"}
-                </Typography>
-                <TextField
-                  value={userPackage.items[userPackage?.firstStage ?? 0]?.name}
-                  select
-                  onChange={(event) => {
-                    handleUserPackageName(event.target.value);
+            >
+              {userPackage?.packageId === "none" ? (
+                <Paper
+                  variant="elevation"
+                  elevation={0}
+                  component="img"
+                  src={photo.display_url}
+                  sx={{
+                    width: "100%",
+                    aspectRatio: "1/1",
+                    objectFit: "contain",
+                    backgroundColor: "#f2f2f2",
+                  }}
+                />
+              ) : find(albumPackage, { id: userPackage?.packageId })
+                  .preview_url ? (
+                <Paper
+                  variant="elevation"
+                  elevation={0}
+                  component="img"
+                  src={
+                    find(albumPackage, { id: userPackage?.packageId })
+                      .preview_url
+                  }
+                  sx={{
+                    width: "100%",
+                    aspectRatio: "1/1",
+                    objectFit: "contain",
+                    backgroundColor: "#f2f2f2",
+                  }}
+                />
+              ) : (
+                <Paper
+                  variant="elevation"
+                  elevation={0}
+                  sx={{
+                    width: "100%",
+                    aspectRatio: "1/1",
+                    objectFit: "contain",
+                    backgroundColor: "#f2f2f2",
+                    textAlign: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  {userCourseData.names.map((name) => {
-                    return (
-                      <MenuItem key={name} value={name}>
-                        {name}
-                      </MenuItem>
-                    );
-                  })}
-                </TextField>
-              </Box>
-              {album.albumProductVariations.map(
-                (
-                  {
-                    productVariation,
-                    mandatory,
-                    productVariation_id,
-                    disabled_options,
-                  },
-                  index
-                ) => {
-                  return (
-                    <Box key={index}>
-                      <ListItemText
-                        primary={
-                          productVariation.name +
-                          `${
-                            productVariation.is_downloadable
-                              ? " (Includes Soft Copy)"
-                              : ""
-                          }` +
-                          (mandatory ? " *" : "")
-                        }
-                        sx={
-                          includes(mandatoryField, productVariation_id)
-                            ? { color: "#E74D3C" }
-                            : {}
-                        }
-                      />
-                      <TextField
-                        error={includes(mandatoryField, productVariation_id)}
-                        helperText={
-                          includes(mandatoryField, productVariation_id)
-                            ? "Required"
-                            : ""
-                        }
-                        value={
-                          find(
-                            userPackage.items[userPackage?.firstStage ?? 0]
-                              .productVariationOptions,
-                            {
-                              productVariationId: productVariation.id,
-                            }
-                          )?.productVariationOptionId
-                        }
-                        select
-                        slotProps={{
-                          select: {
-                            displayEmpty: true,
-                            defaultValue: undefined,
-                          },
-                        }}
-                      >
-                        <MenuItem
-                          value={undefined}
-                          onClick={() => {
-                            handleProductVariationOption(
-                              productVariation,
-                              null
-                            );
-                          }}
-                        >
-                          <ListItemText primary={`None`} />
-                        </MenuItem>
-                        {productVariation.options
-                          .filter(({ id }) => {
-                            return !includes(disabled_options, id);
-                          })
-                          .map((option) => {
-                            const { id, name, price_format, description } =
-                              option;
-
-                            return (
-                              <MenuItem
-                                key={id}
-                                value={id}
-                                onClick={() => {
-                                  handleProductVariationOption(
-                                    productVariation,
-                                    option
-                                  );
-                                }}
-                              >
-                                <ListItemText
-                                  primary={`${name} - ${price_format}`}
-                                  secondary={description}
-                                />
-                              </MenuItem>
-                            );
-                          })}
-                      </TextField>
-                    </Box>
-                  );
-                }
+                  <Typography variant="h4">
+                    {find(albumPackage, { id: userPackage?.packageId }).name}
+                  </Typography>
+                </Paper>
               )}
-              <Box sx={{ width: "100%" }}>
-                <Typography variant="body1" gutterBottom>
-                  {"Packages"}
-                </Typography>
-                <Stack direction={"column"} spacing={2}>
-                  {albumPackage.map(
-                    ({
-                      id,
-                      name,
-                      price_format,
-                      package_type_format,
-                      is_downloadable,
-                    }) => {
-                      return (
-                        <Button
-                          key={id}
-                          fullWidth
-                          variant="outlined"
+              <Stack sx={{ pt: 2 }} direction="row" spacing={2}>
+                {albumPackage.map(({ preview_url, id }) => {
+                  return (
+                    <Button
+                      variant="outlined"
+                      key={id}
+                      sx={{
+                        p: 0,
+                        border:
+                          userPackage?.packageId === id
+                            ? "2px solid #006DEE"
+                            : "2px solid #f2f2f2",
+                      }}
+                      onClick={() => {
+                        handlePackage(id);
+                      }}
+                    >
+                      {id === "none" ? (
+                        <Box
+                          component="img"
                           sx={{
-                            p: 2,
-                            justifyContent: "space-between",
-                            textAlign: "start",
-                            border:
-                              userPackage?.packageId === id
-                                ? "2px solid #006DEE"
-                                : "2px solid #E0E0E0",
-
-                            color:
-                              userPackage?.packageId === id
-                                ? "#006DEE"
-                                : "black",
+                            width: "100px",
+                            height: "100px",
+                            objectFit: "contain",
+                            ":hover": { backgroundColor: "#d9d9d9" },
+                            backgroundColor: "#f2f2f2",
                           }}
-                          onClick={() => {
-                            handlePackage(id);
+                          src={photo.display_url}
+                        />
+                      ) : preview_url ? (
+                        <Box
+                          component="img"
+                          sx={{
+                            width: "100px",
+                            height: "100px",
+                            objectFit: "contain",
+                            ":hover": { backgroundColor: "#d9d9d9" },
+                            backgroundColor: "#f2f2f2",
+                          }}
+                          src={preview_url}
+                        />
+                      ) : (
+                        <Box
+                          sx={{
+                            width: "100px",
+                            height: "100px",
+                            ":hover": { backgroundColor: "#d9d9d9" },
+                            backgroundColor: "#f2f2f2",
+                          }}
+                        />
+                      )}
+                    </Button>
+                  );
+                })}
+              </Stack>
+            </Grid>
+            <Grid size={{ xs: 6 }}>
+              <Stack sx={{ pl: 4, pr: 4 }} spacing={2}>
+                <Box>
+                  <Typography variant="body2">{album.name}</Typography>
+                  <Typography sx={{ fontSize: "28px" }}>
+                    <b>{photo.name}</b>
+                  </Typography>
+                  <Typography variant="h6" color="primary">
+                    RM{" "}
+                    {(
+                      userPackage.packagePrice + userPackage.itemsPrice
+                    ).toFixed(2)}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="body1" gutterBottom>
+                    {"Child's Name"}
+                  </Typography>
+                  <TextField
+                    value={
+                      userPackage.items[userPackage?.firstStage ?? 0]?.name
+                    }
+                    select
+                    onChange={(event) => {
+                      handleUserPackageName(event.target.value);
+                    }}
+                  >
+                    {userCourseData.names.map((name) => {
+                      return (
+                        <MenuItem key={name} value={name}>
+                          {name}
+                        </MenuItem>
+                      );
+                    })}
+                  </TextField>
+                </Box>
+                {album.albumProductVariations.map(
+                  (
+                    {
+                      productVariation,
+                      mandatory,
+                      productVariation_id,
+                      disabled_options,
+                    },
+                    index
+                  ) => {
+                    return (
+                      <Box key={index}>
+                        <ListItemText
+                          primary={
+                            productVariation.name +
+                            `${
+                              productVariation.is_downloadable
+                                ? " (Includes Soft Copy)"
+                                : ""
+                            }` +
+                            (mandatory ? " *" : "")
+                          }
+                          sx={
+                            includes(mandatoryField, productVariation_id)
+                              ? { color: "#E74D3C" }
+                              : {}
+                          }
+                        />
+                        <TextField
+                          error={includes(mandatoryField, productVariation_id)}
+                          helperText={
+                            includes(mandatoryField, productVariation_id)
+                              ? "Required"
+                              : ""
+                          }
+                          value={
+                            find(
+                              userPackage.items[userPackage?.firstStage ?? 0]
+                                .productVariationOptions,
+                              {
+                                productVariationId: productVariation.id,
+                              }
+                            )?.productVariationOptionId
+                          }
+                          select
+                          slotProps={{
+                            select: {
+                              displayEmpty: true,
+                              defaultValue: undefined,
+                            },
                           }}
                         >
-                          <Stack
-                            direction="row"
-                            spacing={2}
-                            sx={{ alignItems: "center" }}
+                          <MenuItem
+                            value={undefined}
+                            onClick={() => {
+                              handleProductVariationOption(
+                                productVariation,
+                                null
+                              );
+                            }}
                           >
-                            <CustomIcon icon="check_circle" />
-                            <ListItemText
-                              sx={{ justifyItems: "start" }}
-                              primary={
-                                name +
-                                (is_downloadable ? " (Includes Soft Copy)" : "")
-                              }
-                              secondary={package_type_format}
-                            />
-                          </Stack>
-                          <Typography
-                            variant="body1"
-                            sx={{ whiteSpace: "nowrap" }}
+                            <ListItemText primary={`None`} />
+                          </MenuItem>
+                          {productVariation.options
+                            .filter(({ id }) => {
+                              return !includes(disabled_options, id);
+                            })
+                            .map((option) => {
+                              const { id, name, price_format, description } =
+                                option;
+
+                              return (
+                                <MenuItem
+                                  key={id}
+                                  value={id}
+                                  onClick={() => {
+                                    handleProductVariationOption(
+                                      productVariation,
+                                      option
+                                    );
+                                  }}
+                                >
+                                  <ListItemText
+                                    primary={`${name} - ${price_format}`}
+                                    secondary={description}
+                                  />
+                                </MenuItem>
+                              );
+                            })}
+                        </TextField>
+                      </Box>
+                    );
+                  }
+                )}
+                <Box sx={{ width: "100%" }}>
+                  <Typography variant="body1" gutterBottom>
+                    {"Packages"}
+                  </Typography>
+                  <Stack direction={"column"} spacing={2}>
+                    {albumPackage.map(
+                      ({
+                        id,
+                        name,
+                        price_format,
+                        package_type_format,
+                        is_downloadable,
+                      }) => {
+                        return (
+                          <Button
+                            key={id}
+                            fullWidth
+                            variant="outlined"
+                            sx={{
+                              p: 2,
+                              justifyContent: "space-between",
+                              textAlign: "start",
+                              border:
+                                userPackage?.packageId === id
+                                  ? "2px solid #006DEE"
+                                  : "2px solid #E0E0E0",
+
+                              color:
+                                userPackage?.packageId === id
+                                  ? "#006DEE"
+                                  : "black",
+                            }}
+                            onClick={() => {
+                              handlePackage(id);
+                            }}
                           >
-                            {price_format}
-                          </Typography>
-                        </Button>
-                      );
-                    }
-                  )}
-                </Stack>
-              </Box>
-              <Stack
-                sx={{
-                  width: "100%",
-                  position: "sticky",
-                  bottom: 0,
-                  backgroundColor: "white",
-                }}
-                direction="row"
-              >
-                <FlexBox />
-                {/* <Button
-                  variant="outlined"
-                  onClick={() => {
-                    push(`/photos/${class_id}/${album_id}`);
+                            <Stack
+                              direction="row"
+                              spacing={2}
+                              sx={{ alignItems: "center" }}
+                            >
+                              <CustomIcon icon="check_circle" />
+                              <ListItemText
+                                sx={{ justifyItems: "start" }}
+                                primary={
+                                  name +
+                                  (is_downloadable
+                                    ? " (Includes Soft Copy)"
+                                    : "")
+                                }
+                                secondary={package_type_format}
+                              />
+                            </Stack>
+                            <Typography
+                              variant="body1"
+                              sx={{ whiteSpace: "nowrap" }}
+                            >
+                              {price_format}
+                            </Typography>
+                          </Button>
+                        );
+                      }
+                    )}
+                  </Stack>
+                </Box>
+                <Stack
+                  sx={{
+                    width: "100%",
+                    position: "sticky",
+                    bottom: 0,
+                    backgroundColor: "white",
                   }}
+                  direction="row"
                 >
-                  Back
-                </Button> */}
-                <Button variant="contained" onClick={handleSave} fullWidth>
-                  {userPackage.cartId
-                    ? "Edit"
-                    : userPackage.packageId === "none"
-                    ? "Add To Cart"
-                    : "Next"}
-                </Button>
+                  <Button variant="contained" onClick={handleSave} fullWidth>
+                    {userPackage.cartId
+                      ? "Edit"
+                      : userPackage.packageId === "none"
+                      ? "Add To Cart"
+                      : "Next"}
+                  </Button>
+                </Stack>
               </Stack>
-            </Stack>
+            </Grid>
           </Grid>
-        </Grid>
+        </Paper>
       </Page>
       <AddCartSuccessDialog open={addedToCart} />
     </Container>
