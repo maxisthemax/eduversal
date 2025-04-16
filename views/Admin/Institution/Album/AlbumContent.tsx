@@ -133,395 +133,397 @@ function AlbumContent({ albumId }: { albumId: string }) {
 
   return (
     <OverlayBox isLoading={isDeleting || isUploading}>
-      <Grid container spacing={1}>
-        <Grid
-          size={{ xs: 8.5 }}
-          sx={{ overflow: "auto", height: getFullHeightSize(24.1) }}
-        >
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12 }}>
-              <Stack
-                spacing={2}
-                direction="row"
-                sx={{
-                  justifyContent: "flex-end",
-                  top: 0,
-                  background: "white",
-                  zIndex: 1,
-                  width: "100%",
-                }}
-              >
-                {selection.length > 0 && access.delete && (
-                  <Button variant="contained" onClick={handleDelete}>
-                    Delete
-                  </Button>
-                )}
-                {access.edit && (
-                  <Button variant="contained" {...bindTrigger(popupState)}>
-                    Upload
-                  </Button>
-                )}
-              </Stack>
-              <Dialog
-                maxWidth="lg"
-                {...bindDialog(popupState)}
-                onClose={() => {}}
-              >
-                <OverlayBox isLoading={isUploading}>
-                  <DialogContent sx={{ minWidth: 400 }}>
-                    <Grid
-                      container
-                      spacing={2}
-                      direction="row"
-                      sx={{
-                        maxHeight: getFullHeightSize(28),
-                        overflow: "auto",
-                        justifyContent: "flex-start",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      {files.map((file, index) => {
-                        return (
-                          <Grid
-                            size={{
-                              xs:
-                                albumData.product_type.type === "INDIVIDUAL"
-                                  ? 1.5
-                                  : 2,
-                            }}
-                            key={index}
-                            sx={{
-                              textAlign: "center",
-                              position: "relative",
-                              "&:hover .delete": {
-                                display: "block",
-                              },
-                            }}
-                          >
-                            <Box
-                              className="delete"
-                              sx={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                display: "none",
-                              }}
-                            >
-                              <IconButton
-                                disableRipple
-                                disableTouchRipple
-                                disableFocusRipple
-                                sx={{ background: "white", m: 0.5 }}
-                                color="primary"
-                                size="small"
-                                onClick={() => {
-                                  setFiles((files) =>
-                                    files.filter((_, i) => i !== index)
-                                  );
-                                }}
-                              >
-                                <CustomIcon icon="delete" fontSizeSx="20px" />
-                              </IconButton>
-                            </Box>
-                            <Box
-                              component="img"
-                              src={URL.createObjectURL(file)}
-                              alt={file.name}
-                              sx={{
-                                display: "block",
-                                width: "100%",
-                                objectFit: "cover",
-                              }}
-                            />
-                            <Typography variant="caption">
-                              {file.name}
-                            </Typography>
-                          </Grid>
-                        );
-                      })}
-                    </Grid>
-                    <Stack sx={{ pt: 1 }}>
-                      <Typography variant="caption">
-                        * Maximum file size is 30MB are allowed
-                      </Typography>
-                      <Typography variant="caption">
-                        * Only .jpeg and .png files are allowed
-                      </Typography>
-                    </Stack>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={() => {
-                        popupState.close();
-                        setFiles([]);
-                      }}
-                    >
-                      Close
-                    </Button>
-                    <FlexBox />
-                    <Box
-                      {...getRootProps()}
-                      sx={{
-                        textAlign: "center",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <input {...getInputProps()} />
-                      <Button variant="contained" color="primary">
-                        Select Files
-                      </Button>
-                    </Box>
-                    <Button
-                      variant="contained"
-                      disabled={files.length === 0}
-                      onClick={handleUploadAndAddPhoto}
-                    >
-                      Upload
-                    </Button>
-                  </DialogActions>
-                </OverlayBox>
-              </Dialog>
-            </Grid>
-            {photosData.map((item, index) => (
-              <Grid
-                size={{
-                  xs: 12,
-                  sm: 6,
-                  md: 4,
-                  lg: albumData.product_type.type === "INDIVIDUAL" ? 2 : 3,
-                }}
-                key={index}
-                sx={{
-                  textAlign: "center",
-                  position: "relative",
-                  "&:hover .checkbox": {
-                    display: "block",
-                  },
-                }}
-              >
-                <PopupState variant="popover" popupId="demo-popup-popover">
-                  {(popupState) => (
-                    <>
-                      <Button
-                        disableRipple
-                        sx={{ p: 0 }}
-                        {...bindTrigger(popupState)}
-                      >
-                        <Box
-                          className="checkbox"
+      <Paper sx={{ px: 2 }}>
+        <Grid container spacing={1}>
+          <Grid size={{ xs: 12 }}>
+            <Stack
+              spacing={2}
+              direction="row"
+              sx={{
+                justifyContent: "flex-end",
+                top: 0,
+                background: "white",
+                zIndex: 1,
+                width: "100%",
+              }}
+            >
+              <Typography variant="body1">
+                <b>{courseData.name}</b>
+              </Typography>
+              <FlexBox />
+              {selection.length > 0 && access.delete && (
+                <Button variant="contained" onClick={handleDelete}>
+                  Delete
+                </Button>
+              )}
+              {access.edit && (
+                <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
+              )}
+              {access.edit && (
+                <Button variant="contained" {...bindTrigger(popupState)}>
+                  Upload
+                </Button>
+              )}
+            </Stack>
+            <Dialog
+              maxWidth="lg"
+              {...bindDialog(popupState)}
+              onClose={() => {}}
+            >
+              <OverlayBox isLoading={isUploading}>
+                <DialogContent sx={{ minWidth: 400 }}>
+                  <Grid
+                    container
+                    spacing={2}
+                    direction="row"
+                    sx={{
+                      maxHeight: getFullHeightSize(28),
+                      overflow: "auto",
+                      justifyContent: "flex-start",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    {files.map((file, index) => {
+                      return (
+                        <Grid
+                          size={{
+                            xs:
+                              albumData.product_type.type === "INDIVIDUAL"
+                                ? 1.5
+                                : 2,
+                          }}
+                          key={index}
                           sx={{
-                            position: "absolute",
-                            top: -2,
-                            left: 0,
-                            display: !includes(selection, item.id)
-                              ? "none"
-                              : "block",
+                            textAlign: "center",
+                            position: "relative",
+                            "&:hover .delete": {
+                              display: "block",
+                            },
                           }}
                         >
-                          <Checkbox
-                            checked={includes(selection, item.id)}
-                            size="small"
-                            disableRipple
+                          <Box
+                            className="delete"
                             sx={{
-                              background: "white",
-                              p: 0,
-                              borderRadius: 0,
-                              m: 0,
-                              zIndex: 1,
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (!includes(selection, item.id)) {
-                                setSelection((selection) => [
-                                  ...selection,
-                                  item.id,
-                                ]);
-                              } else {
-                                setSelection((selection) =>
-                                  selection.filter((id) => id !== item.id)
-                                );
-                              }
-                            }}
-                          />
-                        </Box>
-                        <Box
-                          component="img"
-                          src={`${item.display_url}`}
-                          alt={item.name}
-                          sx={{
-                            display: "block",
-                            width: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </Button>
-                      <Menu
-                        {...bindPopover(popupState)}
-                        anchorOrigin={{
-                          vertical: "top",
-                          horizontal: "right",
-                        }}
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "right",
-                        }}
-                        sx={{ p: 0 }}
-                      >
-                        <MenuList dense={true} disablePadding>
-                          <MenuItem
-                            onClick={async () => {
-                              const res = await axios.get(
-                                `admin/photo/downloadPhoto?fileKey=${item.download_url}`
-                              );
-                              const link = document.createElement("a");
-                              link.href = res.data.url;
-                              link.download = item.name;
-                              document.body.appendChild(link);
-                              link.click();
-                              document.body.removeChild(link);
-                              popupState.close();
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              display: "none",
                             }}
                           >
-                            Download
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </>
-                  )}
-                </PopupState>
-
-                <Typography
-                  variant="caption"
-                  sx={{ overflowWrap: "break-word" }}
+                            <IconButton
+                              disableRipple
+                              disableTouchRipple
+                              disableFocusRipple
+                              sx={{ background: "white", m: 0.5 }}
+                              color="primary"
+                              size="small"
+                              onClick={() => {
+                                setFiles((files) =>
+                                  files.filter((_, i) => i !== index)
+                                );
+                              }}
+                            >
+                              <CustomIcon icon="delete" fontSizeSx="20px" />
+                            </IconButton>
+                          </Box>
+                          <Box
+                            component="img"
+                            src={URL.createObjectURL(file)}
+                            alt={file.name}
+                            sx={{
+                              width: "100%",
+                              aspectRatio: "1/1",
+                              objectFit: "contain",
+                              backgroundColor: "#f2f2f2",
+                            }}
+                          />
+                          <Typography variant="caption">{file.name}</Typography>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                  <Stack sx={{ pt: 1 }}>
+                    <Typography variant="caption">
+                      * Maximum file size is 30MB are allowed
+                    </Typography>
+                    <Typography variant="caption">
+                      * Only .jpeg and .png files are allowed
+                    </Typography>
+                  </Stack>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      popupState.close();
+                      setFiles([]);
+                    }}
+                  >
+                    Close
+                  </Button>
+                  <FlexBox />
+                  <Box
+                    {...getRootProps()}
+                    sx={{
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input {...getInputProps()} />
+                    <Button variant="contained" color="primary">
+                      Select Files
+                    </Button>
+                  </Box>
+                  <Button
+                    variant="contained"
+                    disabled={files.length === 0}
+                    onClick={handleUploadAndAddPhoto}
+                  >
+                    Upload
+                  </Button>
+                </DialogActions>
+              </OverlayBox>
+            </Dialog>
+          </Grid>
+          <Grid
+            size={{ xs: 8.5 }}
+            sx={{ overflow: "auto", height: getFullHeightSize(37) }}
+          >
+            <Grid container spacing={2}>
+              {photosData.map((item, index) => (
+                <Grid
+                  size={{
+                    xs: 2.5,
+                  }}
+                  key={index}
+                  sx={{
+                    textAlign: "center",
+                    position: "relative",
+                    "&:hover .checkbox": {
+                      display: "block",
+                    },
+                  }}
                 >
-                  {item.name}
+                  <PopupState variant="popover" popupId="demo-popup-popover">
+                    {(popupState) => (
+                      <>
+                        <Button
+                          disableRipple
+                          sx={{ p: 0 }}
+                          {...bindTrigger(popupState)}
+                        >
+                          <Box
+                            className="checkbox"
+                            sx={{
+                              position: "absolute",
+                              top: -2,
+                              left: 0,
+                              display: !includes(selection, item.id)
+                                ? "none"
+                                : "block",
+                            }}
+                          >
+                            <Checkbox
+                              checked={includes(selection, item.id)}
+                              size="small"
+                              disableRipple
+                              sx={{
+                                background: "white",
+                                p: 0,
+                                borderRadius: 0,
+                                m: 0,
+                                zIndex: 1,
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!includes(selection, item.id)) {
+                                  setSelection((selection) => [
+                                    ...selection,
+                                    item.id,
+                                  ]);
+                                } else {
+                                  setSelection((selection) =>
+                                    selection.filter((id) => id !== item.id)
+                                  );
+                                }
+                              }}
+                            />
+                          </Box>
+                          <Box
+                            component="img"
+                            src={`${item.display_url}`}
+                            alt={item.name}
+                            sx={{
+                              width: "100%",
+                              aspectRatio: "1/1",
+                              objectFit: "contain",
+                              backgroundColor: "#f2f2f2",
+                            }}
+                          />
+                        </Button>
+                        <Menu
+                          {...bindPopover(popupState)}
+                          anchorOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                          }}
+                          sx={{ p: 0 }}
+                        >
+                          <MenuList dense={true} disablePadding>
+                            <MenuItem
+                              onClick={async () => {
+                                const res = await axios.get(
+                                  `admin/photo/downloadPhoto?fileKey=${item.download_url}`
+                                );
+                                const link = document.createElement("a");
+                                link.href = res.data.url;
+                                link.download = item.name;
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                popupState.close();
+                              }}
+                            >
+                              Download
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                      </>
+                    )}
+                  </PopupState>
+                  <Typography
+                    variant="caption"
+                    sx={{ overflowWrap: "break-word" }}
+                  >
+                    {item.name}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+          <Grid
+            size={{ xs: 3.5 }}
+            sx={{
+              background: "#EBEBEB",
+              height: getFullHeightSize(37),
+              overflow: "auto",
+            }}
+          >
+            <Grid container sx={{ p: 2 }} rowGap={0.5}>
+              <Grid size={{ xs: 12 }} sx={{ alignContent: "center" }}>
+                <Stack direction="row" sx={{ alignItems: "center" }}>
+                  <Typography>
+                    <b>Album Details</b>
+                  </Typography>
+                  <FlexBox />
+                </Stack>
+              </Grid>
+              <NameValue name="Name" value={albumData.name} />
+              <NameValue
+                name="Status"
+                value={
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={400}
+                    color={albumData.is_disabled ? "error" : "success"}
+                  >
+                    {albumData.is_disabled_format}
+                  </Typography>
+                }
+              />
+              <NameValue name="Description" value={albumData.description} />
+              <NameValue name="Total Files" value={photosData.length} />
+              <NameValue
+                name="Created"
+                value={format(albumData.created_at, "PP")}
+              />
+              <NameValue
+                name="Updated"
+                value={format(albumData.updated_at, "PP")}
+              />
+              <NameValue
+                name="Available Until"
+                value={format(courseData.end_date, "PP")}
+              />
+              <NameValue
+                name=""
+                value={
+                  differenceInDays(courseData.end_date, new Date()) +
+                  " days remaining"
+                }
+              />
+              <Grid size={{ xs: 12 }}>
+                <Divider />
+              </Grid>
+              <Grid size={{ xs: 12 }} sx={{ alignContent: "center" }}>
+                <Typography>
+                  <b>Product Details</b>
                 </Typography>
               </Grid>
-            ))}
-          </Grid>
-        </Grid>
-        <Grid
-          size={{ xs: 3.5 }}
-          sx={{
-            background: "#EBEBEB",
-            height: getFullHeightSize(24.1),
-            overflow: "auto",
-          }}
-        >
-          <Grid container sx={{ p: 2 }} rowGap={0.5}>
-            <Grid size={{ xs: 12 }} sx={{ alignContent: "center" }}>
-              <Stack direction="row" sx={{ alignItems: "center" }}>
+              <NameValue name="Name" value={albumData.product_type.name} />
+              <NameValue name="Type" value={albumData.product_type.type} />
+              <NameValue
+                name="Is Deliverable"
+                value={albumData.product_type.is_deliverable_format}
+              />
+              <NameValue
+                name="Price"
+                value={albumData.product_type.price_format}
+              />
+              <Grid size={{ xs: 12 }}>
+                <Divider />
+              </Grid>
+              <Grid size={{ xs: 12 }} sx={{ alignContent: "center" }}>
                 <Typography>
-                  <b>Album Details</b>
+                  <b>Product Variations</b>
                 </Typography>
-                <FlexBox />
-                {access.edit && (
-                  <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
-                )}
-              </Stack>
+              </Grid>
+              {albumData.product_variations_id.map((productVariationId) => {
+                const { name, description, options } =
+                  productVariationsById[productVariationId];
+                return (
+                  <>
+                    <NameValue name="Name" value={name} />
+                    <NameValue name="Description" value={description} />
+                    <Grid
+                      size={{ xs: 12 }}
+                      sx={{ mb: 1 }}
+                      component={Paper}
+                      variant="outlined"
+                    >
+                      <Table size="small">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Description</TableCell>
+                            <TableCell width={100}>Price</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {options.map(
+                            ({ id, name, description, price_format }) => {
+                              return (
+                                <TableRow key={id}>
+                                  <TableCell>{name}</TableCell>
+                                  <TableCell>{description}</TableCell>
+                                  <TableCell>{price_format}</TableCell>
+                                </TableRow>
+                              );
+                            }
+                          )}
+                        </TableBody>
+                      </Table>
+                    </Grid>
+                  </>
+                );
+              })}
             </Grid>
-            <NameValue name="Name" value={albumData.name} />
-            <NameValue
-              name="Status"
-              value={
-                <Typography
-                  variant="subtitle2"
-                  fontWeight={400}
-                  color={albumData.is_disabled ? "error" : "success"}
-                >
-                  {albumData.is_disabled_format}
-                </Typography>
-              }
-            />
-            <NameValue name="Description" value={albumData.description} />
-            <NameValue name="Total Files" value={photosData.length} />
-            <NameValue
-              name="Created"
-              value={format(albumData.created_at, "PP")}
-            />
-            <NameValue
-              name="Updated"
-              value={format(albumData.updated_at, "PP")}
-            />
-            <NameValue
-              name="Available Until"
-              value={format(courseData.end_date, "PP")}
-            />
-            <NameValue
-              name=""
-              value={
-                differenceInDays(courseData.end_date, new Date()) +
-                " days remaining"
-              }
-            />
-            <Grid size={{ xs: 12 }}>
-              <Divider />
-            </Grid>
-            <Grid size={{ xs: 12 }} sx={{ alignContent: "center" }}>
-              <Typography>
-                <b>Product Details</b>
-              </Typography>
-            </Grid>
-            <NameValue name="Name" value={albumData.product_type.name} />
-            <NameValue name="Type" value={albumData.product_type.type} />
-            <NameValue
-              name="Is Deliverable"
-              value={albumData.product_type.is_deliverable_format}
-            />
-            <NameValue
-              name="Price"
-              value={albumData.product_type.price_format}
-            />
-            <Grid size={{ xs: 12 }}>
-              <Divider />
-            </Grid>
-            <Grid size={{ xs: 12 }} sx={{ alignContent: "center" }}>
-              <Typography>
-                <b>Product Variations</b>
-              </Typography>
-            </Grid>
-            {albumData.product_variations_id.map((productVariationId) => {
-              const { name, description, options } =
-                productVariationsById[productVariationId];
-              return (
-                <>
-                  <NameValue name="Name" value={name} />
-                  <NameValue name="Description" value={description} />
-                  <Grid
-                    size={{ xs: 12 }}
-                    sx={{ mb: 1 }}
-                    component={Paper}
-                    variant="outlined"
-                  >
-                    <Table size="small">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Name</TableCell>
-                          <TableCell>Description</TableCell>
-                          <TableCell width={100}>Price</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {options.map(
-                          ({ id, name, description, price_format }) => {
-                            return (
-                              <TableRow key={id}>
-                                <TableCell>{name}</TableCell>
-                                <TableCell>{description}</TableCell>
-                                <TableCell>{price_format}</TableCell>
-                              </TableRow>
-                            );
-                          }
-                        )}
-                      </TableBody>
-                    </Table>
-                  </Grid>
-                </>
-              );
-            })}
           </Grid>
         </Grid>
-      </Grid>
+      </Paper>
     </OverlayBox>
   );
 }

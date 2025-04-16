@@ -31,7 +31,6 @@ function Class() {
     <Container maxWidth="lg">
       <Page
         isLoading={status === "pending"}
-        disabledLinkButton={true}
         links={[
           { href: "/photos", title: "Class" },
           {
@@ -39,10 +38,8 @@ function Class() {
             title: "Albums",
           },
         ]}
+        title="Albums"
       >
-        <Typography sx={{ fontSize: "28px" }} gutterBottom>
-          <b>Albums</b>
-        </Typography>
         <Paper
           variant="elevation"
           elevation={0}

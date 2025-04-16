@@ -10,17 +10,18 @@ import { CustomIcon } from "../Icons";
 import { GoogleIcon } from "../Icons/CustomIcon";
 
 //*mui
-import Toolbar from "@mui/material/Toolbar";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import LinearProgress from "@mui/material/LinearProgress";
-import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import ListItemIcon from "@mui/material/ListItemIcon";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -49,29 +50,38 @@ function AdminMain({ children }: { children: React.ReactNode }) {
   const { push } = useRouter();
 
   //*data
-  const { data, status } = useUser();
+  const { status } = useUser();
 
   if (status === "pending") return <LinearProgress />;
   else
     return (
       <Box>
-        <AppBar color="inherit" elevation={0} position="static">
-          <Toolbar>
-            <Stack direction="row" sx={{ width: "100%" }} spacing={2}>
-              <Box component="img" src={"/image/logo.png"} height={"30px"} />
-              <FlexBox />
-              {data?.role !== "USER" && (
-                <Button
-                  onClick={async () => {
-                    push("/photos");
-                  }}
-                >
-                  Go To User
-                </Button>
-              )}
-            </Stack>
-          </Toolbar>
-          <Divider />
+        <AppBar
+          color="inherit"
+          elevation={0}
+          position="static"
+          variant="outlined"
+        >
+          <Stack direction="row" sx={{ width: "100%" }} spacing={2}>
+            <Box
+              component="img"
+              src={"/image/logo.png"}
+              height={"30px"}
+              sx={{ alignSelf: "center", pl: 2 }}
+            />
+            <FlexBox />
+            <TabContext value={""}>
+              <TabList>
+                <Tab
+                  onClick={() => push("/photos")}
+                  disableRipple
+                  label="Go To User"
+                  value="/admin"
+                  sx={{ fontSize: "16px", height: "60px" }}
+                />
+              </TabList>
+            </TabContext>
+          </Stack>
         </AppBar>
         <Stack
           direction="row"
@@ -81,12 +91,9 @@ function AdminMain({ children }: { children: React.ReactNode }) {
           }}
         >
           <List
-            dense
-            disablePadding
-            component="nav"
             sx={{
               width: "100%",
-              maxWidth: 220,
+              maxWidth: 235,
               borderRight: "0.5px solid #e0e0e0",
               whiteSpace: "nowrap",
             }}
@@ -117,7 +124,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
               {
                 id: "general",
                 title: "General",
-                icon: "globe",
+                icon: "settings",
                 list: [
                   { title: "Setting", href: "/admin/general/setting" },
                   { title: "Banner", href: "/admin/banner" },
@@ -126,13 +133,13 @@ function AdminMain({ children }: { children: React.ReactNode }) {
               {
                 id: "sales_management",
                 title: "Sales Management",
-                icon: "point_of_sale",
+                icon: "monitoring",
                 list: [{ title: "Orders", href: "/admin/sales/order" }],
               },
               {
                 id: "account",
                 title: "Account",
-                icon: "person",
+                icon: "account_circle",
                 list: [
                   { title: "Profile", href: "/admin/account/profile" },
                   {
@@ -152,7 +159,6 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                       });
                     }}
                     key={index}
-                    disableGutters
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -161,16 +167,10 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                       pr: 2,
                     }}
                   >
-                    <CustomIcon
-                      icon={icon as GoogleIcon}
-                      fontSizeSx="14px"
-                      iconColor="black"
-                    />
-                    <ListItemText
-                      primary={<b>{title}</b>}
-                      sx={{ pl: 1 }}
-                      slotProps={{ primary: { variant: "body1" } }}
-                    />
+                    <ListItemIcon sx={{ minWidth: 0, pr: 1 }}>
+                      <CustomIcon icon={icon as GoogleIcon} />
+                    </ListItemIcon>
+                    <ListItemText primary={title} sx={{ pl: 1 }} />
                     <FlexBox />
                     <CustomIcon icon="keyboard_arrow_down" fontSizeSx="14px" />
                   </ListItemButton>
@@ -178,19 +178,16 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     {list.map(({ title, href }, index) => {
                       return (
                         <ListItemButton
-                          selected={href === pathname}
+                          selected={href === "/admin/" + pathname.split("/")[2]}
                           key={index}
                           onClick={() => push(href)}
                         >
                           <ListItemText
                             primary={title}
-                            sx={{ pl: 3 }}
+                            sx={{ pl: 5 }}
                             slotProps={{
                               primary: {
-                                variant: "body1",
-                                fontWeight: "inherit",
-                                color:
-                                  href === pathname ? "primary" : "inherit",
+                                color: "inherit",
                               },
                             }}
                           />
@@ -202,7 +199,9 @@ function AdminMain({ children }: { children: React.ReactNode }) {
               );
             })}
           </List>
-          <Box sx={{ overflow: "auto", width: "100%" }}>{children}</Box>
+          <Box sx={{ overflow: "auto", width: "100%", background: "#f8f8f8" }}>
+            {children}
+          </Box>
         </Stack>
       </Box>
     );

@@ -250,7 +250,6 @@ function PhotoCotent() {
     <Container maxWidth="lg">
       <Page
         isLoading={status === "pending"}
-        disabledLinkButton={true}
         links={[
           { href: "/photos", title: "Class" },
           {

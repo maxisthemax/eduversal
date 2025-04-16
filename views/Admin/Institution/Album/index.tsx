@@ -11,6 +11,7 @@ import AddEditAlbumDialog from "./AddEditAlbumDialog";
 import { useCustomDialog } from "@/components/Dialog";
 import AddEditPackagesDialog from "./AddEditPackagesDialog";
 import NoAccess from "@/components/Box/NoAccess";
+import { CustomIcon } from "@/components/Icons";
 
 //*data
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
@@ -22,8 +23,8 @@ import { useGetStaffAccess } from "@/data/admin/user/staff";
 //*mui
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
 
 function Album() {
   const access = useGetStaffAccess("restrict_content_album");
@@ -63,6 +64,8 @@ function Album() {
 
   return (
     <Page
+      title={`${courseData?.name} - ${institutionData?.type_name_format} (${academicYearData?.name})`}
+      subtitle={`Total Albums: ${albumsData.length}`}
       isLoading={
         institutionStatus === "pending" ||
         albumStatus === "pending" ||
@@ -81,20 +84,20 @@ function Album() {
         },
         {
           href: `/admin/institution/${institutionId}/${academicYearId}/${courseId}`,
-          title: courseData?.name,
+          title: `${courseData?.name}`,
         },
-      ]}
-      leftButton={[
-        <Typography key="title" variant="body1" color="inherit">
-          (Total Albums: <b>{albumsData.length}</b>)
-        </Typography>,
       ]}
       rightButton={[
         <PopupState key="menu" variant="popover" popupId="popup-menu">
           {(popupState) => (
             <>
-              <Button variant="contained" {...bindTrigger(popupState)}>
-                Menu
+              <Button
+                size="large"
+                variant="contained"
+                {...bindTrigger(popupState)}
+                endIcon={<CustomIcon icon="arrow_drop_down" />}
+              >
+                Manage
               </Button>
               <Popover
                 {...bindPopover(popupState)}
@@ -173,7 +176,7 @@ function Album() {
         </PopupState>,
       ]}
     >
-      {tabsComponent}
+      <Paper>{tabsComponent}</Paper>
     </Page>
   );
 }

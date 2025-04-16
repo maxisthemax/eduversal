@@ -250,7 +250,7 @@ function AddEditCourseDialogForm({
                   />
                 </Stack>
               </DialogContent>
-              <DialogActions>
+              <DialogActions sx={{ px: 4 }}>
                 <Button
                   disabled={isSubmitting}
                   onClick={() => {

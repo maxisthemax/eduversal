@@ -132,9 +132,10 @@ function AcademicYear() {
           <AddEditAcademicYearDialog key="addEditAcademicYearDialog" />
         ),
       ]}
+      title={institutionData?.name}
     >
       <DataGrid
-        gap={16}
+        gap={19.4}
         columns={columns}
         data={academicYearsData}
         firstToolbarText={

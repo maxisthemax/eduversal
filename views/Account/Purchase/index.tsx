@@ -73,7 +73,7 @@ function PurchaseComponent({ status }) {
   const { push } = useRouter();
 
   return (
-    <Stack sx={{ height: getFullHeightSize(30), p: 2 }} spacing={2}>
+    <Stack sx={{ height: getFullHeightSize(39.9), p: 2 }} spacing={2}>
       {orderDataByStatus.map(
         ({ cart, id, status, created_at, price, order_no }) => {
           return (

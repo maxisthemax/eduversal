@@ -108,10 +108,11 @@ function Institution() {
           <AddEditInstitutionDialog key="AddEditInstitutionDialog" />
         ),
       ]}
+      title="Institutions"
       isLoading={status === "pending"}
     >
       <DataGrid
-        gap={16}
+        gap={19.4}
         data={institutionsData}
         columns={columns}
         loading={status === "pending"}

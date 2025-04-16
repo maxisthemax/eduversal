@@ -86,6 +86,7 @@ function DataGrid({
           zIndex: 99,
           backgroundColor: "#fff", // keep it from overlapping with background
         },
+        backgroundColor: "#fff",
       }}
       loading={loading}
       disableColumnSelector

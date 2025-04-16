@@ -187,13 +187,16 @@ function Course() {
           })`,
         },
       ]}
+      title={`${academicYearData?.name ?? ""} (${
+        academicYearData?.year?.toString() ?? ""
+      })`}
       leftButton={[]}
       rightButton={[
         access.add && <AddEditCourseDialog key="addEditAcademicYearDialog" />,
       ]}
     >
       <DataGrid
-        gap={16}
+        gap={20}
         columns={columns}
         data={coursesData}
         firstToolbarText={

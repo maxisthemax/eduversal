@@ -78,7 +78,6 @@ function Album() {
     <Container maxWidth="lg">
       <Page
         isLoading={status === "pending"}
-        disabledLinkButton={true}
         links={[
           { href: "/photos", title: "Class" },
           {
@@ -90,10 +89,8 @@ function Album() {
             title: "Photos",
           },
         ]}
+        title="Photos"
       >
-        <Typography sx={{ fontSize: "28px" }} gutterBottom>
-          <b>Photos</b>
-        </Typography>
         <Paper
           variant="elevation"
           elevation={0}
