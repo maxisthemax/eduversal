@@ -313,7 +313,7 @@ function SelectPhotoDialogForm({
           )}
         </Stack>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ px: 4 }}>
         <Button variant="outlined" onClick={handleClose}>
           Back
         </Button>

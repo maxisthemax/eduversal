@@ -197,7 +197,7 @@ function AddEditPackagesDialogForm({
           )}
         </Grid>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ px: 4 }}>
         <Button
           onClick={() => {
             handleClose();
@@ -488,7 +488,7 @@ function AddEditPackagesDialogForm({
                   })}
                 </Stack>
               </DialogContent>
-              <DialogActions>
+              <DialogActions sx={{ px: 4 }}>
                 {access.delete && (
                   <Button
                     variant="contained"

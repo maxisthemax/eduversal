@@ -251,7 +251,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                     </Typography>
                   </Stack>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions sx={{ px: 4 }}>
                   <Button
                     onClick={() => {
                       popupState.close();

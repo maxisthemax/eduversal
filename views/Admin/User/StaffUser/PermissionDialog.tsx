@@ -245,7 +245,7 @@ function PermissionDialog({
                     })}
                   </Grid>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions sx={{ px: 4 }}>
                   {staffData?.permissions && (
                     <Button onClick={handleClose}>Cancel</Button>
                   )}

@@ -205,7 +205,7 @@ function DeleteDialogForm({
           </DialogContentText>
         )}
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ px: 4 }}>
         <Button onClick={handleClose}>Close</Button>
         {coursesData.length === 0 && (
           <Button

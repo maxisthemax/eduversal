@@ -160,7 +160,7 @@ function CustomDialog() {
           </>
         )}
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ px: 4 }}>
         {onSecondConfirm && (
           <LoadingButton
             variant="contained"
