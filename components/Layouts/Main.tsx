@@ -5,7 +5,6 @@ import { useQueryClient } from "@tanstack/react-query";
 
 //*components
 import { FlexBox } from "../Box";
-import { CustomIcon } from "@/components/Icons";
 
 //*mui
 import AppBar from "@mui/material/AppBar";
@@ -107,11 +106,6 @@ function Main({ children }: { children: React.ReactNode }) {
                         spacing={1}
                         sx={{ alignItems: "center" }}
                       >
-                        <CustomIcon
-                          icon="shopping_bag"
-                          fontSizeSx="20px"
-                          fill={pathName === "/cart" ? true : false}
-                        />
                         <Typography variant="inherit" sx={{ fontSize: "16px" }}>
                           Cart {`${cart?.length > 0 ? `(${cart.length})` : ""}`}
                         </Typography>
