@@ -39,6 +39,9 @@ import {
   useProductVariation,
 } from "@/data/admin/productVariation";
 
+//*helpers
+import { getFullHeightSize } from "@/helpers/stringHelpers";
+
 //*validation
 const validationSchema = yup.object({
   name: yup.string().required("Required"),
@@ -189,7 +192,7 @@ function AddEditProductVariationDialogForm({
                   ? "Edit Product Variation"
                   : "Add Product Variation"}
               </DialogTitle>
-              <DialogContent>
+              <DialogContent sx={{ height: getFullHeightSize(22) }}>
                 <Stack
                   p={1}
                   direction="column"
