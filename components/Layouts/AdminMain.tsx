@@ -91,6 +91,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
           }}
         >
           <List
+            disablePadding
             sx={{
               width: "100%",
               maxWidth: 235,
@@ -134,7 +135,13 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                 id: "sales_management",
                 title: "Sales Management",
                 icon: "monitoring",
-                list: [{ title: "Orders", href: "/admin/sales/order" }],
+                list: [
+                  { title: "Orders", href: "/admin/sales/order" },
+                  {
+                    title: "School Summary",
+                    href: "/admin/sales/schoolsummary",
+                  },
+                ],
               },
               {
                 id: "account",
