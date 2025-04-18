@@ -385,6 +385,8 @@ model OrderCart {
   quantity         Int
   userPackage      Json
   price            Float
+  shippingFee      Float?
+  created_at       DateTime     @default(now())
   total_price      Float?
 
   @@index([id])

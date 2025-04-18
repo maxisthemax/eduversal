@@ -84,7 +84,12 @@ function PurchaseDetails() {
       </Button>
       <Paper
         variant="outlined"
-        sx={{ px: 2, pt: 2, height: getFullHeightSize(20), overflowY: "auto" }}
+        sx={{
+          px: 2,
+          pt: 2,
+          height: getFullHeightSize(27.1),
+          overflowY: "auto",
+        }}
       >
         <Stack direction="column" spacing={2}>
           <Stack

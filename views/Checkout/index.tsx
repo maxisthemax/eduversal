@@ -2,10 +2,11 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 //*lodash
 import omit from "lodash/omit";
+import includes from "lodash/includes";
 
 //*components
 import { usePaymentStore } from "./PaymentDialog";
@@ -16,6 +17,9 @@ import {
   MobileNumberForm,
   StateSelectTextFieldForm,
 } from "@/components/Form";
+
+//*lodash
+import groupBy from "lodash/groupBy";
 
 //*mui
 import Grid from "@mui/material/Grid2";
@@ -84,6 +88,14 @@ function Checkout() {
     item.userPackage.items.some((item) => item.album.productTypeDeliverable)
   );
 
+  const cartGroup = useMemo(
+    () =>
+      groupBy(cart, (item) => {
+        return `${item.institutionName} - ${item.academicYearName} - ${item.courseName}`;
+      }),
+    [cart]
+  );
+
   const formik = useFormik({
     initialValues: {
       shipping_address: {
@@ -114,11 +126,33 @@ function Checkout() {
       setIsCheckout(true);
       if (payment_method === "") {
         toast("Payment method required.", { type: "error" });
+        setIsCheckout(false);
         return;
       }
 
+      const deliverableIndex = [];
+      cart.forEach((item) => {
+        let isDeliverable = false;
+        if (item.userPackage.packageId === "none") {
+          isDeliverable =
+            item.userPackage.items[0].album.productTypeDeliverable;
+        } else {
+          isDeliverable = item.userPackage.items.some(
+            (item) => item.album.productTypeDeliverable
+          );
+        }
+
+        if (isDeliverable) {
+          deliverableIndex.push(item.id);
+        }
+      });
+
       try {
         const newCart = cart.map((item) => {
+          const orderShippingFee = includes(deliverableIndex, item.id)
+            ? shipping_fee / deliverableIndex.length
+            : 0;
+
           if (item?.userPackage?.packageData?.expandedAlbums)
             return {
               ...item,
@@ -128,8 +162,14 @@ function Checkout() {
                   ...omit(item.userPackage.packageData, ["expandedAlbums"]),
                 },
               },
+              shippingFee: orderShippingFee,
+              created_at: new Date(),
             };
-          return item;
+          return {
+            ...item,
+            shippingFee: orderShippingFee,
+            created_at: new Date(),
+          };
         });
 
         //*Calculate total price
@@ -482,249 +522,304 @@ function Checkout() {
                   disableGutters
                   sx={{ marginLeft: "0px" }}
                 >
-                  {cart &&
-                    cart.length > 0 &&
-                    cart.map((item) => {
+                  {cartGroup &&
+                    Object.keys(cartGroup).length > 0 &&
+                    Object.keys(cartGroup).map((key: string) => {
+                      const cart = cartGroup[key];
                       return (
-                        <Box key={item.id}>
-                          <Grid container spacing={2}>
-                            <Grid size={{ xs: 2 }}>
-                              {item.userPackage.packageId === "none" ? (
-                                <Box
-                                  component="img"
-                                  src={
-                                    item.userPackage.items[0].photoUrl ?? null
-                                  }
-                                  sx={{
-                                    width: "100%",
-                                    aspectRatio: "1/1",
-                                    objectFit: "contain",
-                                    backgroundColor: "#f2f2f2",
-                                  }}
-                                />
-                              ) : (
-                                <Box
-                                  component="img"
-                                  src={
-                                    item.userPackage.packageData.preview_url ??
-                                    null
-                                  }
-                                  sx={{
-                                    width: "100%",
-                                    aspectRatio: "1/1",
-                                    objectFit: "contain",
-                                    backgroundColor: "#f2f2f2",
-                                  }}
-                                />
-                              )}
-                            </Grid>
-                            <Grid size={{ xs: "grow" }}>
-                              {item.userPackage.packageId === "none" ? (
-                                <Stack
-                                  direction="row"
-                                  sx={{
-                                    width: "100%",
-                                    justifyContent: "space-between",
-                                  }}
-                                >
-                                  <Stack spacing={0.5} sx={{ width: "100%" }}>
-                                    <Stack direction="row">
-                                      <Stack>
-                                        <Typography gutterBottom>
-                                          {item.userPackage.items[0]?.photoName}
-                                        </Typography>
-                                        {!item.userPackage.items[0].album
-                                          .productTypeDeliverable && (
-                                          <Typography
-                                            variant="inherit"
-                                            color="error"
-                                          >
-                                            Please note that this product is
-                                            available for collection at the
-                                            school by the assigned teacher.
-                                          </Typography>
-                                        )}
-                                      </Stack>
-                                      <FlexBox />
-                                      <Tooltip
-                                        placement="top"
-                                        title={`RM ${(
-                                          item.userPackage.packagePrice +
-                                          item.userPackage.itemsPrice
-                                        ).toFixed(2)} x ${item.quantity} = ${(
-                                          (item.userPackage.packagePrice +
-                                            item.userPackage.itemsPrice) *
-                                          item.quantity
-                                        ).toFixed(2)}`}
-                                      >
-                                        <Typography
-                                          sx={{ whiteSpace: "nowrap" }}
-                                        >
-                                          x {item.quantity}
-                                          &nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
-                                          {(
-                                            (item.userPackage.packagePrice +
-                                              item.userPackage.itemsPrice) *
-                                            item.quantity
-                                          ).toFixed(2)}
-                                        </Typography>
-                                      </Tooltip>
-                                    </Stack>
-                                    <Typography variant="body1">
-                                      Child: {item.userPackage.items[0]?.name}
-                                    </Typography>
-                                    {item.userPackage.items[0]?.productVariationOptions.map(
-                                      (option) =>
-                                        option.productVariationOptionId ? (
-                                          <Typography
-                                            variant="body2"
-                                            key={
-                                              option.productVariationOptionId
-                                            }
-                                          >
-                                            {option.productVariationName}
-                                            {option.productVariationDownloadable
-                                              ? ` (Includes Soft Copy)`
-                                              : ""}
-                                            :{" "}
-                                            {option.productVariationOptionName}
-                                          </Typography>
-                                        ) : (
-                                          <></>
-                                        )
-                                    )}
-                                  </Stack>
-                                </Stack>
-                              ) : (
-                                <Stack>
-                                  <Stack direction="row">
-                                    <Typography>
-                                      {item.userPackage.packageData?.name}{" "}
-                                      {item.userPackage.packageData
-                                        .is_downloadable
-                                        ? "(Downloadable)"
-                                        : ""}
-                                    </Typography>
-                                    <FlexBox />
-                                    <Tooltip
-                                      placement="top"
-                                      title={`RM ${(
-                                        item.userPackage.packagePrice +
-                                        item.userPackage.itemsPrice
-                                      ).toFixed(2)} x ${item.quantity} = ${(
-                                        (item.userPackage.packagePrice +
-                                          item.userPackage.itemsPrice) *
-                                        item.quantity
-                                      ).toFixed(2)}`}
-                                    >
-                                      <Typography sx={{ whiteSpace: "nowrap" }}>
-                                        x {item.quantity}
-                                        &nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
-                                        {(
-                                          (item.userPackage.packagePrice +
-                                            item.userPackage.itemsPrice) *
-                                          item.quantity
-                                        ).toFixed(2)}
-                                      </Typography>
-                                    </Tooltip>
-                                  </Stack>
-                                  <Typography variant="body1" gutterBottom>
-                                    Child: {item.userPackage.items[0]?.name}
-                                  </Typography>
-                                  <Stack spacing={2}>
-                                    {item.userPackage.items.map(
-                                      (
-                                        {
-                                          photoId,
-                                          photoName,
-                                          photoUrl,
-                                          productVariationOptions,
-                                          album,
-                                        },
-                                        index
-                                      ) => {
-                                        return (
-                                          <Grid
-                                            container
-                                            key={`${photoId}_${index}`}
-                                            spacing={2}
-                                          >
-                                            <Grid size={{ xs: 1.5 }}>
-                                              <Box
-                                                component="img"
-                                                src={photoUrl ?? null}
-                                                sx={{
-                                                  width: "100%",
-                                                  aspectRatio: "1/1",
-                                                  objectFit: "contain",
-                                                  backgroundColor: "#f2f2f2",
-                                                }}
-                                              />
-                                            </Grid>
-                                            <Grid size={{ xs: "grow" }}>
-                                              <Stack
-                                                direction="row"
-                                                sx={{
-                                                  justifyContent:
-                                                    "space-between",
-                                                }}
-                                              >
-                                                <Stack direction="column">
-                                                  <Stack>
-                                                    <Typography gutterBottom>
-                                                      {photoName}
-                                                    </Typography>
-                                                    {!album.productTypeDeliverable && (
-                                                      <Typography
-                                                        variant="inherit"
-                                                        color="error"
-                                                      >
-                                                        Please note that this
-                                                        product is available for
-                                                        collection at the school
-                                                        by the assigned teacher.
-                                                      </Typography>
-                                                    )}
-                                                  </Stack>
-                                                  {productVariationOptions.map(
-                                                    (option) => (
-                                                      <Typography
-                                                        variant="body2"
-                                                        key={
-                                                          option.productVariationOptionId
-                                                        }
-                                                      >
-                                                        {
-                                                          option.productVariationName
-                                                        }
-                                                        {option.productVariationDownloadable
-                                                          ? ` (Includes Soft Copy)`
-                                                          : ""}
-                                                        :{" "}
-                                                        {
-                                                          option.productVariationOptionName
-                                                        }
-                                                      </Typography>
-                                                    )
-                                                  )}
-                                                </Stack>
-                                              </Stack>
-                                            </Grid>
-                                          </Grid>
-                                        );
-                                      }
-                                    )}
-                                  </Stack>
-                                </Stack>
-                              )}
-                            </Grid>
-                          </Grid>
-                          <Box sx={{ pt: 2, pb: 2 }}>
-                            <Divider />
+                        <Box key={key}>
+                          <Box>
+                            <Typography variant="body1" gutterBottom>
+                              <b>{key}</b>
+                            </Typography>
                           </Box>
+                          {cart &&
+                            cart.length > 0 &&
+                            cart.map((item) => {
+                              return (
+                                <Box key={item.id}>
+                                  <Grid container spacing={2}>
+                                    <Grid size={{ xs: 2 }}>
+                                      {item.userPackage.packageId === "none" ? (
+                                        <Box
+                                          component="img"
+                                          src={
+                                            item.userPackage.items[0]
+                                              .photoUrl ?? null
+                                          }
+                                          sx={{
+                                            width: "100%",
+                                            aspectRatio: "1/1",
+                                            objectFit: "contain",
+                                            backgroundColor: "#f2f2f2",
+                                          }}
+                                        />
+                                      ) : (
+                                        <Box
+                                          component="img"
+                                          src={
+                                            item.userPackage.packageData
+                                              .preview_url ?? null
+                                          }
+                                          sx={{
+                                            width: "100%",
+                                            aspectRatio: "1/1",
+                                            objectFit: "contain",
+                                            backgroundColor: "#f2f2f2",
+                                          }}
+                                        />
+                                      )}
+                                    </Grid>
+                                    <Grid size={{ xs: "grow" }}>
+                                      {item.userPackage.packageId === "none" ? (
+                                        <Stack
+                                          direction="row"
+                                          sx={{
+                                            width: "100%",
+                                            justifyContent: "space-between",
+                                          }}
+                                        >
+                                          <Stack
+                                            spacing={0.5}
+                                            sx={{ width: "100%" }}
+                                          >
+                                            <Stack direction="row">
+                                              <Stack>
+                                                <Typography gutterBottom>
+                                                  {
+                                                    item.userPackage.items[0]
+                                                      ?.photoName
+                                                  }
+                                                </Typography>
+                                                {!item.userPackage.items[0]
+                                                  .album
+                                                  .productTypeDeliverable && (
+                                                  <Typography
+                                                    variant="inherit"
+                                                    color="error"
+                                                  >
+                                                    Please note that this
+                                                    product is available for
+                                                    collection at the school by
+                                                    the assigned teacher.
+                                                  </Typography>
+                                                )}
+                                              </Stack>
+                                              <FlexBox />
+                                              <Tooltip
+                                                placement="top"
+                                                title={`RM ${(
+                                                  item.userPackage
+                                                    .packagePrice +
+                                                  item.userPackage.itemsPrice
+                                                ).toFixed(2)} x ${
+                                                  item.quantity
+                                                } = ${(
+                                                  (item.userPackage
+                                                    .packagePrice +
+                                                    item.userPackage
+                                                      .itemsPrice) *
+                                                  item.quantity
+                                                ).toFixed(2)}`}
+                                              >
+                                                <Typography
+                                                  sx={{ whiteSpace: "nowrap" }}
+                                                >
+                                                  x {item.quantity}
+                                                  &nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
+                                                  {(
+                                                    (item.userPackage
+                                                      .packagePrice +
+                                                      item.userPackage
+                                                        .itemsPrice) *
+                                                    item.quantity
+                                                  ).toFixed(2)}
+                                                </Typography>
+                                              </Tooltip>
+                                            </Stack>
+                                            <Typography variant="body1">
+                                              Child:{" "}
+                                              {item.userPackage.items[0]?.name}
+                                            </Typography>
+                                            {item.userPackage.items[0]?.productVariationOptions.map(
+                                              (option) =>
+                                                option.productVariationOptionId ? (
+                                                  <Typography
+                                                    variant="body2"
+                                                    key={
+                                                      option.productVariationOptionId
+                                                    }
+                                                  >
+                                                    {
+                                                      option.productVariationName
+                                                    }
+                                                    {option.productVariationDownloadable
+                                                      ? ` (Includes Soft Copy)`
+                                                      : ""}
+                                                    :{" "}
+                                                    {
+                                                      option.productVariationOptionName
+                                                    }
+                                                  </Typography>
+                                                ) : (
+                                                  <></>
+                                                )
+                                            )}
+                                          </Stack>
+                                        </Stack>
+                                      ) : (
+                                        <Stack>
+                                          <Stack direction="row">
+                                            <Typography>
+                                              {
+                                                item.userPackage.packageData
+                                                  ?.name
+                                              }{" "}
+                                              {item.userPackage.packageData
+                                                .is_downloadable
+                                                ? "(Downloadable)"
+                                                : ""}
+                                            </Typography>
+                                            <FlexBox />
+                                            <Tooltip
+                                              placement="top"
+                                              title={`RM ${(
+                                                item.userPackage.packagePrice +
+                                                item.userPackage.itemsPrice
+                                              ).toFixed(2)} x ${
+                                                item.quantity
+                                              } = ${(
+                                                (item.userPackage.packagePrice +
+                                                  item.userPackage.itemsPrice) *
+                                                item.quantity
+                                              ).toFixed(2)}`}
+                                            >
+                                              <Typography
+                                                sx={{ whiteSpace: "nowrap" }}
+                                              >
+                                                x {item.quantity}
+                                                &nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
+                                                {(
+                                                  (item.userPackage
+                                                    .packagePrice +
+                                                    item.userPackage
+                                                      .itemsPrice) *
+                                                  item.quantity
+                                                ).toFixed(2)}
+                                              </Typography>
+                                            </Tooltip>
+                                          </Stack>
+                                          <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                          >
+                                            Child:{" "}
+                                            {item.userPackage.items[0]?.name}
+                                          </Typography>
+                                          <Stack spacing={2}>
+                                            {item.userPackage.items.map(
+                                              (
+                                                {
+                                                  photoId,
+                                                  photoName,
+                                                  photoUrl,
+                                                  productVariationOptions,
+                                                  album,
+                                                },
+                                                index
+                                              ) => {
+                                                return (
+                                                  <Grid
+                                                    container
+                                                    key={`${photoId}_${index}`}
+                                                    spacing={2}
+                                                  >
+                                                    <Grid size={{ xs: 1.5 }}>
+                                                      <Box
+                                                        component="img"
+                                                        src={photoUrl ?? null}
+                                                        sx={{
+                                                          width: "100%",
+                                                          aspectRatio: "1/1",
+                                                          objectFit: "contain",
+                                                          backgroundColor:
+                                                            "#f2f2f2",
+                                                        }}
+                                                      />
+                                                    </Grid>
+                                                    <Grid size={{ xs: "grow" }}>
+                                                      <Stack
+                                                        direction="row"
+                                                        sx={{
+                                                          justifyContent:
+                                                            "space-between",
+                                                        }}
+                                                      >
+                                                        <Stack direction="column">
+                                                          <Stack>
+                                                            <Typography
+                                                              gutterBottom
+                                                            >
+                                                              {photoName}
+                                                            </Typography>
+                                                            {!album.productTypeDeliverable && (
+                                                              <Typography
+                                                                variant="inherit"
+                                                                color="error"
+                                                              >
+                                                                Please note that
+                                                                this product is
+                                                                available for
+                                                                collection at
+                                                                the school by
+                                                                the assigned
+                                                                teacher.
+                                                              </Typography>
+                                                            )}
+                                                          </Stack>
+                                                          {productVariationOptions.map(
+                                                            (option) => (
+                                                              <Typography
+                                                                variant="body2"
+                                                                key={
+                                                                  option.productVariationOptionId
+                                                                }
+                                                              >
+                                                                {
+                                                                  option.productVariationName
+                                                                }
+                                                                {option.productVariationDownloadable
+                                                                  ? ` (Includes Soft Copy)`
+                                                                  : ""}
+                                                                :{" "}
+                                                                {
+                                                                  option.productVariationOptionName
+                                                                }
+                                                              </Typography>
+                                                            )
+                                                          )}
+                                                        </Stack>
+                                                      </Stack>
+                                                    </Grid>
+                                                  </Grid>
+                                                );
+                                              }
+                                            )}
+                                          </Stack>
+                                        </Stack>
+                                      )}
+                                    </Grid>
+                                  </Grid>
+                                  <Box sx={{ pt: 2, pb: 2 }}>
+                                    <Divider />
+                                  </Box>
+                                </Box>
+                              );
+                            })}
                         </Box>
                       );
                     })}
+
                   <Grid
                     container
                     sx={{
