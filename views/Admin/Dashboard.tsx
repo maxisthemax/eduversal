@@ -15,6 +15,7 @@ import startCase from "lodash/startCase";
 import { FlexBox, Page } from "@/components/Box";
 import YearAndMonthPopover from "@/components/YearAndMonthPopover";
 import YearPopover from "@/components/YearPopover";
+import NoAccess from "@/components/Box/NoAccess";
 
 //*mui
 import Grid from "@mui/material/Grid2";
@@ -28,7 +29,11 @@ import Button from "@mui/material/Button";
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
 
+//*data
+import { useGetStaffAccess } from "@/data/admin/user/staff";
+
 function Dashboard() {
+  const access = useGetStaffAccess("dashboard");
   const [dateType, setDateType] = useState({
     sales: "month",
     institutions: "month",
@@ -92,6 +97,8 @@ function Dashboard() {
           totalUsersDate
         )}&to_date=${endOfYear(totalUsersDate)}`
   );
+
+  if (!access.view) return <NoAccess />;
 
   return (
     <Page title="Dashboard">
