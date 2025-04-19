@@ -11,20 +11,24 @@ export type MyDatePickerProps = DatePickerProps<Date> & {
   helperText?: string;
   fullWidth?: boolean;
   mode?: "start" | "end";
+  format?: string;
+  width?: string;
 };
 
 function DatePicker(props: MyDatePickerProps) {
-  const { mode = "start", label } = props;
+  const { mode = "start", label, width } = props;
+  const format = props.format || "dd/MM/yyyy";
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <MuiDatePicker
-        format="dd/MM/yyyy"
+        format={format}
         slotProps={{
           textField: {
             error: props.error,
             helperText: props.helperText,
             fullWidth: props?.fullWidth !== undefined ? props.fullWidth : true,
+            sx: width ? { width } : {},
           },
         }}
         {...props}

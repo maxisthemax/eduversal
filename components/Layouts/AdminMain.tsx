@@ -101,6 +101,12 @@ function AdminMain({ children }: { children: React.ReactNode }) {
           >
             {[
               {
+                id: "dashboard",
+                title: "Dashboard",
+                icon: "dashboard",
+                href: "/admin",
+              },
+              {
                 id: "restrictContent",
                 title: "Restrict Content",
                 icon: "lock",
@@ -155,15 +161,18 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                   },
                 ],
               },
-            ].map(({ title, list, id, icon }, index) => {
+            ].map(({ title, list, id, icon, href }, index) => {
               return (
                 <Box key={id}>
                   <ListItemButton
+                    selected={pathname === href}
                     onClick={() => {
-                      setOpen({
-                        ...open,
-                        [id]: !open[id],
-                      });
+                      if (href) push(href);
+                      else
+                        setOpen({
+                          ...open,
+                          [id]: !open[id],
+                        });
                     }}
                     key={index}
                     sx={{
@@ -179,10 +188,15 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     </ListItemIcon>
                     <ListItemText primary={title} sx={{ pl: 1 }} />
                     <FlexBox />
-                    <CustomIcon icon="keyboard_arrow_down" fontSizeSx="14px" />
+                    {list && (
+                      <CustomIcon
+                        icon="keyboard_arrow_down"
+                        fontSizeSx="14px"
+                      />
+                    )}
                   </ListItemButton>
                   <Collapse in={open[id]}>
-                    {list.map(({ title, href }, index) => {
+                    {list?.map(({ title, href }, index) => {
                       return (
                         <ListItemButton
                           selected={href === "/admin/" + pathname.split("/")[2]}

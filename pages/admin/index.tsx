@@ -1,8 +1,7 @@
-//*mui
-import Box from "@mui/material/Box";
+import DashboardView from "@/views/Admin/Dashboard";
 
-function Admin() {
-  return <Box></Box>;
+function Dashboard() {
+  return <DashboardView />;
 }
 
-export default Admin;
+export default Dashboard;
