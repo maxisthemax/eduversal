@@ -64,7 +64,7 @@ function Album() {
 
   return (
     <Page
-      title={`${courseData?.name} - ${institutionData?.type_name_format} (${academicYearData?.name})`}
+      title={`${courseData?.name} - ${courseData?.standard_name_format} (${academicYearData?.name})`}
       subtitle={`Total Albums: ${albumsData.length}`}
       isLoading={
         institutionStatus === "pending" ||

@@ -124,15 +124,22 @@ function CartDetails({ cart }) {
                             </Typography>
                             <Stack spacing={2}>
                               {item.userPackage.items.map(
-                                ({
-                                  photoId,
-                                  photoName,
-                                  photoUrl,
-                                  productVariationOptions,
-                                  album,
-                                }) => {
+                                (
+                                  {
+                                    photoId,
+                                    photoName,
+                                    photoUrl,
+                                    productVariationOptions,
+                                    album,
+                                  },
+                                  index
+                                ) => {
                                   return (
-                                    <Grid container key={photoId} spacing={2}>
+                                    <Grid
+                                      container
+                                      key={photoId + index}
+                                      spacing={2}
+                                    >
                                       <Grid size={{ xs: 1.5 }}>
                                         <Box
                                           component="img"
