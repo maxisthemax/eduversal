@@ -186,6 +186,8 @@ function CustomDialog() {
         <FlexBox />
         {allowClose && (
           <Button
+            sx={{ mr: 1 }}
+            variant="outlined"
             disabled={isConfirming}
             onClick={() => {
               handleCloseDialog();

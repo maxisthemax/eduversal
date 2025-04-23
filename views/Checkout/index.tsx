@@ -269,12 +269,21 @@ function Checkout() {
             >
               <Grid
                 size={{ xs: 6 }}
-                sx={{ pt: 4, pl: 4, pr: 4, height: "100%", overflow: "auto" }}
+                sx={{
+                  height: "100%",
+                }}
               >
                 <Container
                   maxWidth="sm"
                   disableGutters
-                  sx={{ marginRight: "0px" }}
+                  sx={{
+                    marginRight: "0px",
+                    height: "100%",
+                    overflowY: "auto",
+                    pt: 2,
+                    pl: 2,
+                    pr: 2,
+                  }}
                 >
                   <Stack sx={{ width: "100%" }} spacing={4}>
                     <Box>
@@ -298,7 +307,11 @@ function Checkout() {
                             ? "primary"
                             : "inherit"
                         }
-                        sx={{ p: 2, justifyContent: "space-between" }}
+                        sx={{
+                          p: 2,
+                          justifyContent: "space-between",
+                          textTransform: "inherit",
+                        }}
                       >
                         <Stack
                           direction="row"
@@ -316,7 +329,7 @@ function Checkout() {
                               },
                             }}
                             sx={{ justifyItems: "start" }}
-                            primary={"Pick up in store"}
+                            primary={"Pick Up In Store"}
                             secondary={"Collect From Teacher"}
                           />
                         </Stack>
@@ -334,7 +347,11 @@ function Checkout() {
                           }
                           fullWidth
                           variant="outlined"
-                          sx={{ p: 2, justifyContent: "space-between" }}
+                          sx={{
+                            p: 2,
+                            justifyContent: "space-between",
+                            textTransform: "inherit",
+                          }}
                         >
                           <Stack
                             direction="row"
@@ -447,7 +464,11 @@ function Checkout() {
                               ? "primary"
                               : "inherit"
                           }
-                          sx={{ p: 2, justifyContent: "space-between" }}
+                          sx={{
+                            p: 2,
+                            justifyContent: "space-between",
+                            textTransform: "inherit",
+                          }}
                         >
                           <Stack
                             direction="row"
@@ -877,7 +898,9 @@ function Checkout() {
                         direction="row"
                         sx={{ justifyContent: "space-between" }}
                       >
-                        <Typography>Total</Typography>
+                        <Typography>
+                          <b>Total</b>
+                        </Typography>
                         <Typography>
                           RM{" "}
                           {(
@@ -906,27 +929,25 @@ function Checkout() {
           width: "100%",
         }}
       >
-        <Container maxWidth="lg">
-          <Stack
-            spacing={2}
+        <Stack
+          spacing={2}
+          sx={{
+            background: "#F8F8F8",
+            width: "100%",
+            pb: 2,
+          }}
+        >
+          <Divider />
+          <Typography
+            variant="body1"
             sx={{
-              background: "#F8F8F8",
-              width: "100%",
-              pb: 2,
+              textAlign: "center",
+              color: "#6b6f74",
             }}
           >
-            <Divider />
-            <Typography
-              variant="body1"
-              sx={{
-                textAlign: "center",
-                color: "#6b6f74",
-              }}
-            >
-              {`Copyright © ${new Date().getFullYear()} Photoversal Studio. All rights reserved.`}
-            </Typography>
-          </Stack>
-        </Container>
+            {`Copyright © ${new Date().getFullYear()} Photoversal Studio. All rights reserved.`}
+          </Typography>
+        </Stack>
       </Box>
     </>
   );

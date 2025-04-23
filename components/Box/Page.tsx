@@ -24,6 +24,7 @@ function Page({
   title,
   subtitle,
   isLoading = false,
+  backgroundColor = "#F8F8F8",
   sx,
 }: {
   title?: string;
@@ -34,12 +35,15 @@ function Page({
   links?: { href: string; title: string }[];
   isLoading?: boolean;
   sx?: SxProps<Theme>;
+  backgroundColor?: string;
 }) {
   const pathName = usePathname();
   const findCurrentPathname = find(links, { href: pathName });
 
   return (
-    <Box sx={{ pl: 2, pr: 2, pt: 1, pb: 1, background: "#F8F8F8", ...sx }}>
+    <Box
+      sx={{ pl: 2, pr: 2, pt: 1, pb: 1, background: backgroundColor, ...sx }}
+    >
       <Stack
         direction="row"
         spacing={1}

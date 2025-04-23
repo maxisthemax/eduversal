@@ -134,27 +134,25 @@ function Main({ children }: { children: React.ReactNode }) {
             width: "100%",
           }}
         >
-          <Container maxWidth="lg">
-            <Stack
-              spacing={2}
+          <Stack
+            spacing={2}
+            sx={{
+              background: "#F8F8F8",
+              width: "100%",
+              pb: 2,
+            }}
+          >
+            <Divider />
+            <Typography
+              variant="body1"
               sx={{
-                background: "#F8F8F8",
-                width: "100%",
-                pb: 2,
+                textAlign: "center",
+                color: "#6b6f74",
               }}
             >
-              <Divider />
-              <Typography
-                variant="body1"
-                sx={{
-                  textAlign: "center",
-                  color: "#6b6f74",
-                }}
-              >
-                {`Copyright © ${new Date().getFullYear()} Photoversal Studio. All rights reserved.`}
-              </Typography>
-            </Stack>
-          </Container>
+              {`Copyright © ${new Date().getFullYear()} Photoversal Studio. All rights reserved.`}
+            </Typography>
+          </Stack>
         </Box>
       </Box>
     );

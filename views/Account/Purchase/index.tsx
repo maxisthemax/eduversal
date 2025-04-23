@@ -61,7 +61,11 @@ function Purchase() {
   return orderId ? (
     <PurchaseDetails />
   ) : (
-    <Page title="Purchase" subtitle="Manage your purchase">
+    <Page
+      title="Purchase"
+      subtitle="Manage your purchase"
+      backgroundColor="white"
+    >
       {tabsComponent}
     </Page>
   );
@@ -77,7 +81,7 @@ function PurchaseComponent({ status }) {
       {orderDataByStatus.map(
         ({ cart, id, status, created_at, price, order_no }) => {
           return (
-            <Paper key={id}>
+            <Paper key={id} variant="outlined">
               <Stack
                 direction="row"
                 sx={{

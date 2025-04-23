@@ -7,6 +7,7 @@ import Profile from "./Profile";
 import ChangePassword from "./ChangePassword";
 import { CustomIcon } from "@/components/Icons";
 import { GoogleIcon } from "@/components/Icons/CustomIcon";
+import { useCustomDialog } from "@/components/Dialog/CustomDialog";
 
 //*mui
 import Grid from "@mui/material/Grid2";
@@ -17,12 +18,18 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import LinearProgress from "@mui/material/LinearProgress";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 
 //*data
 import { useUser } from "@/data/user";
+
+//*utils
+import axios from "@/utils/axios";
 
 // Define types for menu items
 type MenuItem =
@@ -40,7 +47,6 @@ const menuItems: MenuItem[] = [
     icon: "lock",
     route: "change-password",
   },
-  { type: "divider" },
   { type: "header", text: "MARKETPLACE" },
   { type: "button", text: "Purchase", icon: "work", route: "purchase" },
   {
@@ -52,6 +58,7 @@ const menuItems: MenuItem[] = [
 ];
 
 function Account() {
+  const { handleOpenDialog } = useCustomDialog();
   const { status } = useUser();
   const { push } = useRouter();
   const { page } = useParams();
@@ -66,58 +73,93 @@ function Account() {
   };
 
   return (
-    <Container maxWidth="lg" disableGutters>
-      <Grid container>
-        <Grid
-          size={{ xs: 2 }}
-          sx={{
-            borderRight: "0.5px solid #B8BDC4",
-            pl: 2,
-            pr: 2,
-            height: getFullHeightSize(17),
-            overflow: "auto",
-          }}
-        >
-          <List>
-            {menuItems.map((item, index) => {
-              if (item.type === "header") {
-                return (
-                  <ListItem key={index}>
-                    <ListItemText
-                      primary={item.text}
-                      slotProps={{ primary: { sx: { fontWeight: 300 } } }}
-                    />
-                  </ListItem>
-                );
-              } else if (item.type === "button") {
-                return (
-                  <ListItemButton
-                    key={index}
-                    selected={page === item.route}
-                    onClick={() => {
-                      push(item.route);
-                    }}
-                  >
-                    <ListItemIcon sx={{ minWidth: 0, pr: 1 }}>
-                      <CustomIcon icon={item.icon} />
-                    </ListItemIcon>
-                    <ListItemText primary={item.text} />
-                  </ListItemButton>
-                );
-              } else {
-                return <ListItem key={index} divider />;
-              }
-            })}
-          </List>
+    <Box
+      sx={{
+        background: "linear-gradient(90deg, #f8f8f8 50%, white 50%)",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <Container maxWidth="lg" disableGutters sx={{ backgroundColor: "white" }}>
+        <Grid container sx={{ backgroud: "white" }}>
+          <Grid
+            size={{ xs: 3 }}
+            sx={{
+              borderRight: "0.5px solid #B8BDC4",
+              pl: 2,
+              pr: 2,
+              height: getFullHeightSize(15),
+              overflow: "auto",
+            }}
+          >
+            <List>
+              {menuItems.map((item, index) => {
+                if (item.type === "header") {
+                  return (
+                    <ListItem key={index}>
+                      <ListItemText
+                        primary={item.text}
+                        slotProps={{
+                          primary: {
+                            color: "text.secondary",
+                          },
+                        }}
+                      />
+                    </ListItem>
+                  );
+                } else if (item.type === "button") {
+                  return (
+                    <ListItemButton
+                      key={index}
+                      selected={page === item.route}
+                      onClick={() => {
+                        push(item.route);
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 0, pr: 1 }}>
+                        <CustomIcon icon={item.icon} />
+                      </ListItemIcon>
+                      <ListItemText primary={<b>{item.text}</b>} />
+                    </ListItemButton>
+                  );
+                } else {
+                  return <ListItem key={index} divider />;
+                }
+              })}
+              <Box sx={{ py: 2 }}>
+                <Divider />
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    handleOpenDialog({
+                      title: "Logout",
+                      description: "Are you sure you want to logout?",
+                      onConfirm: async () => {
+                        await axios.post("auth/signOut");
+                        push("/signin");
+                      },
+                    });
+                  }}
+                >
+                  Logout
+                </Button>
+              </Box>
+            </List>
+          </Grid>
+          <Grid
+            size={{ xs: "grow" }}
+            sx={{
+              overflow: "auto",
+              height: getFullHeightSize(15),
+            }}
+          >
+            {pageComponent[page as string]}
+          </Grid>
         </Grid>
-        <Grid
-          size={{ xs: 10 }}
-          sx={{ overflow: "auto", height: getFullHeightSize(17) }}
-        >
-          {pageComponent[page as string]}
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 export default Account;

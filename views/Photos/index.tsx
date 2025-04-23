@@ -17,7 +17,6 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import Fab from "@mui/material/Fab";
-import Collapse from "@mui/material/Collapse";
 
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
@@ -133,14 +132,7 @@ function UserCourseItem({ userCourse }) {
             height: "119px",
           }}
         >
-          <Collapse
-            in={isHovered}
-            timeout={{ appear: 500, enter: 500, exit: 0 }}
-            orientation="horizontal"
-            mountOnEnter
-            unmountOnExit
-            collapsedSize={1}
-          >
+          {isHovered ? (
             <Box
               id="class-hover"
               component="img"
@@ -149,15 +141,7 @@ function UserCourseItem({ userCourse }) {
               width={"119px"}
               sx={{ height: "119px", width: "119px" }}
             />
-          </Collapse>
-          <Collapse
-            in={!isHovered}
-            timeout={{ appear: 200, enter: 200, exit: 0 }}
-            orientation="horizontal"
-            mountOnEnter
-            unmountOnExit
-            collapsedSize={1}
-          >
+          ) : (
             <Box
               id="class"
               component="img"
@@ -166,9 +150,8 @@ function UserCourseItem({ userCourse }) {
               width={"119px"}
               sx={{ height: "119px", width: "119px" }}
             />
-          </Collapse>
+          )}
         </Box>
-
         <Stack>
           <Typography variant="body1">{academic_year_name}</Typography>
           <Typography variant="h6">

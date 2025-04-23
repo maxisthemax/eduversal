@@ -223,6 +223,7 @@ function AddEditUserCourseDialogForm({
           </DialogContent>
           <DialogActions sx={{ px: 2, pb: 2 }}>
             <Button
+              variant="outlined"
               onClick={() =>
                 mode === "add" ? setData(undefined) : handleClose()
               }

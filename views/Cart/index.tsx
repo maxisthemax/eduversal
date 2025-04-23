@@ -24,6 +24,7 @@ import Grid from "@mui/material/Grid2";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Paper from "@mui/material/Paper";
+import Link from "@mui/material/Link";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -139,13 +140,14 @@ function Cart() {
                               />
                             )}
                           </Grid>
-                          <Grid size={{ xs: 7.5 }}>
+                          <Grid size={{ xs: 7 }}>
                             {item.userPackage.packageId === "none" ? (
                               <Stack
                                 direction="row"
                                 sx={{
                                   width: "100%",
                                   justifyContent: "space-between",
+                                  height: "100%",
                                 }}
                               >
                                 <Stack spacing={0.5}>
@@ -173,19 +175,6 @@ function Cart() {
                                       )
                                   )}
                                 </Stack>
-                                <Box>
-                                  <Button
-                                    onClick={() => {
-                                      setUserPackage({
-                                        ...item.userPackage,
-                                        cartId: item.id,
-                                      });
-                                      push(item.packageUrl);
-                                    }}
-                                  >
-                                    Edit
-                                  </Button>
-                                </Box>
                               </Stack>
                             ) : (
                               <Stack>
@@ -287,12 +276,33 @@ function Cart() {
                               </Stack>
                             )}
                           </Grid>
-                          <Grid size={{ xs: 3 }}>
+                          <Grid size={{ xs: 3.5 }}>
                             <Stack
                               direction="row"
-                              sx={{ justifyContent: "space-between" }}
+                              sx={{
+                                alignItems: "center",
+                                width: "100%",
+                                height: "100%",
+                                justifyContent: "space-between",
+                              }}
+                              spacing={4}
                             >
-                              <Stack>
+                              <Link
+                                sx={{ pb: 6 }}
+                                typography={"body1"}
+                                underline="none"
+                                href="#"
+                                onClick={() => {
+                                  setUserPackage({
+                                    ...item.userPackage,
+                                    cartId: item.id,
+                                  });
+                                  push(item.packageUrl);
+                                }}
+                              >
+                                Edit
+                              </Link>
+                              <Stack spacing={2}>
                                 <TextField
                                   type="number"
                                   value={item.quantity}
@@ -304,8 +314,20 @@ function Cart() {
                                       Number(e.target.value)
                                     );
                                   }}
+                                  slotProps={{
+                                    input: {
+                                      sx: {
+                                        height: "55px",
+                                        fontSize: "16px",
+                                        py: "18px",
+                                      },
+                                    },
+                                  }}
                                 />
-                                <Button
+                                <Link
+                                  typography={"body1"}
+                                  underline="none"
+                                  href="#"
                                   onClick={() => {
                                     handleOpenDialog({
                                       allowOutsideClose: false,
@@ -318,7 +340,7 @@ function Cart() {
                                   }}
                                 >
                                   Remove
-                                </Button>
+                                </Link>
                               </Stack>
                               <Tooltip
                                 placement="top"
@@ -333,7 +355,7 @@ function Cart() {
                               >
                                 <Typography
                                   variant="h6"
-                                  sx={{ whiteSpace: "nowrap" }}
+                                  sx={{ whiteSpace: "nowrap", pb: 6 }}
                                 >
                                   RM{" "}
                                   {(
@@ -357,7 +379,7 @@ function Cart() {
           })}
         <Grid container spacing={4}>
           <Grid size={{ xs: 9 }}></Grid>
-          <Grid size={{ xs: 3 }}>
+          <Grid size={{ xs: 3 }} sx={{ pl: 4 }}>
             <Stack
               direction="row"
               sx={{ justifyContent: "space-between" }}

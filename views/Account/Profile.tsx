@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { Formik, Form } from "formik";
-import { useRouter } from "next/navigation";
 
 //*components
 import { FlexBox, OverlayBox, Page } from "@/components/Box";
@@ -9,7 +8,6 @@ import {
   StateSelectTextFieldForm,
   TextFieldForm,
 } from "@/components/Form";
-import { useCustomDialog } from "@/components/Dialog/CustomDialog";
 
 //*mui
 import Stack from "@mui/material/Stack";
@@ -21,9 +19,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 //*data
 import { useUser } from "@/data/user";
 
-//*utils
-import axios from "@/utils/axios";
-
 const validationSchema = yup.object({
   first_name: yup.string().required("First Name is required"),
   last_name: yup.string().required("Last Name is required"),
@@ -34,15 +29,17 @@ const validationSchema = yup.object({
   city: yup.string().required("City is required"),
 });
 
-function Profile({ mode = "user" }: { mode?: "admin" | "user" }) {
-  const { push } = useRouter();
+function Profile() {
   const { data, updateUserData, status } = useUser();
-  const { handleOpenDialog } = useCustomDialog();
 
   if (status === "pending") return <LinearProgress />;
 
   return (
-    <Page title="Profile" subtitle="Manage and protect your account">
+    <Page
+      title="Profile"
+      subtitle="Manage and protect your account"
+      backgroundColor="white"
+    >
       <Formik
         initialValues={{
           first_name: data.first_name,
@@ -160,21 +157,6 @@ function Profile({ mode = "user" }: { mode?: "admin" | "user" }) {
                       />
                     </Stack>
                     <Stack direction={"row"} spacing={2}>
-                      <Button
-                        onClick={() => {
-                          handleOpenDialog({
-                            title: "Logout",
-                            description: "Are you sure you want to logout?",
-                            onConfirm: async () => {
-                              await axios.post("auth/signOut");
-                              if (mode === "user") push("/signin");
-                              else push("/admin/signin");
-                            },
-                          });
-                        }}
-                      >
-                        Logout
-                      </Button>
                       <FlexBox />
                       <Button
                         fullWidth={false}

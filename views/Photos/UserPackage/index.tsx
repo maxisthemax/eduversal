@@ -278,9 +278,8 @@ function UserPackages() {
 
               <FlexBox />
               <Typography variant="h6" sx={{ color: "black" }}>
-                Total:{" "}
                 <b>
-                  RM
+                  Total: RM
                   {(userPackage.packagePrice + userPackage.itemsPrice).toFixed(
                     2
                   )}

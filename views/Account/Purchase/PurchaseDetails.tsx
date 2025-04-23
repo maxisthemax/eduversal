@@ -73,12 +73,13 @@ function PurchaseDetails() {
   if (status === "pending") return <LinearProgress />;
 
   return (
-    <Page>
+    <Page backgroundColor="white">
       <Button
         onClick={() => {
           push("/account/purchase");
         }}
-        sx={{ pb: 1 }}
+        sx={{ mb: 1 }}
+        variant="outlined"
       >
         Back
       </Button>
@@ -87,7 +88,7 @@ function PurchaseDetails() {
         sx={{
           px: 2,
           pt: 2,
-          height: getFullHeightSize(27.1),
+          height: getFullHeightSize(27.8),
           overflowY: "auto",
         }}
       >

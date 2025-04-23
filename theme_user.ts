@@ -38,12 +38,8 @@ const baseTheme: ThemeOptions = {
     MuiButton: {
       defaultProps: {
         sx: {
+          py: 1,
           textTransform: "none",
-          fontSize: "16px",
-          height: "55px",
-          minWidth: "120px",
-          px: "36px",
-          py: "18px",
         },
         disableElevation: true,
       },
