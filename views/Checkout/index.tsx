@@ -902,17 +902,19 @@ function Checkout() {
                           <b>Total</b>
                         </Typography>
                         <Typography>
-                          RM{" "}
-                          {(
-                            cart?.reduce(
-                              (acc, item) =>
-                                acc +
-                                (item.userPackage.itemsPrice +
-                                  item.userPackage.packagePrice) *
-                                  item.quantity,
-                              0
-                            ) + values.shipping_fee
-                          ).toFixed(2)}
+                          <b>
+                            RM{" "}
+                            {(
+                              cart?.reduce(
+                                (acc, item) =>
+                                  acc +
+                                  (item.userPackage.itemsPrice +
+                                    item.userPackage.packagePrice) *
+                                    item.quantity,
+                                0
+                              ) + values.shipping_fee
+                            ).toFixed(2)}
+                          </b>
                         </Typography>
                       </Stack>
                     </Grid>
