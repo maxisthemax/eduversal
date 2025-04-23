@@ -189,15 +189,12 @@ function Cart() {
                                 </Typography>
                                 <Stack spacing={2}>
                                   {item.userPackage.items.map(
-                                    (
-                                      {
-                                        photoId,
-                                        photoName,
-                                        photoUrl,
-                                        productVariationOptions,
-                                      },
-                                      index
-                                    ) => {
+                                    ({
+                                      photoId,
+                                      photoName,
+                                      photoUrl,
+                                      productVariationOptions,
+                                    }) => {
                                       return (
                                         <Grid
                                           container
@@ -252,20 +249,6 @@ function Cart() {
                                                   )
                                                 )}
                                               </Stack>
-                                              <Box>
-                                                <Button
-                                                  onClick={() => {
-                                                    setUserPackage({
-                                                      ...item.userPackage,
-                                                      cartId: item.id,
-                                                      currentStage: index,
-                                                    });
-                                                    push(item.packageUrl);
-                                                  }}
-                                                >
-                                                  Edit
-                                                </Button>
-                                              </Box>
                                             </Stack>
                                           </Grid>
                                         </Grid>
@@ -276,32 +259,41 @@ function Cart() {
                               </Stack>
                             )}
                           </Grid>
-                          <Grid size={{ xs: 3.5 }}>
+                          <Grid size={{ xs: 3.5 }} sx={{ alignSelf: "end" }}>
                             <Stack
                               direction="row"
                               sx={{
-                                alignItems: "center",
+                                alignItems: "start",
                                 width: "100%",
                                 height: "100%",
                                 justifyContent: "space-between",
                               }}
                               spacing={4}
                             >
-                              <Link
-                                sx={{ pb: 6 }}
-                                typography={"body1"}
-                                underline="none"
-                                href="#"
-                                onClick={() => {
-                                  setUserPackage({
-                                    ...item.userPackage,
-                                    cartId: item.id,
-                                  });
-                                  push(item.packageUrl);
-                                }}
-                              >
-                                Edit
-                              </Link>
+                              <Stack spacing={1}>
+                                {item.userPackage.items.map((value, index) => {
+                                  return (
+                                    <Link
+                                      key={index}
+                                      sx={{ pb: 6 }}
+                                      typography={"body1"}
+                                      underline="none"
+                                      href="#"
+                                      onClick={() => {
+                                        setUserPackage({
+                                          ...item.userPackage,
+                                          cartId: item.id,
+                                          currentStage: index,
+                                        });
+                                        push(item.packageUrl);
+                                      }}
+                                    >
+                                      Edit
+                                    </Link>
+                                  );
+                                })}
+                              </Stack>
+
                               <Stack spacing={2}>
                                 <TextField
                                   type="number"
