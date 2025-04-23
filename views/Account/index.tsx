@@ -75,7 +75,6 @@ function Account() {
   return (
     <Box
       sx={{
-        background: "linear-gradient(90deg, #f8f8f8 50%, white 50%)",
         width: "100%",
         height: "100%",
       }}
@@ -149,7 +148,7 @@ function Account() {
             </List>
           </Grid>
           <Grid
-            size={{ xs: "grow" }}
+            size={{ xs: 9 }}
             sx={{
               overflow: "auto",
               height: getFullHeightSize(15),

@@ -34,7 +34,6 @@ function Downloadable() {
         container
         spacing={2}
         sx={{
-          position: "absolute",
           overflow: "auto",
           height: getFullHeightSize(27),
         }}
@@ -42,7 +41,9 @@ function Downloadable() {
         {data.download_images?.map((item, index) => (
           <Grid
             size={{
-              xs: 2.98,
+              xs: 5.98,
+              sm: 3.98,
+              md: 2.98,
             }}
             key={index}
             sx={{
