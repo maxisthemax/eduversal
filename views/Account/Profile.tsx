@@ -39,6 +39,7 @@ function Profile() {
       title="Profile"
       subtitle="Manage and protect your account"
       backgroundColor="white"
+      sx={{ height: "calc(100% - 16px)" }}
     >
       <Formik
         initialValues={{

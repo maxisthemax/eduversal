@@ -44,6 +44,7 @@ function ChangePassword() {
       title="Change Password"
       subtitle="For the security of your account, please do not share your password with anyone"
       backgroundColor="white"
+      sx={{ height: "calc(100% - 16px)" }}
     >
       <Formik
         initialValues={{

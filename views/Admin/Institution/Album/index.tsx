@@ -22,9 +22,9 @@ import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 //*mui
 import Button from "@mui/material/Button";
-import Popover from "@mui/material/Popover";
-import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 function Album() {
   const access = useGetStaffAccess("restrict_content_album");
@@ -99,7 +99,7 @@ function Album() {
               >
                 Manage
               </Button>
-              <Popover
+              <Menu
                 {...bindPopover(popupState)}
                 anchorOrigin={{
                   vertical: "bottom",
@@ -110,67 +110,63 @@ function Album() {
                   horizontal: "left",
                 }}
               >
-                <Stack direction="column" spacing={1} sx={{ p: 1 }}>
-                  {(packageAccess.view ||
-                    packageAccess.edit ||
-                    packageAccess.add ||
-                    packageAccess.delete) && (
-                    <AddEditPackagesDialog key="addEditPackagesDialog" />
-                  )}
-                  {access.add && (
-                    <AddEditAlbumDialog key={"addEditAlbumDialog"} />
-                  )}
-                  {albumsData.length > 0 && access.delete && (
-                    <Button
-                      key="deleteAlbum"
-                      onClick={() => {
-                        handleOpenDialog({
-                          allowOutsideClose: false,
-                          title: "Delete Album",
-                          description:
-                            "Are you sure you want to delete this album?\n All photo related to this album will be deleted and cannot be recovered.",
-                          onConfirm: async () => {
-                            await deleteAlbum(value);
-                          },
-                        });
-                      }}
-                      variant="contained"
-                    >
-                      Delete Album
-                    </Button>
-                  )}
-                  {albumsData.length > 0 && access.delete && (
-                    <Button
-                      key="disabledAlbum"
-                      onClick={() => {
-                        const isDisabled = find(albumsData, {
-                          id: value,
-                        })?.is_disabled;
+                {(packageAccess.view ||
+                  packageAccess.edit ||
+                  packageAccess.add ||
+                  packageAccess.delete) && (
+                  <AddEditPackagesDialog key="addEditPackagesDialog" />
+                )}
+                {access.add && (
+                  <AddEditAlbumDialog key={"addEditAlbumDialog"} />
+                )}
+                {albumsData.length > 0 && access.delete && (
+                  <MenuItem
+                    key="deleteAlbum"
+                    onClick={() => {
+                      handleOpenDialog({
+                        allowOutsideClose: false,
+                        title: "Delete Album",
+                        description:
+                          "Are you sure you want to delete this album?\n All photo related to this album will be deleted and cannot be recovered.",
+                        onConfirm: async () => {
+                          await deleteAlbum(value);
+                        },
+                      });
+                    }}
+                  >
+                    Delete Album
+                  </MenuItem>
+                )}
+                {albumsData.length > 0 && access.delete && (
+                  <MenuItem
+                    key="disabledAlbum"
+                    onClick={() => {
+                      const isDisabled = find(albumsData, {
+                        id: value,
+                      })?.is_disabled;
 
-                        handleOpenDialog({
-                          allowOutsideClose: false,
-                          title: isDisabled ? "Enable Album" : "Disable Album",
-                          description: isDisabled
-                            ? "Are you sure you want to enable this album?"
-                            : "Are you sure you want to disable this album?",
-                          onConfirm: async () => {
-                            if (isDisabled) {
-                              await disableAlbum(value, false);
-                            } else {
-                              await disableAlbum(value, true);
-                            }
-                          },
-                        });
-                      }}
-                      variant="contained"
-                    >
-                      {find(albumsData, { id: value })?.is_disabled
-                        ? "Enable Album"
-                        : "Disable Album"}
-                    </Button>
-                  )}
-                </Stack>
-              </Popover>
+                      handleOpenDialog({
+                        allowOutsideClose: false,
+                        title: isDisabled ? "Enable Album" : "Disable Album",
+                        description: isDisabled
+                          ? "Are you sure you want to enable this album?"
+                          : "Are you sure you want to disable this album?",
+                        onConfirm: async () => {
+                          if (isDisabled) {
+                            await disableAlbum(value, false);
+                          } else {
+                            await disableAlbum(value, true);
+                          }
+                        },
+                      });
+                    }}
+                  >
+                    {find(albumsData, { id: value })?.is_disabled
+                      ? "Enable Album"
+                      : "Disable Album"}
+                  </MenuItem>
+                )}
+              </Menu>
             </>
           )}
         </PopupState>,

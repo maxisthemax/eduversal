@@ -72,12 +72,14 @@ function AddEditAlbumDialog({
 
   return (
     <>
-      <Button
-        variant={mode === "edit" ? "outlined" : "contained"}
-        {...bindTrigger(popupState)}
-      >
-        {mode === "edit" ? "Edit" : "Add Album"}
-      </Button>
+      {mode === "edit" ? (
+        <Button variant={"outlined"} {...bindTrigger(popupState)}>
+          {mode === "edit" ? "Edit" : "Add Album"}
+        </Button>
+      ) : (
+        <MenuItem {...bindTrigger(popupState)}>Add Album</MenuItem>
+      )}
+
       <Dialog
         {...bindDialog(popupState)}
         maxWidth="md"
@@ -388,7 +390,7 @@ function AddEditAlbumDialogForm({
                               component={Paper}
                               variant="outlined"
                             >
-                              <TableHead>
+                              <TableHead sx={{ background: "#f2f2f2" }}>
                                 <TableRow>
                                   <TableCell>Name</TableCell>
                                   <TableCell>Description</TableCell>

@@ -29,7 +29,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 
@@ -78,7 +77,7 @@ function AddEditProductVariationDialog({
       )}
       <Dialog
         {...bindDialog(popupState)}
-        maxWidth="lg"
+        maxWidth="md"
         fullWidth
         keepMounted={false}
         disableEnforceFocus={true}
@@ -209,6 +208,10 @@ function AddEditProductVariationDialogForm({
                     name="description"
                     label="Description"
                     formProps={formProps}
+                    props={{
+                      multiline: true,
+                      minRows: 3,
+                    }}
                   />
                   <CheckboxForm
                     name="is_downloadable"
@@ -238,91 +241,99 @@ function AddEditProductVariationDialogForm({
                                   if (option.status === "deleted") return null;
                                   return (
                                     <>
-                                      <Grid size={{ xs: 3.5 }}>
-                                        <TextFieldForm
-                                          name={`options.${index}.name`}
-                                          label="Name"
-                                          formProps={formProps}
-                                          props={{ required: true }}
-                                        />
-                                      </Grid>
-                                      <Grid size={{ xs: 4.5 }}>
-                                        <TextFieldForm
-                                          name={`options.${index}.description`}
-                                          label="Desciption"
-                                          formProps={formProps}
-                                          props={{
-                                            multiline: true,
-                                            minRows: 3,
-                                          }}
-                                        />
-                                      </Grid>
-                                      <Grid size={{ xs: 1 }}>
-                                        <TextFieldForm
-                                          name={`options.${index}.currency`}
-                                          label="Currency"
-                                          formProps={formProps}
-                                          props={{
-                                            select: true,
-                                            required: true,
-                                          }}
-                                        >
-                                          <MenuItem value="RM">RM</MenuItem>
-                                        </TextFieldForm>
-                                      </Grid>
-                                      <Grid size={{ xs: 2 }}>
-                                        <TextFieldPriceForm
-                                          name={`options.${index}.price`}
-                                          label="Price"
-                                          formProps={formProps}
-                                          props={{
-                                            required: true,
-                                          }}
-                                        />
-                                      </Grid>
-                                      <Grid size={{ xs: 1 }}>
-                                        {values.options.length > 1 && (
-                                          <Button
-                                            variant="contained"
-                                            onClick={() =>
-                                              option?.id
-                                                ? setFieldValue(
-                                                    `options.${index}.status`,
-                                                    "deleted"
-                                                  )
-                                                : remove(index)
-                                            }
+                                      <Grid
+                                        container
+                                        size={{ xs: 9 }}
+                                        spacing={1}
+                                      >
+                                        <Grid size={{ xs: 6 }}>
+                                          <TextFieldForm
+                                            name={`options.${index}.name`}
+                                            label="Name"
+                                            formProps={formProps}
+                                            props={{ required: true }}
+                                          />
+                                        </Grid>
+                                        <Grid size={{ xs: 3 }}>
+                                          <TextFieldForm
+                                            name={`options.${index}.currency`}
+                                            label="Currency"
+                                            formProps={formProps}
+                                            props={{
+                                              select: true,
+                                              required: true,
+                                            }}
                                           >
-                                            Delete
-                                          </Button>
-                                        )}
-                                      </Grid>
-
-                                      <Grid size={{ xs: 12 }}>
-                                        <Stack spacing={2} direction="row">
-                                          {values.options[index]
-                                            .preview_url && (
-                                            <Box
-                                              component="img"
-                                              src={
-                                                values.options[index]
-                                                  .preview_url
+                                            <MenuItem value="RM">RM</MenuItem>
+                                          </TextFieldForm>
+                                        </Grid>
+                                        <Grid size={{ xs: 3 }}>
+                                          <TextFieldPriceForm
+                                            name={`options.${index}.price`}
+                                            label="Price"
+                                            formProps={formProps}
+                                            props={{
+                                              required: true,
+                                            }}
+                                          />
+                                        </Grid>
+                                        <Grid size={{ xs: 12 }}>
+                                          <TextFieldForm
+                                            name={`options.${index}.description`}
+                                            label="Desciption"
+                                            formProps={formProps}
+                                            props={{
+                                              multiline: true,
+                                              minRows: 3,
+                                            }}
+                                          />
+                                        </Grid>
+                                        <Grid size={{ xs: 12 }}>
+                                          {values.options.length > 1 && (
+                                            <Button
+                                              color="error"
+                                              variant="contained"
+                                              onClick={() =>
+                                                option?.id
+                                                  ? setFieldValue(
+                                                      `options.${index}.status`,
+                                                      "deleted"
+                                                    )
+                                                  : remove(index)
                                               }
-                                              alt={
-                                                values.options[index]
-                                                  .preview_url
-                                              }
-                                              sx={{
-                                                display: "block",
-                                                width: "25%",
-                                                objectFit: "cover",
-                                              }}
-                                            />
+                                            >
+                                              Delete
+                                            </Button>
                                           )}
-                                          {values.options[index]
-                                            .preview_image ? (
-                                            <Grid size={{ xs: 1 }}>
-                                              <IconButton
+                                        </Grid>
+                                      </Grid>
+                                      <Grid container size={{ xs: 3 }}>
+                                        <Grid size={{ xs: 12 }}>
+                                          <Stack spacing={1} direction="column">
+                                            {values.options[index]
+                                              .preview_url && (
+                                              <Box
+                                                component="img"
+                                                src={
+                                                  values.options[index]
+                                                    .preview_url
+                                                }
+                                                alt={
+                                                  values.options[index]
+                                                    .preview_url
+                                                }
+                                                sx={{
+                                                  width: "100%",
+                                                  aspectRatio: "1/1",
+                                                  objectFit: "contain",
+                                                  backgroundColor: "#f2f2f2",
+                                                }}
+                                              />
+                                            )}
+                                            {values.options[index]
+                                              .preview_image ? (
+                                              <Button
+                                                variant="outlined"
                                                 onClick={() => {
                                                   setFieldValue(
                                                     `options.${index}.preview_url`,
@@ -337,16 +348,16 @@ function AddEditProductVariationDialogForm({
                                                   );
                                                 }}
                                               >
-                                                <CustomIcon icon="delete" />
-                                              </IconButton>
-                                            </Grid>
-                                          ) : (
-                                            <UploadGrid
-                                              setFieldValue={setFieldValue}
-                                              index={index}
-                                            />
-                                          )}
-                                        </Stack>
+                                                Delete Image
+                                              </Button>
+                                            ) : (
+                                              <UploadGrid
+                                                setFieldValue={setFieldValue}
+                                                index={index}
+                                              />
+                                            )}
+                                          </Stack>
+                                        </Grid>
                                       </Grid>
                                       <Grid size={{ xs: 12 }}>
                                         <Divider />
@@ -456,9 +467,10 @@ function UploadGrid({
   });
 
   return (
-    <Grid size={{ xs: 1 }} {...getRootProps()}>
+    <Box {...getRootProps()}>
       <input {...getInputProps()} />
       <Button
+        fullWidth
         variant="contained"
         startIcon={
           <CustomIcon icon="upload" iconColor="inherit" fontSize="inherit" />
@@ -472,6 +484,6 @@ function UploadGrid({
           Preview Image
         </Typography>
       </Button>
-    </Grid>
+    </Box>
   );
 }

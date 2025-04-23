@@ -55,7 +55,7 @@ function ProductVariation() {
       renderCell: ({ value }) => {
         return (
           <Table size="small">
-            <TableHead>
+            <TableHead sx={{ background: "#f2f2f2" }}>
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>

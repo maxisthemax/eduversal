@@ -73,9 +73,7 @@ function AddEditPackagesDialog() {
 
   return (
     <>
-      <Button variant={"contained"} {...bindTrigger(popupState)}>
-        Manage Packages
-      </Button>
+      <MenuItem {...bindTrigger(popupState)}>Manage Packages</MenuItem>
       <Dialog
         {...bindDialog(popupState)}
         maxWidth="md"

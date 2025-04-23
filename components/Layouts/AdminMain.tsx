@@ -29,7 +29,13 @@ import { getFullHeightSize } from "@/helpers/stringHelpers";
 //*data
 import { useUser } from "@/data/user";
 
+//*utils
+import axios from "@/utils/axios";
+import { useCustomDialog } from "../Dialog/CustomDialog";
+
 function AdminMain({ children }: { children: React.ReactNode }) {
+  const { handleOpenDialog } = useCustomDialog();
+
   //*define
   const pathname = usePathname();
   const [open, setOpen] = useState({
@@ -86,7 +92,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
         <Stack
           direction="row"
           sx={{
-            height: getFullHeightSize(8.1),
+            height: getFullHeightSize(7.7),
             width: "100%",
           }}
         >
@@ -159,6 +165,19 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     title: "Change Password",
                     href: "/admin/account/change-password",
                   },
+                  {
+                    title: "Logout",
+                    onClick: () => {
+                      handleOpenDialog({
+                        title: "Logout",
+                        description: "Are you sure you want to logout?",
+                        onConfirm: async () => {
+                          await axios.post("auth/signOut");
+                          push("/admin/signin");
+                        },
+                      });
+                    },
+                  },
                 ],
               },
             ].map(({ title, list, id, icon, href }, index) => {
@@ -186,7 +205,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     <ListItemIcon sx={{ minWidth: 0, pr: 1 }}>
                       <CustomIcon icon={icon as GoogleIcon} />
                     </ListItemIcon>
-                    <ListItemText primary={title} sx={{ pl: 1 }} />
+                    <ListItemText primary={<b>{title}</b>} sx={{ pl: 1 }} />
                     <FlexBox />
                     {list && (
                       <CustomIcon
@@ -196,12 +215,12 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     )}
                   </ListItemButton>
                   <Collapse in={open[id]}>
-                    {list?.map(({ title, href }, index) => {
+                    {list?.map(({ title, href, onClick }, index) => {
                       return (
                         <ListItemButton
                           selected={href === "/admin/" + pathname.split("/")[2]}
                           key={index}
-                          onClick={() => push(href)}
+                          onClick={onClick ? onClick : () => push(href)}
                         >
                           <ListItemText
                             primary={title}
@@ -220,7 +239,13 @@ function AdminMain({ children }: { children: React.ReactNode }) {
               );
             })}
           </List>
-          <Box sx={{ overflow: "auto", width: "100%", background: "#f8f8f8" }}>
+          <Box
+            sx={{
+              overflow: "auto",
+              width: "100%",
+              background: "#f8f8f8",
+            }}
+          >
             {children}
           </Box>
         </Stack>

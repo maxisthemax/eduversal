@@ -495,7 +495,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                       variant="outlined"
                     >
                       <Table size="small">
-                        <TableHead>
+                        <TableHead sx={{ background: "#f2f2f2" }}>
                           <TableRow>
                             <TableCell>Name</TableCell>
                             <TableCell>Description</TableCell>

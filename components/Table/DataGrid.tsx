@@ -80,6 +80,9 @@ function DataGrid({
         "& .MuiDataGrid-cell": {
           alignContent: "center",
         },
+        "& .MuiDataGrid-columnHeader": {
+          backgroundColor: "#f2f2f2",
+        },
         "& .stickyRight": {
           position: "sticky",
           right: 0,
