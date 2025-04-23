@@ -1,7 +1,7 @@
 import ProfileView from "@/views/Account/Profile";
 
 function Profile() {
-  return <ProfileView mode="admin" />;
+  return <ProfileView />;
 }
 
 export default Profile;
