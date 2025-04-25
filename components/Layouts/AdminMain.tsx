@@ -225,7 +225,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                             color:
                               href === "/admin/" + pathname.split("/")[2]
                                 ? "primary.main"
-                                : "inherit",
+                                : "#64738B",
                           }}
                         >
                           <ListItemText

@@ -193,8 +193,29 @@ function CustomToolbar(props: {
         {firstToolbarText ? firstToolbarText : <></>}
         <FlexBox />
         {showQuickFilter && (
-          <Box sx={{ background: "#f2f2f2", px: 1, height: "30.75px" }}>
-            <GridToolbarQuickFilter variant="standard" />
+          <Box sx={{ background: "#f2f2f2" }}>
+            <GridToolbarQuickFilter
+              slotProps={{
+                input: {
+                  disableUnderline: true,
+                },
+                htmlInput: {
+                  sx: {
+                    paddingTop: "0px !important",
+                    paddingBottom: "0px !important",
+                    margin: "0px !important",
+                    height: "30.75px",
+                    px: "10px !important",
+                  },
+                },
+              }}
+              sx={{
+                paddingTop: "0px !important",
+                paddingBottom: "0px !important",
+                margin: "0px !important",
+                height: "30.75px",
+              }}
+            />
           </Box>
         )}
         <GridToolbarFilterButton

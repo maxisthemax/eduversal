@@ -1,11 +1,16 @@
 import Head from "next/head";
 import { usePathname } from "next/navigation";
+import router from "next/router";
 
 //*lodash
 import find from "lodash/find";
 
+//*lodash
+import findIndex from "lodash/findIndex";
+
 //*components
 import FlexBox from "./FlexBox";
+import { CustomIcon } from "../Icons";
 
 //*mui
 import Stack from "@mui/material/Stack";
@@ -14,10 +19,8 @@ import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import LinearProgress from "@mui/material/LinearProgress";
 import Link from "@mui/material/Link";
-import { IconButton, SxProps, Theme } from "@mui/material";
-import { findIndex } from "lodash";
-import router from "next/router";
-import { CustomIcon } from "../Icons";
+import IconButton from "@mui/material/IconButton";
+import { SxProps, Theme } from "@mui/material";
 
 function AdminPage({
   children,
@@ -53,11 +56,6 @@ function AdminPage({
         sx={{ width: "100%", alignItems: "center" }}
       >
         <Stack direction={"column"}>
-          {title && (
-            <Typography variant="h6">
-              <b>{title}</b>
-            </Typography>
-          )}
           {subtitle && <Typography variant="body2">{subtitle}</Typography>}
         </Stack>
         <Head>
@@ -72,7 +70,7 @@ function AdminPage({
         spacing={1}
         sx={{ width: "100%", pb: 1, alignItems: "center" }}
       >
-        <Box sx={{ background: "#f2f2f2", p: 0.5 }}>
+        <Box sx={{ background: "#f2f2f2", p: 0.5, borderRadius: 1 }}>
           <IconButton
             disableRipple
             size="small"
@@ -87,7 +85,7 @@ function AdminPage({
           </IconButton>
         </Box>
         {links?.length > 1 && (
-          <Box sx={{ background: "#f2f2f2", p: 0.5 }}>
+          <Box sx={{ background: "#f2f2f2", p: 0.5, borderRadius: 1 }}>
             <IconButton
               disableRipple
               size="small"
@@ -108,7 +106,13 @@ function AdminPage({
         )}
         <Breadcrumbs
           separator="▸"
-          sx={{ color: "black", background: "#f2f2f2", width: "100%", p: 1 }}
+          sx={{
+            color: "black",
+            background: "#f2f2f2",
+            width: "100%",
+            p: 1,
+            borderRadius: 1,
+          }}
         >
           {links &&
             links.length > 0 &&
