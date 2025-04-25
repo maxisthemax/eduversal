@@ -1,13 +1,13 @@
-import Link from "next/link";
 import PopupState, {
   bindTrigger,
   bindDialog,
   bindMenu,
 } from "material-ui-popup-state";
+import { useRouter } from "next/router";
 
 //*components
 import DataGrid from "@/components/Table/DataGrid";
-import { OverlayBox, Page } from "@/components/Box";
+import { OverlayBox, AdminPage } from "@/components/Box";
 import AddEditInstitutionDialog from "./AddEditInstitutionDialog";
 import { CustomIcon } from "@/components/Icons";
 import NoAccess from "@/components/Box/NoAccess";
@@ -31,6 +31,7 @@ import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function Institution() {
   const access = useGetStaffAccess("restrict_content_institution");
+  const { push } = useRouter();
 
   //*data
   const { institutionsData, status } = useInstitutions();
@@ -41,9 +42,6 @@ function Institution() {
       field: "name",
       headerName: "Name",
       flex: 1,
-      renderCell: ({ formattedValue, id }) => {
-        return <Link href={`/admin/institution/${id}`}>{formattedValue}</Link>;
-      },
     },
     {
       field: "code",
@@ -100,33 +98,36 @@ function Institution() {
   if (!access.view) return <NoAccess />;
 
   return (
-    <Page
+    <AdminPage
       leftButton={[]}
       links={[{ href: "/admin/institution", title: "Institutions" }]}
-      rightButton={[
-        access.add && (
-          <AddEditInstitutionDialog key="AddEditInstitutionDialog" />
-        ),
-      ]}
       title="Institutions"
       isLoading={status === "pending"}
     >
       <DataGrid
-        gap={19.4}
+        onRowClick={(params) => {
+          push(`/admin/institution/${params.id}`);
+        }}
+        gap={19.7}
         data={institutionsData}
         columns={columns}
         loading={status === "pending"}
         firstToolbarText={
           <Typography
-            variant="inherit"
+            variant="subtitle1"
             sx={{ px: 1, fontWeight: 500 }}
-            color="primary"
+            color="inherit"
           >
             Total Institutions: <b>{institutionsData?.length ?? 0}</b>
           </Typography>
         }
+        lastButton={
+          access.add && (
+            <AddEditInstitutionDialog key="AddEditInstitutionDialog" />
+          )
+        }
       />
-    </Page>
+    </AdminPage>
   );
 }
 

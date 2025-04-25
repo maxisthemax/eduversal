@@ -203,7 +203,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     }}
                   >
                     <ListItemIcon sx={{ minWidth: 0, pr: 1 }}>
-                      <CustomIcon icon={icon as GoogleIcon} />
+                      <CustomIcon icon={icon as GoogleIcon} iconColor="black" />
                     </ListItemIcon>
                     <ListItemText primary={<b>{title}</b>} sx={{ pl: 1 }} />
                     <FlexBox />
@@ -221,6 +221,12 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                           selected={href === "/admin/" + pathname.split("/")[2]}
                           key={index}
                           onClick={onClick ? onClick : () => push(href)}
+                          sx={{
+                            color:
+                              href === "/admin/" + pathname.split("/")[2]
+                                ? "primary.main"
+                                : "inherit",
+                          }}
                         >
                           <ListItemText
                             primary={title}
@@ -243,7 +249,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
             sx={{
               overflow: "auto",
               width: "100%",
-              background: "#f8f8f8",
+              background: "white",
             }}
           >
             {children}

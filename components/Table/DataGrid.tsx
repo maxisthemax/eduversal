@@ -21,11 +21,13 @@ import {
   getGridDateOperators,
   getGridBooleanOperators,
   getGridSingleSelectOperators,
+  GridEventListener,
 } from "@mui/x-data-grid";
 import Stack from "@mui/material/Stack";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
+import Box from "@mui/material/Box";
 
 function DataGrid({
   data,
@@ -38,6 +40,8 @@ function DataGrid({
   autoRowHeightColumn,
   showQuickFilter = true,
   firstToolbarText,
+  lastButton,
+  onRowClick,
 }: {
   data: any[];
   columns: any[];
@@ -60,6 +64,8 @@ function DataGrid({
   autoRowHeightColumn?: string[];
   showQuickFilter?: boolean;
   firstToolbarText?: React.ReactNode;
+  lastButton?: React.ReactNode;
+  onRowClick?: GridEventListener<"rowClick">;
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -71,6 +77,7 @@ function DataGrid({
 
   return (
     <DataGridMui
+      onRowClick={onRowClick ? onRowClick : () => {}}
       rowCount={rowCount}
       paginationModel={paginationModel}
       paginationMode={paginationMode}
@@ -81,7 +88,13 @@ function DataGrid({
           alignContent: "center",
         },
         "& .MuiDataGrid-columnHeader": {
-          backgroundColor: "#f2f2f2",
+          backgroundColor: "#f2f2f2 !important",
+        },
+        "& .MuiDataGrid-cell:focus": {
+          outline: "none",
+        },
+        "& .MuiDataGrid-row:hover": {
+          cursor: "pointer",
         },
         "& .stickyRight": {
           position: "sticky",
@@ -133,6 +146,7 @@ function DataGrid({
       slotProps={{
         toolbar: {
           ...({ firstToolbarText } as any),
+          ...({ lastButton } as any),
           showQuickFilter: showQuickFilter,
         },
       }}
@@ -157,8 +171,10 @@ export default DataGrid;
 
 function CustomToolbar(props: {
   firstToolbarText?: React.ReactNode;
+  lastButton?: React.ReactNode;
   showQuickFilter?: boolean;
 }) {
+  const lastButton = props.lastButton;
   const firstToolbarText = props.firstToolbarText;
   const showQuickFilter = props.showQuickFilter;
 
@@ -172,13 +188,36 @@ function CustomToolbar(props: {
           paddingBottom: 0.5,
         }}
         direction="row"
-        spacing={1}
+        spacing={2}
       >
         {firstToolbarText ? firstToolbarText : <></>}
-        <GridToolbarFilterButton />
-        <GridToolbarExport />
         <FlexBox />
-        {showQuickFilter && <GridToolbarQuickFilter />}
+        {showQuickFilter && (
+          <Box sx={{ background: "#f2f2f2", px: 1, height: "30.75px" }}>
+            <GridToolbarQuickFilter variant="standard" />
+          </Box>
+        )}
+        <GridToolbarFilterButton
+          slotProps={{
+            button: {
+              color: "inherit",
+              size: "small",
+              variant: "outlined",
+              sx: { maxHeight: "30.75px", textTransform: "capitalize" },
+            },
+          }}
+        />
+        <GridToolbarExport
+          slotProps={{
+            button: {
+              color: "inherit",
+              size: "small",
+              variant: "outlined",
+              sx: { maxHeight: "30.75px", textTransform: "capitalize" },
+            },
+          }}
+        />
+        {lastButton ? lastButton : <></>}
       </Stack>
     </GridToolbarContainer>
   );

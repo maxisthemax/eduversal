@@ -7,7 +7,7 @@ import PopupState, {
 import Link from "next/link";
 
 //*components
-import { OverlayBox, Page } from "@/components/Box";
+import { OverlayBox, AdminPage } from "@/components/Box";
 import DataGrid from "@/components/Table/DataGrid";
 import AddEditAcademicYearDialog from "./AddEditAcademicYearDialog";
 import { CustomIcon } from "@/components/Icons";
@@ -115,7 +115,7 @@ function AcademicYear() {
   if (!access.view) return <NoAccess />;
 
   return (
-    <Page
+    <AdminPage
       isLoading={
         institutionStatus === "pending" || academicYearStatus === "pending"
       }
@@ -148,7 +148,7 @@ function AcademicYear() {
           </Typography>
         }
       />
-    </Page>
+    </AdminPage>
   );
 }
 
