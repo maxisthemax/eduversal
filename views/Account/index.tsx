@@ -77,21 +77,24 @@ function Account() {
       sx={{
         width: "100%",
         height: "100%",
+        overflow: "auto",
       }}
     >
       <Container maxWidth="lg" disableGutters sx={{ backgroundColor: "white" }}>
-        <Grid container sx={{ backgroud: "white" }}>
+        <Grid
+          container
+          sx={{ backgroundColor: "white", height: getFullHeightSize(15) }}
+        >
           <Grid
             size={{ xs: 3 }}
             sx={{
               borderRight: "0.5px solid #B8BDC4",
               pl: 2,
               pr: 2,
-              height: getFullHeightSize(15),
-              overflow: "auto",
+              backgroundColor: "white",
             }}
           >
-            <List>
+            <List sx={{ top: "0px", position: "sticky" }}>
               {menuItems.map((item, index) => {
                 if (item.type === "header") {
                   return (
@@ -147,13 +150,7 @@ function Account() {
               </Box>
             </List>
           </Grid>
-          <Grid
-            size={{ xs: 9 }}
-            sx={{
-              overflow: "auto",
-              height: getFullHeightSize(15),
-            }}
-          >
+          <Grid size={{ xs: 9 }} sx={{}}>
             {pageComponent[page as string]}
           </Grid>
         </Grid>

@@ -17,9 +17,6 @@ import { useUser } from "@/data/user";
 //*utils
 import axios from "@/utils/axios";
 
-//*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
-
 function Downloadable() {
   const [isDownloading, setIsDownloading] = useState(false);
   const { data } = useUser();
@@ -30,14 +27,7 @@ function Downloadable() {
       subtitle="Access and Manage Your Resources"
       backgroundColor="white"
     >
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          overflow: "auto",
-          height: getFullHeightSize(27),
-        }}
-      >
+      <Grid container spacing={2}>
         {data.download_images?.map((item, index) => (
           <Grid
             size={{

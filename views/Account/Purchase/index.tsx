@@ -17,9 +17,6 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-//*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
-
 //*data
 import { useOrder } from "@/data/order";
 
@@ -77,7 +74,7 @@ function PurchaseComponent({ status }) {
   const { push } = useRouter();
 
   return (
-    <Stack sx={{ height: getFullHeightSize(39.9), p: 2 }} spacing={2}>
+    <Stack sx={{ p: 2 }} spacing={2}>
       {orderDataByStatus.map(
         ({ cart, id, status, created_at, price, order_no }) => {
           return (

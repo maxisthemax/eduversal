@@ -17,9 +17,6 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 
-//*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
-
 //*data
 import { useOrder } from "@/data/order";
 
@@ -88,8 +85,6 @@ function PurchaseDetails() {
         sx={{
           px: 2,
           pt: 2,
-          height: getFullHeightSize(27.8),
-          overflowY: "auto",
         }}
       >
         <Stack direction="column" spacing={2}>
