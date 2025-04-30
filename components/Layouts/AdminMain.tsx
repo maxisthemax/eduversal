@@ -216,14 +216,34 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                   </ListItemButton>
                   <Collapse in={open[id]}>
                     {list?.map(({ title, href, onClick }, index) => {
+                      console.log("🚀 ~ {list?.map ~ href:", href);
+                      console.log(
+                        111111111111111,
+                        "/admin/" +
+                          pathname.split("/")[2] +
+                          "/" +
+                          pathname.split("/")[3]
+                      );
                       return (
                         <ListItemButton
-                          selected={href === "/admin/" + pathname.split("/")[2]}
+                          selected={
+                            href ===
+                            "/admin/" +
+                              pathname.split("/")[2] +
+                              (pathname?.split("/")?.[3]
+                                ? `/${pathname?.split("/")[3]}`
+                                : "")
+                          }
                           key={index}
                           onClick={onClick ? onClick : () => push(href)}
                           sx={{
                             color:
-                              href === "/admin/" + pathname.split("/")[2]
+                              href ===
+                              "/admin/" +
+                                pathname.split("/")[2] +
+                                (pathname?.split("/")?.[3]
+                                  ? `/${pathname?.split("/")[3]}`
+                                  : "")
                                 ? "primary.main"
                                 : "#64738B",
                           }}

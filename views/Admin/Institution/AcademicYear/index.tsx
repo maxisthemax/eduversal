@@ -1,10 +1,9 @@
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import PopupState, {
   bindTrigger,
   bindDialog,
   bindMenu,
 } from "material-ui-popup-state";
-import Link from "next/link";
 
 //*components
 import { OverlayBox, AdminPage } from "@/components/Box";
@@ -33,6 +32,7 @@ import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function AcademicYear() {
   const access = useGetStaffAccess("restrict_content_year");
+  const { push } = useRouter();
   const params = useParams();
   const institutionId = params.institutionId as string;
   const { institutionData, status: institutionStatus } =
@@ -45,13 +45,6 @@ function AcademicYear() {
       field: "name",
       headerName: "Name",
       flex: 1,
-      renderCell: ({ formattedValue, id }) => {
-        return (
-          <Link href={`/admin/institution/${institutionId}/${id}`}>
-            {formattedValue}
-          </Link>
-        );
-      },
     },
     {
       field: "year",
@@ -90,7 +83,14 @@ function AcademicYear() {
           <PopupState variant="popover" popupId="menu">
             {(popupState) => (
               <>
-                <IconButton size="small" {...bindTrigger(popupState)}>
+                <IconButton
+                  size="small"
+                  {...bindTrigger(popupState)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    popupState.open(e);
+                  }}
+                >
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
@@ -127,25 +127,28 @@ function AcademicYear() {
         },
       ]}
       leftButton={[]}
-      rightButton={[
-        access.add && (
-          <AddEditAcademicYearDialog key="addEditAcademicYearDialog" />
-        ),
-      ]}
       title={institutionData?.name}
     >
       <DataGrid
-        gap={19.4}
+        onRowClick={(params) => {
+          push(`/admin/institution/${institutionId}/${params.id}`);
+        }}
+        gap={19}
         columns={columns}
         data={academicYearsData}
         firstToolbarText={
           <Typography
-            variant="inherit"
-            sx={{ px: 1, fontWeight: 500 }}
-            color="primary"
+            variant="subtitle1"
+            sx={{ fontWeight: 500 }}
+            color="inherit"
           >
             Total Academic Years: <b>{academicYearsData?.length ?? 0}</b>
           </Typography>
+        }
+        lastButton={
+          access.add && (
+            <AddEditAcademicYearDialog key="addEditAcademicYearDialog" />
+          )
         }
       />
     </AdminPage>

@@ -95,6 +95,9 @@ function DataGrid({
         },
         "& .MuiDataGrid-row:hover": {
           cursor: "pointer",
+          "& .MuiDataGrid-cell": {
+            backgroundColor: "#f2f2f2",
+          },
         },
         "& .stickyRight": {
           position: "sticky",
@@ -185,7 +188,7 @@ function CustomToolbar(props: {
           display: "flex",
           width: "100%",
           alignItems: "center",
-          paddingBottom: 0.5,
+          p: 1.5,
         }}
         direction="row"
         spacing={2}

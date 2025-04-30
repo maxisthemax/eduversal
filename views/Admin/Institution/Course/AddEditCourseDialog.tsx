@@ -60,7 +60,12 @@ function AddEditCourseDialog({
       {mode === "edit" ? (
         <MenuItem {...bindTrigger(popupState)}>Edit</MenuItem>
       ) : (
-        <Button variant={"contained"} {...bindTrigger(popupState)}>
+        <Button
+          size="small"
+          variant={"outlined"}
+          color="inherit"
+          {...bindTrigger(popupState)}
+        >
           Add Class
         </Button>
       )}

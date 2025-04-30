@@ -73,7 +73,11 @@ function AddEditAlbumDialog({
   return (
     <>
       {mode === "edit" ? (
-        <Button variant={"outlined"} {...bindTrigger(popupState)}>
+        <Button
+          variant={"outlined"}
+          color="inherit"
+          {...bindTrigger(popupState)}
+        >
           {mode === "edit" ? "Edit" : "Add Album"}
         </Button>
       ) : (

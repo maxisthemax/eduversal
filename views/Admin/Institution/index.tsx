@@ -115,14 +115,14 @@ function Institution() {
         onRowClick={(params) => {
           push(`/admin/institution/${params.id}`);
         }}
-        gap={19.7}
+        gap={19}
         data={institutionsData}
         columns={columns}
         loading={status === "pending"}
         firstToolbarText={
           <Typography
             variant="subtitle1"
-            sx={{ px: 1, fontWeight: 500 }}
+            sx={{ fontWeight: 500 }}
             color="inherit"
           >
             Total Institutions: <b>{institutionsData?.length ?? 0}</b>

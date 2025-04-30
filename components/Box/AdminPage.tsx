@@ -47,9 +47,7 @@ function AdminPage({
   const findCurrentPathname = find(links, { href: pathName });
 
   return (
-    <Box
-      sx={{ pl: 2, pr: 2, pt: 1, pb: 1, background: backgroundColor, ...sx }}
-    >
+    <Box sx={{ p: 2, background: backgroundColor, ...sx }}>
       <Stack
         direction="row"
         spacing={1}
@@ -65,79 +63,81 @@ function AdminPage({
         <FlexBox />
         {rightButton?.map((button) => button)}
       </Stack>
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{ width: "100%", pb: 1, alignItems: "center" }}
-      >
-        <Box sx={{ background: "#f2f2f2", p: 0.5, borderRadius: 1 }}>
-          <IconButton
-            disableRipple
-            size="small"
-            onClick={() => router.push(links[0].href)}
-          >
-            <CustomIcon
-              fontSizeSx="20px"
-              icon="home"
-              iconColor="black"
-              fill={true}
-            />
-          </IconButton>
-        </Box>
-        {links?.length > 1 && (
+      {links && (
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ width: "100%", pb: 2, alignItems: "center" }}
+        >
           <Box sx={{ background: "#f2f2f2", p: 0.5, borderRadius: 1 }}>
             <IconButton
               disableRipple
               size="small"
-              onClick={() =>
-                router.push(
-                  links[findIndex(links, { href: pathName }) - 1].href
-                )
-              }
-              color="primary"
+              onClick={() => router.push(links[0].href)}
             >
               <CustomIcon
                 fontSizeSx="20px"
-                icon="arrow_back"
+                icon="home"
                 iconColor="black"
+                fill={true}
               />
             </IconButton>
           </Box>
-        )}
-        <Breadcrumbs
-          separator="▸"
-          sx={{
-            color: "black",
-            background: "#f2f2f2",
-            width: "100%",
-            p: 1,
-            borderRadius: 1,
-          }}
-        >
-          {links &&
-            links.length > 0 &&
-            links.map(({ href, title }) => {
-              if (findCurrentPathname?.href === href) {
-                return (
-                  <Typography variant="body1" key={href} color="inherit">
-                    {title}
-                  </Typography>
-                );
-              } else {
-                return (
-                  <Link
-                    key={href}
-                    href={href}
-                    underline="hover"
-                    color="inherit"
-                  >
-                    {title}
-                  </Link>
-                );
-              }
-            })}
-        </Breadcrumbs>
-      </Stack>
+          {links?.length > 1 && (
+            <Box sx={{ background: "#f2f2f2", p: 0.5, borderRadius: 1 }}>
+              <IconButton
+                disableRipple
+                size="small"
+                onClick={() =>
+                  router.push(
+                    links[findIndex(links, { href: pathName }) - 1].href
+                  )
+                }
+                color="primary"
+              >
+                <CustomIcon
+                  fontSizeSx="20px"
+                  icon="arrow_back"
+                  iconColor="black"
+                />
+              </IconButton>
+            </Box>
+          )}
+          <Breadcrumbs
+            separator="▸"
+            sx={{
+              color: "black",
+              background: "#f2f2f2",
+              width: "100%",
+              p: 1,
+              borderRadius: 1,
+            }}
+          >
+            {links &&
+              links.length > 0 &&
+              links.map(({ href, title }) => {
+                if (findCurrentPathname?.href === href) {
+                  return (
+                    <Typography variant="body1" key={href} color="inherit">
+                      {title}
+                    </Typography>
+                  );
+                } else {
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      underline="hover"
+                      color="inherit"
+                    >
+                      {title}
+                    </Link>
+                  );
+                }
+              })}
+          </Breadcrumbs>
+        </Stack>
+      )}
       {isLoading ? <LinearProgress /> : children}
     </Box>
   );

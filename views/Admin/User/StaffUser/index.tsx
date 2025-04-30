@@ -5,7 +5,7 @@ import { useState } from "react";
 import DataGrid from "@/components/Table/DataGrid";
 import { CustomIcon } from "@/components/Icons";
 import { useCustomDialog } from "@/components/Dialog";
-import { Page } from "@/components/Box";
+import { AdminPage } from "@/components/Box";
 import PermissionDialog from "./PermissionDialog";
 import NoAccess from "@/components/Box/NoAccess";
 
@@ -97,44 +97,45 @@ function StaffUser() {
   if (!access.view) return <NoAccess />;
 
   return (
-    <Page
-      rightButton={[
-        access.add && (
-          <Button
-            key="add-admin"
-            variant="contained"
-            onClick={() => {
-              handleOpenDialog({
-                allowOutsideClose: false,
-                title: "Add Admin",
-                description:
-                  "Add admin with user email.\nMake sure email already registered.",
-                textField: { id: "text", defaultValue: "" },
-                placeholder: "User email",
-                onConfirm: async (value) => {
-                  const staffid = await updateUserRole(
-                    "ADMIN",
-                    undefined,
-                    value as string
-                  );
-                  setStaffId(staffid);
-                },
-              });
-            }}
-          >
-            Add Admin
-          </Button>
-        ),
-      ]}
-    >
+    <AdminPage>
       <DataGrid
         loading={status === "pending"}
         gap={16}
         data={staffData}
         columns={columns}
+        lastButton={
+          access.add && (
+            <Button
+              color="inherit"
+              size="small"
+              key="add-admin"
+              variant="outlined"
+              onClick={() => {
+                handleOpenDialog({
+                  allowOutsideClose: false,
+                  title: "Add Admin",
+                  description:
+                    "Add admin with user email.\nMake sure email already registered.",
+                  textField: { id: "text", defaultValue: "" },
+                  placeholder: "User email",
+                  onConfirm: async (value) => {
+                    const staffid = await updateUserRole(
+                      "ADMIN",
+                      undefined,
+                      value as string
+                    );
+                    setStaffId(staffid);
+                  },
+                });
+              }}
+            >
+              Add Admin
+            </Button>
+          )
+        }
       />
       <PermissionDialog staffId={staffId} handleClose={() => setStaffId("")} />
-    </Page>
+    </AdminPage>
   );
 }
 

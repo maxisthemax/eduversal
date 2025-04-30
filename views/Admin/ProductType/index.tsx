@@ -3,7 +3,7 @@ import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 //*components
 import DataGrid from "@/components/Table/DataGrid";
 import { CustomIcon } from "@/components/Icons";
-import { Page } from "@/components/Box";
+import { AdminPage } from "@/components/Box";
 import AddEditProductTypeDialog from "./AddEditProductTypeDialog";
 import { useCustomDialog } from "@/components/Dialog/CustomDialog";
 import NoAccess from "@/components/Box/NoAccess";
@@ -91,20 +91,19 @@ function ProductType() {
   if (!access.view) return <NoAccess />;
 
   return (
-    <Page
-      rightButton={[
-        access.add && (
-          <AddEditProductTypeDialog key="addEditProductTypeDialog" />
-        ),
-      ]}
-    >
+    <AdminPage>
       <DataGrid
         loading={status === "pending"}
-        gap={16}
+        gap={12}
         data={productsData}
         columns={columns}
+        lastButton={
+          access.add && (
+            <AddEditProductTypeDialog key="addEditProductTypeDialog" />
+          )
+        }
       />
-    </Page>
+    </AdminPage>
   );
 }
 

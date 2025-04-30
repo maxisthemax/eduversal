@@ -5,7 +5,7 @@ import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
 import find from "lodash/find";
 
 //*components
-import { Page, useCustomTabs } from "@/components/Box";
+import { AdminPage, FlexBox, useCustomTabs } from "@/components/Box";
 import AlbumContent from "./AlbumContent";
 import AddEditAlbumDialog from "./AddEditAlbumDialog";
 import { useCustomDialog } from "@/components/Dialog";
@@ -25,6 +25,8 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 function Album() {
   const access = useGetStaffAccess("restrict_content_album");
@@ -63,9 +65,8 @@ function Album() {
   if (!access.view) return <NoAccess />;
 
   return (
-    <Page
+    <AdminPage
       title={`${courseData?.name} - ${courseData?.standard_name_format} (${academicYearData?.name})`}
-      subtitle={`Total Albums: ${albumsData.length}`}
       isLoading={
         institutionStatus === "pending" ||
         albumStatus === "pending" ||
@@ -87,93 +88,103 @@ function Album() {
           title: `${courseData?.name}`,
         },
       ]}
-      rightButton={[
-        <PopupState key="menu" variant="popover" popupId="popup-menu">
-          {(popupState) => (
-            <>
-              <Button
-                size="large"
-                variant="contained"
-                {...bindTrigger(popupState)}
-                endIcon={<CustomIcon icon="arrow_drop_down" />}
-              >
-                Manage
-              </Button>
-              <Menu
-                {...bindPopover(popupState)}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-              >
-                {(packageAccess.view ||
-                  packageAccess.edit ||
-                  packageAccess.add ||
-                  packageAccess.delete) && (
-                  <AddEditPackagesDialog key="addEditPackagesDialog" />
-                )}
-                {access.add && (
-                  <AddEditAlbumDialog key={"addEditAlbumDialog"} />
-                )}
-                {albumsData.length > 0 && access.delete && (
-                  <MenuItem
-                    key="deleteAlbum"
-                    onClick={() => {
-                      handleOpenDialog({
-                        allowOutsideClose: false,
-                        title: "Delete Album",
-                        description:
-                          "Are you sure you want to delete this album?\n All photo related to this album will be deleted and cannot be recovered.",
-                        onConfirm: async () => {
-                          await deleteAlbum(value);
-                        },
-                      });
-                    }}
-                  >
-                    Delete Album
-                  </MenuItem>
-                )}
-                {albumsData.length > 0 && access.delete && (
-                  <MenuItem
-                    key="disabledAlbum"
-                    onClick={() => {
-                      const isDisabled = find(albumsData, {
-                        id: value,
-                      })?.is_disabled;
-
-                      handleOpenDialog({
-                        allowOutsideClose: false,
-                        title: isDisabled ? "Enable Album" : "Disable Album",
-                        description: isDisabled
-                          ? "Are you sure you want to enable this album?"
-                          : "Are you sure you want to disable this album?",
-                        onConfirm: async () => {
-                          if (isDisabled) {
-                            await disableAlbum(value, false);
-                          } else {
-                            await disableAlbum(value, true);
-                          }
-                        },
-                      });
-                    }}
-                  >
-                    {find(albumsData, { id: value })?.is_disabled
-                      ? "Enable Album"
-                      : "Disable Album"}
-                  </MenuItem>
-                )}
-              </Menu>
-            </>
-          )}
-        </PopupState>,
-      ]}
     >
-      <Paper>{tabsComponent}</Paper>
-    </Page>
+      <Paper variant="outlined">
+        <Stack direction="row" sx={{ px: 2, pt: 1.5, alignItems: "center" }}>
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: 500 }}
+            color="inherit"
+          >{`Total Albums: ${albumsData.length}`}</Typography>
+          <FlexBox />
+          <PopupState key="menu" variant="popover" popupId="popup-menu">
+            {(popupState) => (
+              <>
+                <Button
+                  size="medium"
+                  variant={"outlined"}
+                  color="inherit"
+                  {...bindTrigger(popupState)}
+                  {...bindTrigger(popupState)}
+                  endIcon={<CustomIcon icon="arrow_drop_down" />}
+                >
+                  Manage
+                </Button>
+                <Menu
+                  {...bindPopover(popupState)}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  {(packageAccess.view ||
+                    packageAccess.edit ||
+                    packageAccess.add ||
+                    packageAccess.delete) && (
+                    <AddEditPackagesDialog key="addEditPackagesDialog" />
+                  )}
+                  {access.add && (
+                    <AddEditAlbumDialog key={"addEditAlbumDialog"} />
+                  )}
+                  {albumsData.length > 0 && access.delete && (
+                    <MenuItem
+                      key="deleteAlbum"
+                      onClick={() => {
+                        handleOpenDialog({
+                          allowOutsideClose: false,
+                          title: "Delete Album",
+                          description:
+                            "Are you sure you want to delete this album?\n All photo related to this album will be deleted and cannot be recovered.",
+                          onConfirm: async () => {
+                            await deleteAlbum(value);
+                          },
+                        });
+                      }}
+                    >
+                      Delete Album
+                    </MenuItem>
+                  )}
+                  {albumsData.length > 0 && access.delete && (
+                    <MenuItem
+                      key="disabledAlbum"
+                      onClick={() => {
+                        const isDisabled = find(albumsData, {
+                          id: value,
+                        })?.is_disabled;
+
+                        handleOpenDialog({
+                          allowOutsideClose: false,
+                          title: isDisabled ? "Enable Album" : "Disable Album",
+                          description: isDisabled
+                            ? "Are you sure you want to enable this album?"
+                            : "Are you sure you want to disable this album?",
+                          onConfirm: async () => {
+                            if (isDisabled) {
+                              await disableAlbum(value, false);
+                            } else {
+                              await disableAlbum(value, true);
+                            }
+                          },
+                        });
+                      }}
+                    >
+                      {find(albumsData, { id: value })?.is_disabled
+                        ? "Enable Album"
+                        : "Disable Album"}
+                    </MenuItem>
+                  )}
+                </Menu>
+              </>
+            )}
+          </PopupState>
+        </Stack>
+        {tabsComponent}
+      </Paper>
+    </AdminPage>
   );
 }
 

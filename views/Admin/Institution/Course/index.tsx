@@ -1,5 +1,4 @@
-import { useParams } from "next/navigation";
-import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import PopupState, {
   bindDialog,
   bindMenu,
@@ -7,7 +6,7 @@ import PopupState, {
 } from "material-ui-popup-state";
 
 //*components
-import { OverlayBox, Page } from "@/components/Box";
+import { OverlayBox, AdminPage } from "@/components/Box";
 import DataGrid from "@/components/Table/DataGrid";
 import AddEditCourseDialog from "./AddEditCourseDialog";
 import { CustomIcon } from "@/components/Icons";
@@ -34,6 +33,7 @@ import { useAlbums } from "@/data/admin/institution/album";
 import { useGetStaffAccess } from "@/data/admin/user/staff";
 
 function Course() {
+  const { push } = useRouter();
   const access = useGetStaffAccess("restrict_content_class_club");
   const { handleOpenDialog } = useCustomDialog();
   const params = useParams();
@@ -52,15 +52,6 @@ function Course() {
       headerName: "Name",
       flex: 1,
       minWidth: 200,
-      renderCell: ({ formattedValue, id }) => {
-        return (
-          <Link
-            href={`/admin/institution/${institutionId}/${academicYearId}/${id}`}
-          >
-            {formattedValue}
-          </Link>
-        );
-      },
     },
     {
       field: "standard_name_format",
@@ -118,7 +109,14 @@ function Course() {
           <PopupState variant="popover" popupId="menu">
             {(popupState) => (
               <>
-                <IconButton size="small" {...bindTrigger(popupState)}>
+                <IconButton
+                  size="small"
+                  {...bindTrigger(popupState)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    popupState.open(e);
+                  }}
+                >
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
@@ -168,7 +166,7 @@ function Course() {
   if (!access.view) return <NoAccess />;
 
   return (
-    <Page
+    <AdminPage
       isLoading={
         institutionStatus === "pending" ||
         academicYearStatus === "pending" ||
@@ -191,25 +189,31 @@ function Course() {
         academicYearData?.year?.toString() ?? ""
       })`}
       leftButton={[]}
-      rightButton={[
-        access.add && <AddEditCourseDialog key="addEditAcademicYearDialog" />,
-      ]}
+      rightButton={[]}
     >
       <DataGrid
-        gap={20}
+        onRowClick={(params) => {
+          push(
+            `/admin/institution/${institutionId}/${academicYearId}/${params.id}`
+          );
+        }}
+        gap={19}
         columns={columns}
         data={coursesData}
         firstToolbarText={
           <Typography
-            variant="inherit"
-            sx={{ px: 1, fontWeight: 500 }}
-            color="primary"
+            variant="subtitle1"
+            sx={{ fontWeight: 500 }}
+            color="inherit"
           >
             Total Classes: <b>{coursesData?.length ?? 0}</b>
           </Typography>
         }
+        lastButton={
+          access.add && <AddEditCourseDialog key="addEditAcademicYearDialog" />
+        }
       />
-    </Page>
+    </AdminPage>
   );
 }
 

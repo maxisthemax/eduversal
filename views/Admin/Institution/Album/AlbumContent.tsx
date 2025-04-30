@@ -160,7 +160,11 @@ function AlbumContent({ albumId }: { albumId: string }) {
                 <AddEditAlbumDialog mode="edit" albumId={albumData.id} />
               )}
               {access.edit && (
-                <Button variant="contained" {...bindTrigger(popupState)}>
+                <Button
+                  variant={"outlined"}
+                  color="inherit"
+                  {...bindTrigger(popupState)}
+                >
                   Upload
                 </Button>
               )}
@@ -286,7 +290,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
           </Grid>
           <Grid
             size={{ xs: 8.5 }}
-            sx={{ overflow: "auto", height: getFullHeightSize(37) }}
+            sx={{ overflow: "auto", height: getFullHeightSize(39) }}
           >
             <Grid container spacing={2}>
               {photosData.map((item, index) => (
@@ -408,7 +412,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
             size={{ xs: 3.5 }}
             sx={{
               background: "#EBEBEB",
-              height: getFullHeightSize(37),
+              height: getFullHeightSize(39),
               overflow: "auto",
             }}
           >
