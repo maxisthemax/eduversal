@@ -49,7 +49,7 @@ function YearAndMonthPopover({ date, onChange }: YearAndMonthPopoverProps) {
           <Button
             {...bindTrigger(yearPopupState)}
             variant={"outlined"}
-            color={"primary"}
+            color={"inherit"}
             size={"small"}
           >
             {formatDate(new Date(date), "yyyy MMM")}

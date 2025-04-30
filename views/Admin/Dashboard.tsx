@@ -122,6 +122,7 @@ function Dashboard() {
                 </Stack>
                 <Stack direction="row">
                   <Button
+                    color="inherit"
                     variant="outlined"
                     onClick={() => {
                       setDateType((prev) => {
@@ -171,6 +172,7 @@ function Dashboard() {
                 </Stack>
                 <Stack direction="row">
                   <Button
+                    color="inherit"
                     variant="outlined"
                     onClick={() => {
                       setDateType((prev) => {
@@ -221,6 +223,7 @@ function Dashboard() {
                 </Stack>
                 <Stack direction="row">
                   <Button
+                    color="inherit"
                     variant="outlined"
                     onClick={() => {
                       setDateType((prev) => {
