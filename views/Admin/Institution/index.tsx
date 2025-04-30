@@ -72,7 +72,14 @@ function Institution() {
           <PopupState variant="popover" popupId="menu">
             {(popupState) => (
               <>
-                <IconButton size="small" {...bindTrigger(popupState)}>
+                <IconButton
+                  size="small"
+                  {...bindTrigger(popupState)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    popupState.open(e);
+                  }}
+                >
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
                 <Menu {...bindMenu(popupState)}>
