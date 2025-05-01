@@ -84,7 +84,7 @@ function ChangePassword() {
           return (
             <OverlayBox isLoading={isSubmitting}>
               <Form onSubmit={handleSubmit}>
-                <Container maxWidth="sm" disableGutters sx={{ ml: 0 }}>
+                <Container disableGutters sx={{ ml: 0 }}>
                   <Stack spacing={2} sx={{ pt: 2 }}>
                     <TextFieldForm
                       name="password"

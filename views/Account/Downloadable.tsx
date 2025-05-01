@@ -27,7 +27,7 @@ function Downloadable() {
       subtitle="Access and Manage Your Resources"
       backgroundColor="white"
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={4}>
         {data.download_images?.map((item, index) => (
           <Grid
             size={{

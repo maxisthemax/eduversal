@@ -122,8 +122,9 @@ function Main({ children }: { children: React.ReactNode }) {
           direction="row"
           sx={{
             background: "#F8F8F8",
-            height: getFullHeightSize(14.9),
+            height: getFullHeightSize(15.9),
             width: "100%",
+            overflowY: "auto",
           }}
         >
           {children}
@@ -140,6 +141,7 @@ function Main({ children }: { children: React.ReactNode }) {
               background: "#F8F8F8",
               width: "100%",
               pb: 2,
+              pt: 1,
             }}
           >
             <Divider />

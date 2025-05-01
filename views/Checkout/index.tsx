@@ -38,9 +38,6 @@ import { useCart } from "../Cart";
 import { useOrder } from "@/data/order";
 import { useUser } from "@/data/user";
 
-//*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
-
 //*utils
 import { paymentLabel } from "@/utils/constant";
 
@@ -242,225 +239,71 @@ function Checkout() {
   return (
     <>
       <OverlayBox isLoading={formik.isSubmitting || isCheckout}>
-        {!cart || cart.length === 0 ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: getFullHeightSize(0),
-            }}
-          >
-            <Stack direction="column" spacing={2}>
-              <Typography variant="h4">Check Your Order</Typography>
-              <Button
-                onClick={() => push("/account/purchase")}
-                variant="contained"
-              >
-                Go To Your Order
-              </Button>
-            </Stack>
-          </Box>
-        ) : (
-          <form onSubmit={formik.handleSubmit}>
-            <Grid
-              container
-              sx={{ height: getFullHeightSize(7.1), width: "100%" }}
+        <Box
+          sx={{
+            overflowY: "auto",
+            background: "#FBF9F7",
+            height: "100%",
+          }}
+        >
+          {!cart || cart.length === 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              <Grid
-                size={{ xs: 6 }}
-                sx={{
-                  height: "100%",
-                }}
-              >
-                <Container
-                  maxWidth="sm"
-                  disableGutters
+              <Stack direction="column" spacing={2}>
+                <Typography variant="h4">Check Your Order</Typography>
+                <Button
+                  onClick={() => push("/account/purchase")}
+                  variant="contained"
+                >
+                  Go To Your Order
+                </Button>
+              </Stack>
+            </Box>
+          ) : (
+            <form onSubmit={formik.handleSubmit} style={{ height: "100%" }}>
+              <Grid container sx={{ width: "100%", height: "100%" }}>
+                <Grid
+                  size={{ xs: 6 }}
                   sx={{
-                    marginRight: "0px",
                     height: "100%",
-                    overflowY: "auto",
-                    pt: 2,
-                    pl: 2,
-                    pr: 2,
+                    background: "white",
                   }}
                 >
-                  <Stack sx={{ width: "100%" }} spacing={4}>
-                    <Box>
-                      <Box
-                        component="img"
-                        src={"/image/logo.png"}
-                        height={"30px"}
-                      />
-                    </Box>
-                    <Stack sx={{ width: "100%" }} spacing={2}>
-                      <Typography gutterBottom>Shipping Method</Typography>
-                      <Button
-                        onClick={() => {
-                          setFieldValue("shipment_method", "in-store");
-                          setFieldValue("shipping_fee", 0);
-                        }}
-                        fullWidth
-                        variant="outlined"
-                        color={
-                          values?.shipment_method === "in-store"
-                            ? "primary"
-                            : "inherit"
-                        }
-                        sx={{
-                          p: 2,
-                          justifyContent: "space-between",
-                          textTransform: "inherit",
-                        }}
-                      >
-                        <Stack
-                          direction="row"
-                          spacing={2}
-                          sx={{ alignItems: "center" }}
-                        >
-                          <CustomIcon icon="check_circle" />
-                          <ListItemText
-                            slotProps={{
-                              primary: { variant: "inherit" },
-                              secondary: {
-                                variant: "inherit",
-                                whiteSpace: "break-spaces",
-                                textAlign: "start",
-                              },
-                            }}
-                            sx={{ justifyItems: "start" }}
-                            primary={"Pick Up In Store"}
-                            secondary={"Collect From Teacher"}
-                          />
-                        </Stack>
-                      </Button>
-                      {isDeliverable && (
+                  <Container
+                    maxWidth="sm"
+                    disableGutters
+                    sx={{
+                      marginRight: "0px",
+                      height: "100%",
+                      pt: 2,
+                      pl: 2,
+                      pr: 2,
+                    }}
+                  >
+                    <Stack sx={{ width: "100%" }} spacing={4}>
+                      <Box>
+                        <Box
+                          component="img"
+                          src={"/image/logo.png"}
+                          height={"30px"}
+                        />
+                      </Box>
+                      <Stack sx={{ width: "100%" }} spacing={2}>
+                        <Typography gutterBottom>Shipping Method</Typography>
                         <Button
                           onClick={() => {
-                            setFieldValue("shipment_method", "ship");
-                            setFieldValue("shipping_fee", 15);
+                            setFieldValue("shipment_method", "in-store");
+                            setFieldValue("shipping_fee", 0);
                           }}
-                          color={
-                            values?.shipment_method === "ship"
-                              ? "primary"
-                              : "inherit"
-                          }
                           fullWidth
                           variant="outlined"
-                          sx={{
-                            p: 2,
-                            justifyContent: "space-between",
-                            textTransform: "inherit",
-                          }}
-                        >
-                          <Stack
-                            direction="row"
-                            spacing={2}
-                            sx={{ alignItems: "center", width: "100%" }}
-                          >
-                            <CustomIcon icon="check_circle" />
-                            <ListItemText
-                              slotProps={{
-                                primary: { variant: "inherit" },
-                                secondary: { variant: "inherit" },
-                              }}
-                              sx={{ justifyItems: "start" }}
-                              primary={"Ship In"}
-                            />
-                            <FlexBox />
-                            <Typography variant="inherit">RM 15.00</Typography>
-                          </Stack>
-                        </Button>
-                      )}
-                    </Stack>
-                    {values?.shipment_method === "ship" && (
-                      <Stack sx={{ width: "100%" }} spacing={2}>
-                        <Typography gutterBottom>Shipping Address</Typography>
-                        <Stack spacing={2} sx={{ textAlign: "center" }}>
-                          <Stack direction={"row"} spacing={2}>
-                            <TextFieldForm
-                              name="shipping_address.first_name"
-                              label="First Name"
-                              formProps={formProps}
-                              props={{ required: true, size: "medium" }}
-                            />
-                            <TextFieldForm
-                              name="shipping_address.last_name"
-                              label="Last Name"
-                              formProps={formProps}
-                              props={{ required: true, size: "medium" }}
-                            />
-                          </Stack>
-                          <TextFieldForm
-                            name="shipping_address.email"
-                            label="Email"
-                            formProps={formProps}
-                            props={{ required: true, size: "medium" }}
-                          />
-                          <MobileNumberForm
-                            name="shipping_address.phone_no"
-                            label="Phone No"
-                            formProps={formProps}
-                            props={{ required: true, size: "medium" }}
-                            countryCallingCode={
-                              values.shipping_address.country_code
-                            }
-                            onCountryChange={(e) =>
-                              setFieldValue("country_code", e)
-                            }
-                          />
-                          <TextFieldForm
-                            name="shipping_address.address_1"
-                            label="Address 1"
-                            formProps={formProps}
-                            props={{ required: true, size: "medium" }}
-                          />
-                          <TextFieldForm
-                            name="shipping_address.address_2"
-                            label="Address 2"
-                            formProps={formProps}
-                            props={{ size: "medium" }}
-                          />
-                          <Stack direction={"row"} spacing={2}>
-                            <TextFieldForm
-                              name="shipping_address.postcode"
-                              label="Postcode"
-                              formProps={formProps}
-                              onlyNumber={true}
-                              props={{ required: true, size: "medium" }}
-                            />
-                            <StateSelectTextFieldForm
-                              name="shipping_address.state"
-                              label="State"
-                              formProps={formProps}
-                              props={{
-                                required: true,
-                                size: "medium",
-                                sx: { textAlign: "start" },
-                              }}
-                            />
-                            <TextFieldForm
-                              name="shipping_address.city"
-                              label="City"
-                              formProps={formProps}
-                              props={{ required: true, size: "medium" }}
-                            />
-                          </Stack>
-                        </Stack>
-                      </Stack>
-                    )}
-                    <Stack sx={{ width: "100%" }} spacing={2}>
-                      <Typography gutterBottom>Payment Method</Typography>
-                      {["fpx", "credit_debit", "e_wallet"].map((method) => (
-                        <Button
-                          onClick={() => {
-                            setFieldValue("payment_method", method);
-                          }}
-                          key={method}
-                          fullWidth
-                          variant={"outlined"}
                           color={
-                            values?.payment_method === method
+                            values?.shipment_method === "in-store"
                               ? "primary"
                               : "inherit"
                           }
@@ -479,153 +322,390 @@ function Checkout() {
                             <ListItemText
                               slotProps={{
                                 primary: { variant: "inherit" },
-                                secondary: { variant: "inherit" },
+                                secondary: {
+                                  variant: "inherit",
+                                  whiteSpace: "break-spaces",
+                                  textAlign: "start",
+                                },
                               }}
                               sx={{ justifyItems: "start" }}
-                              primary={paymentLabel[method]}
+                              primary={"Pick Up In Store"}
+                              secondary={"Collect From Teacher"}
                             />
                           </Stack>
                         </Button>
-                      ))}
+                        {isDeliverable && (
+                          <Button
+                            onClick={() => {
+                              setFieldValue("shipment_method", "ship");
+                              setFieldValue("shipping_fee", 15);
+                            }}
+                            color={
+                              values?.shipment_method === "ship"
+                                ? "primary"
+                                : "inherit"
+                            }
+                            fullWidth
+                            variant="outlined"
+                            sx={{
+                              p: 2,
+                              justifyContent: "space-between",
+                              textTransform: "inherit",
+                            }}
+                          >
+                            <Stack
+                              direction="row"
+                              spacing={2}
+                              sx={{ alignItems: "center", width: "100%" }}
+                            >
+                              <CustomIcon icon="check_circle" />
+                              <ListItemText
+                                slotProps={{
+                                  primary: { variant: "inherit" },
+                                  secondary: { variant: "inherit" },
+                                }}
+                                sx={{ justifyItems: "start" }}
+                                primary={"Ship In"}
+                              />
+                              <FlexBox />
+                              <Typography variant="inherit">
+                                RM 15.00
+                              </Typography>
+                            </Stack>
+                          </Button>
+                        )}
+                      </Stack>
+                      {values?.shipment_method === "ship" && (
+                        <Stack sx={{ width: "100%" }} spacing={2}>
+                          <Typography gutterBottom>Shipping Address</Typography>
+                          <Stack spacing={2} sx={{ textAlign: "center" }}>
+                            <Stack direction={"row"} spacing={2}>
+                              <TextFieldForm
+                                name="shipping_address.first_name"
+                                label="First Name"
+                                formProps={formProps}
+                                props={{ required: true, size: "medium" }}
+                              />
+                              <TextFieldForm
+                                name="shipping_address.last_name"
+                                label="Last Name"
+                                formProps={formProps}
+                                props={{ required: true, size: "medium" }}
+                              />
+                            </Stack>
+                            <TextFieldForm
+                              name="shipping_address.email"
+                              label="Email"
+                              formProps={formProps}
+                              props={{ required: true, size: "medium" }}
+                            />
+                            <MobileNumberForm
+                              name="shipping_address.phone_no"
+                              label="Phone No"
+                              formProps={formProps}
+                              props={{ required: true, size: "medium" }}
+                              countryCallingCode={
+                                values.shipping_address.country_code
+                              }
+                              onCountryChange={(e) =>
+                                setFieldValue("country_code", e)
+                              }
+                            />
+                            <TextFieldForm
+                              name="shipping_address.address_1"
+                              label="Address 1"
+                              formProps={formProps}
+                              props={{ required: true, size: "medium" }}
+                            />
+                            <TextFieldForm
+                              name="shipping_address.address_2"
+                              label="Address 2"
+                              formProps={formProps}
+                              props={{ size: "medium" }}
+                            />
+                            <Stack direction={"row"} spacing={2}>
+                              <TextFieldForm
+                                name="shipping_address.postcode"
+                                label="Postcode"
+                                formProps={formProps}
+                                onlyNumber={true}
+                                props={{ required: true, size: "medium" }}
+                              />
+                              <StateSelectTextFieldForm
+                                name="shipping_address.state"
+                                label="State"
+                                formProps={formProps}
+                                props={{
+                                  required: true,
+                                  size: "medium",
+                                  sx: { textAlign: "start" },
+                                }}
+                              />
+                              <TextFieldForm
+                                name="shipping_address.city"
+                                label="City"
+                                formProps={formProps}
+                                props={{ required: true, size: "medium" }}
+                              />
+                            </Stack>
+                          </Stack>
+                        </Stack>
+                      )}
+                      <Stack sx={{ width: "100%" }} spacing={2}>
+                        <Typography gutterBottom>Payment Method</Typography>
+                        {["fpx", "credit_debit", "e_wallet"].map((method) => (
+                          <Button
+                            onClick={() => {
+                              setFieldValue("payment_method", method);
+                            }}
+                            key={method}
+                            fullWidth
+                            variant={"outlined"}
+                            color={
+                              values?.payment_method === method
+                                ? "primary"
+                                : "inherit"
+                            }
+                            sx={{
+                              p: 2,
+                              justifyContent: "space-between",
+                              textTransform: "inherit",
+                            }}
+                          >
+                            <Stack
+                              direction="row"
+                              spacing={2}
+                              sx={{ alignItems: "center" }}
+                            >
+                              <CustomIcon icon="check_circle" />
+                              <ListItemText
+                                slotProps={{
+                                  primary: { variant: "inherit" },
+                                  secondary: { variant: "inherit" },
+                                }}
+                                sx={{ justifyItems: "start" }}
+                                primary={paymentLabel[method]}
+                              />
+                            </Stack>
+                          </Button>
+                        ))}
+                      </Stack>
+                      <TextFieldForm
+                        name="remark"
+                        label="Remark"
+                        formProps={formProps}
+                        props={{ size: "medium", multiline: true, minRows: 4 }}
+                      />
                     </Stack>
-                    <TextFieldForm
-                      name="remark"
-                      label="Remark"
-                      formProps={formProps}
-                      props={{ size: "medium", multiline: true, minRows: 4 }}
-                    />
-                  </Stack>
-                  <Stack
-                    sx={{
-                      position: "sticky",
-                      bottom: 0,
-                      zIndex: 1,
-                      pt: 2,
-                      pb: 4,
-                      background: "white",
-                    }}
-                    spacing={2}
-                  >
-                    <Button
-                      onClick={() => {
-                        formik.handleSubmit();
+                    <Stack
+                      sx={{
+                        pt: 2,
+                        pb: 10,
+                        background: "white",
                       }}
-                      variant="contained"
-                      fullWidth
+                      spacing={2}
                     >
-                      Continue
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        push("/cart");
-                      }}
-                      variant="outlined"
-                      fullWidth
-                    >
-                      Back
-                    </Button>
-                  </Stack>
-                </Container>
-              </Grid>
-              <Grid
-                size={{ xs: 6 }}
-                sx={{
-                  background: "#FBF9F7",
-                  pl: 4,
-                  pr: 4,
-                  pt: 4,
-                  height: "100%",
-                  overflow: "auto",
-                }}
-              >
-                <Container
-                  maxWidth="sm"
-                  disableGutters
-                  sx={{ marginLeft: "0px" }}
+                      <Button
+                        onClick={() => {
+                          formik.handleSubmit();
+                        }}
+                        variant="contained"
+                        fullWidth
+                      >
+                        Continue
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          push("/cart");
+                        }}
+                        variant="outlined"
+                        fullWidth
+                      >
+                        Back
+                      </Button>
+                    </Stack>
+                  </Container>
+                </Grid>
+                <Grid
+                  size={{ xs: 6 }}
+                  sx={{
+                    background: "#FBF9F7",
+                    pl: 4,
+                    pr: 4,
+                    pt: 4,
+                    height: "100%",
+                  }}
                 >
-                  {cartGroup &&
-                    Object.keys(cartGroup).length > 0 &&
-                    Object.keys(cartGroup).map((key: string) => {
-                      const cart = cartGroup[key];
-                      return (
-                        <Box key={key}>
-                          <Box>
-                            <Typography variant="body1" gutterBottom>
-                              <b>{key}</b>
-                            </Typography>
-                          </Box>
-                          {cart &&
-                            cart.length > 0 &&
-                            cart.map((item) => {
-                              return (
-                                <Box key={item.id}>
-                                  <Grid container spacing={2}>
-                                    <Grid size={{ xs: 2 }}>
-                                      {item.userPackage.packageId === "none" ? (
-                                        <Box
-                                          component="img"
-                                          src={
-                                            item.userPackage.items[0]
-                                              .photoUrl ?? null
-                                          }
-                                          sx={{
-                                            width: "100%",
-                                            aspectRatio: "1/1",
-                                            objectFit: "contain",
-                                            backgroundColor: "#f2f2f2",
-                                          }}
-                                        />
-                                      ) : (
-                                        <Box
-                                          component="img"
-                                          src={
-                                            item.userPackage.packageData
-                                              .preview_url ?? null
-                                          }
-                                          sx={{
-                                            width: "100%",
-                                            aspectRatio: "1/1",
-                                            objectFit: "contain",
-                                            backgroundColor: "#f2f2f2",
-                                          }}
-                                        />
-                                      )}
-                                    </Grid>
-                                    <Grid size={{ xs: "grow" }}>
-                                      {item.userPackage.packageId === "none" ? (
-                                        <Stack
-                                          direction="row"
-                                          sx={{
-                                            width: "100%",
-                                            justifyContent: "space-between",
-                                          }}
-                                        >
+                  <Container
+                    maxWidth="sm"
+                    disableGutters
+                    sx={{ marginLeft: "0px" }}
+                  >
+                    {cartGroup &&
+                      Object.keys(cartGroup).length > 0 &&
+                      Object.keys(cartGroup).map((key: string) => {
+                        const cart = cartGroup[key];
+                        return (
+                          <Box key={key}>
+                            <Box>
+                              <Typography variant="body1" gutterBottom>
+                                <b>{key}</b>
+                              </Typography>
+                            </Box>
+                            {cart &&
+                              cart.length > 0 &&
+                              cart.map((item) => {
+                                return (
+                                  <Box key={item.id}>
+                                    <Grid container spacing={2}>
+                                      <Grid size={{ xs: 2 }}>
+                                        {item.userPackage.packageId ===
+                                        "none" ? (
+                                          <Box
+                                            component="img"
+                                            src={
+                                              item.userPackage.items[0]
+                                                .photoUrl ?? null
+                                            }
+                                            sx={{
+                                              width: "100%",
+                                              aspectRatio: "1/1",
+                                              objectFit: "contain",
+                                              backgroundColor: "#f2f2f2",
+                                            }}
+                                          />
+                                        ) : (
+                                          <Box
+                                            component="img"
+                                            src={
+                                              item.userPackage.packageData
+                                                .preview_url ?? null
+                                            }
+                                            sx={{
+                                              width: "100%",
+                                              aspectRatio: "1/1",
+                                              objectFit: "contain",
+                                              backgroundColor: "#f2f2f2",
+                                            }}
+                                          />
+                                        )}
+                                      </Grid>
+                                      <Grid size={{ xs: "grow" }}>
+                                        {item.userPackage.packageId ===
+                                        "none" ? (
                                           <Stack
-                                            spacing={0.5}
-                                            sx={{ width: "100%" }}
+                                            direction="row"
+                                            sx={{
+                                              width: "100%",
+                                              justifyContent: "space-between",
+                                            }}
                                           >
-                                            <Stack direction="row">
-                                              <Stack>
-                                                <Typography gutterBottom>
-                                                  {
-                                                    item.userPackage.items[0]
-                                                      ?.photoName
-                                                  }
-                                                </Typography>
-                                                {!item.userPackage.items[0]
-                                                  .album
-                                                  .productTypeDeliverable && (
-                                                  <Typography
-                                                    variant="inherit"
-                                                    color="error"
-                                                  >
-                                                    Please note that this
-                                                    product is available for
-                                                    collection at the school by
-                                                    the assigned teacher.
+                                            <Stack
+                                              spacing={0.5}
+                                              sx={{ width: "100%" }}
+                                            >
+                                              <Stack direction="row">
+                                                <Stack>
+                                                  <Typography gutterBottom>
+                                                    {
+                                                      item.userPackage.items[0]
+                                                        ?.photoName
+                                                    }
                                                   </Typography>
-                                                )}
+                                                  {!item.userPackage.items[0]
+                                                    .album
+                                                    .productTypeDeliverable && (
+                                                    <Typography
+                                                      variant="inherit"
+                                                      color="error"
+                                                    >
+                                                      Please note that this
+                                                      product is available for
+                                                      collection at the school
+                                                      by the assigned teacher.
+                                                    </Typography>
+                                                  )}
+                                                </Stack>
+                                                <FlexBox />
+                                                <Tooltip
+                                                  placement="top"
+                                                  title={`RM ${(
+                                                    item.userPackage
+                                                      .packagePrice +
+                                                    item.userPackage.itemsPrice
+                                                  ).toFixed(2)} x ${
+                                                    item.quantity
+                                                  } = ${(
+                                                    (item.userPackage
+                                                      .packagePrice +
+                                                      item.userPackage
+                                                        .itemsPrice) *
+                                                    item.quantity
+                                                  ).toFixed(2)}`}
+                                                >
+                                                  <Typography
+                                                    sx={{
+                                                      whiteSpace: "nowrap",
+                                                    }}
+                                                  >
+                                                    x {item.quantity}
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
+                                                    {(
+                                                      (item.userPackage
+                                                        .packagePrice +
+                                                        item.userPackage
+                                                          .itemsPrice) *
+                                                      item.quantity
+                                                    ).toFixed(2)}
+                                                  </Typography>
+                                                </Tooltip>
                                               </Stack>
+                                              <Typography variant="body1">
+                                                Child:{" "}
+                                                {
+                                                  item.userPackage.items[0]
+                                                    ?.name
+                                                }
+                                              </Typography>
+                                              {item.userPackage.items[0]?.productVariationOptions.map(
+                                                (option) =>
+                                                  option.productVariationOptionId ? (
+                                                    <Typography
+                                                      variant="body2"
+                                                      key={
+                                                        option.productVariationOptionId
+                                                      }
+                                                    >
+                                                      {
+                                                        option.productVariationName
+                                                      }
+                                                      {option.productVariationDownloadable
+                                                        ? ` (Includes Soft Copy)`
+                                                        : ""}
+                                                      :{" "}
+                                                      {
+                                                        option.productVariationOptionName
+                                                      }
+                                                    </Typography>
+                                                  ) : (
+                                                    <></>
+                                                  )
+                                              )}
+                                            </Stack>
+                                          </Stack>
+                                        ) : (
+                                          <Stack>
+                                            <Stack direction="row">
+                                              <Typography>
+                                                {
+                                                  item.userPackage.packageData
+                                                    ?.name
+                                                }{" "}
+                                                {item.userPackage.packageData
+                                                  .is_downloadable
+                                                  ? "(Downloadable)"
+                                                  : ""}
+                                              </Typography>
                                               <FlexBox />
                                               <Tooltip
                                                 placement="top"
@@ -658,277 +738,212 @@ function Checkout() {
                                                 </Typography>
                                               </Tooltip>
                                             </Stack>
-                                            <Typography variant="body1">
+                                            <Typography
+                                              variant="body1"
+                                              gutterBottom
+                                            >
                                               Child:{" "}
                                               {item.userPackage.items[0]?.name}
                                             </Typography>
-                                            {item.userPackage.items[0]?.productVariationOptions.map(
-                                              (option) =>
-                                                option.productVariationOptionId ? (
-                                                  <Typography
-                                                    variant="body2"
-                                                    key={
-                                                      option.productVariationOptionId
-                                                    }
-                                                  >
-                                                    {
-                                                      option.productVariationName
-                                                    }
-                                                    {option.productVariationDownloadable
-                                                      ? ` (Includes Soft Copy)`
-                                                      : ""}
-                                                    :{" "}
-                                                    {
-                                                      option.productVariationOptionName
-                                                    }
-                                                  </Typography>
-                                                ) : (
-                                                  <></>
-                                                )
-                                            )}
-                                          </Stack>
-                                        </Stack>
-                                      ) : (
-                                        <Stack>
-                                          <Stack direction="row">
-                                            <Typography>
-                                              {
-                                                item.userPackage.packageData
-                                                  ?.name
-                                              }{" "}
-                                              {item.userPackage.packageData
-                                                .is_downloadable
-                                                ? "(Downloadable)"
-                                                : ""}
-                                            </Typography>
-                                            <FlexBox />
-                                            <Tooltip
-                                              placement="top"
-                                              title={`RM ${(
-                                                item.userPackage.packagePrice +
-                                                item.userPackage.itemsPrice
-                                              ).toFixed(2)} x ${
-                                                item.quantity
-                                              } = ${(
-                                                (item.userPackage.packagePrice +
-                                                  item.userPackage.itemsPrice) *
-                                                item.quantity
-                                              ).toFixed(2)}`}
-                                            >
-                                              <Typography
-                                                sx={{ whiteSpace: "nowrap" }}
-                                              >
-                                                x {item.quantity}
-                                                &nbsp;&nbsp;&nbsp;&nbsp;RM{" "}
-                                                {(
-                                                  (item.userPackage
-                                                    .packagePrice +
-                                                    item.userPackage
-                                                      .itemsPrice) *
-                                                  item.quantity
-                                                ).toFixed(2)}
-                                              </Typography>
-                                            </Tooltip>
-                                          </Stack>
-                                          <Typography
-                                            variant="body1"
-                                            gutterBottom
-                                          >
-                                            Child:{" "}
-                                            {item.userPackage.items[0]?.name}
-                                          </Typography>
-                                          <Stack spacing={2}>
-                                            {item.userPackage.items.map(
-                                              (
-                                                {
-                                                  photoId,
-                                                  photoName,
-                                                  photoUrl,
-                                                  productVariationOptions,
-                                                  album,
-                                                },
-                                                index
-                                              ) => {
-                                                return (
-                                                  <Grid
-                                                    container
-                                                    key={`${photoId}_${index}`}
-                                                    spacing={2}
-                                                  >
-                                                    <Grid size={{ xs: 1.5 }}>
-                                                      <Box
-                                                        component="img"
-                                                        src={photoUrl ?? null}
-                                                        sx={{
-                                                          width: "100%",
-                                                          aspectRatio: "1/1",
-                                                          objectFit: "contain",
-                                                          backgroundColor:
-                                                            "#f2f2f2",
-                                                        }}
-                                                      />
-                                                    </Grid>
-                                                    <Grid size={{ xs: "grow" }}>
-                                                      <Stack
-                                                        direction="row"
-                                                        sx={{
-                                                          justifyContent:
-                                                            "space-between",
-                                                        }}
+                                            <Stack spacing={2}>
+                                              {item.userPackage.items.map(
+                                                (
+                                                  {
+                                                    photoId,
+                                                    photoName,
+                                                    photoUrl,
+                                                    productVariationOptions,
+                                                    album,
+                                                  },
+                                                  index
+                                                ) => {
+                                                  return (
+                                                    <Grid
+                                                      container
+                                                      key={`${photoId}_${index}`}
+                                                      spacing={2}
+                                                    >
+                                                      <Grid size={{ xs: 1.5 }}>
+                                                        <Box
+                                                          component="img"
+                                                          src={photoUrl ?? null}
+                                                          sx={{
+                                                            width: "100%",
+                                                            aspectRatio: "1/1",
+                                                            objectFit:
+                                                              "contain",
+                                                            backgroundColor:
+                                                              "#f2f2f2",
+                                                          }}
+                                                        />
+                                                      </Grid>
+                                                      <Grid
+                                                        size={{ xs: "grow" }}
                                                       >
-                                                        <Stack direction="column">
-                                                          <Stack>
-                                                            <Typography
-                                                              gutterBottom
-                                                            >
-                                                              {photoName}
-                                                            </Typography>
-                                                            {!album.productTypeDeliverable && (
+                                                        <Stack
+                                                          direction="row"
+                                                          sx={{
+                                                            justifyContent:
+                                                              "space-between",
+                                                          }}
+                                                        >
+                                                          <Stack direction="column">
+                                                            <Stack>
                                                               <Typography
-                                                                variant="inherit"
-                                                                color="error"
+                                                                gutterBottom
                                                               >
-                                                                Please note that
-                                                                this product is
-                                                                available for
-                                                                collection at
-                                                                the school by
-                                                                the assigned
-                                                                teacher.
+                                                                {photoName}
                                                               </Typography>
+                                                              {!album.productTypeDeliverable && (
+                                                                <Typography
+                                                                  variant="inherit"
+                                                                  color="error"
+                                                                >
+                                                                  Please note
+                                                                  that this
+                                                                  product is
+                                                                  available for
+                                                                  collection at
+                                                                  the school by
+                                                                  the assigned
+                                                                  teacher.
+                                                                </Typography>
+                                                              )}
+                                                            </Stack>
+                                                            {productVariationOptions.map(
+                                                              (option) => (
+                                                                <Typography
+                                                                  variant="body2"
+                                                                  key={
+                                                                    option.productVariationOptionId
+                                                                  }
+                                                                >
+                                                                  {
+                                                                    option.productVariationName
+                                                                  }
+                                                                  {option.productVariationDownloadable
+                                                                    ? ` (Includes Soft Copy)`
+                                                                    : ""}
+                                                                  :{" "}
+                                                                  {
+                                                                    option.productVariationOptionName
+                                                                  }
+                                                                </Typography>
+                                                              )
                                                             )}
                                                           </Stack>
-                                                          {productVariationOptions.map(
-                                                            (option) => (
-                                                              <Typography
-                                                                variant="body2"
-                                                                key={
-                                                                  option.productVariationOptionId
-                                                                }
-                                                              >
-                                                                {
-                                                                  option.productVariationName
-                                                                }
-                                                                {option.productVariationDownloadable
-                                                                  ? ` (Includes Soft Copy)`
-                                                                  : ""}
-                                                                :{" "}
-                                                                {
-                                                                  option.productVariationOptionName
-                                                                }
-                                                              </Typography>
-                                                            )
-                                                          )}
                                                         </Stack>
-                                                      </Stack>
+                                                      </Grid>
                                                     </Grid>
-                                                  </Grid>
-                                                );
-                                              }
-                                            )}
+                                                  );
+                                                }
+                                              )}
+                                            </Stack>
                                           </Stack>
-                                        </Stack>
-                                      )}
+                                        )}
+                                      </Grid>
                                     </Grid>
-                                  </Grid>
-                                  <Box sx={{ pt: 2, pb: 2 }}>
-                                    <Divider />
+                                    <Box sx={{ pt: 2, pb: 2 }}>
+                                      <Divider />
+                                    </Box>
                                   </Box>
-                                </Box>
-                              );
-                            })}
-                        </Box>
-                      );
-                    })}
+                                );
+                              })}
+                          </Box>
+                        );
+                      })}
 
-                  <Grid
-                    container
-                    sx={{
-                      position: "sticky",
-                      bottom: 0,
-                      zIndex: 1,
-                      pt: 2,
-                      pb: 2,
-                      background: "#FBF9F7",
-                    }}
-                  >
-                    <Grid size={{ xs: 12 }}>
-                      <Stack
-                        direction="row"
-                        sx={{ justifyContent: "space-between" }}
-                        spacing={1}
-                      >
-                        <Typography sx={{ fontWeight: 300 }}>
-                          Subtotal
-                        </Typography>
-                        <Typography sx={{ fontWeight: 300 }}>
-                          RM{" "}
-                          {cart
-                            ?.reduce(
-                              (acc, item) =>
-                                acc +
-                                (item.userPackage.itemsPrice +
-                                  item.userPackage.packagePrice) *
-                                  item.quantity,
-                              0
-                            )
-                            .toFixed(2)}
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid size={{ xs: 12 }}>
-                      <Stack
-                        direction="row"
-                        sx={{ justifyContent: "space-between" }}
-                      >
-                        <Typography sx={{ fontWeight: 300 }}>
-                          Delivery Fee
-                        </Typography>
-                        {values.shipment_method === "ship" ? (
-                          <Typography>
-                            RM {values.shipping_fee.toFixed(2)}
+                    <Grid
+                      container
+                      sx={{
+                        position: "sticky",
+                        bottom: 0,
+                        zIndex: 1,
+                        pt: 2,
+                        pb: 2,
+                        background: "#FBF9F7",
+                      }}
+                    >
+                      <Grid size={{ xs: 12 }}>
+                        <Stack
+                          direction="row"
+                          sx={{ justifyContent: "space-between" }}
+                          spacing={1}
+                        >
+                          <Typography sx={{ fontWeight: 300 }}>
+                            Subtotal
                           </Typography>
-                        ) : (
-                          <Typography>Free</Typography>
-                        )}
-                      </Stack>
-                    </Grid>
-                    <Grid size={{ xs: 12 }}>
-                      <Stack
-                        direction="row"
-                        sx={{ justifyContent: "space-between" }}
-                      >
-                        <Typography>
-                          <b>Total</b>
-                        </Typography>
-                        <Typography>
-                          <b>
+                          <Typography sx={{ fontWeight: 300 }}>
                             RM{" "}
-                            {(
-                              cart?.reduce(
+                            {cart
+                              ?.reduce(
                                 (acc, item) =>
                                   acc +
                                   (item.userPackage.itemsPrice +
                                     item.userPackage.packagePrice) *
                                     item.quantity,
                                 0
-                              ) + values.shipping_fee
-                            ).toFixed(2)}
-                          </b>
-                        </Typography>
-                      </Stack>
+                              )
+                              .toFixed(2)}
+                          </Typography>
+                        </Stack>
+                      </Grid>
+                      <Grid size={{ xs: 12 }}>
+                        <Stack
+                          direction="row"
+                          sx={{ justifyContent: "space-between" }}
+                        >
+                          <Typography sx={{ fontWeight: 300 }}>
+                            Delivery Fee
+                          </Typography>
+                          {values.shipment_method === "ship" ? (
+                            <Typography>
+                              RM {values.shipping_fee.toFixed(2)}
+                            </Typography>
+                          ) : (
+                            <Typography>Free</Typography>
+                          )}
+                        </Stack>
+                      </Grid>
+                      <Grid size={{ xs: 12 }}>
+                        <Stack
+                          direction="row"
+                          sx={{ justifyContent: "space-between" }}
+                        >
+                          <Typography>
+                            <b>Total</b>
+                          </Typography>
+                          <Typography>
+                            <b>
+                              RM{" "}
+                              {(
+                                cart?.reduce(
+                                  (acc, item) =>
+                                    acc +
+                                    (item.userPackage.itemsPrice +
+                                      item.userPackage.packagePrice) *
+                                      item.quantity,
+                                  0
+                                ) + values.shipping_fee
+                              ).toFixed(2)}
+                            </b>
+                          </Typography>
+                        </Stack>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Container>
+                  </Container>
+                </Grid>
               </Grid>
-            </Grid>
-          </form>
-        )}
+            </form>
+          )}
+        </Box>
       </OverlayBox>
       <Box
         sx={{
           background: "#F8F8F8",
           width: "100%",
+          position: "fixed",
+          bottom: 0,
         }}
       >
         <Stack

@@ -33,9 +33,6 @@ import { useUserCourse } from "@/data/userCourse/course";
 import { useUserPackages } from "../UserPackage";
 import { useCart } from "@/views/Cart";
 
-//*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
-
 //*interface
 import {
   ProductVariationData,
@@ -267,11 +264,9 @@ function PhotoCotent() {
             <Grid
               size={{ xs: 6 }}
               sx={{
-                overflow: "auto",
                 justifyContent: "start",
                 display: "flex",
                 flexDirection: "column",
-                height: getFullHeightSize(31),
               }}
             >
               {userPackage?.packageId === "none" ? (
@@ -380,10 +375,7 @@ function PhotoCotent() {
                 })}
               </Stack>
             </Grid>
-            <Grid
-              size={{ xs: 6 }}
-              sx={{ height: getFullHeightSize(31), overflow: "auto" }}
-            >
+            <Grid size={{ xs: 6 }}>
               <Stack sx={{ pl: 4, pr: 4 }} spacing={2}>
                 <Box>
                   <Typography variant="body2">{album.name}</Typography>

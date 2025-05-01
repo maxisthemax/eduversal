@@ -18,9 +18,6 @@ import Paper from "@mui/material/Paper";
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
 
-//*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
-
 function Class() {
   const { push } = useRouter();
   const { class_id } = useParams();
@@ -40,11 +37,7 @@ function Class() {
         ]}
         title="Albums"
       >
-        <Paper
-          variant="elevation"
-          elevation={0}
-          sx={{ p: 4, overflow: "auto", height: getFullHeightSize(38) }}
-        >
+        <Paper variant="elevation" elevation={0} sx={{ p: 4 }}>
           <Stack direction={"row"}>
             <Typography sx={{ fontSize: "22px" }} gutterBottom>
               <b>

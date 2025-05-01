@@ -77,13 +77,12 @@ function Account() {
       sx={{
         width: "100%",
         height: "100%",
-        overflow: "auto",
       }}
     >
       <Container maxWidth="lg" disableGutters sx={{ backgroundColor: "white" }}>
         <Grid
           container
-          sx={{ backgroundColor: "white", height: getFullHeightSize(15) }}
+          sx={{ backgroundColor: "white", height: getFullHeightSize(15.9) }}
         >
           <Grid
             size={{ xs: 3 }}
@@ -150,7 +149,7 @@ function Account() {
               </Box>
             </List>
           </Grid>
-          <Grid size={{ xs: 9 }} sx={{}}>
+          <Grid size={{ xs: 9 }} sx={{ p: 2, backgroundColor: "white" }}>
             {pageComponent[page as string]}
           </Grid>
         </Grid>

@@ -26,9 +26,6 @@ import Tooltip from "@mui/material/Tooltip";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 
-//*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
-
 export interface CartData {
   id?: string;
   userPackage: UserPackageData;
@@ -91,10 +88,7 @@ function Cart() {
           <b>Your Cart</b>
         </Typography>
       </Box>
-      <Paper
-        sx={{ height: getFullHeightSize(30), overflow: "auto", p: 2 }}
-        elevation={0}
-      >
+      <Paper sx={{ p: 2 }} elevation={0}>
         {cartGroup &&
           Object.keys(cartGroup).length > 0 &&
           Object.keys(cartGroup).map((key: string) => {

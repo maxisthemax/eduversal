@@ -24,9 +24,6 @@ import { useUserCourse } from "@/data/userCourse/course";
 //*utils
 import { useHover } from "@/utils/function";
 
-//*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
-
 function Photos() {
   const { userCoursesData, status } = useUserCourse();
   if (status === "pending")
@@ -41,17 +38,16 @@ function Photos() {
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        sx={{ p: 2 }}
+        sx={{
+          p: 2,
+        }}
       >
         <Typography sx={{ fontSize: "28px" }}>
           <b>Class ({userCoursesData?.length ?? 0})</b>
         </Typography>
         <AddEditUserCourseDialog />
       </Stack>
-      <Stack
-        spacing={2}
-        sx={{ py: 2, overflow: "auto", height: getFullHeightSize(32) }}
-      >
+      <Stack spacing={2} sx={{ py: 2 }}>
         {userCoursesData && userCoursesData?.length > 0 ? (
           userCoursesData.map((userCourse, index) => {
             return <UserCourseItem key={index} userCourse={userCourse} />;

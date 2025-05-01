@@ -39,7 +39,6 @@ function Profile() {
       title="Profile"
       subtitle="Manage and protect your account"
       backgroundColor="white"
-      sx={{ height: "calc(100% - 16px)" }}
     >
       <Formik
         initialValues={{
@@ -98,7 +97,7 @@ function Profile() {
           return (
             <OverlayBox isLoading={isSubmitting}>
               <Form onSubmit={handleSubmit}>
-                <Container maxWidth="sm" disableGutters sx={{ ml: 0 }}>
+                <Container disableGutters sx={{ ml: 0 }}>
                   <Stack spacing={2} sx={{ textAlign: "center", pt: 2 }}>
                     <Stack direction={"row"} spacing={2}>
                       <TextFieldForm
