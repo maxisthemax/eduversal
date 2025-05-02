@@ -101,7 +101,7 @@ function Dashboard() {
   if (!access.view) return <NoAccess />;
 
   return (
-    <Page title="Dashboard">
+    <Page title="Dashboard" backgroundColor="white">
       <Box sx={{ pt: 2 }}>
         <Grid container spacing={4}>
           <Grid size={{ xs: 4 }}>
