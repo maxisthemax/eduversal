@@ -7,7 +7,7 @@ import some from "lodash/some";
 
 //*mui
 import {
-  DataGrid as DataGridMui,
+  DataGridPremium as DataGridPremiumMui,
   GridFeatureMode,
   GridPaginationModel,
   GridCallbackDetails,
@@ -22,7 +22,7 @@ import {
   getGridBooleanOperators,
   getGridSingleSelectOperators,
   GridEventListener,
-} from "@mui/x-data-grid";
+} from "@mui/x-data-grid-premium";
 import Stack from "@mui/material/Stack";
 
 //*helpers
@@ -76,7 +76,7 @@ function DataGrid({
   const onFilterChange = filter?.onFilterChange;
 
   return (
-    <DataGridMui
+    <DataGridPremiumMui
       onRowClick={onRowClick ? onRowClick : () => {}}
       rowCount={rowCount}
       paginationModel={paginationModel}
@@ -106,6 +106,8 @@ function DataGrid({
           backgroundColor: "#fff", // keep it from overlapping with background
         },
         backgroundColor: "#fff",
+        '& div[style="position: absolute; pointer-events: none; color: rgba(130, 130, 130, 0.62); z-index: 100000; width: 100%; text-align: center; bottom: 50%; right: 0px; letter-spacing: 5px; font-size: 24px;"]':
+          { display: "none" },
       }}
       loading={loading}
       disableColumnSelector
