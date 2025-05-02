@@ -1,11 +1,14 @@
 import Head from "next/head";
 import { usePathname } from "next/navigation";
+import router from "next/router";
 
 //*lodash
 import find from "lodash/find";
+import findIndex from "lodash/findIndex";
 
 //*components
 import FlexBox from "./FlexBox";
+import { CustomIcon } from "../Icons";
 
 //*mui
 import Stack from "@mui/material/Stack";
@@ -14,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import LinearProgress from "@mui/material/LinearProgress";
 import Link from "@mui/material/Link";
+import IconButton from "@mui/material/IconButton";
 import { SxProps, Theme } from "@mui/material";
 
 function Page({
@@ -49,7 +53,50 @@ function Page({
         spacing={1}
         sx={{ width: "100%", alignItems: "center" }}
       >
-        <Breadcrumbs separator=">" sx={{ color: "black" }}>
+        <Box sx={{ background: "#F2F2F2", p: 0.5, borderRadius: 1 }}>
+          <IconButton
+            disableRipple
+            size="small"
+            onClick={() => router.push(links[0].href)}
+          >
+            <CustomIcon
+              fontSizeSx="20px"
+              icon="home"
+              iconColor="black"
+              fill={true}
+            />
+          </IconButton>
+        </Box>
+        {links?.length > 1 && (
+          <Box sx={{ background: "#F2F2F2", p: 0.5, borderRadius: 1 }}>
+            <IconButton
+              disableRipple
+              size="small"
+              onClick={() =>
+                router.push(
+                  links[findIndex(links, { href: pathName }) - 1].href
+                )
+              }
+              color="primary"
+            >
+              <CustomIcon
+                fontSizeSx="20px"
+                icon="arrow_back"
+                iconColor="black"
+              />
+            </IconButton>
+          </Box>
+        )}
+        <Breadcrumbs
+          separator="▸"
+          sx={{
+            color: "black",
+            background: "#F2F2F2",
+            width: "100%",
+            p: 1,
+            borderRadius: 1,
+          }}
+        >
           {links &&
             links.length > 0 &&
             links.map(({ href, title }) => {
