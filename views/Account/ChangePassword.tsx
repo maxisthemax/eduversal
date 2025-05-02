@@ -122,6 +122,7 @@ function ChangePassword() {
                       only letters, numbers or common punctuation
                     </Typography>
                     <Stack direction={"row"} spacing={2}>
+                      <FlexBox />
                       <Button
                         fullWidth={false}
                         type="submit"
@@ -130,7 +131,6 @@ function ChangePassword() {
                       >
                         Save Changes
                       </Button>
-                      <FlexBox />
                     </Stack>
                   </Stack>
                 </Container>
