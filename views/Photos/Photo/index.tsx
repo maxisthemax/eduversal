@@ -381,7 +381,9 @@ function PhotoCotent() {
               <Stack sx={{ pl: 4, pr: 4 }} spacing={2}>
                 <Box>
                   <Typography variant="body2">{album.name}</Typography>
-                  <Typography sx={{ fontSize: "28px" }}>
+                  <Typography
+                    sx={{ fontSize: "28px", overflowWrap: "break-word" }}
+                  >
                     <b>{photo.name}</b>
                   </Typography>
                   <Typography variant="h6" color="primary">
