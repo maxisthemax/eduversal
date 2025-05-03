@@ -377,7 +377,7 @@ function PhotoCotent() {
                 })}
               </Stack>
             </Grid>
-            <Grid size={{ xs: 6 }}>
+            <Grid size={{ xs: 6 }} sx={{ wordBreak: "break-word" }}>
               <Stack sx={{ pl: 4, pr: 4 }} spacing={2}>
                 <Box>
                   <Typography variant="body2">{album.name}</Typography>
