@@ -451,7 +451,7 @@ export const useCart = create<CartState>()(
                 quantity,
             };
           }
-          return { ...state };
+          return { ...state, cart: [...state.cart] };
         });
       },
       deleteCart: (id: string) => {

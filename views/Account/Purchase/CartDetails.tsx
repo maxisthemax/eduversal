@@ -175,7 +175,7 @@ function CartDetails({ cart }) {
                     </Stack>
                   )}
                 </Grid>
-                <Grid size={{ xs: 2 }}>
+                <Grid size={{ xs: 2.5 }}>
                   <Stack
                     direction="row"
                     sx={{ justifyContent: "space-between" }}
