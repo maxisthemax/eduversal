@@ -22,6 +22,7 @@ import {
   getGridBooleanOperators,
   getGridSingleSelectOperators,
   GridEventListener,
+  GridColumnGroupingModel,
 } from "@mui/x-data-grid-premium";
 import Stack from "@mui/material/Stack";
 
@@ -42,6 +43,8 @@ function DataGrid({
   firstToolbarText,
   lastButton,
   onRowClick,
+  columnGroupingModel,
+  density = "compact",
 }: {
   data: any[];
   columns: any[];
@@ -66,6 +69,8 @@ function DataGrid({
   firstToolbarText?: React.ReactNode;
   lastButton?: React.ReactNode;
   onRowClick?: GridEventListener<"rowClick">;
+  columnGroupingModel?: GridColumnGroupingModel;
+  density?: "compact" | "standard" | "comfortable";
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -77,6 +82,8 @@ function DataGrid({
 
   return (
     <DataGridPremiumMui
+      showCellVerticalBorder={true} // Show vertical borders between cells
+      columnGroupingModel={columnGroupingModel}
       onRowClick={onRowClick ? onRowClick : () => {}}
       rowCount={rowCount}
       paginationModel={paginationModel}
@@ -112,7 +119,7 @@ function DataGrid({
       loading={loading}
       disableColumnSelector
       disableDensitySelector
-      density="compact"
+      density={density}
       rows={data}
       columns={columns
         .filter((column) => {
