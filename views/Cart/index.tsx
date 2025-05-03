@@ -136,7 +136,10 @@ function Cart() {
                               />
                             )}
                           </Grid>
-                          <Grid size={{ xs: 7 }}>
+                          <Grid
+                            size={{ xs: 7 }}
+                            sx={{ wordBreak: "break-word" }}
+                          >
                             {item.userPackage.packageId === "none" ? (
                               <Stack
                                 direction="row"
