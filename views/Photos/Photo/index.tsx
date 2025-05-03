@@ -193,13 +193,15 @@ function PhotoCotent() {
         institutionName: userCourseData.institution_name,
         academicYearId: userCourseData.academic_year_id,
         academicYearName: userCourseData.academic_year_name,
+        standardId: userCourseData.course.standard.id,
+        standardName: userCourseData.course.standard.name,
         courseId: userCourseData.course.id,
         courseName: userCourseData.course.name,
         albumId: userPackage.items.map(({ album }) => {
           return album.albumId;
         }),
         price: userPackage.itemsPrice + userPackage.packagePrice,
-        total_price: (userPackage.itemsPrice + userPackage.packagePrice) * 1,
+        totalPrice: (userPackage.itemsPrice + userPackage.packagePrice) * 1,
       });
       setAddedToCart(true);
     }

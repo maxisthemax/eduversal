@@ -126,10 +126,11 @@ model Standard {
 
   created_by_user_id String
   created_by_name    String
-  created_at         DateTime @default(now())
+  created_at         DateTime    @default(now())
   updated_by_user_id String
   updated_by_name    String
-  updated_at         DateTime @updatedAt
+  updated_at         DateTime    @updatedAt
+  OrderCart          OrderCart[]
 }
 
 model InstitutionType {
@@ -380,6 +381,9 @@ model OrderCart {
   institutionId    String
   institution      Institution  @relation(fields: [institutionId], references: [id])
   institutionName  String
+  standardId       String
+  standard         Standard     @relation(fields: [standardId], references: [id])
+  standardName     String
   albumId          String[]
   packageUrl       String
   quantity         Int
@@ -387,7 +391,7 @@ model OrderCart {
   price            Float
   shippingFee      Float?
   created_at       DateTime     @default(now())
-  total_price      Float?
+  totalPrice       Float?
 
   @@index([id])
 }

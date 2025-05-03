@@ -37,10 +37,12 @@ export interface CartData {
   academicYearName?: string;
   courseId?: string;
   courseName?: string;
+  standardId?: string;
+  standardName?: string;
   albumId: string[];
   shippingFee?: number;
   price: number;
-  total_price: number;
+  totalPrice: number;
 }
 
 function Cart() {
@@ -440,7 +442,7 @@ export const useCart = create<CartState>()(
               price:
                 state.cart[index].userPackage.itemsPrice +
                 state.cart[index].userPackage.packagePrice,
-              total_price:
+              totalPrice:
                 (state.cart[index].userPackage.itemsPrice +
                   state.cart[index].userPackage.packagePrice) *
                 quantity,

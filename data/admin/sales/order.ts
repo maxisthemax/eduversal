@@ -91,7 +91,14 @@ export function useOrder(): {
 
   // Fetch order data with pagination
   const { data, status, isLoading, isRefetching, refetch } = useQueryFetch(
-    ["admin", "sales", "order", "page", qs.stringify(filteredFilter)],
+    [
+      "admin",
+      "sales",
+      "order",
+      "page",
+      pageModel.page,
+      qs.stringify(filteredFilter),
+    ],
     `admin/sales/order?page=${pageModel.page}&pageSize=${
       pageModel.pageSize
     }&${qs.stringify(filteredFilter)}`,

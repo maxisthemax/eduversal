@@ -225,8 +225,6 @@ function Order() {
     }));
   };
 
-  if (!access.view) return <NoAccess />;
-
   return (
     <Box sx={{ p: 2 }}>
       <OverlayBox isLoading={isRefetching}>
