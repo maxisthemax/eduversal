@@ -60,15 +60,15 @@ function SchoolSummary() {
     schoolSummaryData.forEach((data) => {
       if (data.userPackage.packageId === "none") {
         returnData.push({
-          albumName: data?.userPackage.items[0].album.albumName,
-          albumId: data?.userPackage.items[0].album.albumId,
+          packageName: data?.userPackage.items[0].album.albumName,
+          packageId: data?.userPackage.items[0].album.albumId,
           quantity: data.quantity,
           totalPrice: data.totalPrice,
           id: `${data?.standardId}-${data?.courseId}`,
         });
       }
     });
-    return groupBy(returnData, "albumName");
+    return groupBy(returnData, "packageName");
   }, [data]);
 
   // Dynamically generate columns based on the keys of packageNoneGroupData
@@ -91,6 +91,56 @@ function SchoolSummary() {
       headerAlign: "center",
       minWidth: 100,
       align: "right",
+      valueFormatter: (value) => {
+        if (value !== undefined) return `RM ${value.toFixed(2)}`;
+      },
+    });
+
+    return temp;
+  }, []);
+
+  const packageGroupData = useMemo(() => {
+    const schoolSummaryData = data?.data ?? [];
+    const returnData = [];
+    schoolSummaryData.forEach((data) => {
+      if (data.userPackage.packageId !== "none") {
+        returnData.push({
+          packageName: data?.userPackage?.packageData?.name,
+          packageId: data?.userPackage?.packageData?.id,
+          quantity: data.quantity,
+          totalPrice: data.totalPrice,
+          id: `${data?.standardId}-${data?.courseId}`,
+        });
+      }
+    });
+    return groupBy(returnData, "packageName");
+  }, [data]);
+
+  const packageColumns: GridColDef<(typeof undefined)[number]>[] = sortBy(
+    Object.keys(packageGroupData)
+  ).reduce((temp, key) => {
+    temp.push({
+      key: key,
+      field: `${key}_quantity`,
+      headerName: "Quantity",
+      headerAlign: "center",
+      minWidth: 100,
+      align: "right",
+      valueFormatter: (value) => {
+        if (value > 0) return value;
+        else return "";
+      },
+    });
+    temp.push({
+      key: key,
+      field: `${key}_totalPrice`,
+      headerName: "Total Price",
+      headerAlign: "center",
+      minWidth: 100,
+      align: "right",
+      valueFormatter: (value) => {
+        if (value !== undefined) return `RM ${value}`;
+      },
     });
 
     return temp;
@@ -133,16 +183,25 @@ function SchoolSummary() {
           const packageNoneRowData = {};
           Object.keys(packageNoneGroupData).forEach((key) => {
             const groupData = groupBy(packageNoneGroupData[key], "id")[data.id];
-            packageNoneRowData[`${key}_quantity`] = sumBy(
-              groupData,
-              "quantity"
-            );
+            packageNoneRowData[`${key}_quantity`] =
+              sumBy(groupData, "quantity") > 0
+                ? sumBy(groupData, "quantity")
+                : undefined;
             packageNoneRowData[`${key}_totalPrice`] = Number(
               sumBy(groupData, "totalPrice").toFixed(2)
             );
           });
 
-          return { ...data, no, ...packageNoneRowData };
+          const packageRowData = {};
+          Object.keys(packageGroupData).forEach((key) => {
+            const groupData = groupBy(packageGroupData[key], "id")[data.id];
+            packageRowData[`${key}_quantity`] = sumBy(groupData, "quantity");
+            packageRowData[`${key}_totalPrice`] = Number(
+              sumBy(groupData, "totalPrice").toFixed(2)
+            );
+          });
+
+          return { ...data, no, ...packageNoneRowData, ...packageRowData };
         })
       );
 
@@ -173,6 +232,7 @@ function SchoolSummary() {
       headerAlign: "center",
     },
     ...packageNoneColumns,
+    ...packageColumns,
   ];
 
   if (!access.view) return <NoAccess />;
@@ -296,30 +356,52 @@ function SchoolSummary() {
         </Stack>
         <DataGrid
           density="compact"
-          columnGroupingModel={Object.keys(
-            groupBy(packageNoneColumns, "key")
-          ).map((key) => {
-            const children = groupBy(packageNoneColumns, "key")[key];
+          columnGroupingModel={[
+            ...Object.keys(groupBy(packageNoneColumns, "key")).map((key) => {
+              const children = groupBy(packageNoneColumns, "key")[key];
 
-            return {
-              groupId: key,
-              headerAlign: "center",
-              children: [
-                {
-                  field: children[0].field,
-                  headerAlign: "center",
-                  headerName: "Quantity",
-                  minWidth: 150,
-                },
-                {
-                  field: children[1].field,
-                  headerAlign: "center",
-                  headerName: "Total Price",
-                  minWidth: 150,
-                },
-              ],
-            };
-          })}
+              return {
+                groupId: key,
+                headerAlign: "center" as const,
+                children: [
+                  {
+                    field: children[0].field,
+                    headerAlign: "center" as const,
+                    headerName: "Quantity",
+                    minWidth: 150,
+                  },
+                  {
+                    field: children[1].field,
+                    headerAlign: "center" as const,
+                    headerName: "Total Price",
+                    minWidth: 150,
+                  },
+                ],
+              };
+            }),
+            ...Object.keys(groupBy(packageColumns, "key")).map((key) => {
+              const children = groupBy(packageColumns, "key")[key];
+
+              return {
+                groupId: key,
+                headerAlign: "center" as const,
+                children: [
+                  {
+                    field: children[0].field,
+                    headerAlign: "center" as const,
+                    headerName: "Quantity",
+                    minWidth: 150,
+                  },
+                  {
+                    field: children[1].field,
+                    headerAlign: "center" as const,
+                    headerName: "Total Price",
+                    minWidth: 150,
+                  },
+                ],
+              };
+            }),
+          ]}
           loading={status === "pending"}
           height="maxHeight"
           data={dataMemo}
