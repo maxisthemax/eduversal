@@ -45,6 +45,7 @@ function DataGrid({
   onRowClick,
   columnGroupingModel,
   density = "compact",
+  disableFilter = false,
 }: {
   data: any[];
   columns: any[];
@@ -71,6 +72,7 @@ function DataGrid({
   onRowClick?: GridEventListener<"rowClick">;
   columnGroupingModel?: GridColumnGroupingModel;
   density?: "compact" | "standard" | "comfortable";
+  disableFilter?: boolean;
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -160,6 +162,7 @@ function DataGrid({
           ...({ firstToolbarText } as any),
           ...({ lastButton } as any),
           showQuickFilter: showQuickFilter,
+          disableFilter: disableFilter,
         },
       }}
       filterMode={filterMode}
@@ -174,7 +177,8 @@ function DataGrid({
             ? "auto"
             : null;
       }}
-      columnBufferPx={1000}
+      columnBufferPx={500}
+      rowBufferPx={500}
     />
   );
 }
@@ -185,10 +189,12 @@ function CustomToolbar(props: {
   firstToolbarText?: React.ReactNode;
   lastButton?: React.ReactNode;
   showQuickFilter?: boolean;
+  disableFilter?: boolean;
 }) {
   const lastButton = props.lastButton;
   const firstToolbarText = props.firstToolbarText;
   const showQuickFilter = props.showQuickFilter;
+  const disableFilter = props.disableFilter;
 
   return (
     <GridToolbarContainer>
@@ -230,16 +236,18 @@ function CustomToolbar(props: {
             />
           </Box>
         )}
-        <GridToolbarFilterButton
-          slotProps={{
-            button: {
-              color: "inherit",
-              size: "small",
-              variant: "outlined",
-              sx: { maxHeight: "30.75px", textTransform: "capitalize" },
-            },
-          }}
-        />
+        {!disableFilter && (
+          <GridToolbarFilterButton
+            slotProps={{
+              button: {
+                color: "inherit",
+                size: "small",
+                variant: "outlined",
+                sx: { maxHeight: "30.75px", textTransform: "capitalize" },
+              },
+            }}
+          />
+        )}
         <GridToolbarExport
           slotProps={{
             button: {

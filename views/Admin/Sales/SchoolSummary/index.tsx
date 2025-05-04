@@ -47,7 +47,7 @@ function SchoolSummary() {
     from_date: "",
     to_date: "",
   });
-  const { data, status, isLoading } = useQueryFetch(
+  const { data, isLoading } = useQueryFetch(
     ["admin", "sales", "school_summary", qs.stringify(schoolSummaryFilter)],
     `admin/sales/schoolsummary?${qs.stringify(schoolSummaryFilter)}`
   );
@@ -81,19 +81,25 @@ function SchoolSummary() {
       field: `${key}_quantity`,
       headerName: "Quantity",
       headerAlign: "center",
-      minWidth: 100,
+      minWidth: 120,
       align: "right",
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
     });
     temp.push({
       key: key,
       field: `${key}_totalPrice`,
       headerName: "Total Price",
       headerAlign: "center",
-      minWidth: 100,
+      minWidth: 120,
       align: "right",
       valueFormatter: (value) => {
-        if (value !== undefined) return `RM ${value.toFixed(2)}`;
+        if (value !== undefined) return `RM ${value}`;
       },
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
     });
 
     return temp;
@@ -124,23 +130,29 @@ function SchoolSummary() {
       field: `${key}_quantity`,
       headerName: "Quantity",
       headerAlign: "center",
-      minWidth: 100,
+      minWidth: 120,
       align: "right",
       valueFormatter: (value) => {
         if (value > 0) return value;
         else return "";
       },
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
     });
     temp.push({
       key: key,
       field: `${key}_totalPrice`,
       headerName: "Total Price",
       headerAlign: "center",
-      minWidth: 100,
+      minWidth: 120,
       align: "right",
       valueFormatter: (value) => {
         if (value !== undefined) return `RM ${value}`;
       },
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
     });
 
     return temp;
@@ -187,18 +199,20 @@ function SchoolSummary() {
               sumBy(groupData, "quantity") > 0
                 ? sumBy(groupData, "quantity")
                 : undefined;
-            packageNoneRowData[`${key}_totalPrice`] = Number(
-              sumBy(groupData, "totalPrice").toFixed(2)
-            );
+            packageNoneRowData[`${key}_totalPrice`] = sumBy(
+              groupData,
+              "totalPrice"
+            ).toFixed(2);
           });
 
           const packageRowData = {};
           Object.keys(packageGroupData).forEach((key) => {
             const groupData = groupBy(packageGroupData[key], "id")[data.id];
             packageRowData[`${key}_quantity`] = sumBy(groupData, "quantity");
-            packageRowData[`${key}_totalPrice`] = Number(
-              sumBy(groupData, "totalPrice").toFixed(2)
-            );
+            packageRowData[`${key}_totalPrice`] = sumBy(
+              groupData,
+              "totalPrice"
+            ).toFixed(2);
           });
 
           return { ...data, no, ...packageNoneRowData, ...packageRowData };
@@ -210,9 +224,28 @@ function SchoolSummary() {
         newStandardGroup.push({ id: uuidv4(), no: "" });
       }
     });
+    const sumDataRow = { id: "sum", class: "Total", no: "" };
+    Object.keys(packageNoneGroupData).forEach((key) => {
+      sumDataRow[`${key}_quantity`] = sumBy(
+        packageNoneGroupData[key],
+        "quantity"
+      );
+      sumDataRow[`${key}_totalPrice`] = sumBy(
+        packageNoneGroupData[key],
+        "totalPrice"
+      ).toFixed(2);
+    });
 
-    return newStandardGroup;
-  }, [data?.data, packageNoneGroupData]);
+    Object.keys(packageGroupData).forEach((key) => {
+      sumDataRow[`${key}_quantity`] = sumBy(packageGroupData[key], "quantity");
+      sumDataRow[`${key}_totalPrice`] = sumBy(
+        packageGroupData[key],
+        "totalPrice"
+      ).toFixed(2);
+    });
+
+    return [...newStandardGroup, sumDataRow];
+  }, [data?.data, packageGroupData, packageNoneGroupData]);
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
@@ -220,16 +253,25 @@ function SchoolSummary() {
       headerName: "No",
       headerAlign: "center",
       minWidth: 80,
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
     },
     {
       field: "standard",
       headerName: "Standard",
       headerAlign: "center",
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
     },
     {
       field: "class",
       headerName: "Class",
       headerAlign: "center",
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
     },
     ...packageNoneColumns,
     ...packageColumns,
@@ -402,7 +444,7 @@ function SchoolSummary() {
               };
             }),
           ]}
-          loading={status === "pending"}
+          //loading={status === "pending"}
           height="maxHeight"
           data={dataMemo}
           columns={
@@ -415,6 +457,7 @@ function SchoolSummary() {
           }
           gap={18.7}
           showQuickFilter={false}
+          disableFilter={true}
         />
       </OverlayBox>
     </Box>
