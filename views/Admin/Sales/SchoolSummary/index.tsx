@@ -375,6 +375,10 @@ function SchoolSummary() {
       disableColumnMenu: true,
       sortable: false,
       disableReorder: true,
+      renderCell: (params) => {
+        if (params.value === "Total") return <b>{params.value}</b>;
+        else return params.value;
+      },
     },
     ...packageNoneColumns,
     ...packageColumns,
