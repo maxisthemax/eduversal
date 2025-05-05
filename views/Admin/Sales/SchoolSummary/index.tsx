@@ -37,6 +37,7 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
 import { useCourses } from "@/data/admin/institution/course";
+import { includes, sum } from "lodash";
 
 interface Filter {
   institutionId: string;
@@ -99,6 +100,7 @@ function SchoolSummary() {
           packageName: data?.userPackage.items[0].album.albumName,
           packageId: data?.userPackage.items[0].album.albumId,
           quantity: data.quantity,
+          shippingFee: data?.shippingFee ?? 0,
           totalPrice: data.totalPrice,
           id: `${data?.standardId}-${data?.courseId}`,
         });
@@ -150,6 +152,7 @@ function SchoolSummary() {
           packageName: data?.userPackage?.packageData?.name,
           packageId: data?.userPackage?.packageData?.id,
           quantity: data.quantity,
+          shippingFee: data?.shippingFee ?? 0,
           totalPrice: data.totalPrice,
           id: `${data?.standardId}-${data?.courseId}`,
         });
@@ -231,6 +234,10 @@ function SchoolSummary() {
           const packageNoneRowData = {};
           Object.keys(packageNoneGroupData).forEach((key) => {
             const groupData = groupBy(packageNoneGroupData[key], "id")[data.id];
+            packageNoneRowData[`${key}_shippingFee`] = sumBy(
+              groupData,
+              "shippingFee"
+            );
             packageNoneRowData[`${key}_quantity`] =
               sumBy(groupData, "quantity") > 0
                 ? sumBy(groupData, "quantity")
@@ -244,6 +251,10 @@ function SchoolSummary() {
           const packageRowData = {};
           Object.keys(packageGroupData).forEach((key) => {
             const groupData = groupBy(packageGroupData[key], "id")[data.id];
+            packageRowData[`${key}_shippingFee`] = sumBy(
+              groupData,
+              "shippingFee"
+            );
             packageRowData[`${key}_quantity`] = sumBy(groupData, "quantity");
             packageRowData[`${key}_totalPrice`] = sumBy(
               groupData,
@@ -251,7 +262,40 @@ function SchoolSummary() {
             ).toFixed(2);
           });
 
-          return { ...data, no, ...packageNoneRowData, ...packageRowData };
+          return {
+            ...data,
+            no,
+            ...packageNoneRowData,
+            ...packageRowData,
+            totalShippingFee: (
+              sum(
+                Object.keys(packageNoneRowData).map((key) => {
+                  if (includes(key, "_shippingFee"))
+                    return Number(packageNoneRowData[key]);
+                })
+              ) +
+              sum(
+                Object.keys(packageRowData).map((key) => {
+                  if (includes(key, "_shippingFee"))
+                    return Number(packageRowData[key]);
+                })
+              )
+            ).toFixed(2),
+            totalAmount: (
+              sum(
+                Object.keys(packageNoneRowData).map((key) => {
+                  if (includes(key, "_totalPrice"))
+                    return Number(packageNoneRowData[key]);
+                })
+              ) +
+              sum(
+                Object.keys(packageRowData).map((key) => {
+                  if (includes(key, "_totalPrice"))
+                    return Number(packageRowData[key]);
+                })
+              )
+            ).toFixed(2),
+          };
         })
       );
 
@@ -262,6 +306,10 @@ function SchoolSummary() {
     });
     const sumDataRow = { id: "sum", class: "Total", no: "" };
     Object.keys(packageNoneGroupData).forEach((key) => {
+      sumDataRow[`${key}_shippingFee`] = sumBy(
+        packageNoneGroupData[key],
+        "shippingFee"
+      );
       sumDataRow[`${key}_quantity`] = sumBy(
         packageNoneGroupData[key],
         "quantity"
@@ -273,6 +321,10 @@ function SchoolSummary() {
     });
 
     Object.keys(packageGroupData).forEach((key) => {
+      sumDataRow[`${key}_shippingFee`] = sumBy(
+        packageGroupData[key],
+        "shippingFee"
+      );
       sumDataRow[`${key}_quantity`] = sumBy(packageGroupData[key], "quantity");
       sumDataRow[`${key}_totalPrice`] = sumBy(
         packageGroupData[key],
@@ -280,7 +332,22 @@ function SchoolSummary() {
       ).toFixed(2);
     });
 
-    return [...newStandardGroup, sumDataRow];
+    return [
+      ...newStandardGroup,
+      {
+        ...sumDataRow,
+        totalShippingFee: sum(
+          Object.keys(sumDataRow).map((key) => {
+            if (includes(key, "_shippingFee")) return Number(sumDataRow[key]);
+          })
+        )?.toFixed(2),
+        totalAmount: sum(
+          Object.keys(sumDataRow).map((key) => {
+            if (includes(key, "_totalPrice")) return Number(sumDataRow[key]);
+          })
+        )?.toFixed(2),
+      },
+    ];
   }, [data?.data, packageGroupData, packageNoneGroupData]);
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
@@ -311,6 +378,32 @@ function SchoolSummary() {
     },
     ...packageNoneColumns,
     ...packageColumns,
+    {
+      field: "totalShippingFee",
+      headerName: "Total Shipping",
+      headerAlign: "right",
+      align: "right",
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
+      valueFormatter: (value) => {
+        if (value !== undefined) return `RM ${value}`;
+      },
+      minWidth: 150,
+    },
+    {
+      field: "totalAmount",
+      headerName: "Total Amount",
+      headerAlign: "right",
+      align: "right",
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
+      valueFormatter: (value) => {
+        if (value !== undefined) return `RM ${value}`;
+      },
+      minWidth: 150,
+    },
   ];
 
   if (!access.view) return <NoAccess />;
