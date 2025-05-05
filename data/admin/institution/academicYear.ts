@@ -56,7 +56,8 @@ export function useAcademicYears(
   // Fetch academic years data
   const { data, status, isLoading, refetch } = useQueryFetch(
     ["admin", "institutions", institutionId, "academicYears"],
-    `admin/institution/${institutionId}/academicYear`
+    `admin/institution/${institutionId}/academicYear`,
+    { enabled: institutionId !== undefined && institutionId !== "" }
   );
 
   const academicYearsQueryData = data?.data as AcademicYearData[];

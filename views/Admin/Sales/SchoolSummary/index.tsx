@@ -9,8 +9,10 @@ import orderBy from "lodash/orderBy";
 import uniqBy from "lodash/uniqBy";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
+import isEmpty from "lodash/isEmpty";
 
 //*components
+import { CustomIcon } from "@/components/Icons";
 import DataGrid from "@/components/Table/DataGrid";
 import NoAccess from "@/components/Box/NoAccess";
 import DatePicker from "@/components/Date/DatePicker";
@@ -23,6 +25,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { GridColDef } from "@mui/x-data-grid";
 import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
 
 //*data
 import { useGetStaffAccess } from "@/data/admin/user/staff";
@@ -32,24 +35,57 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 
 //*data
 import { useInstitutions } from "@/data/admin/institution/institution";
+import { useAcademicYears } from "@/data/admin/institution/academicYear";
+import { useCourses } from "@/data/admin/institution/course";
+
+interface Filter {
+  institutionId: string;
+  academicYearId: string;
+  standardId: string;
+  courseId: string;
+  from_date: string;
+  to_date: string;
+  [string: string]: string;
+}
+
+const filter = {
+  institutionId: "",
+  academicYearId: "",
+  standardId: "",
+  courseId: "",
+  from_date: "",
+  to_date: "",
+};
 
 function SchoolSummary() {
+  const [schoolSummaryFilterQuery, setSchoolSummaryFilterQuery] =
+    useState<Filter>(filter);
+
+  const [schoolSummaryFilter, setSchoolSummaryFilter] =
+    useState<Filter>(filter);
+
   const { institutionsData } = useInstitutions();
-  const access = useGetStaffAccess("sales_school_sales");
-  const [schoolSummaryFilter, setSchoolSummaryFilter] = useState<{
-    institutionId: string;
-    academicYearId: string;
-    from_date: string;
-    to_date: string;
-  }>({
-    institutionId: "",
-    academicYearId: "",
-    from_date: "",
-    to_date: "",
+  const { academicYearsData } = useAcademicYears(undefined, {
+    institutionId: schoolSummaryFilter?.institutionId ?? undefined,
   });
-  const { data, isLoading } = useQueryFetch(
-    ["admin", "sales", "school_summary", qs.stringify(schoolSummaryFilter)],
-    `admin/sales/schoolsummary?${qs.stringify(schoolSummaryFilter)}`
+  const { coursesData } = useCourses(undefined, {
+    institutionId: schoolSummaryFilter?.institutionId ?? undefined,
+    academicYearId: schoolSummaryFilter?.academicYearId ?? undefined,
+  });
+
+  const access = useGetStaffAccess("sales_school_sales");
+
+  const { data, isLoading, refetch } = useQueryFetch(
+    [
+      "admin",
+      "sales",
+      "school_summary",
+      qs.stringify(schoolSummaryFilterQuery),
+    ],
+    `admin/sales/schoolsummary?${qs.stringify(schoolSummaryFilterQuery)}`,
+    {
+      enabled: !isEmpty(schoolSummaryFilterQuery),
+    }
   );
 
   // Group data by album name for packages with no associated package ID ("none")
@@ -288,6 +324,13 @@ function SchoolSummary() {
     }));
   };
 
+  const handleTextFieldClear = (name: string) => {
+    setSchoolSummaryFilter((prev) => ({
+      ...prev,
+      [name]: undefined,
+    }));
+  };
+
   return (
     <Box sx={{ p: 2 }}>
       <OverlayBox isLoading={isLoading}>
@@ -306,6 +349,105 @@ function SchoolSummary() {
                 {institution.name}
               </MenuItem>
             ))}
+          </TextField>
+          <TextField
+            name="academicYearId"
+            select
+            label="Academic Year"
+            value={schoolSummaryFilter?.academicYearId}
+            onChange={handleTextFieldChange}
+            fullWidth={false}
+            sx={{ minWidth: 200 }}
+            slotProps={{
+              input: {
+                endAdornment: schoolSummaryFilter.academicYearId && (
+                  <IconButton
+                    sx={{ mr: 2 }}
+                    size="small"
+                    onClick={() => {
+                      handleTextFieldClear("academicYearId");
+                    }}
+                  >
+                    <CustomIcon icon="close" fontSizeSx="22px" />
+                  </IconButton>
+                ),
+              },
+            }}
+          >
+            {academicYearsData?.map((academicYear) => (
+              <MenuItem key={academicYear.id} value={academicYear.id}>
+                {academicYear.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            name="standardId"
+            select
+            label="Standard"
+            value={schoolSummaryFilter?.standardId}
+            onChange={handleTextFieldChange}
+            fullWidth={false}
+            sx={{ minWidth: 200 }}
+            slotProps={{
+              input: {
+                endAdornment: schoolSummaryFilter.standardId && (
+                  <IconButton
+                    sx={{ mr: 2 }}
+                    size="small"
+                    onClick={() => {
+                      handleTextFieldClear("standardId");
+                    }}
+                  >
+                    <CustomIcon icon="close" fontSizeSx="22px" />
+                  </IconButton>
+                ),
+              },
+            }}
+          >
+            {orderBy(
+              uniqBy(coursesData, "standard_id"),
+              ["standard_name_format"],
+              ["asc"]
+            )?.map((course) => (
+              <MenuItem key={course.standard_id} value={course.standard_id}>
+                {course.standard_name_format}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            name="courseId"
+            select
+            label="Courses"
+            value={schoolSummaryFilter?.courseId}
+            onChange={handleTextFieldChange}
+            fullWidth={false}
+            sx={{ minWidth: 200 }}
+            slotProps={{
+              input: {
+                endAdornment: schoolSummaryFilter.courseId && (
+                  <IconButton
+                    sx={{ mr: 2 }}
+                    size="small"
+                    onClick={() => {
+                      handleTextFieldClear("courseId");
+                    }}
+                  >
+                    <CustomIcon icon="close" fontSizeSx="22px" />
+                  </IconButton>
+                ),
+              },
+            }}
+          >
+            {coursesData
+              .filter(({ standard_id }) => {
+                if (!schoolSummaryFilter?.standardId) return true;
+                return standard_id === schoolSummaryFilter?.standardId;
+              })
+              ?.map((course) => (
+                <MenuItem key={course.id} value={course.id}>
+                  {course.name}
+                </MenuItem>
+              ))}
           </TextField>
           <DatePicker
             fullWidth={false}
@@ -379,18 +521,20 @@ function SchoolSummary() {
               },
             }}
           />
-          <Button variant="contained" onClick={() => {}}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setSchoolSummaryFilterQuery(schoolSummaryFilter);
+              refetch();
+            }}
+          >
             Search
           </Button>
           <Button
             variant="outlined"
             onClick={() => {
-              setSchoolSummaryFilter({
-                institutionId: "",
-                academicYearId: "",
-                from_date: "",
-                to_date: "",
-              });
+              setSchoolSummaryFilterQuery(filter);
+              setSchoolSummaryFilter(filter);
             }}
           >
             Reset

@@ -55,7 +55,7 @@ type CourseUpdate = Partial<CourseCreate>;
 
 export function useCourses(
   courseId?: string,
-  otherParams?: { academicYearId: string }
+  otherParams?: { academicYearId: string; institutionId: string }
 ): {
   coursesData: CourseData[];
   coursesDataById: Record<string, CourseData>;
@@ -67,9 +67,10 @@ export function useCourses(
   isDeleting: boolean;
 } {
   const params = useParams();
-  const institutionId = params.institutionId as string;
   const academicYearId =
     (params.academicYearId as string) ?? otherParams?.academicYearId;
+  const institutionId =
+    (params.institutionId as string) ?? otherParams?.institutionId;
 
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -83,7 +84,14 @@ export function useCourses(
       academicYearId,
       "courses",
     ],
-    `admin/institution/${institutionId}/academicYear/${academicYearId}/course`
+    `admin/institution/${institutionId}/academicYear/${academicYearId}/course`,
+    {
+      enabled:
+        institutionId !== undefined &&
+        institutionId !== "" &&
+        academicYearId !== undefined &&
+        academicYearId !== "",
+    }
   );
 
   const coursesQueryData = data?.data as CourseData[];
