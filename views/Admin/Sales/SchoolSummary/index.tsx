@@ -634,6 +634,7 @@ function SchoolSummary() {
           </Button>
         </Stack>
         <DataGrid
+          showCellVerticalBorder={true}
           density="compact"
           columnGroupingModel={[
             ...Object.keys(groupBy(packageNoneColumns, "key")).map((key) => {

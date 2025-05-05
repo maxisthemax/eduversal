@@ -46,6 +46,7 @@ function DataGrid({
   columnGroupingModel,
   density = "compact",
   disableFilter = false,
+  showCellVerticalBorder = false,
 }: {
   data: any[];
   columns: any[];
@@ -73,6 +74,7 @@ function DataGrid({
   columnGroupingModel?: GridColumnGroupingModel;
   density?: "compact" | "standard" | "comfortable";
   disableFilter?: boolean;
+  showCellVerticalBorder?: boolean;
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -84,7 +86,7 @@ function DataGrid({
 
   return (
     <DataGridPremiumMui
-      showCellVerticalBorder={true} // Show vertical borders between cells
+      showCellVerticalBorder={showCellVerticalBorder} // Show vertical borders between cells
       columnGroupingModel={columnGroupingModel}
       onRowClick={onRowClick ? onRowClick : () => {}}
       rowCount={rowCount}

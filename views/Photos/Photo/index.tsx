@@ -322,7 +322,7 @@ function PhotoCotent() {
                 </Paper>
               )}
               <Stack sx={{ pt: 2 }} direction="row" spacing={2}>
-                {albumPackage.map(({ preview_url, id }) => {
+                {albumPackage.map(({ preview_url, id, name }) => {
                   return (
                     <Button
                       variant="outlined"
@@ -369,8 +369,13 @@ function PhotoCotent() {
                             height: "100px",
                             ":hover": { backgroundColor: "#d9d9d9" },
                             backgroundColor: "#f2f2f2",
+                            alignContent: "center",
                           }}
-                        />
+                        >
+                          <Typography color="black" variant="caption">
+                            {name}
+                          </Typography>
+                        </Box>
                       )}
                     </Button>
                   );
@@ -483,8 +488,13 @@ function PhotoCotent() {
                               return !includes(disabled_options, id);
                             })
                             .map((option) => {
-                              const { id, name, price_format, description } =
-                                option;
+                              const {
+                                id,
+                                name,
+                                price_format,
+                                description,
+                                preview_url,
+                              } = option;
 
                               return (
                                 <MenuItem
@@ -497,10 +507,23 @@ function PhotoCotent() {
                                     );
                                   }}
                                 >
-                                  <ListItemText
-                                    primary={`${name} - ${price_format}`}
-                                    secondary={description}
-                                  />
+                                  <Stack
+                                    direction="row"
+                                    sx={{ alignItems: "center" }}
+                                    spacing={2}
+                                  >
+                                    {preview_url && (
+                                      <Box
+                                        component="img"
+                                        src={preview_url}
+                                        height={40}
+                                      />
+                                    )}
+                                    <ListItemText
+                                      primary={`${name} - ${price_format}`}
+                                      secondary={description}
+                                    />
+                                  </Stack>
                                 </MenuItem>
                               );
                             })}
