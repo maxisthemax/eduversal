@@ -55,7 +55,7 @@ type CourseUpdate = Partial<CourseCreate>;
 
 export function useCourses(
   courseId?: string,
-  otherParams?: { academicYearId: string; institutionId: string }
+  otherParams?: { academicYearId?: string; institutionId?: string }
 ): {
   coursesData: CourseData[];
   coursesDataById: Record<string, CourseData>;

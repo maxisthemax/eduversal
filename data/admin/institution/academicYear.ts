@@ -34,7 +34,7 @@ type AcademicYearUpdate = Partial<AcademicYearCreate>;
 
 export function useAcademicYears(
   academicYearId?: string,
-  otherParams?: { institutionId: string }
+  otherParams?: { institutionId?: string }
 ): {
   academicYearsData: AcademicYearData[];
   academicYearsDataById: Record<string, AcademicYearData>;

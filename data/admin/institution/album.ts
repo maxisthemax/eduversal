@@ -73,7 +73,7 @@ type AlbumUpdate = Partial<AlbumCreate>;
 
 export function useAlbums(
   albumId?: string,
-  otherParams?: { courseId: string }
+  otherParams?: { courseId?: string }
 ): {
   albumsData: AlbumData[];
   albumsDataById: Record<string, AlbumData>;
