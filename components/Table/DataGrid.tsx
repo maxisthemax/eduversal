@@ -175,6 +175,13 @@ function DataGrid({
             : null;
       }}
       columnBufferPx={1000}
+      initialState={{
+        aggregation: {
+          model: {
+            gross: "sum",
+          },
+        },
+      }}
     />
   );
 }

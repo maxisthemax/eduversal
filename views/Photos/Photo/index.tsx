@@ -257,7 +257,11 @@ function PhotoCotent() {
           },
           {
             href: `/photos/${class_id}/${album_id}`,
-            title: "Photo",
+            title: "Photos",
+          },
+          {
+            href: `/photos/${class_id}/${album_id}/${photo_id}`,
+            title: photo.name,
           },
         ]}
       >

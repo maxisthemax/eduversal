@@ -124,7 +124,7 @@ function Main({ children }: { children: React.ReactNode }) {
             background: "#F8F8F8",
             height: getFullHeightSize(15.9),
             width: "100%",
-            overflowY: "auto",
+            overflowY: "scroll",
           }}
         >
           {children}

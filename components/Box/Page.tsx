@@ -54,7 +54,7 @@ function Page({
           spacing={1}
           sx={{ width: "100%", alignItems: "center" }}
         >
-          <Box sx={{ background: "#F8F8F8", p: 0.5, borderRadius: 1 }}>
+          <Box sx={{ background: "white", p: 0.5, borderRadius: 1 }}>
             <IconButton
               disableRipple
               size="small"
@@ -68,7 +68,7 @@ function Page({
               />
             </IconButton>
           </Box>
-          <Box sx={{ background: "#F8F8F8", p: 0.5, borderRadius: 1 }}>
+          <Box sx={{ background: "white", p: 0.5, borderRadius: 1 }}>
             <IconButton
               disableRipple
               size="small"
@@ -90,7 +90,7 @@ function Page({
             separator="▸"
             sx={{
               color: "black",
-              background: "#F8F8F8",
+              background: "white",
               width: "100%",
               p: 1,
               borderRadius: 1,
