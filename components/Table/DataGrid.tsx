@@ -45,6 +45,8 @@ function DataGrid({
   onRowClick,
   columnGroupingModel,
   density = "compact",
+  disableFilter = false,
+  showCellVerticalBorder = false,
 }: {
   data: any[];
   columns: any[];
@@ -71,6 +73,8 @@ function DataGrid({
   onRowClick?: GridEventListener<"rowClick">;
   columnGroupingModel?: GridColumnGroupingModel;
   density?: "compact" | "standard" | "comfortable";
+  disableFilter?: boolean;
+  showCellVerticalBorder?: boolean;
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -82,7 +86,7 @@ function DataGrid({
 
   return (
     <DataGridPremiumMui
-      showCellVerticalBorder={true} // Show vertical borders between cells
+      showCellVerticalBorder={showCellVerticalBorder} // Show vertical borders between cells
       columnGroupingModel={columnGroupingModel}
       onRowClick={onRowClick ? onRowClick : () => {}}
       rowCount={rowCount}
@@ -160,6 +164,7 @@ function DataGrid({
           ...({ firstToolbarText } as any),
           ...({ lastButton } as any),
           showQuickFilter: showQuickFilter,
+          disableFilter: disableFilter,
         },
       }}
       filterMode={filterMode}
@@ -174,14 +179,8 @@ function DataGrid({
             ? "auto"
             : null;
       }}
-      columnBufferPx={1000}
-      initialState={{
-        aggregation: {
-          model: {
-            gross: "sum",
-          },
-        },
-      }}
+      columnBufferPx={500}
+      rowBufferPx={500}
     />
   );
 }
@@ -192,10 +191,12 @@ function CustomToolbar(props: {
   firstToolbarText?: React.ReactNode;
   lastButton?: React.ReactNode;
   showQuickFilter?: boolean;
+  disableFilter?: boolean;
 }) {
   const lastButton = props.lastButton;
   const firstToolbarText = props.firstToolbarText;
   const showQuickFilter = props.showQuickFilter;
+  const disableFilter = props.disableFilter;
 
   return (
     <GridToolbarContainer>
@@ -237,16 +238,18 @@ function CustomToolbar(props: {
             />
           </Box>
         )}
-        <GridToolbarFilterButton
-          slotProps={{
-            button: {
-              color: "inherit",
-              size: "small",
-              variant: "outlined",
-              sx: { maxHeight: "30.75px", textTransform: "capitalize" },
-            },
-          }}
-        />
+        {!disableFilter && (
+          <GridToolbarFilterButton
+            slotProps={{
+              button: {
+                color: "inherit",
+                size: "small",
+                variant: "outlined",
+                sx: { maxHeight: "30.75px", textTransform: "capitalize" },
+              },
+            }}
+          />
+        )}
         <GridToolbarExport
           slotProps={{
             button: {

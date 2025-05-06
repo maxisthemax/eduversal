@@ -17,6 +17,9 @@ export default async function handler(
     switch (req.method) {
       case "GET": {
         const institutionId = req.query.institutionId as string;
+        const academicYearId = req.query.academicYearId as string;
+        const courseId = req.query.courseId as string;
+        const standardId = req.query.standardId as string;
         const from_date = req.query.from_date as string;
         const to_date = req.query.to_date as string;
 
@@ -43,6 +46,9 @@ export default async function handler(
           where: {
             ...where,
             institutionId: institutionId,
+            ...(academicYearId ? { academicYearId: academicYearId } : {}),
+            ...(standardId ? { standardId: standardId } : {}),
+            ...(courseId ? { courseId: courseId } : {}),
             order: { status: "COMPLETED" },
           },
           orderBy: [

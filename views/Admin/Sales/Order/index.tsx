@@ -394,6 +394,7 @@ function Order() {
           </Button>
         </Stack>
         <DataGrid
+          showCellVerticalBorder={true}
           loading={status === "pending"}
           height="maxHeight"
           data={orderData}
