@@ -99,6 +99,7 @@ function DataGrid({
       columnGroupingModel={columnGroupingModel}
       onRowClick={onRowClick ? onRowClick : () => {}}
       rowCount={rowCount}
+      pagination={true}
       paginationModel={paginationModel}
       paginationMode={paginationMode}
       onPaginationModelChange={onPaginationModelChange}
