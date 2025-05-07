@@ -153,6 +153,10 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     title: "School Summary",
                     href: "/admin/sales/schoolsummary",
                   },
+                  {
+                    title: "Shipping Report",
+                    href: "/admin/sales/shippingreport",
+                  },
                 ],
               },
               {

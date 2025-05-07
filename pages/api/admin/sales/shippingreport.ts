@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
-import { endOfDay, startOfDay } from "date-fns";
+import { startOfDay, endOfDay } from "date-fns";
 
 //*lib
 import prisma from "@/lib/prisma";
@@ -16,10 +16,6 @@ export default async function handler(
   try {
     switch (req.method) {
       case "GET": {
-        const institutionId = req.query.institutionId as string;
-        const academicYearId = req.query.academicYearId as string;
-        const courseId = req.query.courseId as string;
-        const standardId = req.query.standardId as string;
         const from_date = req.query.from_date as string;
         const to_date = req.query.to_date as string;
 
@@ -53,19 +49,24 @@ export default async function handler(
         const orders = await prisma.orderCart.findMany({
           where: {
             ...where,
-            institutionId: institutionId,
-            ...(academicYearId ? { academicYearId: academicYearId } : {}),
-            ...(standardId ? { standardId: standardId } : {}),
-            ...(courseId ? { courseId: courseId } : {}),
             order: { status: "COMPLETED" },
           },
-          orderBy: [
-            {
-              created_at: "asc",
-            },
-          ],
           include: {
-            order: { select: { id: true, order_no: true } },
+            order: {
+              select: {
+                id: true,
+                order_no: true,
+                price: true,
+                cust_email: true,
+                cust_name: true,
+                cust_phone: true,
+                shipment_method: true,
+                shipping_fee: true,
+                shipping_address: true,
+                tracking_no: true,
+                remark: true,
+              },
+            },
           },
         });
 

@@ -10,6 +10,8 @@ import uniqBy from "lodash/uniqBy";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import isEmpty from "lodash/isEmpty";
+import sum from "lodash/sum";
+import includes from "lodash/includes";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
@@ -37,7 +39,6 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 import { useInstitutions } from "@/data/admin/institution/institution";
 import { useAcademicYears } from "@/data/admin/institution/academicYear";
 import { useCourses } from "@/data/admin/institution/course";
-import { includes, sum } from "lodash";
 
 interface Filter {
   institutionId: string;
@@ -58,7 +59,7 @@ const filter = {
   to_date: "",
 };
 
-function SchoolSummary() {
+function SummaryReport() {
   const [schoolSummaryFilterQuery, setSchoolSummaryFilterQuery] =
     useState<Filter>(filter);
 
@@ -700,10 +701,11 @@ function SchoolSummary() {
           gap={18.7}
           showQuickFilter={false}
           disableFilter={true}
+          fileName="Summary_Report"
         />
       </OverlayBox>
     </Box>
   );
 }
 
-export default SchoolSummary;
+export default SummaryReport;

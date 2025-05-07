@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { formatDate } from "date-fns";
+
 //*components
 import { FlexBox } from "../Box";
 
@@ -23,6 +25,7 @@ import {
   getGridSingleSelectOperators,
   GridEventListener,
   GridColumnGroupingModel,
+  GridExcelExportOptions,
 } from "@mui/x-data-grid-premium";
 import Stack from "@mui/material/Stack";
 
@@ -47,6 +50,9 @@ function DataGrid({
   density = "compact",
   disableFilter = false,
   showCellVerticalBorder = false,
+  fileName,
+  rowSpanning = false,
+  exceljsPostProcess,
 }: {
   data: any[];
   columns: any[];
@@ -75,6 +81,9 @@ function DataGrid({
   density?: "compact" | "standard" | "comfortable";
   disableFilter?: boolean;
   showCellVerticalBorder?: boolean;
+  fileName?: string;
+  rowSpanning?: boolean;
+  exceljsPostProcess?: GridExcelExportOptions["exceljsPostProcess"];
 }) {
   const paginationModel = pagination?.paginationModel;
   const onPaginationModelChange = pagination?.onPaginationModelChange;
@@ -165,6 +174,8 @@ function DataGrid({
           ...({ lastButton } as any),
           showQuickFilter: showQuickFilter,
           disableFilter: disableFilter,
+          fileName: fileName,
+          exceljsPostProcess: exceljsPostProcess,
         },
       }}
       filterMode={filterMode}
@@ -181,6 +192,7 @@ function DataGrid({
       }}
       columnBufferPx={500}
       rowBufferPx={500}
+      unstable_rowSpanning={rowSpanning} // Disable row spanning
     />
   );
 }
@@ -192,11 +204,15 @@ function CustomToolbar(props: {
   lastButton?: React.ReactNode;
   showQuickFilter?: boolean;
   disableFilter?: boolean;
+  fileName?: string;
+  exceljsPostProcess?: GridExcelExportOptions["exceljsPostProcess"];
 }) {
   const lastButton = props.lastButton;
   const firstToolbarText = props.firstToolbarText;
   const showQuickFilter = props.showQuickFilter;
   const disableFilter = props.disableFilter;
+  const fileName = props.fileName;
+  const exceljsPostProcess = props.exceljsPostProcess;
 
   return (
     <GridToolbarContainer>
@@ -258,6 +274,14 @@ function CustomToolbar(props: {
               variant: "outlined",
               sx: { maxHeight: "30.75px", textTransform: "capitalize" },
             },
+          }}
+          excelOptions={{
+            ...(exceljsPostProcess ? { exceljsPostProcess } : {}),
+            ...(fileName
+              ? {
+                  fileName: `${fileName}_${formatDate(new Date(), "yyyyMMdd")}`,
+                }
+              : {}),
           }}
         />
         {lastButton ? lastButton : <></>}
