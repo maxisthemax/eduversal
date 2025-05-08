@@ -73,7 +73,7 @@ export default async function handler(
           ...(to_date && to_date !== "" && (!from_date || from_date === "")
             ? {
                 created_at: {
-                  lte: startOfDay(new Date(to_date)),
+                  lte: endOfDay(new Date(to_date)),
                 },
               }
             : {}),
