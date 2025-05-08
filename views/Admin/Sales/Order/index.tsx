@@ -76,7 +76,6 @@ function Order() {
       headerName: "Order No",
       minWidth: 100,
       renderCell: (params) => {
-        console.log(params.row);
         return (
           <OrderDrawer
             orderData={params.row}

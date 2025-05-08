@@ -119,8 +119,8 @@ function ShippingReport() {
                   data.order.shipping_address.address_2
                     ? ", \n" + data.order.shipping_address.address_2
                     : ""
-                },\n${data.order.shipping_address.city}, ${
-                  data.order.shipping_address.postcode
+                },\n${data.order.shipping_address.postcode}, ${
+                  data.order.shipping_address.city
                 }, ${data.order.shipping_address.state}`
               : "",
           tracking_no: data?.order?.tracking_no,
@@ -505,17 +505,20 @@ function ShippingReport() {
 
               if (orderNo !== previousOrderNo) {
                 if (firstIndex1 > 1) {
-                  worksheet.mergeCells(firstIndex1, 1, rowNumber - 1, 1);
+                  if (firstIndex1 !== rowNumber - 1)
+                    worksheet.mergeCells(firstIndex1, 1, rowNumber - 1, 1);
 
                   [4, 5, 6, 7, 8, 9, 10, 11, 12].forEach((index) => {
                     const numbers =
                       index + productionVariationColumns.length + 1;
-                    worksheet.mergeCells(
-                      firstIndex1,
-                      numbers,
-                      rowNumber - 1,
-                      numbers
-                    );
+
+                    if (firstIndex1 !== rowNumber - 1)
+                      worksheet.mergeCells(
+                        firstIndex1,
+                        numbers,
+                        rowNumber - 1,
+                        numbers
+                      );
                   });
                 }
                 firstIndex1 = rowNumber;
@@ -524,7 +527,8 @@ function ShippingReport() {
 
               if (orderNoPackageName !== previousOrderNoPackageName) {
                 if (firstIndex2 > 1) {
-                  worksheet.mergeCells(firstIndex2, 2, rowNumber - 1, 2);
+                  if (firstIndex2 !== rowNumber - 1)
+                    worksheet.mergeCells(firstIndex2, 2, rowNumber - 1, 2);
                 }
                 firstIndex2 = rowNumber;
                 previousOrderNoPackageName = orderNoPackageName;
@@ -532,12 +536,13 @@ function ShippingReport() {
 
               if (previousQuantity !== quantity) {
                 if (firstIndex3 > 1) {
-                  worksheet.mergeCells(
-                    firstIndex3,
-                    4 + productionVariationColumns.length,
-                    rowNumber - 1,
-                    7
-                  );
+                  if (firstIndex3 !== rowNumber - 1)
+                    worksheet.mergeCells(
+                      firstIndex3,
+                      4 + productionVariationColumns.length,
+                      rowNumber - 1,
+                      7
+                    );
                 }
                 firstIndex3 = rowNumber;
                 previousQuantity = quantity;

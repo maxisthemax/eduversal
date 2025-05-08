@@ -133,8 +133,8 @@ export function useOrder(queryKey?: QueryKey): {
                 data.shipping_address.address_2
                   ? ", \n" + data.shipping_address.address_2
                   : ""
-              },\n${data.shipping_address.city}, ${
-                data.shipping_address.postcode
+              },\n${data.shipping_address.postcode}, ${
+                data.shipping_address.city
               }, ${data.shipping_address.state}`
             : "",
       }));

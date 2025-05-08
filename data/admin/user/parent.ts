@@ -64,7 +64,7 @@ export function useParent(): {
         contact_number_format: data.country_code + data.phone_no,
         address_format: `${data?.address_1}${
           data.address_2 ? ", \n" + data.address_2 : ""
-        },\n${data.city}, ${data.postcode}, ${data.state}`,
+        },\n${data.postcode}, ${data.city}, ${data.state}`,
       }));
     } else return [];
   }, [parentQueryData, isLoading]);
