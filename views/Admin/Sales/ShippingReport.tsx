@@ -6,6 +6,7 @@ import qs from "querystring";
 import orderBy from "lodash/orderBy";
 import isEmpty from "lodash/isEmpty";
 import uniqBy from "lodash/uniqBy";
+import last from "lodash/last";
 
 //*components
 import DataGrid from "@/components/Table/DataGrid";
@@ -146,8 +147,8 @@ function ShippingReport() {
             sortable: false,
             disableReorder: true,
             align: "center",
-            valueFormatter: (value) => {
-              if (value === undefined) return "N/A";
+            valueFormatter: (value, rows) => {
+              if (rows?.id !== "summary" && value === undefined) return "N/A";
               else return value;
             },
           });
@@ -156,6 +157,39 @@ function ShippingReport() {
     });
     return uniqBy(columns, "field");
   }, [shippingReportData]);
+
+  const summaryRow = useMemo(() => {
+    const quantityRow = uniqBy(shippingReportData, (row) => {
+      if (row.userPackage?.packageId !== "none") {
+        return `${row.orderNo}-${row.pacakgeName}`;
+      } else return `${row.id}-${row.photoName}`;
+    }).reduce((acc, row) => {
+      const quantity = row.quantity ?? 0;
+      const pricing = row.pricing ?? 0;
+      const totalPrice = row.totalPrice ?? 0;
+      acc["quantity"] = (acc["quantity"] || 0) + quantity;
+      acc["pricing"] = (acc["pricing"] || 0) + pricing;
+      acc["totalPrice"] = (acc["totalPrice"] || 0) + totalPrice;
+      return acc;
+    }, {});
+    const totalRow = uniqBy(shippingReportData, "orderNo").reduce(
+      (acc, row) => {
+        const pricing = row.pricing ?? 0;
+        const totalPrice = row.totalPrice ?? 0;
+        acc["pricing"] = (acc["pricing"] || 0) + pricing;
+        acc["totalPrice"] = (acc["totalPrice"] || 0) + totalPrice;
+        return acc;
+      },
+      {}
+    );
+
+    return {
+      id: "summary",
+      [last(productionVariationColumns)?.field]: "Total",
+      ...quantityRow,
+      ...totalRow,
+    };
+  }, [shippingReportData, productionVariationColumns]);
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
@@ -428,6 +462,16 @@ function ShippingReport() {
         </Stack>
         <DataGrid
           exceljsPostProcess={async ({ worksheet }) => {
+            const quantityProcessData = shippingReportData.map((row) => {
+              return {
+                ...row,
+                quantityId:
+                  row.userPackage?.packageId !== "none"
+                    ? `${row.orderNo}-${row.pacakgeName}`
+                    : `${row.id}-${row.photoName}`,
+              };
+            });
+
             let firstIndex1 = 1;
             let firstIndex2 = 1;
             let firstIndex3 = 1;
@@ -436,14 +480,7 @@ function ShippingReport() {
               worksheet.getRow(2).getCell(1).value +
               " " +
               worksheet.getRow(2).getCell(2).value;
-
-            let previousQuantity =
-              worksheet.getRow(2).getCell(2).value !== "N/A"
-                ? `${worksheet.getRow(2).getCell(1).value}-${
-                    worksheet.getRow(2).getCell(2).value
-                  }`
-                : `1-${worksheet.getRow(2).getCell(3).value}`;
-
+            let previousQuantity = quantityProcessData[0].quantityId;
             worksheet.eachRow((row, rowNumber) => {
               if (rowNumber === 1) return; // Skip the header row
               const orderNo = row.getCell(1).value; // Access the first column (column index 1)
@@ -453,23 +490,22 @@ function ShippingReport() {
               if (typeof phoneCell === "string") {
                 row.getCell(6).value = replaceStringAll(phoneCell, "'", "");
               }
-              const quantity =
-                row.getCell(2).value !== "N/A"
-                  ? `${row.getCell(1).value}-${row.getCell(2).value}`
-                  : `${rowNumber}-${row.getCell(3).value}`;
+              const quantity = quantityProcessData[rowNumber - 2]?.quantityId;
 
               if (orderNo !== previousOrderNo) {
                 if (firstIndex1 > 1) {
                   worksheet.mergeCells(firstIndex1, 1, rowNumber - 1, 1);
-                  worksheet.mergeCells(firstIndex1, 5, rowNumber - 1, 5);
-                  worksheet.mergeCells(firstIndex1, 6, rowNumber - 1, 6);
-                  worksheet.mergeCells(firstIndex1, 7, rowNumber - 1, 7);
-                  worksheet.mergeCells(firstIndex1, 8, rowNumber - 1, 8);
-                  worksheet.mergeCells(firstIndex1, 9, rowNumber - 1, 9);
-                  worksheet.mergeCells(firstIndex1, 10, rowNumber - 1, 10);
-                  worksheet.mergeCells(firstIndex1, 11, rowNumber - 1, 11);
-                  worksheet.mergeCells(firstIndex1, 12, rowNumber - 1, 12);
-                  worksheet.mergeCells(firstIndex1, 13, rowNumber - 1, 13);
+
+                  [4, 5, 6, 7, 8, 9, 10, 11, 12].forEach((index) => {
+                    const numbers =
+                      index + productionVariationColumns.length + 1;
+                    worksheet.mergeCells(
+                      firstIndex1,
+                      numbers,
+                      rowNumber - 1,
+                      numbers
+                    );
+                  });
                 }
                 firstIndex1 = rowNumber;
                 previousOrderNo = orderNo;
@@ -485,7 +521,12 @@ function ShippingReport() {
 
               if (previousQuantity !== quantity) {
                 if (firstIndex3 > 1) {
-                  worksheet.mergeCells(firstIndex3, 4, rowNumber - 1, 4);
+                  worksheet.mergeCells(
+                    firstIndex3,
+                    4 + productionVariationColumns.length,
+                    rowNumber - 1,
+                    7
+                  );
                 }
                 firstIndex3 = rowNumber;
                 previousQuantity = quantity;
@@ -495,7 +536,7 @@ function ShippingReport() {
           showCellVerticalBorder={true}
           density="compact"
           height="maxHeight"
-          data={shippingReportData}
+          data={[...shippingReportData, summaryRow]}
           columns={columns}
           gap={18.7}
           showQuickFilter={false}
