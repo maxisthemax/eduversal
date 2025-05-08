@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
 import { format, isValid } from "date-fns";
+import qs from "querystring";
 
 //*components
 import DataGrid from "@/components/Table/DataGrid";
@@ -45,6 +46,7 @@ function Order() {
     isRefetching,
     updateOrder,
     isUpdating,
+    filter,
   } = useOrder();
 
   useEffect(() => {
@@ -74,7 +76,20 @@ function Order() {
       headerName: "Order No",
       minWidth: 100,
       renderCell: (params) => {
-        return <OrderDrawer orderData={params.row} />;
+        console.log(params.row);
+        return (
+          <OrderDrawer
+            orderData={params.row}
+            queryKey={[
+              "admin",
+              "sales",
+              "order",
+              "page",
+              pagination.currentPage,
+              qs.stringify(filter),
+            ]}
+          />
+        );
       },
     },
     {

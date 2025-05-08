@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { QueryKey } from "@tanstack/react-query";
 import { formatDate } from "date-fns";
 
 //*components
@@ -28,9 +29,15 @@ declare global {
   }
 }
 
-function PurchaseDetails({ orderId }: { orderId: string }) {
+function PurchaseDetails({
+  orderId,
+  queryKey,
+}: {
+  orderId: string;
+  queryKey?: QueryKey;
+}) {
   const access = useGetStaffAccess("sales_order_details");
-  const { orderDataById, updateOrder, status } = useOrder();
+  const { orderDataById, updateOrder, status } = useOrder(queryKey);
   const orderData = orderDataById[orderId];
 
   useEffect(() => {

@@ -1,10 +1,10 @@
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useQuery, keepPreviousData, QueryKey } from "@tanstack/react-query";
 
 //*utils
 import axios from "@/utils/axios";
 
 export function useQueryFetch(
-  queryKey: (string | number)[],
+  queryKey: QueryKey,
   queryUrl: string,
   option?: {
     enabled?: boolean;

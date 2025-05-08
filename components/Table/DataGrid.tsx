@@ -268,6 +268,8 @@ function CustomToolbar(props: {
           />
         )}
         <GridToolbarExport
+          csvOptions={{ disableToolbarButton: true }}
+          printOptions={{ disableToolbarButton: true }}
           slotProps={{
             button: {
               color: "inherit",

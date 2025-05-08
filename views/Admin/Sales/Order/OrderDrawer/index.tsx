@@ -9,8 +9,15 @@ import Drawer from "@mui/material/Drawer";
 
 //*data
 import { OrderData } from "@/data/admin/sales/order";
+import { QueryKey } from "@tanstack/react-query";
 
-function OrderDrawer({ orderData }: { orderData: OrderData }) {
+function OrderDrawer({
+  orderData,
+  queryKey,
+}: {
+  orderData: OrderData;
+  queryKey?: QueryKey;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -31,7 +38,7 @@ function OrderDrawer({ orderData }: { orderData: OrderData }) {
           anchor="right"
           PaperProps={{ sx: { width: "60%" } }}
         >
-          <PurchaseDetails orderId={orderData.id} />
+          <PurchaseDetails orderId={orderData.id} queryKey={queryKey} />
         </Drawer>
       )}
     </>

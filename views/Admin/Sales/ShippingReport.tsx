@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { format, isValid } from "date-fns";
 import qs from "querystring";
+import { toast } from "react-toastify";
 
 //*lodash
 import orderBy from "lodash/orderBy";
-import isEmpty from "lodash/isEmpty";
 import uniqBy from "lodash/uniqBy";
 import last from "lodash/last";
 
@@ -56,7 +56,9 @@ function ShippingReport() {
     ],
     `admin/sales/shippingreport?${qs.stringify(shippingReportFilterQuery)}`,
     {
-      enabled: !isEmpty(shippingReportFilterQuery),
+      enabled:
+        shippingReportFilterQuery.from_date !== "" &&
+        shippingReportFilterQuery.to_date !== "",
     }
   );
 
@@ -444,8 +446,17 @@ function ShippingReport() {
           <Button
             variant="contained"
             onClick={() => {
-              setShippingReportFilterQuery(shippingReportFilter);
-              refetch();
+              if (
+                shippingReportFilter.from_date !== "" &&
+                shippingReportFilter.to_date !== ""
+              ) {
+                setShippingReportFilterQuery(shippingReportFilter);
+                refetch();
+              } else {
+                toast.error("Please select From Date and To Date", {
+                  position: "top-right",
+                });
+              }
             }}
           >
             Search

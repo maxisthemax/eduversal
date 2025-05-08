@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import qs from "querystring";
+import { QueryKey } from "@tanstack/react-query";
 
 //*lodash
 import keyBy from "lodash/keyBy";
@@ -61,7 +62,7 @@ export interface OrderFilter {
 
 type UpdateOrderData = Partial<OrderData>;
 
-export function useOrder(): {
+export function useOrder(queryKey?: QueryKey): {
   orderData: OrderData[];
   orderDataById: Record<string, OrderData>;
   status: string;
@@ -91,14 +92,16 @@ export function useOrder(): {
 
   // Fetch order data with pagination
   const { data, status, isLoading, isRefetching, refetch } = useQueryFetch(
-    [
-      "admin",
-      "sales",
-      "order",
-      "page",
-      pageModel.page,
-      qs.stringify(filteredFilter),
-    ],
+    queryKey
+      ? queryKey
+      : [
+          "admin",
+          "sales",
+          "order",
+          "page",
+          pageModel.page,
+          qs.stringify(filteredFilter),
+        ],
     `admin/sales/order?page=${pageModel.page}&pageSize=${
       pageModel.pageSize
     }&${qs.stringify(filteredFilter)}`,

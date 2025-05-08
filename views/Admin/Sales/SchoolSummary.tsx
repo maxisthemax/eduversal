@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { format, isValid } from "date-fns";
 import qs from "querystring";
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "react-toastify";
 
 //*lodash
 import groupBy from "lodash/groupBy";
@@ -622,8 +623,14 @@ function SummaryReport() {
           <Button
             variant="contained"
             onClick={() => {
-              setSchoolSummaryFilterQuery(schoolSummaryFilter);
-              refetch();
+              if (schoolSummaryFilter.institutionId !== "") {
+                setSchoolSummaryFilterQuery(schoolSummaryFilter);
+                refetch();
+              } else {
+                toast.error("Please select Institution first", {
+                  position: "top-right",
+                });
+              }
             }}
           >
             Search
