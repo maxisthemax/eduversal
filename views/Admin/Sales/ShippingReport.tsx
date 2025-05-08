@@ -66,21 +66,26 @@ function ShippingReport() {
     if (!isLoading && data) {
       const result = [];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data?.data.forEach((order) => {
+      data?.data.forEach((order: any) => {
         const { userPackage, ...base } = order;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        userPackage.items.forEach((item: any, index: number) => {
-          const newOrder = {
-            ...base,
-            userPackage: {
-              ...userPackage,
-              items: [item], // single item per row
-            },
-            id: `${order.id}_${index}`,
-          };
-          result.push(newOrder);
-        });
+        userPackage.items
+          .filter(({ photoId }) => {
+            console.log("🚀 ~ .filter ~ photoId:", photoId);
+            return photoId !== "";
+          })
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .forEach((item: any, index: number) => {
+            const newOrder = {
+              ...base,
+              userPackage: {
+                ...userPackage,
+                items: [item], // single item per row
+              },
+              id: `${order.id}_${index}`,
+            };
+            result.push(newOrder);
+          });
       });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
