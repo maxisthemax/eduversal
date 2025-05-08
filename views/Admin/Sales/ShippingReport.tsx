@@ -194,7 +194,8 @@ function ShippingReport() {
       id: "summary",
       [last(productionVariationColumns)?.field]: "Total",
       ...quantityRow,
-      ...totalRow,
+      pricing: Number(totalRow.pricing).toFixed(2),
+      totalPrice: Number(totalRow.totalPrice).toFixed(2),
     };
   }, [shippingReportData, productionVariationColumns]);
 
