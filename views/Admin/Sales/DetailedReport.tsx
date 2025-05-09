@@ -252,9 +252,10 @@ function DetailedReport() {
         ...total,
         totalPrice: totalPrice["Total"],
       };
-      return totalRow;
-    }
+      return [{ ...totalRow }];
+    } else return [];
   }, [detailedReportData, data]);
+  console.log("🚀 ~ summaryRow ~ summaryRow:", summaryRow);
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
@@ -465,7 +466,7 @@ function DetailedReport() {
           density="compact"
           columnGroupingModel={detailedReportData.group}
           height="maxHeight"
-          data={[...detailedReportData?.result, summaryRow]}
+          data={[...detailedReportData?.result, ...summaryRow]}
           columns={
             columns.length > 0
               ? [

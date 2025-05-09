@@ -158,12 +158,8 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     href: "/admin/sales/shippingreport",
                   },
                   {
-                    title: "Detailed Report (Group)",
-                    href: "/admin/sales/detailedreportgroup",
-                  },
-                  {
-                    title: "Detailed Report (Individual)",
-                    href: "/admin/sales/detailedreportindividual",
+                    title: "Detailed Report",
+                    href: "/admin/sales/detailedreport",
                   },
                 ],
               },
