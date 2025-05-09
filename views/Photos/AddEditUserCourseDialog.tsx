@@ -180,7 +180,10 @@ function AddEditUserCourseDialogForm({
                 </Stack>
               </Stack>
 
-              <Stack sx={{ alignItems: "start", width: "100%" }} spacing={2}>
+              <Stack
+                sx={{ alignItems: "start", width: "100%", maxHeight: "250px" }}
+                spacing={2}
+              >
                 <Typography>{"Child's Name"}</Typography>
                 {child.map((name, index) => (
                   <TextField

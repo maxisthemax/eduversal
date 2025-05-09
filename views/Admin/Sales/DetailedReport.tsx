@@ -239,6 +239,23 @@ function DetailedReport() {
       } else return { result: [], columns: [], group: [] };
     }, [data]);
 
+  const summaryRow = useMemo(() => {
+    if (detailedReportData?.result?.length > 0) {
+      const { no, ...total } = sumGroupedNumericFields(
+        detailedReportData.result
+      );
+      const totalPrice = calculateTotalPriceByName(data.data);
+      const totalRow = {
+        id: "total",
+        name: "Total",
+        no_1: no,
+        ...total,
+        totalPrice: totalPrice["Total"],
+      };
+      return totalRow;
+    }
+  }, [detailedReportData, data]);
+
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
       field: "no",
@@ -448,7 +465,7 @@ function DetailedReport() {
           density="compact"
           columnGroupingModel={detailedReportData.group}
           height="maxHeight"
-          data={detailedReportData?.result}
+          data={[...detailedReportData?.result, summaryRow]}
           columns={
             columns.length > 0
               ? [
@@ -502,7 +519,7 @@ function calculateTotalPriceByName(data: any[]): Record<string, number> {
         (item) => item.name === name
       );
       if (userPackage) {
-        return item.price;
+        return item.totalPrice;
       }
       return 0;
     });
