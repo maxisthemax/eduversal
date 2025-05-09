@@ -109,7 +109,9 @@ function DetailedReport() {
                 productVariationOptionValue[`${item.photoName}`] = 0;
                 columns.push({
                   field: `${item.photoName}•none•photoOnly`,
-                  headerName: "Photo Only",
+                  headerName: `Photo Only (RM ${item.album.productTypePrice.toFixed(
+                    2
+                  )})`,
                   headerAlign: "center",
                   minWidth: 120,
                   align: "center",
@@ -125,7 +127,9 @@ function DetailedReport() {
               } else {
                 columns.push({
                   field: `${item.photoName}•none•photoOnly`,
-                  headerName: "Photo Only",
+                  headerName: `Photo Only (RM ${item.album.productTypePrice.toFixed(
+                    2
+                  )})`,
                   headerAlign: "center",
                   minWidth: 120,
                   align: "center",
@@ -141,21 +145,16 @@ function DetailedReport() {
                   (productVariationOption: any) => {
                     if (productVariationOption) {
                       productVariationOptionValue[
-                        `${item.photoName}•${
-                          productVariationOption.productVariationName
-                        } (RM ${productVariationOption.productVariationOptionPrice.toFixed(
-                          2
-                        )})•${productVariationOption.productVariationOptionId}`
+                        `${item.photoName}•${productVariationOption.productVariationName}•${productVariationOption.productVariationOptionId}`
                       ] = 1;
 
                       columns.push({
-                        field: `${item.photoName}•${
-                          productVariationOption.productVariationName
+                        field: `${item.photoName}•${productVariationOption.productVariationName}•${productVariationOption.productVariationOptionId}`,
+                        headerName: `${
+                          productVariationOption.productVariationOptionName
                         } (RM ${productVariationOption.productVariationOptionPrice.toFixed(
                           2
-                        )})•${productVariationOption.productVariationOptionId}`,
-                        headerName:
-                          productVariationOption.productVariationOptionName,
+                        )})`,
                         headerAlign: "center",
                         minWidth: 150,
                         align: "center",
@@ -255,7 +254,6 @@ function DetailedReport() {
       return [{ ...totalRow }];
     } else return [];
   }, [detailedReportData, data]);
-  console.log("🚀 ~ summaryRow ~ summaryRow:", summaryRow);
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
