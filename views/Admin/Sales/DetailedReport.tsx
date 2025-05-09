@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import groupBy from "lodash/groupBy";
 import orderBy from "lodash/orderBy";
 import uniqBy from "lodash/uniqBy";
+import sumBy from "lodash/sumBy";
 import isEmpty from "lodash/isEmpty";
 
 //*components
@@ -107,7 +108,7 @@ function DetailedReport() {
                 photoOnly = 1;
                 productVariationOptionValue[`${item.photoName}`] = 0;
                 columns.push({
-                  field: `${item.photoName}-none-photoOnly`,
+                  field: `${item.photoName}•none•photoOnly`,
                   headerName: "Photo Only",
                   headerAlign: "center",
                   minWidth: 120,
@@ -123,7 +124,7 @@ function DetailedReport() {
                 });
               } else {
                 columns.push({
-                  field: `${item.photoName}-none-photoOnly`,
+                  field: `${item.photoName}•none•photoOnly`,
                   headerName: "Photo Only",
                   headerAlign: "center",
                   minWidth: 120,
@@ -140,19 +141,19 @@ function DetailedReport() {
                   (productVariationOption: any) => {
                     if (productVariationOption) {
                       productVariationOptionValue[
-                        `${item.photoName}-${
+                        `${item.photoName}•${
                           productVariationOption.productVariationName
                         } (RM ${productVariationOption.productVariationOptionPrice.toFixed(
                           2
-                        )})-${productVariationOption.productVariationOptionId}`
+                        )})•${productVariationOption.productVariationOptionId}`
                       ] = 1;
 
                       columns.push({
-                        field: `${item.photoName}-${
+                        field: `${item.photoName}•${
                           productVariationOption.productVariationName
                         } (RM ${productVariationOption.productVariationOptionPrice.toFixed(
                           2
-                        )})-${productVariationOption.productVariationOptionId}`,
+                        )})•${productVariationOption.productVariationOptionId}`,
                         headerName:
                           productVariationOption.productVariationOptionName,
                         headerAlign: "center",
@@ -172,7 +173,7 @@ function DetailedReport() {
               }
               const newOrder = {
                 ...productVariationOptionValue,
-                [`${item.photoName}-none-photoOnly`]: photoOnly,
+                [`${item.photoName}•none•photoOnly`]: photoOnly,
                 photoName: item.photoName,
                 photoId: item.photoId,
                 name: item.name,
@@ -188,19 +189,19 @@ function DetailedReport() {
         );
 
         const firstGroup = groupBy(newColumns, (item) => {
-          return item.field.split("-")[0];
+          return item.field.split("•")[0];
         });
 
         Object.keys(firstGroup).forEach((key1) => {
           const secondGroup = groupBy(firstGroup[key1], (item) => {
-            return item.field.split("-")[1];
+            return item.field.split("•")[1];
           });
           group.push({
             groupId: key1,
             headerAlign: "center",
             children: Object.keys(secondGroup).map((key2) => {
               if (key2 === "none") {
-                return { field: `${key1}-none-photoOnly` };
+                return { field: `${key1}•none•photoOnly` };
               } else
                 return {
                   groupId: key2,
@@ -489,17 +490,25 @@ function sumGroupedNumericFields(data: AnyObject[]): Record<string, number> {
 }
 
 function calculateTotalPriceByName(data: any[]): Record<string, number> {
+  const names = uniqBy(data, (item) => {
+    return item.userPackage.items[0].name;
+  }).map((item) => {
+    return item.userPackage.items[0].name;
+  });
   const result: Record<string, number> = {};
-
-  for (const entry of data) {
-    const names = entry.userPackage.items.map((item) => item.name);
-    for (const name of names) {
-      if (!result[name]) {
-        result[name] = 0;
+  names.forEach((name) => {
+    const sum = sumBy(data, (item) => {
+      const userPackage = item.userPackage.items.find(
+        (item) => item.name === name
+      );
+      if (userPackage) {
+        return item.price;
       }
-      result[name] += entry.totalPrice;
-    }
-  }
+      return 0;
+    });
+
+    result[name] = sum;
+  });
 
   return result;
 }
