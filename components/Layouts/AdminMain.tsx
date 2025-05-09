@@ -100,7 +100,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
             disablePadding
             sx={{
               width: "100%",
-              maxWidth: 235,
+              maxWidth: 265,
               borderRight: "0.5px solid #e0e0e0",
               whiteSpace: "nowrap",
             }}
@@ -156,6 +156,14 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                   {
                     title: "Shipping Report",
                     href: "/admin/sales/shippingreport",
+                  },
+                  {
+                    title: "Detailed Report (Group)",
+                    href: "/admin/sales/detailedreportgroup",
+                  },
+                  {
+                    title: "Detailed Report (Individual)",
+                    href: "/admin/sales/detailedreportindividual",
                   },
                 ],
               },

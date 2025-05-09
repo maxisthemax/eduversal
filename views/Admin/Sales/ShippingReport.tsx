@@ -71,7 +71,6 @@ function ShippingReport() {
 
         userPackage.items
           .filter(({ photoId }) => {
-            console.log("🚀 ~ .filter ~ photoId:", photoId);
             return photoId !== "";
           })
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
