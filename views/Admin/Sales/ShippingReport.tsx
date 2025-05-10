@@ -51,7 +51,7 @@ function ShippingReport() {
     [
       "admin",
       "sales",
-      "shippingreport",
+      "shipping_report",
       qs.stringify(shippingReportFilterQuery),
     ],
     `admin/sales/shippingreport?${qs.stringify(shippingReportFilterQuery)}`,

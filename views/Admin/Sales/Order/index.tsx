@@ -421,6 +421,7 @@ function Order() {
             paginationMode: "server",
           }}
           showQuickFilter={false}
+          fileName="Order_Report"
         />
       </OverlayBox>
     </Box>

@@ -68,7 +68,7 @@ function PurchaseDetails() {
   };
 
   if (status === "pending") return <LinearProgress />;
-
+  if (!orderData) return <></>;
   return (
     <Page backgroundColor="white">
       <Button

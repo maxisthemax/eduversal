@@ -56,19 +56,19 @@ const filter = {
 };
 
 function DetailedReport() {
-  const [schoolSummaryFilterQuery, setSchoolSummaryFilterQuery] =
+  const [detailedReportFilterQuery, setDetailedReportFilterQuery] =
     useState<Filter>(filter);
 
-  const [schoolSummaryFilter, setSchoolSummaryFilter] =
+  const [detailedReportFilter, setDetailedReportFilter] =
     useState<Filter>(filter);
 
   const { institutionsData } = useInstitutions();
   const { academicYearsData } = useAcademicYears(undefined, {
-    institutionId: schoolSummaryFilter?.institutionId ?? undefined,
+    institutionId: detailedReportFilter?.institutionId ?? undefined,
   });
   const { coursesData } = useCourses(undefined, {
-    institutionId: schoolSummaryFilter?.institutionId ?? undefined,
-    academicYearId: schoolSummaryFilter?.academicYearId ?? undefined,
+    institutionId: detailedReportFilter?.institutionId ?? undefined,
+    academicYearId: detailedReportFilter?.academicYearId ?? undefined,
   });
 
   const access = useGetStaffAccess("sales_school_sales");
@@ -77,12 +77,12 @@ function DetailedReport() {
     [
       "admin",
       "sales",
-      "school_summary",
-      qs.stringify(schoolSummaryFilterQuery),
+      "detailed_report",
+      qs.stringify(detailedReportFilterQuery),
     ],
-    `admin/sales/detailedreport?${qs.stringify(schoolSummaryFilterQuery)}`,
+    `admin/sales/detailedreport?${qs.stringify(detailedReportFilterQuery)}`,
     {
-      enabled: !isEmpty(schoolSummaryFilterQuery),
+      enabled: !isEmpty(detailedReportFilterQuery),
     }
   );
 
@@ -297,14 +297,14 @@ function DetailedReport() {
   const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;
     const value = e.target.value;
-    setSchoolSummaryFilter((prev) => ({
+    setDetailedReportFilter((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
   const handleTextFieldClear = (name: string) => {
-    setSchoolSummaryFilter((prev) => ({
+    setDetailedReportFilter((prev) => ({
       ...prev,
       [name]: undefined,
     }));
@@ -318,7 +318,7 @@ function DetailedReport() {
             name="institutionId"
             select
             label="Institution"
-            value={schoolSummaryFilter?.institutionId}
+            value={detailedReportFilter?.institutionId}
             onChange={handleTextFieldChange}
             fullWidth={false}
             sx={{ minWidth: 200 }}
@@ -333,13 +333,13 @@ function DetailedReport() {
             name="academicYearId"
             select
             label="Academic Year"
-            value={schoolSummaryFilter?.academicYearId}
+            value={detailedReportFilter?.academicYearId}
             onChange={handleTextFieldChange}
             fullWidth={false}
             sx={{ minWidth: 200 }}
             slotProps={{
               input: {
-                endAdornment: schoolSummaryFilter.academicYearId && (
+                endAdornment: detailedReportFilter.academicYearId && (
                   <IconButton
                     sx={{ mr: 2 }}
                     size="small"
@@ -363,13 +363,13 @@ function DetailedReport() {
             name="standardId"
             select
             label="Standard"
-            value={schoolSummaryFilter?.standardId}
+            value={detailedReportFilter?.standardId}
             onChange={handleTextFieldChange}
             fullWidth={false}
             sx={{ minWidth: 200 }}
             slotProps={{
               input: {
-                endAdornment: schoolSummaryFilter.standardId && (
+                endAdornment: detailedReportFilter.standardId && (
                   <IconButton
                     sx={{ mr: 2 }}
                     size="small"
@@ -397,13 +397,13 @@ function DetailedReport() {
             name="courseId"
             select
             label="Courses"
-            value={schoolSummaryFilter?.courseId}
+            value={detailedReportFilter?.courseId}
             onChange={handleTextFieldChange}
             fullWidth={false}
             sx={{ minWidth: 200 }}
             slotProps={{
               input: {
-                endAdornment: schoolSummaryFilter.courseId && (
+                endAdornment: detailedReportFilter.courseId && (
                   <IconButton
                     sx={{ mr: 2 }}
                     size="small"
@@ -419,8 +419,8 @@ function DetailedReport() {
           >
             {coursesData
               .filter(({ standard_id }) => {
-                if (!schoolSummaryFilter?.standardId) return true;
-                return standard_id === schoolSummaryFilter?.standardId;
+                if (!detailedReportFilter?.standardId) return true;
+                return standard_id === detailedReportFilter?.standardId;
               })
               ?.map((course) => (
                 <MenuItem key={course.id} value={course.id}>
@@ -432,17 +432,17 @@ function DetailedReport() {
             variant="contained"
             onClick={() => {
               if (
-                !schoolSummaryFilter?.institutionId ||
-                !schoolSummaryFilter?.academicYearId ||
-                !schoolSummaryFilter?.standardId ||
-                !schoolSummaryFilter?.courseId
+                !detailedReportFilter?.institutionId ||
+                !detailedReportFilter?.academicYearId ||
+                !detailedReportFilter?.standardId ||
+                !detailedReportFilter?.courseId
               ) {
                 toast.error("Please fill in all the fields", {
                   position: "top-right",
                 });
                 return;
               } else {
-                setSchoolSummaryFilterQuery(schoolSummaryFilter);
+                setDetailedReportFilterQuery(detailedReportFilter);
                 refetch();
               }
             }}
@@ -452,8 +452,8 @@ function DetailedReport() {
           <Button
             variant="outlined"
             onClick={() => {
-              setSchoolSummaryFilterQuery(filter);
-              setSchoolSummaryFilter(filter);
+              setDetailedReportFilterQuery(filter);
+              setDetailedReportFilter(filter);
             }}
           >
             Reset
@@ -476,7 +476,7 @@ function DetailedReport() {
           gap={18.7}
           showQuickFilter={false}
           disableFilter={true}
-          fileName="Summary_Report"
+          fileName="Detailed_Report"
         />
       </OverlayBox>
     </Box>
