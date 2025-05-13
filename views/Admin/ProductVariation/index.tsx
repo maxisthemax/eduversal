@@ -52,6 +52,16 @@ function ProductVariation() {
       field: "options",
       headerName: "Options",
       flex: 2,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      valueFormatter: (value: any[]) => {
+        let text = "";
+        value.forEach((item, index) => {
+          text += `${index + 1}. Name: ${item.name}, Description: ${
+            item.description
+          }, Price: ${item.price_format} \n`;
+        });
+        return text;
+      },
       renderCell: ({ value }) => {
         return (
           <Table size="small">

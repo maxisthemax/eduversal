@@ -92,7 +92,6 @@ function DetailedReport() {
         const result = [];
         const columns = [];
         const group = [];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data?.data.forEach((order: any) => {
           const { userPackage } = order;
 
@@ -100,12 +99,11 @@ function DetailedReport() {
             .filter(({ photoId }) => {
               return photoId !== "";
             })
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .forEach((item: any, index: number) => {
               const productVariationOptionValue = {};
               let photoOnly = 0;
               if (item.productVariationOptions?.length === 0) {
-                photoOnly = 1;
+                photoOnly = 1 * order.quantity;
                 productVariationOptionValue[`${item.photoName}`] = 0;
                 columns.push({
                   field: `${item.photoName}•none•photoOnly`,
@@ -146,7 +144,7 @@ function DetailedReport() {
                     if (productVariationOption) {
                       productVariationOptionValue[
                         `${item.photoName}•${productVariationOption.productVariationName}•${productVariationOption.productVariationOptionId}`
-                      ] = 1;
+                      ] = 1 * order.quantity;
 
                       columns.push({
                         field: `${item.photoName}•${productVariationOption.productVariationName}•${productVariationOption.productVariationOptionId}`,
