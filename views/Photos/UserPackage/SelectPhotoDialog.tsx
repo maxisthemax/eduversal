@@ -298,10 +298,24 @@ function SelectPhotoDialogForm({
                               handleCheckMandatory(value);
                             }}
                           >
-                            <ListItemText
-                              primary={`${name} - ${price_format}`}
-                              secondary={description}
-                            />
+                            {" "}
+                            <Stack
+                              direction="row"
+                              sx={{ alignItems: "center" }}
+                              spacing={2}
+                            >
+                              {preview_url && (
+                                <Box
+                                  component="img"
+                                  src={preview_url}
+                                  height={40}
+                                />
+                              )}
+                              <ListItemText
+                                primary={`${name} - ${price_format}`}
+                                secondary={description}
+                              />
+                            </Stack>
                           </MenuItem>
                         );
                       }
