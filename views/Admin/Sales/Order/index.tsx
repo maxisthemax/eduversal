@@ -28,6 +28,7 @@ import { OrderFilter, useOrder } from "@/data/admin/sales/order";
 import { statusColor } from "@/utils/constant";
 
 function Order() {
+  const [orderId, setOrderId] = useState<string | undefined>(undefined);
   const access = useGetStaffAccess("sales_order_details");
   const [orderFilter, setOrderFilter] = useState<OrderFilter>({
     order_no: "",
@@ -47,6 +48,7 @@ function Order() {
     updateOrder,
     isUpdating,
     filter,
+    orderDataById,
   } = useOrder();
 
   useEffect(() => {
@@ -75,21 +77,6 @@ function Order() {
       field: "order_no",
       headerName: "Order No",
       minWidth: 100,
-      renderCell: (params) => {
-        return (
-          <OrderDrawer
-            orderData={params.row}
-            queryKey={[
-              "admin",
-              "sales",
-              "order",
-              "page",
-              pagination.currentPage,
-              qs.stringify(filter),
-            ]}
-          />
-        );
-      },
     },
     {
       field: "created_at",
@@ -408,6 +395,9 @@ function Order() {
           </Button>
         </Stack>
         <DataGrid
+          onRowClick={(params) => {
+            setOrderId(params.row.id);
+          }}
           showCellVerticalBorder={true}
           loading={status === "pending"}
           height="maxHeight"
@@ -423,6 +413,22 @@ function Order() {
           showQuickFilter={false}
           fileName="Order_Report"
         />
+        {orderId && (
+          <OrderDrawer
+            orderData={orderDataById[orderId]}
+            queryKey={[
+              "admin",
+              "sales",
+              "order",
+              "page",
+              pagination.currentPage,
+              qs.stringify(filter),
+            ]}
+            onClose={() => {
+              setOrderId(undefined);
+            }}
+          />
+        )}
       </OverlayBox>
     </Box>
   );
