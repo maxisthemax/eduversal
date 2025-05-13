@@ -19,6 +19,9 @@ const baseTheme: ThemeOptions = {
     MuiSelect: {
       defaultProps: {
         size: "small",
+        sx: {
+          textAlign: "start",
+        },
       },
     },
     MuiButton: {

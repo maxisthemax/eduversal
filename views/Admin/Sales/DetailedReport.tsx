@@ -245,14 +245,14 @@ function DetailedReport() {
       );
       const totalPrice = calculateTotalPriceByName(data.data);
       const totalRow = {
+        ...total,
         id: "total",
         name: "Total",
         no_1: no,
-        ...total,
         totalPrice: totalPrice["Total"],
       };
-      return [{ ...totalRow }];
-    } else return [];
+      return totalRow;
+    } else return {};
   }, [detailedReportData, data]);
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
@@ -287,7 +287,7 @@ function DetailedReport() {
       sortable: false,
       disableReorder: true,
       valueFormatter: (value: number) => {
-        if (value > 0) return value?.toFixed(2);
+        if (value && value > 0) return Number(value)?.toFixed(2);
         else return "";
       },
     },
@@ -464,7 +464,11 @@ function DetailedReport() {
           density="compact"
           columnGroupingModel={detailedReportData.group}
           height="maxHeight"
-          data={[...detailedReportData?.result, ...summaryRow]}
+          data={
+            detailedReportData?.result.length > 0
+              ? [...detailedReportData?.result, summaryRow]
+              : []
+          }
           columns={
             columns.length > 0
               ? [

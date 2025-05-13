@@ -89,7 +89,10 @@ function ProductVariation() {
                 <IconButton size="small" {...bindTrigger(popupState)}>
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
-                <Menu {...bindMenu(popupState)}>
+                <Menu
+                  {...bindMenu(popupState)}
+                  onKeyDownCapture={(e) => e.stopPropagation()}
+                >
                   {access.edit && (
                     <AddEditProductVariationDialog
                       mode="edit"

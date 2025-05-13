@@ -157,8 +157,7 @@ function UserCourseItem({ userCourse }) {
             <Stack direction={"row"} spacing={2}>
               <Stack
                 direction={"row"}
-                spacing={1}
-                sx={{ alignItems: "center" }}
+                sx={{ alignItems: "center", maxWidth: "500px" }}
               >
                 <CustomIcon icon="person" fontSizeSx="20px" />
                 <Typography variant="body2">

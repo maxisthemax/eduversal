@@ -158,11 +158,17 @@ export default async function signUp(
       type: "USER_REGISTERED_SUCCESSFULLY",
     });
   } catch (error) {
-    console.error("Registration failed:", error);
-    res.status(500).json({
-      message: "Registration failed",
-      error,
-      type: "REGISTRATION_FAILED",
-    });
+    if (error.code === "EAUTH")
+      res.status(500).json({
+        message: error.response,
+        error,
+        type: "REGISTRATION_FAILED",
+      });
+    else
+      res.status(500).json({
+        message: "Registration failed",
+        error,
+        type: "REGISTRATION_FAILED",
+      });
   }
 }

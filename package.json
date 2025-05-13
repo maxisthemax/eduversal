@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 5000",
+    "dev": "dotenv -e .env -- next dev -p 5000",
+    "prod": "dotenv -e .env.prod -- next dev -p 8080",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
     "seed": "ts-node --project tsconfig.seed.json prisma/seed.ts",
-    "resetdbandseed": "npx prisma migrate reset && npx prisma db push && npx prisma generate && npm run seed"
+    "seedprod": "ts-node --project tsconfig.seed.json prisma/seed_prod.ts",
+    "resetdbandseed": "dotenv -e .env -- npx prisma migrate reset && npx prisma db push && npx prisma generate && npm run seed",
+    "resetdbandseedprod": "dotenv -e .env.prod -- npx prisma migrate reset && npx prisma db push && npx prisma generate && npm run seedprod"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -33,6 +36,7 @@
     "country-codes-list": "^1.6.11",
     "country-list": "^2.3.0",
     "date-fns": "^4.1.0",
+    "dotenv-cli": "^8.0.0",
     "flat": "^6.0.1",
     "formidable": "^3.5.2",
     "formik": "^2.4.6",

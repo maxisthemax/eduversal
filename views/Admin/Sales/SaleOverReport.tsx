@@ -119,6 +119,10 @@ function SaleOverReport() {
       sortable: false,
       disableReorder: true,
       align: "right",
+      valueFormatter: (value: number) => {
+        if (value && value > 0) return `${Number(value)?.toFixed(2)}`;
+        else return "";
+      },
     },
   ];
 

@@ -82,7 +82,10 @@ function Institution() {
                 >
                   <CustomIcon fontSizeSx="20px" icon="more_vert" />
                 </IconButton>
-                <Menu {...bindMenu(popupState)}>
+                <Menu
+                  {...bindMenu(popupState)}
+                  onKeyDownCapture={(e) => e.stopPropagation()}
+                >
                   {access.edit && (
                     <AddEditInstitutionDialog
                       mode="edit"

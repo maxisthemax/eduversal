@@ -111,7 +111,7 @@ export function useCourses(
         })?.label,
         access_code_status:
           data.force_disable ||
-          differenceInDays(new Date(data.end_date), new Date()) === 0
+          differenceInDays(new Date(data.end_date), new Date()) > 0
             ? "Disabled"
             : "Enabled",
       }));

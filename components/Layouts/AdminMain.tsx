@@ -162,7 +162,7 @@ function AdminMain({ children }: { children: React.ReactNode }) {
                     href: "/admin/sales/detailedreport",
                   },
                   {
-                    title: "Sale Over Report",
+                    title: "Sales Over Time Report",
                     href: "/admin/sales/saleoverreport",
                   },
                 ],

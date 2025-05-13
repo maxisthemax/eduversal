@@ -262,6 +262,10 @@ function ShippingReport() {
       rowSpanValueGetter: (value, row) => {
         return row ? `${row.orderNo}` : value;
       },
+      valueFormatter: (value: number) => {
+        if (value && value > 0) return `${Number(value)?.toFixed(2)}`;
+        else return "";
+      },
       align: "center",
     },
     {
@@ -365,6 +369,10 @@ function ShippingReport() {
       disableReorder: true,
       rowSpanValueGetter: (value, row) => {
         return row ? `${row.orderNo}` : value;
+      },
+      valueFormatter: (value: number) => {
+        if (value && value > 0) return Number(value)?.toFixed(2);
+        else return "";
       },
       align: "center",
     },
@@ -557,7 +565,11 @@ function ShippingReport() {
           showCellVerticalBorder={true}
           density="compact"
           height="maxHeight"
-          data={[...shippingReportData, summaryRow]}
+          data={
+            shippingReportData.length > 0
+              ? [...shippingReportData, summaryRow]
+              : []
+          }
           columns={columns}
           gap={18.7}
           showQuickFilter={false}

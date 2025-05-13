@@ -202,7 +202,9 @@ function SummaryReport() {
   const dataMemo = useMemo(() => {
     // Process and transform the school summary data
     // Map the data to include standard, class, and dynamically generated packageNoneRowData
-    const schoolSummaryData = data?.data ?? [];
+    const schoolSummaryData = data?.data;
+    if ((schoolSummaryData?.length ?? 0) === 0) return [];
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mapData = schoolSummaryData.map((data: any) => {
       return {
@@ -405,8 +407,9 @@ function SummaryReport() {
       disableColumnMenu: true,
       sortable: false,
       disableReorder: true,
-      valueFormatter: (value) => {
-        if (value !== undefined) return `RM ${value}`;
+      valueFormatter: (value: number) => {
+        if (value && value > 0) return `RM ${Number(value)?.toFixed(2)}`;
+        else return "";
       },
       minWidth: 150,
     },
