@@ -103,6 +103,7 @@ export default async function handler(
           data: orders,
           currentPage: Number(page),
           totalCount,
+          where,
         });
       }
       default: {
