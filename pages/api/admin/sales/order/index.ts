@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
+import { endOfDay, startOfDay } from "date-fns";
 
 //*lib
 import prisma from "@/lib/prisma";
@@ -56,15 +57,15 @@ export default async function handler(
           ...(from_date && from_date !== "" && to_date && to_date !== ""
             ? {
                 created_at: {
-                  gte: new Date(from_date),
-                  lte: new Date(to_date),
+                  gte: startOfDay(new Date(from_date)),
+                  lte: endOfDay(new Date(to_date)),
                 },
               }
             : {}),
           ...(from_date && from_date !== "" && (!to_date || to_date === "")
             ? {
                 created_at: {
-                  gte: new Date(from_date),
+                  gte: startOfDay(new Date(from_date)),
                 },
               }
             : {}),
@@ -72,7 +73,7 @@ export default async function handler(
           ...(to_date && to_date !== "" && (!from_date || from_date === "")
             ? {
                 created_at: {
-                  lte: new Date(to_date),
+                  lte: endOfDay(new Date(to_date)),
                 },
               }
             : {}),
