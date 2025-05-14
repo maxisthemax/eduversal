@@ -57,15 +57,15 @@ export default async function handler(
           ...(from_date && from_date !== "" && to_date && to_date !== ""
             ? {
                 created_at: {
-                  gte: startOfDay(new Date(from_date)),
-                  lte: endOfDay(new Date(to_date)),
+                  gte: startOfDay(new Date(from_date)).toISOString(),
+                  lte: endOfDay(new Date(to_date)).toISOString(),
                 },
               }
             : {}),
           ...(from_date && from_date !== "" && (!to_date || to_date === "")
             ? {
                 created_at: {
-                  gte: startOfDay(new Date(from_date)),
+                  gte: startOfDay(new Date(from_date)).toISOString(),
                 },
               }
             : {}),
@@ -73,7 +73,7 @@ export default async function handler(
           ...(to_date && to_date !== "" && (!from_date || from_date === "")
             ? {
                 created_at: {
-                  lte: endOfDay(new Date(to_date)),
+                  lte: endOfDay(new Date(to_date)).toISOString(),
                 },
               }
             : {}),
