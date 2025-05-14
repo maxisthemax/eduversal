@@ -30,7 +30,8 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
     pathName === "/admin/signin" ||
     pathName === "/payment" ||
     pathName === "/admin/forgotpassword" ||
-    pathName === "/admin/signup"
+    pathName === "/admin/signup" ||
+    pathName === "/admin/verifyemail"
   )
     return <Minimal>{children}</Minimal>;
   else if (startsWith(pathName, "/admin"))

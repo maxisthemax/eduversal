@@ -25,6 +25,7 @@ export async function middleware(req: NextRequest) {
       "/admin/signin",
       "/admin/forgotpassword",
       "/admin/signup",
+      "/admin/verifyemail",
       "/signin",
       "/signup",
       "/verifyemail",
