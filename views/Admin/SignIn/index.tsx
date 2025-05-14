@@ -115,7 +115,9 @@ function SignIn() {
                       />
                       <FlexBox />
                       <Typography>
-                        <Link href={"/forgotpassword"}>Forgot Password?</Link>
+                        <Link href={"/admin/forgotpassword"}>
+                          Forgot Password?
+                        </Link>
                       </Typography>
                     </Stack>
                     <Button
@@ -128,7 +130,7 @@ function SignIn() {
                     </Button>
                     <Typography sx={{ textAlign: "center", pt: 4 }}>
                       Don&apos;t have an account?{" "}
-                      <Link href={"/signup"}>Sign up</Link>
+                      <Link href={"/admin/signup"}>Sign up</Link>
                     </Typography>
                   </Stack>
                 </Form>

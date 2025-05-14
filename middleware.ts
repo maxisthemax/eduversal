@@ -23,6 +23,8 @@ export async function middleware(req: NextRequest) {
   if (
     [
       "/admin/signin",
+      "/admin/forgotpassword",
+      "/admin/signup",
       "/signin",
       "/signup",
       "/verifyemail",

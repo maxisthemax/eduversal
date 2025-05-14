@@ -26,7 +26,12 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
     )
   )
     return <AuthMain>{children}</AuthMain>;
-  else if (pathName === "/admin/signin" || pathName === "/payment")
+  else if (
+    pathName === "/admin/signin" ||
+    pathName === "/payment" ||
+    pathName === "/admin/forgotpassword" ||
+    pathName === "/admin/signup"
+  )
     return <Minimal>{children}</Minimal>;
   else if (startsWith(pathName, "/admin"))
     return <AdminMain>{children}</AdminMain>;

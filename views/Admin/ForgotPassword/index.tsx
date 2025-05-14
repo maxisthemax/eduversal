@@ -25,6 +25,7 @@ const validationSchema = yup.object().shape({
 
 function ForgotPassword() {
   //*define
+
   const { push } = useRouter();
 
   return (
@@ -34,6 +35,7 @@ function ForgotPassword() {
         validationSchema={validationSchema}
         onSubmit={async (values) => {
           await axios.post("/auth/forgotPassword", values);
+
           push("/admin/signin");
         }}
       >
@@ -79,7 +81,7 @@ function ForgotPassword() {
                   >
                     Submit
                   </Button>
-                  <Button onClick={() => push("/signin")}>Back</Button>
+                  <Button onClick={() => push("/admin/signin")}>Back</Button>
                 </Stack>
               </Form>
             </OverlayBox>
