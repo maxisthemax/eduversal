@@ -81,7 +81,7 @@ export function useOrder(queryKey?: QueryKey): {
   isUpdating: boolean;
 } {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [pageModel, setPageModel] = useState({ page: 0, pageSize: 20 });
+  const [pageModel, setPageModel] = useState({ page: 0, pageSize: 100 });
   const [filter, setFilter] = useState<OrderFilter>();
 
   const filteredFilter = filter
