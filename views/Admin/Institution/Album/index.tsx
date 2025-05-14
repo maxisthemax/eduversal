@@ -1,5 +1,5 @@
 import { useParams } from "next/navigation";
-import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
+import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 
 //*lodash
 import find from "lodash/find";
@@ -105,13 +105,13 @@ function Album() {
                   variant={"outlined"}
                   color="inherit"
                   {...bindTrigger(popupState)}
-                  {...bindTrigger(popupState)}
                   endIcon={<CustomIcon icon="arrow_drop_down" />}
                 >
                   Manage
                 </Button>
                 <Menu
-                  {...bindPopover(popupState)}
+                  {...bindMenu(popupState)}
+                  onKeyDownCapture={(e) => e.stopPropagation()}
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "left",

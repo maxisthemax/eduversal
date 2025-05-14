@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
+import PopupState, { bindPopover } from "material-ui-popup-state";
 import { format, isValid } from "date-fns";
 import qs from "querystring";
 
@@ -107,10 +107,14 @@ function Order() {
                 <>
                   <Link
                     href="#"
-                    {...bindTrigger(popupState)}
                     color={
                       Boolean(params?.row.tracking_no) ? "primary" : "error"
                     }
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      popupState.open(e);
+                    }}
                   >
                     {Boolean(params?.row.tracking_no)
                       ? params?.row.tracking_no

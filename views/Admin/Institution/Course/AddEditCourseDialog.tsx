@@ -6,7 +6,7 @@ import {
   usePopupState,
 } from "material-ui-popup-state/hooks";
 import { useParams } from "next/navigation";
-import { addMonths, addYears } from "date-fns";
+import { addMonths, addYears, endOfDay } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 
 //*components
@@ -214,11 +214,13 @@ function AddEditCourseDialogForm({
                         if (e.target.value !== "CUSTOM") {
                           setFieldValue(
                             "end_date",
-                            addMonths(
-                              values.start_date,
-                              { MONTH: 1, QUARTER: 3, HALF: 6, YEAR: 12 }[
-                                e.target.value
-                              ]
+                            endOfDay(
+                              addMonths(
+                                values.start_date,
+                                { MONTH: 1, QUARTER: 3, HALF: 6, YEAR: 12 }[
+                                  e.target.value
+                                ]
+                              )
                             )
                           );
                         }

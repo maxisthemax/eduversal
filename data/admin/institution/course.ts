@@ -1,6 +1,6 @@
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import { differenceInDays } from "date-fns";
+import { isAfter } from "date-fns";
 
 //*lodash
 import keyBy from "lodash/keyBy";
@@ -99,22 +99,23 @@ export function useCourses(
   // Memoize courses data
   const coursesData = useMemo(() => {
     if (!isLoading && coursesQueryData) {
-      return coursesQueryData.map((data) => ({
-        ...data,
-        start_date: new Date(data.start_date),
-        end_date: new Date(data.end_date),
-        created_at: new Date(data.created_at),
-        updated_at: new Date(data.updated_at),
-        standard_name_format: data.standard.name,
-        valid_period_format: find(validPeriodOptions, {
-          value: data.valid_period,
-        })?.label,
-        access_code_status:
-          data.force_disable ||
-          differenceInDays(new Date(data.end_date), new Date()) > 0
-            ? "Disabled"
-            : "Enabled",
-      }));
+      return coursesQueryData.map((data) => {
+        return {
+          ...data,
+          start_date: new Date(data.start_date),
+          end_date: new Date(data.end_date),
+          created_at: new Date(data.created_at),
+          updated_at: new Date(data.updated_at),
+          standard_name_format: data.standard.name,
+          valid_period_format: find(validPeriodOptions, {
+            value: data.valid_period,
+          })?.label,
+          access_code_status:
+            data.force_disable || isAfter(new Date(), new Date(data.end_date))
+              ? "Disabled"
+              : "Enabled",
+        };
+      });
     } else return [];
   }, [coursesQueryData, isLoading]);
 
