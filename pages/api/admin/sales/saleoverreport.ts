@@ -25,7 +25,7 @@ export default async function handler(
         const result = await prisma.$queryRaw<
           { date: Date; count: bigint; total: number }[]
         >`
-          SELECT DATE_TRUNC('day', "created_at") AS date, COUNT(*) AS count,
+          SELECT created_at AS date, COUNT(*) AS count,
                  SUM("price") AS total
           FROM "Order"
           WHERE "status" = 'COMPLETED'
@@ -43,9 +43,22 @@ export default async function handler(
           count: Number(r.count), // convert bigint to number
           total: Number(r.total), // convert bigint to number (if SUM is bigint)
         }));
+        //sum the data where date is the same
+
+        const sum = formatted.reduce((acc, curr) => {
+          const existing = acc.find((item) => item.date === curr.date);
+          if (existing) {
+            existing.count += curr.count;
+            existing.total += curr.total;
+          } else {
+            acc.push({ ...curr });
+          }
+          return acc;
+        }, []);
+
         // Return the users along with pagination info
         return res.status(200).json({
-          data: formatted,
+          data: sum,
         });
       }
       default: {
