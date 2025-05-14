@@ -110,7 +110,6 @@ function SaleOverReport() {
       disableReorder: true,
       align: "right",
       rowSpanValueGetter: (value, row) => {
-        console.log("🚀 ~ SaleOverReport ~ row:", row);
         if (row.id === "summary") {
           return "summary";
         } else return row.date;
