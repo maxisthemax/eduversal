@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PopupState, { bindPopover } from "material-ui-popup-state";
-import { format, isValid } from "date-fns";
+import { isValid } from "date-fns";
 import qs from "querystring";
 
 //*components
@@ -303,9 +303,7 @@ function Order() {
             onChange={(newValue) => {
               setOrderFilter((prev) => ({
                 ...prev,
-                from_date: isValid(newValue)
-                  ? format(newValue, "yyyy-MM-dd")
-                  : "",
+                from_date: isValid(newValue) ? newValue.toISOString() : "",
               }));
             }}
             slotProps={{
@@ -339,9 +337,7 @@ function Order() {
             onChange={(newValue) => {
               setOrderFilter((prev) => ({
                 ...prev,
-                to_date: isValid(newValue)
-                  ? format(newValue, "yyyy-MM-dd")
-                  : "",
+                to_date: isValid(newValue) ? newValue.toISOString() : "",
               }));
             }}
             slotProps={{
