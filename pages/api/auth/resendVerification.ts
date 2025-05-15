@@ -27,7 +27,7 @@ export default async function resendVerification(
 
   // Extract the request body
   const { email } = req.body;
-  const type = req.body?.user ?? "USER";
+  const type = req.body?.type ?? "USER";
 
   // Validate required fields
   if (!validateRequiredFields(req, res, ["email"])) {

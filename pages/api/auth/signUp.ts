@@ -38,7 +38,7 @@ export default async function signUp(
     city,
   } = req.body;
 
-  const type = req.body?.user ?? "USER";
+  const type = req.body?.type ?? "USER";
 
   // Validate required fields
   if (
