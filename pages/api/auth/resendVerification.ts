@@ -27,6 +27,7 @@ export default async function resendVerification(
 
   // Extract the request body
   const { email } = req.body;
+  const type = req.body?.user ?? "USER";
 
   // Validate required fields
   if (!validateRequiredFields(req, res, ["email"])) {
@@ -73,11 +74,18 @@ export default async function resendVerification(
     });
 
     // Generate verification link
-    const verificationLink = `${
-      process.env.NEXT_PUBLIC_URL
-    }/verifyemail?token=${verification_token}&email=${encodeURIComponent(
-      email
-    )}`;
+    const verificationLink =
+      type === "USER"
+        ? `${
+            process.env.NEXT_PUBLIC_URL
+          }/verifyemail?token=${verification_token}&email=${encodeURIComponent(
+            email
+          )}`
+        : `${
+            process.env.NEXT_PUBLIC_URL
+          }/admin/verifyemail?token=${verification_token}&email=${encodeURIComponent(
+            email
+          )}`;
 
     // Send verification email
     await sendEmail({

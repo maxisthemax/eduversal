@@ -118,6 +118,7 @@ function SignUp() {
                   postcode,
                   state,
                   city,
+                  type: "ADMIN",
                 },
                 undefined,
                 true

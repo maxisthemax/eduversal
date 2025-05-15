@@ -33,7 +33,7 @@ function VerifyEmail({ message, isVerified, type }) {
           <Box>
             <Button
               onClick={async () => {
-                axios.post("auth/resendVerification", { email });
+                axios.post("auth/resendVerification", { email, type: "ADMIN" });
                 push("/admin/signin");
               }}
             >

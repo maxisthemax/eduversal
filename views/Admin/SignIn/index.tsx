@@ -59,7 +59,10 @@ function SignIn() {
                   content: (
                     <Button
                       onClick={async () => {
-                        axios.post("auth/resendVerification", { email });
+                        axios.post("auth/resendVerification", {
+                          email,
+                          type: "ADMIN",
+                        });
                         handleCloseDialog();
                       }}
                     >

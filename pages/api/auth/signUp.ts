@@ -38,6 +38,8 @@ export default async function signUp(
     city,
   } = req.body;
 
+  const type = req.body?.user ?? "USER";
+
   // Validate required fields
   if (
     !validateRequiredFields(req, res, [
@@ -120,11 +122,18 @@ export default async function signUp(
     });
 
     // Generate verification link
-    const verificationLink = `${
-      process.env.NEXT_PUBLIC_URL
-    }/verifyemail?token=${verification_token}&email=${encodeURIComponent(
-      email
-    )}`;
+    const verificationLink =
+      type === "USER"
+        ? `${
+            process.env.NEXT_PUBLIC_URL
+          }/verifyemail?token=${verification_token}&email=${encodeURIComponent(
+            email
+          )}`
+        : `${
+            process.env.NEXT_PUBLIC_URL
+          }/admin/verifyemail?token=${verification_token}&email=${encodeURIComponent(
+            email
+          )}`;
 
     // Validate environment variables
     if (!process.env.NEXT_EMAIL_FROM || !process.env.NEXT_EMAIL_PASS) {
