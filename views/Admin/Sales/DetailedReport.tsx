@@ -535,7 +535,7 @@ function calculateTotalPriceByName(data: any[]): Record<string, number> {
         (item) => item.name === name
       );
       if (userPackage) {
-        return item.totalPrice;
+        return item.totalPrice + item.shippingFee;
       }
       return 0;
     });
