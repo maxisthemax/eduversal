@@ -27,6 +27,7 @@ export default async function forgotPassword(
 
   // Extract the request body
   const { email } = req.body;
+  const type = req.body?.type ?? "USER";
 
   // Validate required fields
   if (!validateRequiredFields(req, res, ["email"])) {
@@ -81,9 +82,18 @@ export default async function forgotPassword(
     });
 
     // Generate reset link
-    const resetLink = `${
-      process.env.NEXT_PUBLIC_URL
-    }/resetpassword?token=${reset_token}&email=${encodeURIComponent(email)}`;
+    const resetLink =
+      type === "USER"
+        ? `${
+            process.env.NEXT_PUBLIC_URL
+          }/resetpassword?token=${reset_token}&email=${encodeURIComponent(
+            email
+          )}`
+        : `${
+            process.env.NEXT_PUBLIC_URL
+          }/admin/resetpassword?token=${reset_token}&email=${encodeURIComponent(
+            email
+          )}`;
 
     // Send reset email using the helper function
     await sendEmail({
