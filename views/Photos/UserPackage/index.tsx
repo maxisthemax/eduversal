@@ -171,43 +171,41 @@ function UserPackages() {
       <Box sx={{ p: 2, background: "white" }}>
         <Container maxWidth="lg">
           <Grid container spacing={2}>
-            {[...album.photos, ...album.photos, ...album.photos].map(
-              (photo) => {
-                const { id: photoId, display_url } = photo;
-                return (
-                  <Grid
-                    spacing={2}
-                    key={photoId}
-                    size={{
-                      xs: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
-                    }}
-                  >
-                    <Stack spacing={2}>
+            {album.photos.map((photo) => {
+              const { id: photoId, display_url } = photo;
+              return (
+                <Grid
+                  spacing={2}
+                  key={photoId}
+                  size={{
+                    xs: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
+                  }}
+                >
+                  <Stack spacing={2}>
+                    <Box
+                      sx={{
+                        p: 0,
+                        border: "1px solid #f2f2f2",
+                        display: "flex",
+                        backgroundColor: "#f2f2f2",
+                      }}
+                    >
                       <Box
+                        component="img"
+                        src={display_url ?? null}
                         sx={{
-                          p: 0,
-                          border: "1px solid #f2f2f2",
-                          display: "flex",
+                          width: "100%",
+                          aspectRatio: "1/1",
+                          objectFit: "contain",
                           backgroundColor: "#f2f2f2",
                         }}
-                      >
-                        <Box
-                          component="img"
-                          src={display_url ?? null}
-                          sx={{
-                            width: "100%",
-                            aspectRatio: "1/1",
-                            objectFit: "contain",
-                            backgroundColor: "#f2f2f2",
-                          }}
-                        />
-                      </Box>
-                      <SelectPhotoDialog album={album} photo={photo} />
-                    </Stack>
-                  </Grid>
-                );
-              }
-            )}
+                      />
+                    </Box>
+                    <SelectPhotoDialog album={album} photo={photo} />
+                  </Stack>
+                </Grid>
+              );
+            })}
           </Grid>
         </Container>
         <Toolbar sx={{ height: "130px" }} />
