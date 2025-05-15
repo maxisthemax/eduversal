@@ -22,7 +22,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   if (token && email) {
     try {
-      const res = await axios.post(`auth/verifyEmail`, { token, email });
+      const res = await axios.post(`auth/verifyEmail`, {
+        token,
+        email,
+        type: "ADMIN",
+      });
       message = res?.message ?? "";
       is_verified = true;
       type = res?.type ?? "";

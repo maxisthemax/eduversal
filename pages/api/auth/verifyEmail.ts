@@ -19,6 +19,7 @@ export default async function verifyEmail(
 
   // Extract from request body
   const { token, email } = req.body;
+  const type = req.body?.type ?? "USER";
 
   // Validate required fields
   if (!validateRequiredFields(req, res, ["email", "token"])) {
@@ -51,7 +52,10 @@ export default async function verifyEmail(
     // If user is already verified, return a success message
     if (user.is_verified) {
       return res.status(200).json({
-        message: "Email is already verified. Please Sign In",
+        message:
+          type === "USER"
+            ? "Email is already verified. Please Sign In"
+            : "Email is already verified. Please wait for admin approval.",
         type: "EMAIL_ALREADY_VERIFIED",
       });
     }
