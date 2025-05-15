@@ -34,7 +34,7 @@ function ForgotPassword() {
         validationSchema={validationSchema}
         onSubmit={async (values) => {
           await axios.post("/auth/forgotPassword", values);
-          push("/admin/signin");
+          push("/signin");
         }}
       >
         {({
