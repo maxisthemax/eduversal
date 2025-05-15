@@ -221,6 +221,7 @@ function DetailedReport() {
         const resultGroup = groupBy(result, "name");
         const newResult = [];
         const price = calculateTotalPriceByName(data.data);
+        const shippingPrice = calculateTotalShippingByName(data.data);
         Object.keys(resultGroup).forEach((key, index) => {
           const data = resultGroup[key];
           const newData = sumGroupedNumericFields(data);
@@ -230,6 +231,7 @@ function DetailedReport() {
             name: key,
             ...newData,
             photoPrice: price[key],
+            shippingPrice: shippingPrice[key],
           });
         });
         return { result: newResult, columns: newColumns, group };
@@ -241,14 +243,13 @@ function DetailedReport() {
       const { no, ...total } = sumGroupedNumericFields(
         detailedReportData.result
       );
-      const totalPrice = calculateTotalPriceByName(data.data);
       const totalRow = {
         ...total,
         id: "total",
         name: "Total",
         no_1: no,
-        totalPrice: totalPrice["Total"],
       };
+      console.log("🚀 ~ summaryRow ~ totalRow:", totalRow);
       return totalRow;
     } else return {};
   }, [detailedReportData, data]);
@@ -275,6 +276,20 @@ function DetailedReport() {
       disableReorder: true,
     },
     ...detailedReportData.columns,
+    {
+      field: "shippingPrice",
+      headerName: "Total Shipping Fee",
+      headerAlign: "center",
+      align: "center",
+      minWidth: 140,
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
+      valueFormatter: (value: number) => {
+        if (value && value > 0) return Number(value)?.toFixed(2);
+        else return "0.00";
+      },
+    },
     {
       field: "photoPrice",
       headerName: "Total Amount",
@@ -521,6 +536,30 @@ function calculateTotalPriceByName(data: any[]): Record<string, number> {
       );
       if (userPackage) {
         return item.totalPrice;
+      }
+      return 0;
+    });
+
+    result[name] = sum;
+  });
+
+  return result;
+}
+
+function calculateTotalShippingByName(data: any[]): Record<string, number> {
+  const names = uniqBy(data, (item) => {
+    return item.userPackage.items[0].name;
+  }).map((item) => {
+    return item.userPackage.items[0].name;
+  });
+  const result: Record<string, number> = {};
+  names.forEach((name) => {
+    const sum = sumBy(data, (item) => {
+      const userPackage = item.userPackage.items.find(
+        (item) => item.name === name
+      );
+      if (userPackage) {
+        return item.shippingFee;
       }
       return 0;
     });

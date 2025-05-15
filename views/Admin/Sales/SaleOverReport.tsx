@@ -246,7 +246,7 @@ function SaleOverReport() {
           gap={18.7}
           showQuickFilter={false}
           disableFilter={true}
-          fileName="Shipping_Report"
+          fileName="Sales_Over_Time_Report"
           rowSpanning={true}
         />
       </OverlayBox>

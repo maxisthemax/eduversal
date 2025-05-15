@@ -173,17 +173,21 @@ function ShippingReport() {
       const quantity = row.quantity ?? 0;
       const pricing = row.pricing ?? 0;
       const totalPrice = row.totalPrice ?? 0;
+      const shippingFee = row.shippingFee ?? 0;
       acc["quantity"] = (acc["quantity"] || 0) + quantity;
       acc["pricing"] = (acc["pricing"] || 0) + pricing;
       acc["totalPrice"] = (acc["totalPrice"] || 0) + totalPrice;
+      acc["shippingFee"] = (acc["shippingFee"] || 0) + shippingFee;
       return acc;
     }, {});
     const totalRow = uniqBy(shippingReportData, "orderNo").reduce(
       (acc, row) => {
         const pricing = row.pricing ?? 0;
         const totalPrice = row.totalPrice ?? 0;
+        const shippingFee = row.shippingFee ?? 0;
         acc["pricing"] = (acc["pricing"] || 0) + pricing;
         acc["totalPrice"] = (acc["totalPrice"] || 0) + totalPrice;
+        acc["shippingFee"] = (acc["shippingFee"] || 0) + shippingFee;
         return acc;
       },
       {}

@@ -297,6 +297,18 @@ function SummaryReport() {
                   if (includes(key, "_totalPrice"))
                     return Number(packageRowData[key]);
                 })
+              ) +
+              sum(
+                Object.keys(packageNoneRowData).map((key) => {
+                  if (includes(key, "_shippingFee"))
+                    return Number(packageNoneRowData[key]);
+                })
+              ) +
+              sum(
+                Object.keys(packageRowData).map((key) => {
+                  if (includes(key, "_shippingFee"))
+                    return Number(packageRowData[key]);
+                })
               )
             ).toFixed(2),
           };
@@ -345,10 +357,17 @@ function SummaryReport() {
             if (includes(key, "_shippingFee")) return Number(sumDataRow[key]);
           })
         )?.toFixed(2),
-        totalAmount: sum(
-          Object.keys(sumDataRow).map((key) => {
-            if (includes(key, "_totalPrice")) return Number(sumDataRow[key]);
-          })
+        totalAmount: (
+          sum(
+            Object.keys(sumDataRow).map((key) => {
+              if (includes(key, "_totalPrice")) return Number(sumDataRow[key]);
+            })
+          ) +
+          sum(
+            Object.keys(sumDataRow).map((key) => {
+              if (includes(key, "_shippingFee")) return Number(sumDataRow[key]);
+            })
+          )
         )?.toFixed(2),
       },
     ];
