@@ -169,7 +169,7 @@ export default async function signUp(
   } catch (error) {
     if (error.code === "EAUTH")
       res.status(500).json({
-        message: error.response,
+        message: "Email sending failed",
         error,
         type: "REGISTRATION_FAILED",
       });

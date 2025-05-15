@@ -34,7 +34,10 @@ function ForgotPassword() {
         initialValues={{ email: "" }}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
-          await axios.post("/auth/forgotPassword", values);
+          await axios.post("/auth/forgotPassword", {
+            ...values,
+            type: "ADMIN",
+          });
 
           push("/admin/signin");
         }}
