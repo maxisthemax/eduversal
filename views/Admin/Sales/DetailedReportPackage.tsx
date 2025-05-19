@@ -55,7 +55,7 @@ const filter = {
   to_date: "",
 };
 
-function DetailedReport() {
+function DetailedReportPackage() {
   const [detailedReportFilterQuery, setDetailedReportFilterQuery] =
     useState<Filter>(filter);
 
@@ -79,8 +79,11 @@ function DetailedReport() {
       "sales",
       "detailed_report",
       qs.stringify(detailedReportFilterQuery),
+      "package",
     ],
-    `admin/sales/detailedreport?${qs.stringify(detailedReportFilterQuery)}`,
+    `admin/sales/detailedreport?packageId=package&${qs.stringify(
+      detailedReportFilterQuery
+    )}`,
     {
       enabled: !isEmpty(detailedReportFilterQuery),
     }
@@ -500,7 +503,7 @@ function DetailedReport() {
   );
 }
 
-export default DetailedReport;
+export default DetailedReportPackage;
 
 type AnyObject = Record<string, any>;
 

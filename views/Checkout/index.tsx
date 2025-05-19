@@ -162,12 +162,14 @@ function Checkout() {
               shippingFee: orderShippingFee,
               created_at: new Date(),
               package_id: item.userPackage.packageId,
+              product_type: "",
             };
           return {
             ...item,
             shippingFee: orderShippingFee,
             created_at: new Date(),
             package_id: item.userPackage.packageId,
+            product_type: item.userPackage.items[0].album.productType,
           };
         });
 

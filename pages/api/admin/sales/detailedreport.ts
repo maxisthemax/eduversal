@@ -18,6 +18,8 @@ export default async function handler(
         const academicYearId = req.query.academicYearId as string;
         const courseId = req.query.courseId as string;
         const standardId = req.query.standardId as string;
+        const packageId = req.query.packageId as string;
+        const productType = req.query.productType as string;
 
         // Fetch users with pagination
         const orders = await prisma.orderCart.findMany({
@@ -26,6 +28,9 @@ export default async function handler(
             academicYearId: academicYearId,
             standardId: standardId,
             courseId: courseId,
+            package_id:
+              packageId === "none" ? { equals: "none" } : { not: "none" },
+            ...(packageId === "none" ? { product_type: productType } : {}),
             order: { status: "COMPLETED" },
           },
           orderBy: [

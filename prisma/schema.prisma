@@ -389,6 +389,7 @@ model OrderCart {
   quantity         Int
   userPackage      Json
   package_id       String
+  product_type     String
   price            Float
   shippingFee      Float?
   created_at       DateTime     @default(now())
