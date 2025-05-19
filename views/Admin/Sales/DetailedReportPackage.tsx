@@ -496,7 +496,7 @@ function DetailedReportPackage() {
           gap={18.7}
           showQuickFilter={false}
           disableFilter={true}
-          fileName="Detailed_Report"
+          fileName="Detailed_Report_Package"
         />
       </OverlayBox>
     </Box>

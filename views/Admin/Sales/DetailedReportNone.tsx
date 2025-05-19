@@ -497,7 +497,11 @@ function DetailedReportPackage({ type }: { type: "INDIVIDUAL" | "GROUP" }) {
           gap={18.7}
           showQuickFilter={false}
           disableFilter={true}
-          fileName="Detailed_Report"
+          fileName={
+            type === "GROUP"
+              ? "Detailed_Report_Group"
+              : "Detailed_Report_Individual"
+          }
         />
       </OverlayBox>
     </Box>
