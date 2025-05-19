@@ -161,11 +161,13 @@ function Checkout() {
               },
               shippingFee: orderShippingFee,
               created_at: new Date(),
+              package_id: item.userPackage.packageId,
             };
           return {
             ...item,
             shippingFee: orderShippingFee,
             created_at: new Date(),
+            package_id: item.userPackage.packageId,
           };
         });
 
