@@ -9,6 +9,7 @@ import orderBy from "lodash/orderBy";
 import uniqBy from "lodash/uniqBy";
 import sumBy from "lodash/sumBy";
 import isEmpty from "lodash/isEmpty";
+import find from "lodash/find";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
@@ -499,8 +500,16 @@ function DetailedReportPackage({ type }: { type: "INDIVIDUAL" | "GROUP" }) {
           disableFilter={true}
           fileName={
             type === "GROUP"
-              ? "Detailed_Report_Group"
-              : "Detailed_Report_Individual"
+              ? `Detailed_Report_Group_${
+                  find(institutionsData, (data) => {
+                    return data.id === detailedReportFilter.institutionId;
+                  })?.name
+                }`
+              : `Detailed_Report_Individual_${
+                  find(institutionsData, (data) => {
+                    return data.id === detailedReportFilter.institutionId;
+                  })?.name
+                }`
           }
         />
       </OverlayBox>
