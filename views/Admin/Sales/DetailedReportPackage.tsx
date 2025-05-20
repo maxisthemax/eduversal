@@ -9,6 +9,7 @@ import orderBy from "lodash/orderBy";
 import uniqBy from "lodash/uniqBy";
 import sumBy from "lodash/sumBy";
 import isEmpty from "lodash/isEmpty";
+import find from "lodash/find";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
