@@ -496,7 +496,11 @@ function DetailedReportPackage() {
           gap={18.7}
           showQuickFilter={false}
           disableFilter={true}
-          fileName="Detailed_Report_Package"
+          fileName={`Detailed_Report_Package_${
+            find(institutionsData, (data) => {
+              return data.id === detailedReportFilter.institutionId;
+            })?.name
+          }`}
         />
       </OverlayBox>
     </Box>
