@@ -103,6 +103,8 @@ function AdminMain({ children }: { children: React.ReactNode }) {
               maxWidth: 265,
               borderRight: "0.5px solid #e0e0e0",
               whiteSpace: "nowrap",
+              overflow: "auto",
+              scrollbarWidth: "thin",
             }}
           >
             {[

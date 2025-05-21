@@ -17,6 +17,7 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import Fab from "@mui/material/Fab";
+import Grid from "@mui/material/Grid2";
 
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
@@ -148,52 +149,68 @@ function UserCourseItem({ userCourse }) {
             />
           )}
         </Box>
-        <Stack>
+        <Stack sx={{ width: "100%" }}>
           <Typography variant="body1">{academic_year_name}</Typography>
           <Typography variant="h6">
             <b>{title_format}</b>
           </Typography>
-          <Stack direction={"row"} spacing={8}>
-            <Stack direction={"row"} spacing={2}>
+          <Grid container>
+            <Grid size={{ xs: 7 }}>
+              <Stack direction={"row"} spacing={2}>
+                <Stack
+                  direction={"row"}
+                  sx={{ alignItems: "center", maxWidth: "500px" }}
+                >
+                  <CustomIcon icon="person" fontSizeSx="20px" />
+                  <Typography variant="body2">
+                    {names.map((name) => name).join(", ")}
+                  </Typography>
+                </Stack>
+                <AddEditUserCourseDialog mode="edit" id={id} />
+              </Stack>
+            </Grid>
+            <Grid size={{ xs: 2.5 }}>
               <Stack
                 direction={"row"}
-                sx={{ alignItems: "center", maxWidth: "500px" }}
+                spacing={1}
+                sx={{ alignItems: "center" }}
               >
-                <CustomIcon icon="person" fontSizeSx="20px" />
+                <CustomIcon icon="location_on" fontSizeSx="20px" />
+                <Typography variant="body2">{institution_name}</Typography>
+              </Stack>
+            </Grid>
+            <Grid size={{ xs: 2.5 }}>
+              <Stack
+                direction={"row"}
+                spacing={1}
+                sx={{ alignItems: "center" }}
+              >
+                <CustomIcon icon="imagesmode" fontSizeSx="20px" />
                 <Typography variant="body2">
-                  {names.map((name) => name).join(", ")}
+                  {course.albums.length} Albums |{" "}
+                  {sum(course.albums.map(({ photos }) => photos.length))} Photos
                 </Typography>
               </Stack>
-              <AddEditUserCourseDialog mode="edit" id={id} />
-            </Stack>
-            <Stack direction={"row"} spacing={1} sx={{ alignItems: "center" }}>
-              <CustomIcon icon="location_on" fontSizeSx="20px" />
-              <Typography variant="body2">{institution_name}</Typography>
-            </Stack>
-            <Stack direction={"row"} spacing={1} sx={{ alignItems: "center" }}>
-              <CustomIcon icon="imagesmode" fontSizeSx="20px" />
-              <Typography variant="body2">
-                {course.albums.length} Albums |{" "}
-                {sum(course.albums.map(({ photos }) => photos.length))} Photos
-              </Typography>
-            </Stack>
-          </Stack>
+            </Grid>
+          </Grid>
           <Typography variant="body2" sx={{ pt: 2 }} color="error">
             Avaliable until {formatDate(course.end_date, "dd MMM yyyy")}
           </Typography>
         </Stack>
         <FlexBox />
-        <Fab
-          variant="circular"
-          size="medium"
-          color="primary"
-          onClick={() => push(`/photos/${id}`)}
-          sx={{
-            boxShadow: 0,
-          }}
-        >
-          <CustomIcon icon="arrow_forward" fontSizeSx="32px" />
-        </Fab>
+        <Box>
+          <Fab
+            variant="circular"
+            size="medium"
+            color="primary"
+            onClick={() => push(`/photos/${id}`)}
+            sx={{
+              boxShadow: 0,
+            }}
+          >
+            <CustomIcon icon="arrow_forward" fontSizeSx="32px" />
+          </Fab>
+        </Box>
       </Stack>
     </Paper>
   );

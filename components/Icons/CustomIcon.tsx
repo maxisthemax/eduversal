@@ -52,6 +52,7 @@ function CustomIcon({
 export default CustomIcon;
 
 export type GoogleIcon =
+  | "check_indeterminate_small"
   | "10k"
   | "10mp"
   | "11mp"

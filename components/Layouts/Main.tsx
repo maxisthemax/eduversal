@@ -98,6 +98,13 @@ function Main({ children }: { children: React.ReactNode }) {
                     sx={{ fontSize: "16px" }}
                   />
                   <Tab
+                    onClick={() => push("/about")}
+                    disableRipple
+                    label="About Us"
+                    value="/about"
+                    sx={{ fontSize: "16px" }}
+                  />
+                  <Tab
                     onClick={() => push("/cart")}
                     disableRipple
                     label={
@@ -125,6 +132,7 @@ function Main({ children }: { children: React.ReactNode }) {
             height: getFullHeightSize(15.9),
             width: "100%",
             overflowY: "scroll",
+            scrollbarWidth: "thin",
           }}
         >
           {children}
