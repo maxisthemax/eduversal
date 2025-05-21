@@ -99,8 +99,12 @@ function Account() {
                   return (
                     <ListItem key={index}>
                       <ListItemText
-                        primary={<b>{item.text}</b>}
-                        slotProps={{}}
+                        primary={item.text}
+                        slotProps={{
+                          primary: {
+                            color: "text.secondary",
+                          },
+                        }}
                       />
                     </ListItem>
                   );
@@ -114,19 +118,9 @@ function Account() {
                       }}
                     >
                       <ListItemIcon sx={{ minWidth: 0, pr: 1 }}>
-                        <CustomIcon
-                          icon={item.icon}
-                          activeColor="#006DEE"
-                          active={page === item.route}
-                        />
+                        <CustomIcon icon={item.icon} />
                       </ListItemIcon>
-                      <ListItemText
-                        primary={item.text}
-                        sx={{
-                          color:
-                            page === item.route ? "#006DEE" : "text.secondary",
-                        }}
-                      />
+                      <ListItemText primary={<b>{item.text}</b>} />
                     </ListItemButton>
                   );
                 } else {
