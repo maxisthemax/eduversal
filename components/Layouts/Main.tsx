@@ -131,8 +131,13 @@ function Main({ children }: { children: React.ReactNode }) {
             background: "#F8F8F8",
             height: getFullHeightSize(15.9),
             width: "100%",
-            overflowY: "scroll",
-            scrollbarWidth: "thin",
+            overflowY: "scroll", // Always show scrollbar
+            msOverflowStyle: "none", // IE and Edge
+            scrollbarWidth: "none", // Firefox
+            "&::-webkit-scrollbar": {
+              // Chrome, Safari and Opera
+              display: "none",
+            },
           }}
         >
           {children}
