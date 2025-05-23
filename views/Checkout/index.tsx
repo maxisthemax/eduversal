@@ -17,6 +17,7 @@ import {
   MobileNumberForm,
   StateSelectTextFieldForm,
 } from "@/components/Form";
+import Footer from "@/components/Layouts/Footer";
 
 //*lodash
 import groupBy from "lodash/groupBy";
@@ -928,34 +929,7 @@ function Checkout() {
           )}
         </Box>
       </OverlayBox>
-      <Box
-        sx={{
-          background: "#F8F8F8",
-          width: "100%",
-          position: "fixed",
-          bottom: 0,
-        }}
-      >
-        <Stack
-          spacing={2}
-          sx={{
-            background: "#F8F8F8",
-            width: "100%",
-            pb: 2,
-          }}
-        >
-          <Divider />
-          <Typography
-            variant="body1"
-            sx={{
-              textAlign: "center",
-              color: "#6b6f74",
-            }}
-          >
-            {`Copyright © ${new Date().getFullYear()} Photoversal Studio. All rights reserved.`}
-          </Typography>
-        </Stack>
-      </Box>
+      <Footer />
     </>
   );
 }

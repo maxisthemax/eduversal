@@ -156,7 +156,7 @@ function UserCourseItem({ userCourse }) {
           </Typography>
           <Grid container>
             <Grid size={{ xs: 7 }}>
-              <Stack direction={"row"} spacing={2}>
+              <Stack direction={"row"} spacing={2} sx={{ pr: 2 }}>
                 <Stack
                   direction={"row"}
                   sx={{ alignItems: "center", maxWidth: "500px" }}
@@ -166,6 +166,7 @@ function UserCourseItem({ userCourse }) {
                     {names.map((name) => name).join(", ")}
                   </Typography>
                 </Stack>
+                <FlexBox />
                 <AddEditUserCourseDialog mode="edit" id={id} />
               </Stack>
             </Grid>

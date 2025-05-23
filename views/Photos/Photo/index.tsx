@@ -1,6 +1,7 @@
 import { useParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { formatDate } from "date-fns";
 
 //*lodash
 import find from "lodash/find";
@@ -325,6 +326,29 @@ function PhotoCotent() {
                   </Typography>
                 </Paper>
               )}
+              <Box
+                sx={{
+                  backgroundColor: "#f2f2f2",
+                  p: 2,
+                  mt: 2,
+                  borderRadius: 1,
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  gutterBottom
+                  sx={{ fontWeight: 500 }}
+                >
+                  Description
+                </Typography>
+                <Typography
+                  component={"span"}
+                  sx={{ whiteSpace: "break-spaces" }}
+                  variant="body2"
+                >
+                  {album.description}
+                </Typography>
+              </Box>
               <Stack sx={{ pt: 2 }} direction="row" spacing={2}>
                 {albumPackage.map(({ preview_url, id, name }) => {
                   return (
@@ -400,6 +424,10 @@ function PhotoCotent() {
                     {(
                       userPackage.packagePrice + userPackage.itemsPrice
                     ).toFixed(2)}
+                  </Typography>
+                  <Typography variant="body1">
+                    Available until{" "}
+                    {formatDate(userCourseData.course.end_date, "dd MMM yyyy")}
                   </Typography>
                 </Box>
                 <Box>
@@ -604,8 +632,6 @@ function PhotoCotent() {
                 <Stack
                   sx={{
                     width: "100%",
-                    position: "sticky",
-                    bottom: 0,
                     backgroundColor: "white",
                   }}
                   direction="row"

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -32,6 +33,33 @@ const queryClient = new QueryClient({
 
 export default function App({ Component, pageProps }: AppProps) {
   const pathName = usePathname()?.split("/")[1];
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_URL === "http://localhost:5000") return;
+    // Block right-click
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+      return false;
+    };
+
+    // Block keyboard shortcuts
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey && (e.key === "s" || e.key === "u")) || e.key === "F12") {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    // Add event listeners
+    document.addEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Clean up
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 //*components
 import { FlexBox } from "../Box";
+import Footer from "./Footer";
 
 //*mui
 import AppBar from "@mui/material/AppBar";
@@ -16,7 +17,6 @@ import Typography from "@mui/material/Typography";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
-import Divider from "@mui/material/Divider";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
@@ -98,13 +98,6 @@ function Main({ children }: { children: React.ReactNode }) {
                     sx={{ fontSize: "16px" }}
                   />
                   <Tab
-                    onClick={() => push("/about")}
-                    disableRipple
-                    label="About Us"
-                    value="/about"
-                    sx={{ fontSize: "16px" }}
-                  />
-                  <Tab
                     onClick={() => push("/cart")}
                     disableRipple
                     label={
@@ -126,10 +119,9 @@ function Main({ children }: { children: React.ReactNode }) {
           </Container>
         </AppBar>
         <Stack
-          direction="row"
           sx={{
             background: "#F8F8F8",
-            height: getFullHeightSize(15.9),
+            height: getFullHeightSize(7.9),
             width: "100%",
             overflowY: "scroll", // Always show scrollbar
             msOverflowStyle: "none", // IE and Edge
@@ -140,35 +132,10 @@ function Main({ children }: { children: React.ReactNode }) {
             },
           }}
         >
-          {children}
+          <Stack direction="row">{children}</Stack>
+          <FlexBox />
+          <Footer />
         </Stack>
-        <Box
-          sx={{
-            background: "#F8F8F8",
-            width: "100%",
-          }}
-        >
-          <Stack
-            spacing={2}
-            sx={{
-              background: "#F8F8F8",
-              width: "100%",
-              pb: 2,
-              pt: 1,
-            }}
-          >
-            <Divider />
-            <Typography
-              variant="body1"
-              sx={{
-                textAlign: "center",
-                color: "#6b6f74",
-              }}
-            >
-              {`Copyright © ${new Date().getFullYear()} Photoversal Studio. All rights reserved.`}
-            </Typography>
-          </Stack>
-        </Box>
       </Box>
     );
 }
