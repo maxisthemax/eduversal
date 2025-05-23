@@ -43,7 +43,7 @@ function Footer() {
           <FlexBox />
           <Stack direction="column" sx={{ alignItems: "end" }}>
             {[
-              { href: "/contactus", text: "Contact Us" },
+              { href: "/aboutus", text: "About Us" },
               { href: "/refundpolicy", text: "Refund Policy" },
               { href: "/privacypolicy", text: "Privacy Policy" },
               { href: "/shippingpolicy", text: "Shipping Policy" },
