@@ -38,8 +38,10 @@ export default function App({ Component, pageProps }: AppProps) {
     if (process.env.NEXT_PUBLIC_URL === "http://localhost:5000") return;
     // Block right-click
     const handleContextMenu = (e) => {
-      e.preventDefault();
-      return false;
+      if (e.target.tagName === "IMG") {
+        e.preventDefault();
+        return false;
+      }
     };
 
     // Block keyboard shortcuts
