@@ -22,12 +22,14 @@ function AboutUs() {
             photography, portrait sessions, event photography, passport photos,
             printing services, corporate shoots, and photobooth experiences.
           </Typography>
+          <br />
           <Typography gutterBottom>
             What sets us apart is our commitment to personalised service. We
             understand that every client is unique, and our team of experienced
             photographers works closely with each one to bring their vision to
             life, capturing moments that matter with creativity and care.
           </Typography>
+          <br />
           <Typography gutterBottom>
             We’ve had the privilege of working closely with government schools
             and private kindergartens, especially within the SJKC community. To
@@ -37,10 +39,12 @@ function AboutUs() {
             portraits to timeless graduation memories, we are honoured to play a
             part in preserving these important milestones.
           </Typography>
+          <br />
           <Typography gutterBottom>
             As we continue to grow, we look forward to bringing our services to
             even more schools across different states in Malaysia.
           </Typography>
+          <br />
           <Typography gutterBottom>
             At Photoversal Studio, we embrace the digital era, seamlessly
             blending traditional photography with modern technology. From online

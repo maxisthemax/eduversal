@@ -28,6 +28,7 @@ function ShippingPolicy() {
             time of individual payment. Estimated delivery is within 7 to 14
             working days from the order deadline.
           </Typography>
+          <br />
           <Typography>How Delivery Works:</Typography>
           <List dense>
             {[
@@ -41,7 +42,7 @@ function ShippingPolicy() {
                 ],
               },
               {
-                header: "Home Delivery (Only for Selected Products)",
+                header: "2. Home Delivery (Only for Selected Products)",
                 list: [
                   "Some special photos or items may offer delivery to your home address.",
                   "If this option is available during checkout, please fill in your complete and accurate address.",
