@@ -25,7 +25,8 @@ function ShippingPolicy() {
           <Typography gutterBottom>
             All photo products are processed under a preorder system. This means
             we only begin production after the purchase period ends, not at the
-            time of individual payment.
+            time of individual payment. Estimated delivery is within 7 to 14
+            working days from the order deadline.
           </Typography>
           <Typography>How Delivery Works:</Typography>
           <List dense>
