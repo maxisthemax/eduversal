@@ -21,7 +21,7 @@ function Footer() {
             {[
               "Photoversal Studio",
               "Company Registration No: 202103306253 (TR0251372-W)",
-              "Email :Hello@ysphotoversalstudio.com",
+              "Email: Hello@ysphotoversalstudio.com",
               "Tel: 0389489932 / 60176849932",
               "Company address: Lot 3267 Jalan 18/36 Taman Sri Serdang,",
               `43300 Seri Kembangan, Selangor, Malaysia`,
