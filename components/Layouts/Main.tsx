@@ -121,7 +121,7 @@ function Main({ children }: { children: React.ReactNode }) {
         <Stack
           sx={{
             background: "#F8F8F8",
-            height: getFullHeightSize(7.9),
+            height: getFullHeightSize(-19.2),
             width: "100%",
             overflowY: "scroll", // Always show scrollbar
             msOverflowStyle: "none", // IE and Edge
