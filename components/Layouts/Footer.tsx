@@ -1,10 +1,16 @@
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
+
+//*components
 import { FlexBox } from "../Box";
-import { Link } from "@mui/material";
+
+//*helpers
+import { useGetIsMobileSize } from "@/helpers/view";
 
 function Footer() {
+  const isMobile = useGetIsMobileSize();
   return (
     <Stack
       spacing={2}
@@ -16,22 +22,25 @@ function Footer() {
       }}
     >
       <Container maxWidth="lg">
-        <Stack direction={"row"} sx={{ width: "100%" }}>
+        <Stack
+          direction={isMobile ? "column" : "row"}
+          sx={{ width: "100%" }}
+          spacing={1}
+        >
           <Stack direction="column" sx={{ alignItems: "start" }}>
             {[
               "Photoversal Studio",
               "Company Registration No: 202103306253 (TR0251372-W)",
               "Email: Hello@ysphotoversalstudio.com",
               "Tel: 0389489932 / 60176849932",
-              "Company address: Lot 3267 Jalan 18/36 Taman Sri Serdang,",
-              `43300 Seri Kembangan, Selangor, Malaysia`,
+              "Company address: Lot 3267 Jalan 18/36 Taman Sri Serdang, 43300, Seri Kembangan, Selangor, Malaysia",
             ].map((text, index) => {
               return (
                 <Typography
                   key={index}
-                  variant="body1"
+                  variant="body2"
                   sx={{
-                    textAlign: "center",
+                    textAlign: "start",
                     color: "#6b6f74",
                   }}
                 >
@@ -41,7 +50,10 @@ function Footer() {
             })}
           </Stack>
           <FlexBox />
-          <Stack direction="column" sx={{ alignItems: "end" }}>
+          <Stack
+            direction="column"
+            sx={{ alignItems: isMobile ? "start" : "end" }}
+          >
             {[
               { href: "/aboutus", text: "About Us" },
               { href: "/refundpolicy", text: "Refund Policy" },
@@ -53,7 +65,7 @@ function Footer() {
                 <Link href={href} key={index} underline="none">
                   <Typography
                     key={index}
-                    variant="body1"
+                    variant="body2"
                     sx={{
                       textAlign: "center",
                       color: "#6b6f74",
@@ -67,7 +79,7 @@ function Footer() {
           </Stack>
         </Stack>
         <Typography
-          variant="body1"
+          variant="body2"
           sx={{
             textAlign: "center",
             color: "#6b6f74",
