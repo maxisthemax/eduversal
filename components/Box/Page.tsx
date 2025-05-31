@@ -46,7 +46,14 @@ function Page({
 
   return (
     <Box
-      sx={{ pl: 2, pr: 2, pt: 1, pb: 1, background: backgroundColor, ...sx }}
+      sx={{
+        pl: { xs: 0, sm: 0, md: 2 },
+        pr: { xs: 0, sm: 0, md: 2 },
+        pt: 1,
+        pb: 1,
+        background: backgroundColor,
+        ...sx,
+      }}
     >
       {links?.length > 1 && (
         <Stack
@@ -94,6 +101,9 @@ function Page({
               width: "100%",
               p: 1,
               borderRadius: 1,
+              "& .MuiBreadcrumbs-ol": {
+                flexWrap: "nowrap",
+              },
             }}
           >
             {links &&
@@ -101,7 +111,16 @@ function Page({
               links.map(({ href, title }) => {
                 if (findCurrentPathname?.href === href) {
                   return (
-                    <Typography variant="body1" key={href} color="inherit">
+                    <Typography
+                      variant="body1"
+                      key={href}
+                      color="inherit"
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth: { xs: "75px", sm: "100px", md: "100%" },
+                      }}
+                    >
                       {title}
                     </Typography>
                   );

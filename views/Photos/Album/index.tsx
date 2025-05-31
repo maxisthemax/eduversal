@@ -88,8 +88,12 @@ function Album() {
         ]}
         title="Photos"
       >
-        <Paper variant="elevation" elevation={0} sx={{ p: 4 }}>
-          <Stack direction={"row"}>
+        <Paper
+          variant="elevation"
+          elevation={0}
+          sx={{ p: { xs: 2, sm: 2, md: 4 } }}
+        >
+          <Stack direction={{ xs: "column", sm: "column", md: "row" }}>
             <Typography sx={{ fontSize: "22px" }} gutterBottom>
               <b>
                 {userCourseData.title_format} (
@@ -110,7 +114,9 @@ function Album() {
                     spacing={2}
                     key={photoId}
                     size={{
-                      xs: album.product_type.type === "INDIVIDUAL" ? 3 : 4,
+                      xs: 6,
+                      sm: 6,
+                      md: album.product_type.type === "INDIVIDUAL" ? 3 : 4,
                     }}
                   >
                     <Stack>

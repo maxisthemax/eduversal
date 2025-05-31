@@ -266,10 +266,13 @@ function PhotoCotent() {
           },
         ]}
       >
-        <Paper sx={{ p: 4, height: "100%" }} elevation={0}>
+        <Paper
+          sx={{ p: { xs: 2, sm: 2, md: 4 }, height: "100%" }}
+          elevation={0}
+        >
           <Grid container>
             <Grid
-              size={{ xs: 6 }}
+              size={{ xs: 12, sm: 12, md: 6 }}
               sx={{
                 justifyContent: "start",
                 display: "flex",
@@ -349,7 +352,7 @@ function PhotoCotent() {
                   {album.description}
                 </Typography>
               </Box>
-              <Stack sx={{ pt: 2 }} direction="row" spacing={2}>
+              <Stack sx={{ pt: 2 }} direction={"row"} gap={2} flexWrap={"wrap"}>
                 {albumPackage.map(({ preview_url, id, name }) => {
                   return (
                     <Button
@@ -410,8 +413,17 @@ function PhotoCotent() {
                 })}
               </Stack>
             </Grid>
-            <Grid size={{ xs: 6 }} sx={{ wordBreak: "break-word" }}>
-              <Stack sx={{ pl: 4, pr: 4 }} spacing={2}>
+            <Grid
+              size={{ xs: 12, sm: 12, md: 6 }}
+              sx={{ wordBreak: "break-word" }}
+            >
+              <Stack
+                sx={{
+                  px: { xs: 0, sm: 0, md: 4 },
+                  pt: { xs: 2, sm: 2, md: 0 },
+                }}
+                spacing={2}
+              >
                 <Box>
                   <Typography variant="body2">{album.name}</Typography>
                   <Typography

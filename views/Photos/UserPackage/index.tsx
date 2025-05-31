@@ -178,7 +178,9 @@ function UserPackages() {
                   spacing={2}
                   key={photoId}
                   size={{
-                    xs: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
+                    xs: album.product_type.type === "INDIVIDUAL" ? 6 : 3,
+                    sm: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
+                    md: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
                   }}
                 >
                   <Stack spacing={2}>

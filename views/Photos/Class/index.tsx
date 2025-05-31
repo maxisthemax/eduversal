@@ -37,8 +37,12 @@ function Class() {
         ]}
         title="Albums"
       >
-        <Paper variant="elevation" elevation={0} sx={{ p: 4 }}>
-          <Stack direction={"row"}>
+        <Paper
+          variant="elevation"
+          elevation={0}
+          sx={{ p: { xs: 2, sm: 2, md: 4 } }}
+        >
+          <Stack direction={{ xs: "column", sm: "column", md: "row" }}>
             <Typography sx={{ fontSize: "22px" }} gutterBottom>
               <b>
                 {userCourseData.title_format} (
@@ -55,7 +59,7 @@ function Class() {
             {userCourseData.course.albums.map(
               ({ id: albumId, name, photos, preview_url }) => {
                 return (
-                  <Grid key={albumId} size={{ xs: 3 }}>
+                  <Grid key={albumId} size={{ xs: 6, sm: 6, md: 3 }}>
                     <Stack>
                       <Button
                         disableRipple
@@ -81,17 +85,17 @@ function Class() {
                         />
                       </Button>
                       <Typography
+                        variant="body1"
                         sx={{
                           pt: 0.5,
                           whiteSpace: "nowrap",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
-                          fontSize: "18px",
                         }}
                       >
                         <b>{name}</b>
                       </Typography>
-                      <Typography variant="caption" sx={{ fontSize: "16px" }}>
+                      <Typography variant="body1">
                         {photos?.length ?? 0} Photos
                       </Typography>
                     </Stack>

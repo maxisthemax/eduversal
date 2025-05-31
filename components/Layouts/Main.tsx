@@ -98,7 +98,7 @@ function Main({ children }: { children: React.ReactNode }) {
                     <IconButton onClick={() => setOpen(!open)}>
                       <CustomIcon icon="menu" />
                     </IconButton>
-                    <IconButton onClick={() => setOpen(!open)}>
+                    <IconButton onClick={() => push("/cart")}>
                       <Badge
                         badgeContent={cart?.length ?? 0}
                         color="primary"
