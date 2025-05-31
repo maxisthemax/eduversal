@@ -29,7 +29,7 @@ function CartDetails({ cart }) {
               <b>{key}</b>
             </Typography>
           </Box>
-          {cart.map((item) => {
+          {cart.map((item, index1) => {
             return (
               <Grid
                 container
@@ -37,7 +37,7 @@ function CartDetails({ cart }) {
                 spacing={{ xs: 1, sm: 1, md: 4 }}
                 sx={{ px: 2, py: 1 }}
               >
-                <Grid size={{ xs: 4, sm: 4, md: 1.5 }}>
+                <Grid size={{ xs: 3, sm: 3, md: 1.5 }}>
                   {item.userPackage.packageId === "none" ? (
                     <Box
                       component="img"
@@ -124,7 +124,7 @@ function CartDetails({ cart }) {
                           }) => {
                             return (
                               <Grid container key={photoId} spacing={2}>
-                                <Grid size={{ xs: 1.5 }}>
+                                <Grid size={{ xs: 3, sm: 3, md: 1.5 }}>
                                   <Box
                                     component="img"
                                     src={photoUrl ?? null}
@@ -211,12 +211,14 @@ function CartDetails({ cart }) {
                     </Tooltip>
                   </Stack>
                 </Grid>
-                <Grid
-                  size={{ xs: 12, sm: 12 }}
-                  sx={{ display: { xs: "block", sm: "block", md: "none" } }}
-                >
-                  <Divider />
-                </Grid>
+                {cart.length - 1 !== index1 && (
+                  <Grid
+                    size={{ xs: 12, sm: 12 }}
+                    sx={{ display: { xs: "block", sm: "block", md: "none" } }}
+                  >
+                    <Divider />
+                  </Grid>
+                )}
               </Grid>
             );
           })}

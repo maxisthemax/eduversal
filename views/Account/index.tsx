@@ -77,88 +77,93 @@ function Account() {
       sx={{
         width: "100%",
         height: "100%",
-        p: { xs: 2, sm: 2, md: 0 },
       }}
     >
-      <Container maxWidth="lg" disableGutters sx={{ backgroundColor: "white" }}>
-        <Grid
-          container
-          sx={{ backgroundColor: "white", minHeight: getFullHeightSize(10) }}
+      <Box sx={{ p: { xs: 2, sm: 2, md: 0 } }}>
+        <Container
+          maxWidth="lg"
+          disableGutters
+          sx={{ backgroundColor: "white" }}
         >
           <Grid
-            size={{ md: 3 }}
-            sx={{
-              borderRight: "0.5px solid #B8BDC4",
-              pl: 2,
-              pr: 2,
-              backgroundColor: "white",
-              display: { xs: "none", sm: "none", md: "block" },
-            }}
+            container
+            sx={{ backgroundColor: "white", minHeight: getFullHeightSize(10) }}
           >
-            <List sx={{ top: "0px", position: "sticky" }}>
-              {menuItems.map((item, index) => {
-                if (item.type === "header") {
-                  return (
-                    <ListItem key={index}>
-                      <ListItemText
-                        primary={item.text}
-                        slotProps={{
-                          primary: {
-                            color: "text.secondary",
-                          },
+            <Grid
+              size={{ md: 3 }}
+              sx={{
+                borderRight: "0.5px solid #B8BDC4",
+                pl: 2,
+                pr: 2,
+                backgroundColor: "white",
+                display: { xs: "none", sm: "none", md: "block" },
+              }}
+            >
+              <List sx={{ top: "0px", position: "sticky" }}>
+                {menuItems.map((item, index) => {
+                  if (item.type === "header") {
+                    return (
+                      <ListItem key={index}>
+                        <ListItemText
+                          primary={item.text}
+                          slotProps={{
+                            primary: {
+                              color: "text.secondary",
+                            },
+                          }}
+                        />
+                      </ListItem>
+                    );
+                  } else if (item.type === "button") {
+                    return (
+                      <ListItemButton
+                        key={index}
+                        selected={page === item.route}
+                        onClick={() => {
+                          push(item.route);
                         }}
-                      />
-                    </ListItem>
-                  );
-                } else if (item.type === "button") {
-                  return (
-                    <ListItemButton
-                      key={index}
-                      selected={page === item.route}
-                      onClick={() => {
-                        push(item.route);
-                      }}
-                    >
-                      <ListItemIcon sx={{ minWidth: 0, pr: 1 }}>
-                        <CustomIcon icon={item.icon} />
-                      </ListItemIcon>
-                      <ListItemText primary={<b>{item.text}</b>} />
-                    </ListItemButton>
-                  );
-                } else {
-                  return <ListItem key={index} divider />;
-                }
-              })}
-              <Box sx={{ py: 2 }}>
-                <Divider />
-              </Box>
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    handleOpenDialog({
-                      title: "Logout",
-                      description: "Are you sure you want to logout?",
-                      onConfirm: async () => {
-                        await axios.post("auth/signOut");
-                        push("/signin");
-                      },
-                    });
-                  }}
-                >
-                  Logout
-                </Button>
-              </Box>
-            </List>
+                      >
+                        <ListItemIcon sx={{ minWidth: 0, pr: 1 }}>
+                          <CustomIcon icon={item.icon} />
+                        </ListItemIcon>
+                        <ListItemText primary={<b>{item.text}</b>} />
+                      </ListItemButton>
+                    );
+                  } else {
+                    return <ListItem key={index} divider />;
+                  }
+                })}
+                <Box sx={{ py: 2 }}>
+                  <Divider />
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      handleOpenDialog({
+                        title: "Logout",
+                        description: "Are you sure you want to logout?",
+                        onConfirm: async () => {
+                          await axios.post("auth/signOut");
+                          push("/signin");
+                        },
+                      });
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </Box>
+              </List>
+            </Grid>
+            <Grid
+              size={{ xs: 12, sm: 12, md: 9 }}
+              sx={{ p: { xs: 0, sm: 0, md: 2 }, backgroundColor: "white" }}
+            >
+              {pageComponent[page as string]}
+            </Grid>
           </Grid>
-          <Grid
-            size={{ xs: 12, sm: 12, md: 9 }}
-            sx={{ p: { xs: 0, sm: 0, md: 2 }, backgroundColor: "white" }}
-          >
-            {pageComponent[page as string]}
-          </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </Box>
     </Box>
   );
 }
