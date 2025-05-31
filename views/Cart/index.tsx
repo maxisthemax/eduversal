@@ -25,6 +25,7 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
+import { FlexBox } from "@/components/Box";
 
 export interface CartData {
   id?: string;
@@ -108,7 +109,7 @@ function Cart() {
                     return (
                       <Box key={item.id}>
                         <Grid container spacing={4}>
-                          <Grid size={{ xs: 1.5 }}>
+                          <Grid size={{ xs: 3, sm: 3, md: 1.5 }}>
                             {item.userPackage.packageId === "none" ? (
                               <Box
                                 component="img"
@@ -137,7 +138,7 @@ function Cart() {
                             )}
                           </Grid>
                           <Grid
-                            size={{ xs: 7 }}
+                            size={{ xs: 9, sm: 9, md: 7 }}
                             sx={{ wordBreak: "break-word" }}
                           >
                             {item.userPackage.packageId === "none" ? (
@@ -200,7 +201,9 @@ function Cart() {
                                           key={photoId}
                                           spacing={2}
                                         >
-                                          <Grid size={{ xs: 1.5 }}>
+                                          <Grid
+                                            size={{ xs: 3, sm: 3, md: 1.5 }}
+                                          >
                                             <Box
                                               component="img"
                                               src={photoUrl ?? null}
@@ -258,7 +261,10 @@ function Cart() {
                               </Stack>
                             )}
                           </Grid>
-                          <Grid size={{ xs: 3.5 }} sx={{ alignSelf: "end" }}>
+                          <Grid
+                            size={{ xs: 12, sm: 12, md: 2.5 }}
+                            sx={{ alignSelf: "end" }}
+                          >
                             <Stack
                               direction="row"
                               sx={{
@@ -266,10 +272,94 @@ function Cart() {
                                 width: "100%",
                                 height: "100%",
                                 justifyContent: "space-between",
+                                display: { xs: "flex", sm: "flex", md: "none" },
+                              }}
+                            >
+                              <Tooltip
+                                placement="top"
+                                title={`RM ${(
+                                  item.userPackage.packagePrice +
+                                  item.userPackage.itemsPrice
+                                ).toFixed(2)} x ${item.quantity} = ${(
+                                  (item.userPackage.packagePrice +
+                                    item.userPackage.itemsPrice) *
+                                  item.quantity
+                                ).toFixed(2)}`}
+                              >
+                                <Typography
+                                  variant="h6"
+                                  sx={{ whiteSpace: "nowrap", pb: 6 }}
+                                >
+                                  RM{" "}
+                                  {(
+                                    (item.userPackage.itemsPrice +
+                                      item.userPackage.packagePrice) *
+                                    item.quantity
+                                  ).toFixed(2)}
+                                </Typography>
+                              </Tooltip>
+                              <Stack spacing={1} sx={{ alignItems: "end" }}>
+                                <TextField
+                                  type="number"
+                                  value={item.quantity}
+                                  sx={{ width: "65px", pb: 1 }}
+                                  onChange={(e) => {
+                                    if (Number(e.target.value) < 1) return;
+                                    updateCartQuantity(
+                                      item.id,
+                                      Number(e.target.value)
+                                    );
+                                  }}
+                                  slotProps={{
+                                    input: {
+                                      sx: {
+                                        height: "55px",
+                                        fontSize: "16px",
+                                        py: "18px",
+                                      },
+                                    },
+                                  }}
+                                />
+                                <Link
+                                  typography={"body1"}
+                                  underline="none"
+                                  href="#"
+                                  onClick={() => {
+                                    handleOpenDialog({
+                                      allowOutsideClose: false,
+                                      title:
+                                        "Are you to sure remove this from cart?",
+                                      onConfirm: async () => {
+                                        deleteCart(item.id);
+                                      },
+                                    });
+                                  }}
+                                >
+                                  Remove
+                                </Link>
+                              </Stack>
+                            </Stack>
+                            <Stack
+                              direction="row"
+                              sx={{
+                                alignItems: "start",
+                                width: "100%",
+                                height: "100%",
+                                justifyContent: "space-between",
+                                display: { xs: "none", sm: "none", md: "flex" },
                               }}
                               spacing={4}
                             >
-                              <Stack spacing={1}>
+                              <Stack
+                                spacing={1}
+                                sx={{
+                                  display: {
+                                    xs: "none",
+                                    sm: "none",
+                                    md: "flex",
+                                  },
+                                }}
+                              >
                                 {item.userPackage.items.map((value, index) => {
                                   return (
                                     <Link
@@ -368,7 +458,11 @@ function Cart() {
               </Box>
             );
           })}
-        <Grid container spacing={4}>
+        <Grid
+          container
+          spacing={4}
+          sx={{ display: { xs: "none", sm: "none", md: "flex" } }}
+        >
           <Grid size={{ xs: 9 }}></Grid>
           <Grid size={{ xs: 3 }} sx={{ pl: 4 }}>
             <Stack
@@ -405,7 +499,40 @@ function Cart() {
             </Box>
           </Grid>
         </Grid>
+        <Stack
+          spacing={2}
+          sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
+        >
+          <Stack direction={"row"}>
+            <Typography variant="h6">Subtotal</Typography>
+            <FlexBox />
+            <Typography variant="h6" sx={{ whiteSpace: "nowrap" }}>
+              RM{" "}
+              {cart
+                .reduce(
+                  (acc, item) =>
+                    acc +
+                    (item.userPackage.itemsPrice +
+                      item.userPackage.packagePrice) *
+                      item.quantity,
+                  0
+                )
+                .toFixed(2)}
+            </Typography>
+          </Stack>
+          <Divider />
+          <Box sx={{ pb: 2 }}>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => push("/checkout")}
+            >
+              Check Out
+            </Button>
+          </Box>
+        </Stack>
       </Paper>
+      <FlexBox minHeight={180} />
     </Container>
   );
 }

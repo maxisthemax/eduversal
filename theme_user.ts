@@ -73,7 +73,7 @@ theme.typography.h6 = {
   ...theme.typography.h6,
 
   [theme.breakpoints.down("md")]: {
-    fontSize: "18px",
+    fontSize: "16px",
   },
 };
 
