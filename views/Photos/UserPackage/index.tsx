@@ -178,8 +178,8 @@ function UserPackages() {
                   spacing={2}
                   key={photoId}
                   size={{
-                    xs: album.product_type.type === "INDIVIDUAL" ? 6 : 3,
-                    sm: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
+                    xs: album.product_type.type === "INDIVIDUAL" ? 6 : 6,
+                    sm: album.product_type.type === "INDIVIDUAL" ? 6 : 6,
                     md: album.product_type.type === "INDIVIDUAL" ? 2 : 3,
                   }}
                 >
@@ -214,98 +214,117 @@ function UserPackages() {
       </Box>
       <AppBar
         position="fixed"
-        sx={{ top: "auto", bottom: 0, background: "white" }}
+        sx={{
+          top: "auto",
+          bottom: 0,
+          background: "white",
+          height: { xs: "180px", sm: "180px", md: "inherit" },
+        }}
       >
         <Toolbar disableGutters>
           <Container maxWidth="lg">
             <Stack
-              direction="row"
-              spacing={2}
+              direction={{ xs: "column", sm: "column", md: "row" }}
+              spacing={1}
               sx={{
                 height: "80px",
                 pt: 2,
                 pb: 2,
                 width: "100%",
-                alignItems: "center",
               }}
             >
-              {items.map((item, index) => {
-                if (!item) return null;
-                const { photoUrl } = item;
+              <Stack
+                direction="row"
+                sx={{ alignItems: "center" }}
+                spacing={{ xs: 0.5, sm: 0.5, md: 2 }}
+              >
+                {items.map((item, index) => {
+                  if (!item) return null;
+                  const { photoUrl } = item;
 
-                return (
-                  <>
-                    <Button
-                      onClick={() => {
-                        setUserPackage({ currentStage: index });
-                      }}
-                      sx={{
-                        p: 0,
-                        border:
-                          index === userPackage.currentStage
-                            ? "2px solid #006DEE"
-                            : "2px solid #f2f2f2",
-                        backgroundColor: "#f2f2f2",
-                      }}
-                    >
-                      {photoUrl ? (
-                        <Box
-                          component="img"
-                          src={photoUrl ?? null}
-                          sx={{
-                            backgroundColor: "#f2f2f2",
-                            height: "80px",
-                            width: "80px",
-                            objectFit: "contain",
-                          }}
-                        />
-                      ) : (
-                        <Box
-                          sx={{
-                            backgroundColor: "#f2f2f2",
-                            height: "80px",
-                            width: "80px",
-                            objectFit: "contain",
-                          }}
-                        />
+                  return (
+                    <>
+                      <Button
+                        onClick={() => {
+                          setUserPackage({ currentStage: index });
+                        }}
+                        sx={{
+                          p: 0,
+                          border:
+                            index === userPackage.currentStage
+                              ? "2px solid #006DEE"
+                              : "2px solid #f2f2f2",
+                          backgroundColor: "#f2f2f2",
+                        }}
+                      >
+                        {photoUrl ? (
+                          <Box
+                            component="img"
+                            src={photoUrl ?? null}
+                            sx={{
+                              backgroundColor: "#f2f2f2",
+                              height: { xs: "50px", sm: "50px", md: "80px" },
+                              width: { xs: "50px", sm: "50px", md: "80px" },
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : (
+                          <Box
+                            sx={{
+                              backgroundColor: "#f2f2f2",
+                              height: { xs: "50px", sm: "50px", md: "80px" },
+                              width: { xs: "50px", sm: "50px", md: "80px" },
+                              objectFit: "contain",
+                            }}
+                          />
+                        )}
+                      </Button>
+                      {items.length - 1 !== index && (
+                        <CustomIcon icon="add" iconColor="black" />
                       )}
-                    </Button>
-                    {items.length - 1 !== index && (
-                      <CustomIcon icon="add" iconColor="black" />
-                    )}
-                  </>
-                );
-              })}
+                    </>
+                  );
+                })}
+              </Stack>
 
               <FlexBox />
-              <Typography variant="h6" sx={{ color: "black" }}>
-                <b>
-                  Total: RM
-                  {(userPackage.packagePrice + userPackage.itemsPrice).toFixed(
-                    2
-                  )}
-                </b>
-              </Typography>
-              <Button
-                variant="outlined"
-                size="large"
-                onClick={() => {
-                  handleOpenDialog({
-                    title: "Reselect Package",
-                    description: "Are you sure you want to reselect package?",
-                    onConfirm: () => {
-                      push(
-                        `/photos/${class_id}/${album_id}/${userPackage.items[0].photoId}`
-                      );
-                    },
-                  });
+              <Box
+                sx={{
+                  alignContent: "center",
+                  height: "100%",
                 }}
               >
-                Reselect Package
-              </Button>
-              <Button variant="contained" size="large" onClick={handleSave}>
-                {userPackage.cartId ? "Edit" : "Add To Cart"}
-              </Button>
+                <Typography variant="h6" sx={{ color: "black" }}>
+                  <b>
+                    Total: RM
+                    {(
+                      userPackage.packagePrice + userPackage.itemsPrice
+                    ).toFixed(2)}
+                  </b>
+                </Typography>
+              </Box>
+              <Stack direction="row" sx={{ alignItems: "center" }} spacing={2}>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => {
+                    handleOpenDialog({
+                      title: "Reselect Package",
+                      description: "Are you sure you want to reselect package?",
+                      onConfirm: () => {
+                        push(
+                          `/photos/${class_id}/${album_id}/${userPackage.items[0].photoId}`
+                        );
+                      },
+                    });
+                  }}
+                >
+                  Reselect Package
+                </Button>
+                <Button variant="contained" size="large" onClick={handleSave}>
+                  {userPackage.cartId ? "Edit" : "Add To Cart"}
+                </Button>
+              </Stack>
             </Stack>
           </Container>
         </Toolbar>
