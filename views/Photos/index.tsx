@@ -190,9 +190,7 @@ function UserCourseItem({ userCourse }) {
                     {(names as string[]).map((name) => name).join(", ")}
                   </Typography>
                 </Stack>
-                <FlexBox
-                // sx={{ display: { xs: "none", sm: "none", md: "block" } }}
-                />
+                <FlexBox />
                 <AddEditUserCourseDialog mode="edit" id={id} />
               </Stack>
             </Grid>

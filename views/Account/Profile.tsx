@@ -99,7 +99,10 @@ function Profile() {
               <Form onSubmit={handleSubmit}>
                 <Container disableGutters sx={{ ml: 0 }}>
                   <Stack spacing={2} sx={{ textAlign: "center", pt: 2 }}>
-                    <Stack direction={"row"} spacing={2}>
+                    <Stack
+                      direction={{ xs: "column", sm: "column", md: "row" }}
+                      spacing={2}
+                    >
                       <TextFieldForm
                         name="first_name"
                         label="First Name"
@@ -110,9 +113,20 @@ function Profile() {
                         name="last_name"
                         label="Last Name"
                         formProps={formProps}
-                        props={{ required: true }}
+                        props={{
+                          required: true,
+                        }}
                       />
                     </Stack>
+                    <TextFieldForm
+                      name="last_name"
+                      label="Last Name"
+                      formProps={formProps}
+                      props={{
+                        required: true,
+                        sx: { display: { xs: "none", sm: "none" } },
+                      }}
+                    />
                     <TextField
                       value={data.email}
                       disabled={true}
@@ -138,7 +152,10 @@ function Profile() {
                       formProps={formProps}
                     />
 
-                    <Stack direction={"row"} spacing={2}>
+                    <Stack
+                      direction={{ xs: "column", sm: "column", md: "row" }}
+                      spacing={2}
+                    >
                       <TextFieldForm
                         name="postcode"
                         label="Postcode"

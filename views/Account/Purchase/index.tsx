@@ -52,7 +52,7 @@ function Purchase() {
     ],
     defaultTab: "all",
     isPaper: false,
-    variant: "fullWidth",
+    variant: "scrollable",
   });
 
   return orderId ? (
@@ -74,7 +74,7 @@ function PurchaseComponent({ status }) {
   const { push } = useRouter();
 
   return (
-    <Stack sx={{ p: 2 }} spacing={2}>
+    <Stack spacing={2}>
       {orderDataByStatus.map(
         ({ cart, id, status, created_at, price, order_no }) => {
           return (

@@ -56,7 +56,11 @@ function Downloadable() {
                 }}
               />
               <Box>
-                <Typography variant="body2" gutterBottom>
+                <Typography
+                  variant="body2"
+                  gutterBottom
+                  sx={{ overflowWrap: "break-word" }}
+                >
                   <b>{item.photoName}</b>
                 </Typography>
                 <Button

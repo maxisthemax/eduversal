@@ -31,8 +31,13 @@ function CartDetails({ cart }) {
           </Box>
           {cart.map((item) => {
             return (
-              <Grid container key={item.id} spacing={4} sx={{ px: 2, py: 1 }}>
-                <Grid size={{ xs: 1.5 }}>
+              <Grid
+                container
+                key={item.id}
+                spacing={{ xs: 1, sm: 1, md: 4 }}
+                sx={{ px: 2, py: 1 }}
+              >
+                <Grid size={{ xs: 4, sm: 4, md: 1.5 }}>
                   {item.userPackage.packageId === "none" ? (
                     <Box
                       component="img"
@@ -175,10 +180,11 @@ function CartDetails({ cart }) {
                     </Stack>
                   )}
                 </Grid>
-                <Grid size={{ xs: 2.5 }}>
+                <Grid size={{ xs: 12, sm: 12, md: 2.5 }}>
                   <Stack
                     direction="row"
-                    sx={{ justifyContent: "space-between" }}
+                    spacing={2}
+                    sx={{ justifyContent: "flex-end" }}
                   >
                     <Typography variant="body1">x {item.quantity}</Typography>
                     <Tooltip
@@ -204,6 +210,12 @@ function CartDetails({ cart }) {
                       </Typography>
                     </Tooltip>
                   </Stack>
+                </Grid>
+                <Grid
+                  size={{ xs: 12, sm: 12 }}
+                  sx={{ display: { xs: "block", sm: "block", md: "none" } }}
+                >
+                  <Divider />
                 </Grid>
               </Grid>
             );

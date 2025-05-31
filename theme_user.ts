@@ -85,4 +85,12 @@ theme.typography.h4 = {
   },
 };
 
+theme.typography.h5 = {
+  ...theme.typography.h5,
+
+  [theme.breakpoints.down("md")]: {
+    fontSize: "18px",
+  },
+};
+
 export default theme;

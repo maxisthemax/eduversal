@@ -128,7 +128,7 @@ function Page({
       >
         <Stack direction={"column"}>
           {title && (
-            <Typography sx={{ fontSize: "28px" }}>
+            <Typography variant="h5">
               <b>{title}</b>
             </Typography>
           )}

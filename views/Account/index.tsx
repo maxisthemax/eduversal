@@ -77,12 +77,13 @@ function Account() {
       sx={{
         width: "100%",
         height: "100%",
+        p: { xs: 2, sm: 2, md: 0 },
       }}
     >
       <Container maxWidth="lg" disableGutters sx={{ backgroundColor: "white" }}>
         <Grid
           container
-          sx={{ backgroundColor: "white", minHeight: getFullHeightSize(34.9) }}
+          sx={{ backgroundColor: "white", minHeight: getFullHeightSize(10) }}
         >
           <Grid
             size={{ md: 3 }}
