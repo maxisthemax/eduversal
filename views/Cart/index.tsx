@@ -105,7 +105,7 @@ function Cart() {
                 </Box>
                 {cart &&
                   cart.length > 0 &&
-                  cart.map((item) => {
+                  cart.map((item, index) => {
                     return (
                       <Box key={item.id}>
                         <Grid container spacing={4}>
@@ -157,6 +157,29 @@ function Cart() {
                                   <Typography variant="body1">
                                     Child: {item.userPackage.items[0]?.name}
                                   </Typography>
+                                  <Link
+                                    sx={{
+                                      display: {
+                                        xs: "block",
+                                        sm: "block",
+                                        md: "none",
+                                      },
+                                    }}
+                                    key={index}
+                                    typography={"body1"}
+                                    underline="none"
+                                    href="#"
+                                    onClick={() => {
+                                      setUserPackage({
+                                        ...item.userPackage,
+                                        cartId: item.id,
+                                        currentStage: index,
+                                      });
+                                      push(item.packageUrl);
+                                    }}
+                                  >
+                                    Edit
+                                  </Link>
                                   {item.userPackage.items[0]?.productVariationOptions.map(
                                     (option) =>
                                       option.productVariationOptionId ? (
@@ -252,6 +275,29 @@ function Cart() {
                                                 )}
                                               </Stack>
                                             </Stack>
+                                            <Link
+                                              sx={{
+                                                display: {
+                                                  xs: "block",
+                                                  sm: "block",
+                                                  md: "none",
+                                                },
+                                              }}
+                                              key={index}
+                                              typography={"body1"}
+                                              underline="none"
+                                              href="#"
+                                              onClick={() => {
+                                                setUserPackage({
+                                                  ...item.userPackage,
+                                                  cartId: item.id,
+                                                  currentStage: index,
+                                                });
+                                                push(item.packageUrl);
+                                              }}
+                                            >
+                                              Edit
+                                            </Link>
                                           </Grid>
                                         </Grid>
                                       );
