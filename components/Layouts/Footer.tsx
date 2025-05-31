@@ -38,7 +38,7 @@ function Footer() {
               return (
                 <Typography
                   key={index}
-                  variant="body2"
+                  variant="body1"
                   sx={{
                     textAlign: "start",
                     color: "#6b6f74",
@@ -65,7 +65,7 @@ function Footer() {
                 <Link href={href} key={index} underline="none">
                   <Typography
                     key={index}
-                    variant="body2"
+                    variant="body1"
                     sx={{
                       textAlign: "center",
                       color: "#6b6f74",
@@ -79,7 +79,7 @@ function Footer() {
           </Stack>
         </Stack>
         <Typography
-          variant="body2"
+          variant="body1"
           sx={{
             textAlign: "center",
             color: "#6b6f74",

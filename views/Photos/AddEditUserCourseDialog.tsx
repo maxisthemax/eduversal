@@ -259,7 +259,12 @@ function AddEditUserCourseDialogForm({
           <Stack
             direction="column"
             spacing={3}
-            sx={{ alignItems: "center", pl: 2, pr: 2, pb: 2 }}
+            sx={{
+              alignItems: "center",
+              pl: { xs: 0, sm: 0, md: 2 },
+              pr: { xs: 0, sm: 0, md: 2 },
+              pb: { xs: 0, sm: 0, md: 2 },
+            }}
           >
             <Box
               component="img"
@@ -272,7 +277,11 @@ function AddEditUserCourseDialogForm({
             <Typography variant="body1" sx={{ fontWeight: 300 }}>
               Enter passcode to access the content.
             </Typography>
-            <Box>
+            <Box
+              sx={{
+                width: { xs: "100%", sm: "100%", md: "inherit" },
+              }}
+            >
               <TextField
                 value={code}
                 fullWidth

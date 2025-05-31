@@ -60,4 +60,29 @@ const baseTheme: ThemeOptions = {
 
 const theme = createTheme(baseTheme);
 
+theme.typography.body1 = {
+  ...theme.typography.body1,
+  fontSize: "16px",
+
+  [theme.breakpoints.down("md")]: {
+    fontSize: "14px",
+  },
+};
+
+theme.typography.h6 = {
+  ...theme.typography.h6,
+
+  [theme.breakpoints.down("md")]: {
+    fontSize: "18px",
+  },
+};
+
+theme.typography.h4 = {
+  ...theme.typography.h4,
+
+  [theme.breakpoints.down("md")]: {
+    fontSize: "20px",
+  },
+};
+
 export default theme;

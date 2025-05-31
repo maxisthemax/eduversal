@@ -43,7 +43,7 @@ function Photos() {
           p: 2,
         }}
       >
-        <Typography sx={{ fontSize: "28px" }}>
+        <Typography sx={{ fontSize: "28px" }} variant="h4">
           <b>Class ({userCoursesData?.length ?? 0})</b>
         </Typography>
         <AddEditUserCourseDialog />
@@ -122,30 +122,49 @@ function UserCourseItem({ userCourse }) {
         },
       }}
     >
-      <Stack direction={"row"} spacing={3} sx={{ alignItems: "center" }}>
+      <Stack
+        direction={"row"}
+        spacing={3}
+        sx={{ alignItems: { xs: "start", sm: "start", md: "center" } }}
+      >
         <Box
-          sx={{
-            width: "119px",
+          sx={(theme) => ({
             height: "119px",
-          }}
+            width: "119px",
+            [theme.breakpoints.down("md")]: {
+              height: "60px",
+              width: "60px",
+            },
+            alignItems: "start",
+          })}
         >
           {isHovered ? (
             <Box
               id="class-hover"
               component="img"
               src={"/image/class_hover.svg"}
-              height={"119px"}
-              width={"119px"}
-              sx={{ height: "119px", width: "119px" }}
+              sx={(theme) => ({
+                height: "119px",
+                width: "119px",
+                [theme.breakpoints.down("md")]: {
+                  height: "60px",
+                  width: "60px",
+                },
+              })}
             />
           ) : (
             <Box
               id="class"
               component="img"
               src={"/image/class.svg"}
-              height={"119px"}
-              width={"119px"}
-              sx={{ height: "119px", width: "119px" }}
+              sx={(theme) => ({
+                height: "119px",
+                width: "119px",
+                [theme.breakpoints.down("md")]: {
+                  height: "60px",
+                  width: "60px",
+                },
+              })}
             />
           )}
         </Box>
@@ -155,37 +174,36 @@ function UserCourseItem({ userCourse }) {
             <b>{title_format}</b>
           </Typography>
           <Grid container>
-            <Grid size={{ xs: 7 }}>
-              <Stack direction={"row"} spacing={2} sx={{ pr: 2 }}>
+            <Grid size={{ xs: 12, sm: 12, md: 7 }}>
+              <Stack
+                direction={"row"}
+                spacing={2}
+                sx={{ pr: { xs: 0, sm: 0, md: 2 } }}
+              >
                 <Stack
+                  spacing={1}
                   direction={"row"}
-                  sx={{ alignItems: "center", maxWidth: "500px" }}
+                  sx={{ alignItems: "start", maxWidth: "500px" }}
                 >
                   <CustomIcon icon="person" fontSizeSx="20px" />
                   <Typography variant="body2">
-                    {names.map((name) => name).join(", ")}
+                    {(names as string[]).map((name) => name).join(", ")}
                   </Typography>
                 </Stack>
-                <FlexBox />
+                <FlexBox
+                // sx={{ display: { xs: "none", sm: "none", md: "block" } }}
+                />
                 <AddEditUserCourseDialog mode="edit" id={id} />
               </Stack>
             </Grid>
-            <Grid size={{ xs: 2.5 }}>
-              <Stack
-                direction={"row"}
-                spacing={1}
-                sx={{ alignItems: "center" }}
-              >
+            <Grid size={{ xs: 12, sm: 12, md: 2.5 }}>
+              <Stack direction={"row"} spacing={1} sx={{ alignItems: "start" }}>
                 <CustomIcon icon="location_on" fontSizeSx="20px" />
                 <Typography variant="body2">{institution_name}</Typography>
               </Stack>
             </Grid>
-            <Grid size={{ xs: 2.5 }}>
-              <Stack
-                direction={"row"}
-                spacing={1}
-                sx={{ alignItems: "center" }}
-              >
+            <Grid size={{ xs: 12, sm: 12, md: 2.5 }}>
+              <Stack direction={"row"} spacing={1} sx={{ alignItems: "start" }}>
                 <CustomIcon icon="imagesmode" fontSizeSx="20px" />
                 <Typography variant="body2">
                   {course.albums.length} Albums |{" "}
@@ -198,8 +216,8 @@ function UserCourseItem({ userCourse }) {
             Avaliable until {formatDate(course.end_date, "dd MMM yyyy")}
           </Typography>
         </Stack>
-        <FlexBox />
-        <Box>
+        <FlexBox sx={{ display: { xs: "none", sm: "none", md: "block" } }} />
+        <Box sx={{ display: { xs: "none", sm: "none", md: "block" } }}>
           <Fab
             variant="circular"
             size="medium"

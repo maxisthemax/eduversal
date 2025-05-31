@@ -85,12 +85,13 @@ function Account() {
           sx={{ backgroundColor: "white", minHeight: getFullHeightSize(34.9) }}
         >
           <Grid
-            size={{ xs: 3 }}
+            size={{ md: 3 }}
             sx={{
               borderRight: "0.5px solid #B8BDC4",
               pl: 2,
               pr: 2,
               backgroundColor: "white",
+              display: { xs: "none", sm: "none", md: "block" },
             }}
           >
             <List sx={{ top: "0px", position: "sticky" }}>
@@ -149,7 +150,10 @@ function Account() {
               </Box>
             </List>
           </Grid>
-          <Grid size={{ xs: 9 }} sx={{ p: 2, backgroundColor: "white" }}>
+          <Grid
+            size={{ xs: 12, sm: 12, md: 9 }}
+            sx={{ p: { xs: 0, sm: 0, md: 2 }, backgroundColor: "white" }}
+          >
             {pageComponent[page as string]}
           </Grid>
         </Grid>
