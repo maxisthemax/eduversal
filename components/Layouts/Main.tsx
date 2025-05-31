@@ -126,7 +126,10 @@ function Main({ children }: { children: React.ReactNode }) {
                         </IconButton>
                       </ListItem>
                       <ListItemButton
-                        onClick={() => push("/photos")}
+                        onClick={() => {
+                          push("/photos");
+                          setOpen(false);
+                        }}
                         sx={{ pl: 4 }}
                       >
                         <ListItemText
