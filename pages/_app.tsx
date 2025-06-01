@@ -36,6 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_URL === "http://localhost:5000") return;
+
     // Block right-click
     const handleContextMenu = (e) => {
       if (e.target.tagName === "IMG") {
@@ -44,12 +45,25 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     };
 
-    // Block long-press context menu on mobile (iOS Safari)
+    // Variables to track touch duration
+    let touchTimer: ReturnType<typeof setTimeout> | null = null;
+
+    // Handle touch start - begin timing for long press
     const handleTouchStart = (e: TouchEvent) => {
       const target = e.target as HTMLElement;
       if (target.tagName === "IMG") {
-        e.preventDefault();
-        return false;
+        touchTimer = setTimeout(() => {
+          // This is a long press - prevent default behavior
+          e.preventDefault();
+        }, 500); // 500ms is typical threshold for long press
+      }
+    };
+
+    // Handle touch end - clear timer for short taps
+    const handleTouchEnd = () => {
+      if (touchTimer) {
+        clearTimeout(touchTimer);
+        touchTimer = null;
       }
     };
 
@@ -67,12 +81,16 @@ export default function App({ Component, pageProps }: AppProps) {
     document.addEventListener("touchstart", handleTouchStart, {
       passive: false,
     });
+    document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener("touchcancel", handleTouchEnd);
 
     // Clean up
     return () => {
       document.removeEventListener("contextmenu", handleContextMenu);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, []);
 
