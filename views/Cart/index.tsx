@@ -157,6 +157,23 @@ function Cart() {
                                   <Typography variant="body1">
                                     Child: {item.userPackage.items[0]?.name}
                                   </Typography>
+                                  {item.userPackage.items[0]?.productVariationOptions.map(
+                                    (option) =>
+                                      option.productVariationOptionId ? (
+                                        <Typography
+                                          variant="body2"
+                                          key={option.productVariationOptionId}
+                                        >
+                                          {option.productVariationName}
+                                          {option.productVariationDownloadable
+                                            ? ` (Includes Soft Copy)`
+                                            : ""}
+                                          : {option.productVariationOptionName}
+                                        </Typography>
+                                      ) : (
+                                        <></>
+                                      )
+                                  )}
                                   <Link
                                     sx={{
                                       display: {
@@ -180,23 +197,6 @@ function Cart() {
                                   >
                                     Edit
                                   </Link>
-                                  {item.userPackage.items[0]?.productVariationOptions.map(
-                                    (option) =>
-                                      option.productVariationOptionId ? (
-                                        <Typography
-                                          variant="body2"
-                                          key={option.productVariationOptionId}
-                                        >
-                                          {option.productVariationName}
-                                          {option.productVariationDownloadable
-                                            ? ` (Includes Soft Copy)`
-                                            : ""}
-                                          : {option.productVariationOptionName}
-                                        </Typography>
-                                      ) : (
-                                        <></>
-                                      )
-                                  )}
                                 </Stack>
                               </Stack>
                             ) : (
