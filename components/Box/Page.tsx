@@ -47,8 +47,8 @@ function Page({
   return (
     <Box
       sx={{
-        pl: { xs: 0, sm: 0, md: 2 },
-        pr: { xs: 0, sm: 0, md: 2 },
+        pl: { xs: 1, sm: 1, md: 2 },
+        pr: { xs: 1, sm: 1, md: 2 },
         pt: 1,
         pb: 1,
         background: backgroundColor,
