@@ -143,77 +143,69 @@ function PurchaseDetails() {
           <Divider sx={{ mx: "-16px !important" }} />
           <CartDetails cart={orderData.cart} />
           <Divider sx={{ mx: "-16px !important" }} />
-          <Stack direction="row" sx={{ p: 2, justifyContent: "space-between" }}>
+          <Stack
+            direction={{ xs: "column", sm: "column", md: "row" }}
+            sx={{ p: 2, justifyContent: "space-between" }}
+            spacing={1}
+          >
             <Typography variant="body1">
               Placed on{" "}
               {formatDate(orderData.created_at, "dd MMMM yyyy h:mm a")}
             </Typography>
             <Stack spacing={1}>
-              <Stack
-                direction="row"
-                spacing={10}
-                sx={{ justifyContent: "space-between" }}
-              >
-                <Typography
-                  variant="body1"
-                  sx={{ width: "130px", textAlign: "end" }}
-                >
-                  <b>Subtotal:</b>
-                </Typography>
-                <Typography variant="body1">
-                  <b>
-                    RM{" "}
-                    {(
-                      Number(orderData.price) - Number(orderData.shipping_fee)
-                    ).toFixed(2)}
-                  </b>
-                </Typography>
-              </Stack>
-              <Stack
-                direction="row"
-                spacing={10}
-                sx={{ justifyContent: "space-between" }}
-              >
-                <Typography
-                  variant="body1"
-                  sx={{ width: "130px", textAlign: "end" }}
-                >
-                  <b>Shipping Fee:</b>
-                </Typography>
-                <Typography variant="body1">
-                  <b>RM {orderData.shipping_fee.toFixed(2)}</b>
-                </Typography>
-              </Stack>
-              <Stack
-                direction="row"
-                spacing={10}
-                sx={{ justifyContent: "space-between" }}
-              >
-                <Typography
-                  variant="body1"
-                  sx={{ width: "130px", textAlign: "end" }}
-                >
-                  <b>Total:</b>
-                </Typography>
-                <Typography variant="body1">
-                  <b>RM {orderData.price.toFixed(2)}</b>
-                </Typography>
-              </Stack>
-              <Stack
-                direction="row"
-                spacing={10}
-                sx={{ justifyContent: "space-between" }}
-              >
-                <Typography
-                  variant="body1"
-                  sx={{ width: "130px", textAlign: "end" }}
-                >
-                  <b>Payment Method:</b>
-                </Typography>
-                <Typography variant="body1">
-                  <b>{orderData.payment_method_format}</b>
-                </Typography>
-              </Stack>
+              {[
+                {
+                  label: "Subtotal:",
+                  value: `RM ${(
+                    Number(orderData.price) - Number(orderData.shipping_fee)
+                  ).toFixed(2)}`,
+                },
+                {
+                  label: "Shipping Fee:",
+                  value: `RM ${orderData.shipping_fee.toFixed(2)}`,
+                },
+                {
+                  label: "Total:",
+                  value: `RM ${orderData.price.toFixed(2)}`,
+                },
+                {
+                  label: "Payment Method:",
+                  value: `${orderData.payment_method_format}`,
+                },
+              ].map(({ label, value }, index) => {
+                return (
+                  <Stack
+                    key={index}
+                    direction="row"
+                    spacing={{ xs: 1, sm: 1, md: 10 }}
+                    sx={{
+                      justifyContent: {
+                        xs: "start",
+                        sm: "start",
+                        md: "space-between",
+                      },
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        width: "130px",
+                        textAlign: { xs: "start", sm: "start", md: "end" },
+                      }}
+                    >
+                      <b>{label}</b>
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        textAlign: { xs: "start", sm: "start", md: "end" },
+                      }}
+                    >
+                      <b>{value}</b>
+                    </Typography>
+                  </Stack>
+                );
+              })}
             </Stack>
           </Stack>
         </Stack>
