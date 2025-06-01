@@ -350,7 +350,14 @@ function Cart() {
                                   value={item.quantity}
                                   sx={{ width: "65px", pb: 1 }}
                                   onChange={(e) => {
-                                    if (Number(e.target.value) < 1) return;
+                                    if (e.target.value === "") {
+                                      updateCartQuantity(item.id, 1);
+                                      return;
+                                    }
+                                    if (Number(e.target.value) < 1) {
+                                      updateCartQuantity(item.id, 1);
+                                      return;
+                                    }
                                     updateCartQuantity(
                                       item.id,
                                       Number(e.target.value)
@@ -428,14 +435,20 @@ function Cart() {
                                   );
                                 })}
                               </Stack>
-
                               <Stack spacing={2}>
                                 <TextField
                                   type="number"
                                   value={item.quantity}
                                   sx={{ width: "65px", pb: 1 }}
                                   onChange={(e) => {
-                                    if (Number(e.target.value) < 1) return;
+                                    if (e.target.value === "") {
+                                      updateCartQuantity(item.id, 1);
+                                      return;
+                                    }
+                                    if (Number(e.target.value) < 1) {
+                                      updateCartQuantity(item.id, 1);
+                                      return;
+                                    }
                                     updateCartQuantity(
                                       item.id,
                                       Number(e.target.value)
