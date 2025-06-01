@@ -42,7 +42,7 @@ function Payment({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              p: 4,
+              p: { xs: 2, sm: 2, md: 4 },
             }}
             spacing={3}
           >
