@@ -165,7 +165,10 @@ function SignUp() {
                           "Join us to unlock your child's class albums, cherish their moments, and share the joy."
                         }
                       </Typography>
-                      <Stack direction={"row"} spacing={2}>
+                      <Stack
+                        direction={{ xs: "column", sm: "column", md: "row" }}
+                        spacing={2}
+                      >
                         <TextFieldForm
                           name="first_name"
                           label="First Name"

@@ -5,8 +5,10 @@ import Grid from "@mui/material/Grid2";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
+import { useGetIsMobileSize } from "@/helpers/view";
 
 function AuthMain({ children }: { children: React.ReactNode }) {
+  const isMobile = useGetIsMobileSize();
   return (
     <Grid container>
       <Grid
@@ -29,7 +31,18 @@ function AuthMain({ children }: { children: React.ReactNode }) {
           }}
         />
       </Grid>
-      <Grid size={{ xs: 12, sm: 12, md: 7.5 }}>
+      <Grid
+        size={{ xs: 12, sm: 12, md: 7.5 }}
+        sx={
+          isMobile
+            ? {
+                backgroundImage: `url(https://${process.env.NEXT_PUBLIC_DO_SPACES_URL}/banner/banner_img)`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : {}
+        }
+      >
         <Stack
           direction="row"
           sx={{
