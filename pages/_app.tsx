@@ -12,15 +12,15 @@ import { CustomDialog } from "@/components/Dialog";
 import { AppCacheProvider } from "@mui/material-nextjs/v15-pagesRouter";
 import { ThemeProvider } from "@mui/material/styles";
 
-//*theme
-import theme from "theme";
-import themeuser from "theme_user";
-
 //*css
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+
+//*theme
+import theme from "theme";
+import themeuser from "theme_user";
 
 // Create a client
 const queryClient = new QueryClient({
