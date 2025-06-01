@@ -24,7 +24,7 @@ function CartDetails({ cart }) {
       const cart = cartGroup[key];
       return (
         <Box key={key}>
-          <Box sx={{ px: 2, pt: 1 }}>
+          <Box sx={{ pt: 1 }}>
             <Typography>
               <b>{key}</b>
             </Typography>
@@ -35,7 +35,7 @@ function CartDetails({ cart }) {
                 container
                 key={item.id}
                 spacing={{ xs: 1, sm: 1, md: 4 }}
-                sx={{ px: 2, py: 1 }}
+                sx={{ py: 1 }}
               >
                 <Grid size={{ xs: 3, sm: 3, md: 1.5 }}>
                   {item.userPackage.packageId === "none" ? (

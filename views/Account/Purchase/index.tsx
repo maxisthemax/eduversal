@@ -22,6 +22,7 @@ import { useOrder } from "@/data/order";
 
 //*utils
 import { statusColor } from "@/utils/constant";
+import Box from "@mui/material/Box";
 
 function Purchase() {
   const params = useSearchParams();
@@ -102,7 +103,9 @@ function PurchaseComponent({ status }) {
                 </Typography>
               </Stack>
               <Divider />
-              <CartDetails cart={cart} />
+              <Box sx={{ px: 2 }}>
+                <CartDetails cart={cart} />
+              </Box>
               <Divider />
               <Stack
                 direction="row"
