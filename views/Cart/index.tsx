@@ -4,7 +4,9 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 //*components
+import { CustomIcon } from "@/components/Icons";
 import { useCustomDialog } from "@/components/Dialog";
+import { FlexBox } from "@/components/Box";
 
 //*lodash
 import findIndex from "lodash/findIndex";
@@ -25,7 +27,7 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
-import { FlexBox } from "@/components/Box";
+import IconButton from "@mui/material/IconButton";
 
 export interface CartData {
   id?: string;
@@ -345,34 +347,64 @@ function Cart() {
                                 </Typography>
                               </Tooltip>
                               <Stack spacing={1} sx={{ alignItems: "end" }}>
-                                <TextField
-                                  type="number"
-                                  value={item.quantity}
-                                  sx={{ width: "65px", pb: 1 }}
-                                  onChange={(e) => {
-                                    if (e.target.value === "") {
-                                      updateCartQuantity(item.id, 1);
-                                      return;
-                                    }
-                                    if (Number(e.target.value) < 1) {
-                                      updateCartQuantity(item.id, 1);
-                                      return;
-                                    }
-                                    updateCartQuantity(
-                                      item.id,
-                                      Number(e.target.value)
-                                    );
-                                  }}
-                                  slotProps={{
-                                    input: {
-                                      sx: {
-                                        height: "55px",
-                                        fontSize: "16px",
-                                        py: "18px",
+                                <Stack
+                                  direction={"row"}
+                                  sx={{ alignItems: "center" }}
+                                  spacing={0.5}
+                                >
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => {
+                                      if (cart[index].quantity < 2) return;
+                                      updateCartQuantity(
+                                        item.id,
+                                        cart[index].quantity - 1
+                                      );
+                                    }}
+                                  >
+                                    <CustomIcon icon="remove" />
+                                  </IconButton>
+                                  <TextField
+                                    type="number"
+                                    value={item.quantity}
+                                    sx={{ width: "65px" }}
+                                    onChange={(e) => {
+                                      if (e.target.value === "") {
+                                        updateCartQuantity(item.id, 1);
+                                        return;
+                                      }
+                                      if (Number(e.target.value) < 1) {
+                                        updateCartQuantity(item.id, 1);
+                                        return;
+                                      }
+                                      updateCartQuantity(
+                                        item.id,
+                                        Number(e.target.value)
+                                      );
+                                    }}
+                                    slotProps={{
+                                      input: {
+                                        sx: {
+                                          height: "55px",
+                                          fontSize: "16px",
+                                          py: "18px",
+                                          textAlignLast: "center",
+                                        },
                                       },
-                                    },
-                                  }}
-                                />
+                                    }}
+                                  />
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => {
+                                      updateCartQuantity(
+                                        item.id,
+                                        cart[index].quantity + 1
+                                      );
+                                    }}
+                                  >
+                                    <CustomIcon icon="add" />
+                                  </IconButton>
+                                </Stack>
                                 <Link
                                   typography={"body1"}
                                   underline="none"
