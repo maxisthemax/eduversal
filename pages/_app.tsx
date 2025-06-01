@@ -44,6 +44,15 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     };
 
+    // Block long-press context menu on mobile (iOS Safari)
+    const handleTouchStart = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === "IMG") {
+        e.preventDefault();
+        return false;
+      }
+    };
+
     // Block keyboard shortcuts
     const handleKeyDown = (e) => {
       if ((e.ctrlKey && (e.key === "s" || e.key === "u")) || e.key === "F12") {
@@ -55,11 +64,15 @@ export default function App({ Component, pageProps }: AppProps) {
     // Add event listeners
     document.addEventListener("contextmenu", handleContextMenu);
     document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
 
     // Clean up
     return () => {
       document.removeEventListener("contextmenu", handleContextMenu);
       document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("touchstart", handleTouchStart);
     };
   }, []);
 
