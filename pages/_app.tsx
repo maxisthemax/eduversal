@@ -55,7 +55,7 @@ export default function App({ Component, pageProps }: AppProps) {
         touchTimer = setTimeout(() => {
           // This is a long press - prevent default behavior
           e.preventDefault();
-        }, 500); // 500ms is typical threshold for long press
+        }, 100); // 500ms is typical threshold for long press
       }
     };
 
