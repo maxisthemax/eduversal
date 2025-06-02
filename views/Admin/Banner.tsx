@@ -26,6 +26,7 @@ function Banner() {
       <Paper variant="outlined" sx={{ p: 2, height: "inherit" }}>
         <Box
           component="img"
+          draggable={false}
           src={files.length > 0 ? URL.createObjectURL(files[0]) : image}
           alt={files[0]?.name}
           sx={{

@@ -71,7 +71,12 @@ function Photos() {
                 maxWidth: "400px",
               }}
             >
-              <Box component="img" src="/image/no_class.svg" width={"50%"} />
+              <Box
+                draggable={false}
+                component="img"
+                src="/image/no_class.svg"
+                width={"50%"}
+              />
               <Typography variant="h5">
                 <b>No Class Available</b>
               </Typography>
@@ -140,6 +145,7 @@ function UserCourseItem({ userCourse }) {
         >
           {isHovered ? (
             <Box
+              draggable={false}
               id="class-hover"
               component="img"
               src={"/image/class_hover.svg"}
@@ -154,6 +160,7 @@ function UserCourseItem({ userCourse }) {
             />
           ) : (
             <Box
+              draggable={false}
               id="class"
               component="img"
               src={"/image/class.svg"}

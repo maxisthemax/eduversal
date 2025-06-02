@@ -83,6 +83,7 @@ function Main({ children }: { children: React.ReactNode }) {
           <Container maxWidth="lg">
             <Stack direction="row" sx={{ width: "100%" }} spacing={2}>
               <Box
+                draggable={false}
                 component="img"
                 src={"/image/logo.png"}
                 sx={{

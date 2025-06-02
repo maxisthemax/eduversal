@@ -231,6 +231,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                             </IconButton>
                           </Box>
                           <Box
+                            draggable={false}
                             component="img"
                             src={URL.createObjectURL(file)}
                             alt={file.name}
@@ -354,6 +355,7 @@ function AlbumContent({ albumId }: { albumId: string }) {
                           </Box>
                           <Box
                             component="img"
+                            draggable={false}
                             src={`${item.display_url}`}
                             alt={item.name}
                             sx={{

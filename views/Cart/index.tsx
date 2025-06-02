@@ -114,6 +114,7 @@ function Cart() {
                           <Grid size={{ xs: 3, sm: 3, md: 1.5 }}>
                             {item.userPackage.packageId === "none" ? (
                               <Box
+                                draggable={false}
                                 component="img"
                                 src={item.userPackage.items[0].photoUrl ?? null}
                                 sx={{
@@ -125,6 +126,7 @@ function Cart() {
                               />
                             ) : (
                               <Box
+                                draggable={false}
                                 component="img"
                                 src={
                                   item.userPackage.packageData.preview_url ??
@@ -230,6 +232,7 @@ function Cart() {
                                             size={{ xs: 3, sm: 3, md: 1.5 }}
                                           >
                                             <Box
+                                              draggable={false}
                                               component="img"
                                               src={photoUrl ?? null}
                                               sx={{

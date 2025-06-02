@@ -264,6 +264,7 @@ function CustomCountryDialog({
                   >
                     <Box
                       component="img"
+                      draggable={false}
                       src={`https://flagsapi.com/${code}/flat/16.png`}
                       sx={{ minWidth: "16px" }}
                     />

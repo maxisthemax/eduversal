@@ -71,6 +71,7 @@ function Class() {
                         }}
                       >
                         <Box
+                          draggable={false}
                           component="img"
                           src={
                             preview_url !== ""

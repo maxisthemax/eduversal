@@ -318,6 +318,7 @@ function AddEditProductVariationDialogForm({
                                             {values.options[index]
                                               .preview_url && (
                                               <Box
+                                                draggable={false}
                                                 component="img"
                                                 src={
                                                   values.options[index]

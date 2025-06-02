@@ -356,6 +356,7 @@ function AddEditPackagesDialogForm({
                           )}
                         </Box>
                         <Box
+                          draggable={false}
                           component="img"
                           src={
                             files.length > 0

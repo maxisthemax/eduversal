@@ -22,6 +22,7 @@ function AuthMain({ children }: { children: React.ReactNode }) {
         }}
       >
         <Box
+          draggable={false}
           component="img"
           src={`https://${process.env.NEXT_PUBLIC_DO_SPACES_URL}/banner/banner_img`}
           sx={{

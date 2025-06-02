@@ -12,7 +12,12 @@ function Minimal({ children }: { children: React.ReactNode }) {
     <Box>
       <AppBar color="inherit" elevation={0} position="static">
         <Toolbar>
-          <Box component="img" src={"/image/logo.png"} height={"30px"} />
+          <Box
+            draggable={false}
+            component="img"
+            src={"/image/logo.png"}
+            height={"30px"}
+          />
         </Toolbar>
       </AppBar>
       <Stack

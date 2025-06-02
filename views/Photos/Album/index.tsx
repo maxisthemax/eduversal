@@ -137,6 +137,7 @@ function Album() {
                         }}
                       >
                         <Box
+                          draggable={false}
                           component="img"
                           src={display_url ?? ""}
                           sx={{

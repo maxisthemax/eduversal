@@ -45,6 +45,7 @@ function Downloadable() {
               sx={{ justifyContent: "space-between", height: "100%" }}
             >
               <Box
+                draggable={false}
                 component="img"
                 src={`${item.photoUrl}`}
                 alt={item.photoUrl}

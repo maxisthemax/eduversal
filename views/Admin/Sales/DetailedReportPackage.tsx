@@ -253,7 +253,6 @@ function DetailedReportPackage() {
         name: "Total",
         no_1: no,
       };
-      console.log("🚀 ~ summaryRow ~ totalRow:", totalRow);
       return totalRow;
     } else return {};
   }, [detailedReportData, data]);

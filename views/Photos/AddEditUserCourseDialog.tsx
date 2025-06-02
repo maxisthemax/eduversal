@@ -267,6 +267,7 @@ function AddEditUserCourseDialogForm({
             }}
           >
             <Box
+              draggable={false}
               component="img"
               src={"/image/locked.svg"}
               sx={{ width: "136px", height: "106px" }}

@@ -254,7 +254,6 @@ function DetailedReportPackage({ type }: { type: "INDIVIDUAL" | "GROUP" }) {
         name: "Total",
         no_1: no,
       };
-      console.log("🚀 ~ summaryRow ~ totalRow:", totalRow);
       return totalRow;
     } else return {};
   }, [detailedReportData, data]);

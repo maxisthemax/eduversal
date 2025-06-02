@@ -272,6 +272,7 @@ function Checkout() {
                         <Grid size={{ xs: 2 }}>
                           {item.userPackage.packageId === "none" ? (
                             <Box
+                              draggable={false}
                               component="img"
                               src={item.userPackage.items[0].photoUrl ?? null}
                               sx={{
@@ -283,6 +284,7 @@ function Checkout() {
                             />
                           ) : (
                             <Box
+                              draggable={false}
                               component="img"
                               src={
                                 item.userPackage.packageData.preview_url ?? null
@@ -430,6 +432,7 @@ function Checkout() {
                                       >
                                         <Grid size={{ xs: 1.5 }}>
                                           <Box
+                                            draggable={false}
                                             component="img"
                                             src={photoUrl ?? null}
                                             sx={{
@@ -623,6 +626,7 @@ function Checkout() {
                   }}
                 >
                   <Box
+                    draggable={false}
                     component="img"
                     src={"/image/logo.png"}
                     height={"30px"}

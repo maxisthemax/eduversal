@@ -21,6 +21,7 @@ import "@fontsource/roboto/700.css";
 //*theme
 import theme from "theme";
 import themeuser from "theme_user";
+import "./global.css";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -35,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const pathName = usePathname()?.split("/")[1];
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_URL === "http://localhost:5000") return;
+    //if (process.env.NEXT_PUBLIC_URL === "http://localhost:5000") return;
 
     // Block right-click
     const handleContextMenu = (e) => {

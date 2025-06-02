@@ -186,6 +186,7 @@ function SelectPhotoDialogForm({
       <DialogContent>
         <Stack direction="row" spacing={2}>
           <Box
+            draggable={false}
             component="img"
             src={item.photoUrl}
             sx={{
@@ -306,6 +307,7 @@ function SelectPhotoDialogForm({
                             >
                               {preview_url && (
                                 <Box
+                                  draggable={false}
                                   component="img"
                                   src={preview_url}
                                   height={40}

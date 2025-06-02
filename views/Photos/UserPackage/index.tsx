@@ -193,6 +193,7 @@ function UserPackages() {
                       }}
                     >
                       <Box
+                        draggable={false}
                         component="img"
                         src={display_url ?? null}
                         sx={{
@@ -259,6 +260,7 @@ function UserPackages() {
                       >
                         {photoUrl ? (
                           <Box
+                            draggable={false}
                             component="img"
                             src={photoUrl ?? null}
                             sx={{
