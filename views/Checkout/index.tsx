@@ -616,7 +616,8 @@ function Checkout() {
                   maxWidth="sm"
                   disableGutters
                   sx={{
-                    marginRight: "0px",
+                    marginRight: { xs: "auto", sm: "auto", md: "0px" },
+                    marginLeft: { xs: "0px", sm: "0px", md: "auto" },
                     height: "100%",
                     p: 2,
                   }}
@@ -669,11 +670,14 @@ function Checkout() {
                   maxWidth="sm"
                   disableGutters
                   sx={{
-                    marginRight: "0px",
+                    marginRight: { xs: "auto", sm: "auto", md: "0px" },
+                    marginLeft: { xs: "0px", sm: "0px", md: "auto" },
                     height: "100%",
                     pt: 2,
                     pl: 2,
                     pr: 2,
+                    alignContent: "end",
+                    alignItems: "end",
                   }}
                 >
                   <Stack sx={{ width: "100%", height: "100%" }} spacing={4}>

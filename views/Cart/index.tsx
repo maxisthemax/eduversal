@@ -406,6 +406,7 @@ function Cart() {
                                   </IconButton>
                                 </Stack>
                                 <Link
+                                  sx={{ pr: 6 }}
                                   typography={"body1"}
                                   underline="none"
                                   href="#"
