@@ -701,7 +701,6 @@ function Checkout() {
                         }
                         sx={{
                           p: 2,
-                          justifyContent: "space-between",
                           textTransform: "inherit",
                         }}
                       >
@@ -714,17 +713,14 @@ function Checkout() {
                           <ListItemText
                             slotProps={{
                               primary: { variant: "inherit" },
-                              secondary: {
-                                variant: "inherit",
-                                whiteSpace: "break-spaces",
-                                textAlign: "start",
-                              },
+                              secondary: { variant: "inherit" },
                             }}
                             sx={{ justifyItems: "start" }}
                             primary={"Pick Up In Store"}
                             secondary={"Collect From Teacher"}
                           />
                         </Stack>
+                        <FlexBox />
                       </Button>
                       {isDeliverable && (
                         <Button
@@ -741,7 +737,6 @@ function Checkout() {
                           variant="outlined"
                           sx={{
                             p: 2,
-                            justifyContent: "space-between",
                             textTransform: "inherit",
                           }}
                         >
@@ -858,7 +853,6 @@ function Checkout() {
                           }
                           sx={{
                             p: 2,
-                            justifyContent: "space-between",
                             textTransform: "inherit",
                           }}
                         >
@@ -877,6 +871,7 @@ function Checkout() {
                               primary={paymentLabel[method]}
                             />
                           </Stack>
+                          <FlexBox />
                         </Button>
                       ))}
                     </Stack>
