@@ -46,52 +46,12 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     };
 
-    // Variables to track touch duration
-    let touchTimer: ReturnType<typeof setTimeout> | null = null;
-
-    // Handle touch start - begin timing for long press
-    const handleTouchStart = (e: TouchEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === "IMG") {
-        touchTimer = setTimeout(() => {
-          // This is a long press - prevent default behavior
-          e.preventDefault();
-        }, 100); // 500ms is typical threshold for long press
-      }
-    };
-
-    // Handle touch end - clear timer for short taps
-    const handleTouchEnd = () => {
-      if (touchTimer) {
-        clearTimeout(touchTimer);
-        touchTimer = null;
-      }
-    };
-
-    // Block keyboard shortcuts
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey && (e.key === "s" || e.key === "u")) || e.key === "F12") {
-        e.preventDefault();
-        return false;
-      }
-    };
-
     // Add event listeners
     document.addEventListener("contextmenu", handleContextMenu);
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("touchstart", handleTouchStart, {
-      passive: false,
-    });
-    document.addEventListener("touchend", handleTouchEnd);
-    document.addEventListener("touchcancel", handleTouchEnd);
 
     // Clean up
     return () => {
       document.removeEventListener("contextmenu", handleContextMenu);
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchend", handleTouchEnd);
-      document.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, []);
 

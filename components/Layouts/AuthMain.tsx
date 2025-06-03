@@ -50,7 +50,7 @@ function AuthMain({ children }: { children: React.ReactNode }) {
           sx={{
             height: "100vh",
             width: "100%",
-            placeItems: "end",
+            placeItems: { xs: "end", sm: "end", md: "center" },
           }}
         >
           {children}
