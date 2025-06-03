@@ -712,8 +712,14 @@ function Checkout() {
                           <CustomIcon icon="check_circle" />
                           <ListItemText
                             slotProps={{
-                              primary: { variant: "inherit" },
-                              secondary: { variant: "inherit" },
+                              primary: {
+                                variant: "inherit",
+                                textAlign: "start",
+                              },
+                              secondary: {
+                                variant: "inherit",
+                                textAlign: "start",
+                              },
                             }}
                             sx={{ justifyItems: "start" }}
                             primary={"Pick Up In Store"}
@@ -748,8 +754,14 @@ function Checkout() {
                             <CustomIcon icon="check_circle" />
                             <ListItemText
                               slotProps={{
-                                primary: { variant: "inherit" },
-                                secondary: { variant: "inherit" },
+                                primary: {
+                                  variant: "inherit",
+                                  textAlign: "start",
+                                },
+                                secondary: {
+                                  variant: "inherit",
+                                  textAlign: "start",
+                                },
                               }}
                               sx={{ justifyItems: "start" }}
                               primary={"Ship In"}
@@ -757,6 +769,7 @@ function Checkout() {
                             <FlexBox />
                             <Typography variant="inherit">RM 15.00</Typography>
                           </Stack>
+                          <FlexBox />
                         </Button>
                       )}
                     </Stack>
