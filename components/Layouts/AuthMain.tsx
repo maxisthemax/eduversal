@@ -4,7 +4,6 @@ import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
 
 //*helpers
-import { getFullHeightSize } from "@/helpers/stringHelpers";
 import { useGetIsMobileSize } from "@/helpers/view";
 
 function AuthMain({ children }: { children: React.ReactNode }) {
@@ -38,8 +37,9 @@ function AuthMain({ children }: { children: React.ReactNode }) {
           isMobile
             ? {
                 backgroundImage: `url(https://${process.env.NEXT_PUBLIC_DO_SPACES_URL}/banner/banner_img)`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+                backgroundPositionX: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundColor: "#F8F8F8",
               }
             : {}
         }
@@ -47,8 +47,9 @@ function AuthMain({ children }: { children: React.ReactNode }) {
         <Stack
           direction="row"
           sx={{
-            height: getFullHeightSize(10),
+            height: "100vh",
             width: "100%",
+            placeItems: "end",
           }}
         >
           {children}
