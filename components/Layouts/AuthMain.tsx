@@ -40,6 +40,7 @@ function AuthMain({ children }: { children: React.ReactNode }) {
                 backgroundPositionX: "center",
                 backgroundRepeat: "no-repeat",
                 backgroundColor: "#F8F8F8",
+                backgroundSize: "contain",
               }
             : {}
         }
