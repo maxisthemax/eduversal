@@ -291,9 +291,9 @@ function Main({ children }: { children: React.ReactNode }) {
         <Stack
           sx={{
             background: "#F8F8F8",
-            height: getFullHeightSize(-19.2),
+            minHeight: getFullHeightSize(-19.2),
             width: "100%",
-            overflowY: "scroll", // Always show scrollbar
+            overflowY: "hidden", // Always show scrollbar
             msOverflowStyle: "none", // IE and Edge
             scrollbarWidth: "none", // Firefox
             "&::-webkit-scrollbar": {
