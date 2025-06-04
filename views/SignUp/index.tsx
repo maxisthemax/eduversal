@@ -66,6 +66,8 @@ function SignUp() {
         alignContent: "center",
         height: "100vh",
         width: "100%",
+        position: { xs: "relative", sm: "relative", md: "inherit" },
+        top: { xs: 260, sm: 260, md: 0 },
       }}
     >
       <Container
