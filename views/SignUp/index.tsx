@@ -64,7 +64,6 @@ function SignUp() {
     <Box
       sx={{
         alignContent: "center",
-        overflow: "auto",
         height: "100vh",
         width: "100%",
       }}
