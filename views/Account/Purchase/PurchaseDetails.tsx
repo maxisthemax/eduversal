@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import CartDetails from "./CartDetails";
 import PaymentDialog, { usePaymentStore } from "@/views/Checkout/PaymentDialog";
 import { Page } from "@/components/Box";
+import { useCustomDialog } from "@/components/Dialog";
 
 //*mui
 import Divider from "@mui/material/Divider";
@@ -14,7 +15,6 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 
 //*data
@@ -45,6 +45,7 @@ function PurchaseDetails() {
   const { orderDataById, status } = useOrder();
   const orderData = orderDataById[orderId];
   const { paymentData, setPaymentData } = usePaymentStore();
+  const { handleOpenDialog } = useCustomDialog();
 
   useEffect(() => {
     // Dynamically load the script
@@ -210,7 +211,8 @@ function PurchaseDetails() {
           </Stack>
         </Stack>
         {orderData.status === "PENDING" && (
-          <Box
+          <Stack
+            direction={"row"}
             sx={{
               display: "flex",
               width: "100%",
@@ -220,7 +222,60 @@ function PurchaseDetails() {
               py: 1,
               backgroundColor: "background.paper",
             }}
+            spacing={1}
           >
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => {
+                handleOpenDialog({
+                  title: "Change Payment Method",
+                  description:
+                    "Are you sure you want to change the payment method?",
+                  textField: {
+                    id: "select",
+                    selectField: [
+                      {
+                        name: "Online Banking",
+                        value: "fpx",
+                      },
+                      {
+                        name: "Credit/Debit Card",
+                        value: "credit_debit",
+                      },
+                      {
+                        name: "E-Wallet",
+                        value: "e_wallet",
+                      },
+                    ],
+                    defaultValue: orderData.payment_method,
+                  },
+                  onConfirm: async (value) => {
+                    const res = await axios.post("payment/requestPayment", {
+                      PymtMethod: eghlPymtMethod[value],
+                      OrderNumber: orderData.order_no,
+                      PaymentID: `${orderData.order_no}_${formatDate(
+                        new Date(),
+                        "yyyyMMddHHmmssSS"
+                      )}`,
+                      Amount: orderData.price.toFixed(2),
+                      CurrencyCode: "MYR",
+                    });
+                    setPaymentData({
+                      ...res.data,
+                      PaymentDesc: `${orderData.cart.length} item(s)`,
+                      CustEmail: orderData.cust_email,
+                      CustName: orderData.cust_name,
+                      CustPhone: orderData.cust_phone,
+                    });
+                  },
+                });
+              }}
+            >
+              Change Payment
+            </Button>
+
             <Button
               variant="contained"
               size="small"
@@ -246,7 +301,7 @@ function PurchaseDetails() {
             >
               Make Payment
             </Button>
-          </Box>
+          </Stack>
         )}
       </Paper>
       {paymentData && <PaymentDialog />}
