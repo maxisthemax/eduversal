@@ -252,6 +252,10 @@ function PurchaseDetails() {
                     defaultValue: orderData.payment_method,
                   },
                   onConfirm: async (value) => {
+                    await axios.put("order", {
+                      order_id: orderData.id,
+                      payment_method: value,
+                    });
                     const res = await axios.post("payment/requestPayment", {
                       PymtMethod: eghlPymtMethod[value],
                       OrderNumber: orderData.order_no,
