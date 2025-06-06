@@ -72,7 +72,7 @@ function PaymentDialog() {
           ref={formRef}
           name="frmPayment"
           method="post"
-          action="https://pay.e-ghl.com/IPGSG/Payment.aspx"
+          action={process.env.NEXT_PUBLIC_EGHL_API_URL}
           target="_self"
         >
           <input type="hidden" name="TransactionType" value="SALE" />
