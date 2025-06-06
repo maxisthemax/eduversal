@@ -81,7 +81,11 @@ function PaymentDialog() {
             name="PymtMethod"
             value={paymentData.PymtMethod}
           />
-          <input type="hidden" name="ServiceID" value={"sit"} />
+          <input
+            type="hidden"
+            name="ServiceID"
+            value={process.env.NEXT_PUBLIC_SERVICE_ID}
+          />
           <input
             type="hidden"
             name="OrderNumber"

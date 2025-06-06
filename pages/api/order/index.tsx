@@ -23,7 +23,7 @@ const eghlPymtMethod = {
   e_wallet: "WA",
 };
 
-const SERVICE_ID = process.env.SERVICE_ID;
+const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID;
 const MERCHANT_PASSWORD = process.env.MERCHANT_PASSWORD;
 const MERCHANT_RETURN_URL = `${process.env.NEXT_PUBLIC_URL}/payment`;
 const MERCHANT_CALLBACK_URL = `${process.env.NEXT_SERVER_API_URL}/api/payment/callbackPayment`;
