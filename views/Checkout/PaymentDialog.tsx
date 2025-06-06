@@ -9,8 +9,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 //*data
-import { PaymentData } from "@/data/order";
 import { useCart } from "../Cart";
+import { PaymentData } from "@/data/order";
 
 function PaymentDialog() {
   const { paymentData, clearPaymentData } = usePaymentStore();
