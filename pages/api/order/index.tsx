@@ -257,6 +257,45 @@ export default async function handler(
         return res.status(201).json({ data: queryData });
       }
 
+      case "PUT": {
+        // Update an existing order payment method
+        const { payment_method, order_id } = req.body;
+        if (
+          !validateRequiredFields(
+            req,
+            res,
+            ["payment_method", "order_id"],
+            "body"
+          )
+        ) {
+          return;
+        }
+        // Get updatedBy
+        const { updated_by } = await getCreatedByUpdatedBy(req, res);
+
+        // Validate the order exists
+        const order = await prisma.order.findUnique({
+          where: { id: order_id },
+        });
+        if (!order) {
+          return res.status(404).json({
+            message: "Order not found",
+          });
+        }
+
+        // Update the order payment method
+        const updatedOrder = await prisma.order.update({
+          where: { id: order_id },
+          data: {
+            payment_method,
+            ...updated_by,
+          },
+        });
+
+        // Return the updated order
+        return res.status(200).json({ data: updatedOrder });
+      }
+
       default: {
         // Handle unsupported methods
         if (handleAllowedMethods(req, res, ["GET", "POST"])) return;
