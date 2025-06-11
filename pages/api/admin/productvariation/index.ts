@@ -128,7 +128,7 @@ export default async function handler(
                   "-"
                 );
                 const res = await upload({
-                  Key: `productvariation/${newProductVariation.id}/${newFileName}`,
+                  Key: `productVariation/${newProductVariation.id}/${newFileName}`,
                   Body: fileStream,
                   ACL: "public-read",
                   ContentType: option.preview_image.mimetype,
