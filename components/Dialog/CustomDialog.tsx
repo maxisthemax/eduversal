@@ -80,154 +80,156 @@ function CustomDialog() {
   }, [fieldValue]);
 
   return (
-    <Dialog
-      open={open}
-      fullWidth
-      maxWidth="sm"
-      onClose={() => {
-        if (isConfirming) return;
-        if (allowOutsideClose) {
-          setValue(undefined);
-          handleCloseDialog();
-        }
-      }}
-      keepMounted={false}
-    >
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        {description && (
-          <DialogContentText sx={{ whiteSpace: "break-spaces" }}>
-            {description}
-          </DialogContentText>
-        )}
-        {content ? content : <></>}
+    open && (
+      <Dialog
+        open={open}
+        fullWidth
+        maxWidth="sm"
+        onClose={() => {
+          if (isConfirming) return;
+          if (allowOutsideClose) {
+            setValue(undefined);
+            handleCloseDialog();
+          }
+        }}
+        keepMounted={false}
+      >
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent>
+          {description && (
+            <DialogContentText sx={{ whiteSpace: "break-spaces" }}>
+              {description}
+            </DialogContentText>
+          )}
+          {content ? content : <></>}
 
-        {textField?.id === "text" && (
-          <>
-            <Box p={1} />
-            <TextField
-              disabled={isConfirming}
-              type="string"
-              defaultValue={textField.defaultValue}
-              placeholder={placeholder}
-              variant="standard"
-              onChange={(e) => {
-                if (e.target.value !== "") setValue(e.target.value);
-                else setValue(undefined);
-              }}
-            />
-          </>
-        )}
+          {textField?.id === "text" && (
+            <>
+              <Box p={1} />
+              <TextField
+                disabled={isConfirming}
+                type="string"
+                defaultValue={textField.defaultValue}
+                placeholder={placeholder}
+                variant="standard"
+                onChange={(e) => {
+                  if (e.target.value !== "") setValue(e.target.value);
+                  else setValue(undefined);
+                }}
+              />
+            </>
+          )}
 
-        {textField?.id === "number" && (
-          <>
-            <Box p={1} />
-            <TextField
-              disabled={isConfirming}
-              type="number"
-              defaultValue={textField.defaultValue}
-              placeholder={placeholder}
-              variant="standard"
-              onChange={(e) => {
-                if (e.target.value !== "") setValue(e.target.value);
-                else setValue(undefined);
-              }}
-            />
-          </>
-        )}
+          {textField?.id === "number" && (
+            <>
+              <Box p={1} />
+              <TextField
+                disabled={isConfirming}
+                type="number"
+                defaultValue={textField.defaultValue}
+                placeholder={placeholder}
+                variant="standard"
+                onChange={(e) => {
+                  if (e.target.value !== "") setValue(e.target.value);
+                  else setValue(undefined);
+                }}
+              />
+            </>
+          )}
 
-        {textField?.id === "select" && (
-          <>
-            <Box p={1} />
-            <TextField
-              select={true}
-              disabled={isConfirming}
-              placeholder={placeholder}
-              variant="standard"
-              onChange={(e) => {
-                setValue(e.target.value);
+          {textField?.id === "select" && (
+            <>
+              <Box p={1} />
+              <TextField
+                select={true}
+                disabled={isConfirming}
+                placeholder={placeholder}
+                variant="standard"
+                onChange={(e) => {
+                  setValue(e.target.value);
+                }}
+                defaultValue={textField.defaultValue}
+              >
+                {textField.selectField.map(({ value, name }) => {
+                  return (
+                    <MenuItem key={value} value={value}>
+                      {name}
+                    </MenuItem>
+                  );
+                })}
+              </TextField>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ px: 4 }}>
+          {onSecondConfirm && (
+            <LoadingButton
+              variant="contained"
+              loading={isConfirming}
+              onClick={async () => {
+                try {
+                  setIsConfirming(true);
+                  const res = await onSecondConfirm();
+                  setIsConfirming(false);
+                  if (res === undefined || res) {
+                    handleCloseDialog();
+                    setValue(undefined);
+                  }
+                } catch (error) {
+                  console.error("Confirmation failed:", error);
+                  setIsConfirming(false);
+                }
               }}
-              defaultValue={textField.defaultValue}
             >
-              {textField.selectField.map(({ value, name }) => {
-                return (
-                  <MenuItem key={value} value={value}>
-                    {name}
-                  </MenuItem>
-                );
-              })}
-            </TextField>
-          </>
-        )}
-      </DialogContent>
-      <DialogActions sx={{ px: 4 }}>
-        {onSecondConfirm && (
+              {onSecondTitle ?? "Delete"}
+            </LoadingButton>
+          )}
+          <FlexBox />
+          {allowClose && (
+            <Button
+              sx={{ mr: 1 }}
+              variant="outlined"
+              disabled={isConfirming}
+              onClick={() => {
+                handleCloseDialog();
+                setValue(undefined);
+              }}
+            >
+              Cancel
+            </Button>
+          )}
           <LoadingButton
+            disabled={
+              (textField ||
+                (textField?.id === "select" &&
+                  textField.selectField &&
+                  textField.selectField?.length > 0)) &&
+              value === undefined
+            }
             variant="contained"
             loading={isConfirming}
             onClick={async () => {
-              try {
-                setIsConfirming(true);
-                const res = await onSecondConfirm();
-                setIsConfirming(false);
-                if (res === undefined || res) {
-                  handleCloseDialog();
-                  setValue(undefined);
+              if (onConfirm) {
+                try {
+                  setIsConfirming(true);
+                  const res = await onConfirm(value);
+                  setIsConfirming(false);
+                  if (res === undefined || res) {
+                    handleCloseDialog();
+                    setValue(undefined);
+                  }
+                } catch (error) {
+                  console.error("Confirmation failed:", error);
+                  setIsConfirming(false);
                 }
-              } catch (error) {
-                console.error("Confirmation failed:", error);
-                setIsConfirming(false);
               }
             }}
           >
-            {onSecondTitle ?? "Delete"}
+            OK
           </LoadingButton>
-        )}
-        <FlexBox />
-        {allowClose && (
-          <Button
-            sx={{ mr: 1 }}
-            variant="outlined"
-            disabled={isConfirming}
-            onClick={() => {
-              handleCloseDialog();
-              setValue(undefined);
-            }}
-          >
-            Cancel
-          </Button>
-        )}
-        <LoadingButton
-          disabled={
-            (textField ||
-              (textField?.id === "select" &&
-                textField.selectField &&
-                textField.selectField?.length > 0)) &&
-            value === undefined
-          }
-          variant="contained"
-          loading={isConfirming}
-          onClick={async () => {
-            if (onConfirm) {
-              try {
-                setIsConfirming(true);
-                const res = await onConfirm(value);
-                setIsConfirming(false);
-                if (res === undefined || res) {
-                  handleCloseDialog();
-                  setValue(undefined);
-                }
-              } catch (error) {
-                console.error("Confirmation failed:", error);
-                setIsConfirming(false);
-              }
-            }
-          }}
-        >
-          OK
-        </LoadingButton>
-      </DialogActions>
-    </Dialog>
+        </DialogActions>
+      </Dialog>
+    )
   );
 }
 
