@@ -66,6 +66,7 @@ function PhotoCotent() {
       package_type_format: "",
       is_downloadable: false,
       preview_url: "",
+      description: undefined,
     },
     ...userCourseData.course.package.filter(({ packageAlbums }) => {
       return includes(
@@ -349,7 +350,8 @@ function PhotoCotent() {
                   sx={{ whiteSpace: "break-spaces" }}
                   variant="body2"
                 >
-                  {album.description}
+                  {find(albumPackage, { id: userPackage?.packageId })
+                    ?.description ?? album.description}
                 </Typography>
               </Box>
               <Stack sx={{ pt: 2 }} direction={"row"} gap={2} flexWrap={"wrap"}>
