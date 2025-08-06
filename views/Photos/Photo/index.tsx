@@ -351,7 +351,12 @@ function PhotoCotent() {
                   variant="body2"
                 >
                   {find(albumPackage, { id: userPackage?.packageId })
-                    ?.description ?? album.description}
+                    ?.description &&
+                  find(albumPackage, { id: userPackage?.packageId })
+                    ?.description !== ""
+                    ? find(albumPackage, { id: userPackage?.packageId })
+                        .description
+                    : album.description}
                 </Typography>
               </Box>
               <Stack sx={{ pt: 2 }} direction={"row"} gap={2} flexWrap={"wrap"}>
