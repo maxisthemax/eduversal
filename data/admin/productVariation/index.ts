@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 
 //*lodash
 import keyBy from "lodash/keyBy";
+import startsWith from "lodash/startsWith";
 
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
@@ -95,6 +96,11 @@ export function useProductVariation(productVariationId?: string): {
         options: data.options.map((option) => ({
           ...option,
           price_format: option.currency + " " + option.price.toFixed(2),
+          preview_url: `${
+            startsWith(option.preview_url, "sgp1")
+              ? "https://" + option.preview_url
+              : option.preview_url
+          }`,
         })),
       }));
     } else return [];

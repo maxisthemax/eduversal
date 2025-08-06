@@ -3,6 +3,8 @@ import { useParams } from "next/navigation";
 
 //*lodash
 import keyBy from "lodash/keyBy";
+import startsWith from "lodash/startsWith";
+
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
 
@@ -83,6 +85,11 @@ export function usePackage(packageId?: string): {
           .join(" + "),
         created_at: new Date(data.created_at),
         updated_at: new Date(data.updated_at),
+        preview_url: `${
+          startsWith(data.preview_url, "sgp1")
+            ? "https://" + data.preview_url
+            : data.preview_url
+        }`,
       }));
     } else return [];
   }, [isLoading, packagesQueryData, albumsDataById]);

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 
 //*lodash
 import keyBy from "lodash/keyBy";
+import startsWith from "lodash/startsWith";
 
 //*helpers
 import { useQueryFetch } from "@/helpers/queryHelpers";
@@ -126,6 +127,11 @@ export function useUserCourse(userCourseId?: string): {
             albums,
             package: data.course.package.map((pack) => ({
               ...pack,
+              preview_url: `${
+                startsWith(pack.preview_url, "sgp1")
+                  ? "https://" + pack.preview_url
+                  : pack.preview_url
+              }`,
               price_format: pack.currency + " " + pack.price.toFixed(2),
               package_type_format: pack.packageAlbums
                 .map(({ album_id, quantity }) => {
