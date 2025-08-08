@@ -103,6 +103,9 @@ export function useUserCourse(userCourseId?: string): {
       return userCoursesQueryData.map((data) => {
         const albums = data.course.albums.map((album) => ({
           ...album,
+          preview_url: startsWith(album.preview_url, "sgp1")
+            ? "https://" + album.preview_url
+            : album.preview_url,
           albumProductVariations: album.albumProductVariations.map(
             (albumProductVariation) => ({
               ...albumProductVariation,
