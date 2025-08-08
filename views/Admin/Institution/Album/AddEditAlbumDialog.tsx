@@ -174,7 +174,7 @@ function AddEditAlbumDialogForm({
         values.album_product_variations.forEach((item) => {
           if (
             item.mandatory &&
-            item.disabled_options.length ===
+            (item?.disabled_options?.length ?? 0) ===
               find(productVariationsData, {
                 id: item.productVariation_id,
               })?.options.length
