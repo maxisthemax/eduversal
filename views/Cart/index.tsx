@@ -29,6 +29,9 @@ import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import IconButton from "@mui/material/IconButton";
 
+//*helpers
+import { getFullHeightSize } from "@/helpers/stringHelpers";
+
 export interface CartData {
   id?: string;
   userPackage: UserPackageData;
@@ -70,12 +73,21 @@ function Cart() {
             display: "flex",
             justifyContent: "center",
             p: 2,
+            height: getFullHeightSize(30),
           }}
         >
           <Typography variant="h5">
-            <b>Your Cart is Empty</b>
+            <b>Your Cart is sEmpty</b>
           </Typography>
         </Box>
+        <Stack sx={{ background: "white", mx: 6, my: 4, p: 2 }}>
+          <Typography variant="body2" color="inherit">
+            📸 Don’t forget to add co-curricular photos before checkout
+          </Typography>
+          <Typography variant="body2" color="inherit">
+            📸 别忘了加购您孩子的课外活动照片
+          </Typography>
+        </Stack>
       </Container>
     );
   }
@@ -627,7 +639,15 @@ function Cart() {
           </Box>
         </Stack>
       </Paper>
-      <FlexBox minHeight={180} />
+      <FlexBox minHeight={260} />
+      <Stack sx={{ background: "white", mx: 6, my: 4, p: 2 }}>
+        <Typography variant="body2" color="inherit">
+          📸 Don’t forget to add co-curricular photos before checkout
+        </Typography>
+        <Typography variant="body2" color="inherit">
+          📸 别忘了加购您孩子的课外活动照片
+        </Typography>
+      </Stack>
     </Container>
   );
 }
