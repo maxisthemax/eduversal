@@ -80,7 +80,7 @@ function Cart() {
             <b>Your Cart is sEmpty</b>
           </Typography>
         </Box>
-        <Stack sx={{ background: "white", mx: 6, my: 4, p: 2 }}>
+        <Stack spacing={1} sx={{ background: "white", mx: 6, my: 4, p: 2 }}>
           <Typography variant="body2" color="inherit">
             📸 Don’t forget to add co-curricular photos before checkout
           </Typography>
@@ -640,7 +640,7 @@ function Cart() {
         </Stack>
       </Paper>
       <FlexBox minHeight={260} />
-      <Stack sx={{ background: "white", mx: 6, my: 4, p: 2 }}>
+      <Stack spacing={1} sx={{ background: "white", mx: 6, my: 4, p: 2 }}>
         <Typography variant="body2" color="inherit">
           📸 Don’t forget to add co-curricular photos before checkout
         </Typography>
