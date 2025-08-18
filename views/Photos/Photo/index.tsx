@@ -60,7 +60,7 @@ function PhotoCotent() {
   const albumPackage = [
     {
       id: "none",
-      name: "No Package",
+      name: "-",
       price: album.product_type.price,
       price_format: `RM ${album.product_type.price.toFixed(2)}`,
       package_type_format: "",
@@ -585,7 +585,7 @@ function PhotoCotent() {
                 )}
                 <Box sx={{ width: "100%" }}>
                   <Typography variant="body1" gutterBottom>
-                    {"Packages"}
+                    {"Selections"}
                   </Typography>
                   <Stack direction={"column"} spacing={2}>
                     {albumPackage.map(
