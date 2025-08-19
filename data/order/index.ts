@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { publicIpv4 } from "public-ip";
 
 //*lodash
 import filter from "lodash/filter";
@@ -177,7 +178,8 @@ export function useOrder(orderStatus?: string): {
   ): Promise<any> {
     try {
       setIsAdding(true);
-      const res = await axios.post(`order`, order);
+      const publicIp = await publicIpv4();
+      const res = await axios.post(`order`, { ...order, publicIp });
       await refetch();
       setIsAdding(false);
       return res;

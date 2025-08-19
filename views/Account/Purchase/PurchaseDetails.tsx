@@ -23,6 +23,7 @@ import { useOrder } from "@/data/order";
 //*utils
 import { statusColor } from "@/utils/constant";
 import axios from "@/utils/axios";
+import { publicIpv4 } from "public-ip";
 
 declare global {
   interface Window {
@@ -252,6 +253,7 @@ function PurchaseDetails() {
                     defaultValue: orderData.payment_method,
                   },
                   onConfirm: async (value) => {
+                    const publicIp = await publicIpv4();
                     await axios.put("order", {
                       order_id: orderData.id,
                       payment_method: value,
@@ -265,6 +267,7 @@ function PurchaseDetails() {
                       )}`,
                       Amount: orderData.price.toFixed(2),
                       CurrencyCode: "MYR",
+                      publicIp,
                     });
                     setPaymentData({
                       ...res.data,
@@ -284,6 +287,7 @@ function PurchaseDetails() {
               variant="contained"
               size="small"
               onClick={async () => {
+                const publicIp = await publicIpv4();
                 const res = await axios.post("payment/requestPayment", {
                   PymtMethod: eghlPymtMethod[orderData.payment_method],
                   OrderNumber: orderData.order_no,
@@ -293,6 +297,7 @@ function PurchaseDetails() {
                   )}`,
                   Amount: orderData.price.toFixed(2),
                   CurrencyCode: "MYR",
+                  publicIp,
                 });
                 setPaymentData({
                   ...res.data,

@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { formatDate } from "date-fns";
 import crypto from "crypto";
-import axios from "axios";
 
 //*lodash
 import uniq from "lodash/uniq";
@@ -69,6 +68,7 @@ export default async function handler(
           cust_phone,
           status_index,
           priority,
+          publicIp,
         } = req.body;
 
         // Validate required fields
@@ -89,6 +89,7 @@ export default async function handler(
               "cust_phone",
               "status_index",
               "priority",
+              "publicIp",
             ],
             "body"
           )
@@ -206,10 +207,6 @@ export default async function handler(
             })),
           });
 
-          const publicIp = await axios.get(
-            "https://api64.ipify.org?format=json"
-          );
-
           const paymentId = `${newOrder.order_no}_${formatDate(
             new Date(),
             "yyyyMMddHHmmssSS"
@@ -228,11 +225,11 @@ export default async function handler(
               PaymentID: paymentId,
               Amount: price.toFixed(2),
               CurrencyCode: "MYR",
-              CustIP: publicIp.data.ip,
+              CustIP: publicIp,
             }),
             MerchantReturnURL: MERCHANT_RETURN_URL,
             MerchantCallBackURL: MERCHANT_CALLBACK_URL,
-            CustIP: publicIp.data.ip,
+            CustIP: publicIp,
           };
 
           const paymentData = await prisma.payment.create({

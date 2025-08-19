@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
-import axios from "axios";
 import prisma from "@/lib/prisma";
 import { getCreatedByUpdatedBy } from "@/helpers/apiHelpers";
 
@@ -23,10 +22,14 @@ export default async function handler(
     return res.status(405).json({ message: "Method Not Allowed" });
 
   try {
-    const publicIp = await axios.get("https://api64.ipify.org?format=json");
-
-    const { PymtMethod, OrderNumber, PaymentID, Amount, CurrencyCode } =
-      req.body;
+    const {
+      PymtMethod,
+      OrderNumber,
+      PaymentID,
+      Amount,
+      CurrencyCode,
+      publicIp,
+    } = req.body;
 
     const queryData = {
       TransactionType: "SALE",
@@ -41,11 +44,11 @@ export default async function handler(
         PaymentID,
         Amount,
         CurrencyCode,
-        CustIP: publicIp.data.ip,
+        CustIP: publicIp,
       }),
       MerchantReturnURL: MERCHANT_RETURN_URL,
       MerchantCallBackURL: MERCHANT_CALLBACK_URL,
-      CustIP: publicIp.data.ip,
+      CustIP: publicIp,
     };
     const { created_by, updated_by } = await getCreatedByUpdatedBy(req, res);
 
