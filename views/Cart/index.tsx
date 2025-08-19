@@ -81,10 +81,10 @@ function Cart() {
           </Typography>
         </Box>
         <Stack spacing={1} sx={{ background: "white", mx: 6, my: 4, p: 2 }}>
-          <Typography variant="body2" color="inherit">
+          <Typography variant="h6" color="inherit">
             📸 Don’t forget to add co-curricular photos before checkout
           </Typography>
-          <Typography variant="body2" color="inherit">
+          <Typography variant="h6" color="inherit">
             📸 别忘了加购您孩子的课外活动照片
           </Typography>
         </Stack>
@@ -641,10 +641,10 @@ function Cart() {
       </Paper>
       <FlexBox minHeight={260} />
       <Stack spacing={1} sx={{ background: "white", mx: 6, my: 4, p: 2 }}>
-        <Typography variant="body2" color="inherit">
+        <Typography variant="h6" color="inherit">
           📸 Don’t forget to add co-curricular photos before checkout
         </Typography>
-        <Typography variant="body2" color="inherit">
+        <Typography variant="h6" color="inherit">
           📸 别忘了加购您孩子的课外活动照片
         </Typography>
       </Stack>
