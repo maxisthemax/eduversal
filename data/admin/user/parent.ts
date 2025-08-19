@@ -36,8 +36,9 @@ export function useParent(): {
     setFilterModel: React.Dispatch<React.SetStateAction<GridFilterModel>>;
   };
   disabledUser: (id: string, isDisabled: boolean) => Promise<void>;
+  approveUser: (id: string) => Promise<void>;
 } {
-  const [pageModel, setPageModel] = useState({ page: 0, pageSize: 10 });
+  const [pageModel, setPageModel] = useState({ page: 0, pageSize: 100 });
   const [filterModel, setFilterModel] = useState<GridFilterModel>();
 
   // Fetch parent data with pagination
@@ -82,6 +83,13 @@ export function useParent(): {
     refetch();
   };
 
+  const approveUser = async (id: string) => {
+    await axios.post("/admin/user/manualVerifyUser", {
+      parentId: id,
+    });
+    refetch();
+  };
+
   return {
     parentData,
     parentDataById,
@@ -89,5 +97,6 @@ export function useParent(): {
     pagination: { currentPage, totalCount, pageModel, setPageModel },
     filter: { filterModel, setFilterModel },
     disabledUser,
+    approveUser,
   };
 }

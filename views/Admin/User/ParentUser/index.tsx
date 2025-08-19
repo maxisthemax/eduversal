@@ -24,7 +24,8 @@ import { useGetStaffAccess } from "@/data/admin/user/staff";
 function ParentUser() {
   const access = useGetStaffAccess("account_parent");
   const { handleOpenDialog } = useCustomDialog();
-  const { parentData, pagination, status, filter, disabledUser } = useParent();
+  const { parentData, pagination, status, filter, disabledUser, approveUser } =
+    useParent();
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
@@ -112,6 +113,23 @@ function ParentUser() {
                   {...bindMenu(popupState)}
                   onKeyDownCapture={(e) => e.stopPropagation()}
                 >
+                  {!row.is_verified && (
+                    <MenuItem
+                      onClick={async () => {
+                        handleOpenDialog({
+                          allowOutsideClose: false,
+                          title: "Manual Verify User",
+                          description:
+                            "Are you sure you want to manually verify user?",
+                          onConfirm: async () => {
+                            await approveUser(id as string);
+                          },
+                        });
+                      }}
+                    >
+                      Manual Verify
+                    </MenuItem>
+                  )}
                   <MenuItem
                     onClick={async () => {
                       handleOpenDialog({
