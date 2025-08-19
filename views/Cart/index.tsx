@@ -77,7 +77,7 @@ function Cart() {
           }}
         >
           <Typography variant="h5">
-            <b>Your Cart is sEmpty</b>
+            <b>Your Cart is Empty</b>
           </Typography>
         </Box>
         <Stack spacing={1} sx={{ background: "white", mx: 6, my: 4, p: 2 }}>
