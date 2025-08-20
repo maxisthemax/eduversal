@@ -81,7 +81,11 @@ export function useOrder(queryKey?: QueryKey): {
   isUpdating: boolean;
 } {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [pageModel, setPageModel] = useState({ page: 0, pageSize: 100 });
+  const [pageModel, setPageModel] = useState({
+    page: queryKey?.[4] !== undefined ? (queryKey?.[4] as number) : 0,
+    pageSize: 100,
+  });
+
   const [filter, setFilter] = useState<OrderFilter>();
 
   const filteredFilter = filter
@@ -102,9 +106,9 @@ export function useOrder(queryKey?: QueryKey): {
           pageModel.page,
           qs.stringify(filteredFilter),
         ],
-    `admin/sales/order?page=${
-      queryKey?.[4] !== undefined ? queryKey?.[4] : pageModel.page
-    }&pageSize=${pageModel.pageSize}&${qs.stringify(filteredFilter)}`,
+    `admin/sales/order?page=${pageModel.page}&pageSize=${
+      pageModel.pageSize
+    }&${qs.stringify(filteredFilter)}`,
     { isKeepPreviousData: true }
   );
 
