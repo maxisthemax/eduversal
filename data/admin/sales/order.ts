@@ -102,9 +102,9 @@ export function useOrder(queryKey?: QueryKey): {
           pageModel.page,
           qs.stringify(filteredFilter),
         ],
-    `admin/sales/order?page=${pageModel.page}&pageSize=${
-      pageModel.pageSize
-    }&${qs.stringify(filteredFilter)}`,
+    `admin/sales/order?page=${
+      queryKey?.[4] !== undefined ? queryKey?.[4] : pageModel.page
+    }&pageSize=${pageModel.pageSize}&${qs.stringify(filteredFilter)}`,
     { isKeepPreviousData: true }
   );
 

@@ -24,7 +24,11 @@ function OrderDrawer({
       anchor="right"
       PaperProps={{ sx: { width: "60%" } }}
     >
-      <PurchaseDetails orderId={orderData?.id} queryKey={queryKey} />
+      {orderData ? (
+        <PurchaseDetails orderId={orderData?.id} queryKey={queryKey} />
+      ) : (
+        <></>
+      )}
     </Drawer>
   );
 }
