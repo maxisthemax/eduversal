@@ -37,6 +37,7 @@ export function useParent(): {
   };
   disabledUser: (id: string, isDisabled: boolean) => Promise<void>;
   approveUser: (id: string) => Promise<void>;
+  deleteNonVerifiedUser: (id: string) => Promise<void>;
 } {
   const [pageModel, setPageModel] = useState({ page: 0, pageSize: 100 });
   const [filterModel, setFilterModel] = useState<GridFilterModel>();
@@ -90,6 +91,13 @@ export function useParent(): {
     refetch();
   };
 
+  const deleteNonVerifiedUser = async (id: string) => {
+    await axios.post("/admin/user/deleteNonVerifiedUser", {
+      parentId: id,
+    });
+    refetch();
+  };
+
   return {
     parentData,
     parentDataById,
@@ -98,5 +106,6 @@ export function useParent(): {
     filter: { filterModel, setFilterModel },
     disabledUser,
     approveUser,
+    deleteNonVerifiedUser,
   };
 }

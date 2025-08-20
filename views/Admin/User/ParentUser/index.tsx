@@ -24,8 +24,15 @@ import { useGetStaffAccess } from "@/data/admin/user/staff";
 function ParentUser() {
   const access = useGetStaffAccess("account_parent");
   const { handleOpenDialog } = useCustomDialog();
-  const { parentData, pagination, status, filter, disabledUser, approveUser } =
-    useParent();
+  const {
+    parentData,
+    pagination,
+    status,
+    filter,
+    disabledUser,
+    approveUser,
+    deleteNonVerifiedUser,
+  } = useParent();
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
     {
@@ -113,6 +120,22 @@ function ParentUser() {
                   {...bindMenu(popupState)}
                   onKeyDownCapture={(e) => e.stopPropagation()}
                 >
+                  {!row.is_verified && (
+                    <MenuItem
+                      onClick={async () => {
+                        handleOpenDialog({
+                          allowOutsideClose: false,
+                          title: "Delete User",
+                          description: "Are you sure you want to delete user?",
+                          onConfirm: async () => {
+                            await deleteNonVerifiedUser(id as string);
+                          },
+                        });
+                      }}
+                    >
+                      Delete
+                    </MenuItem>
+                  )}
                   {!row.is_verified && (
                     <MenuItem
                       onClick={async () => {
