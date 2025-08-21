@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 
 //*components
 import { OverlayBox } from "@/components/Box";
-import { TextFieldForm } from "@/components/Form";
+import PasswordTextFieldWithHide from "@/components/PasswordTextFieldWithHide";
 
 //*mui
 import Stack from "@mui/material/Stack";
@@ -89,23 +89,18 @@ function ResetPassword() {
                         value={email}
                         disabled={true}
                       />
-                      <TextFieldForm
+                      <PasswordTextFieldWithHide
                         name="new_password"
                         label="New Password"
-                        type="password"
                         formProps={formProps}
                         props={{
-                          required: true,
-                          type: "password",
                           autoComplete: "new-password",
                         }}
                       />
-                      <TextFieldForm
+                      <PasswordTextFieldWithHide
                         name="confirm_new_password"
                         label="Confirm Password"
-                        type="password"
                         formProps={formProps}
-                        props={{ required: true }}
                       />
                       <Button
                         type="submit"

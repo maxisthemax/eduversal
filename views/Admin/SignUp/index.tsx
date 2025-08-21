@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 //*components
+import PasswordTextFieldWithHide from "@/components/PasswordTextFieldWithHide";
 import { useCustomDialog } from "@/components/Dialog";
 import {
   MobileNumberForm,
@@ -183,21 +184,18 @@ function SignUp() {
                           placeholder: "Your Email",
                         }}
                       />
-                      <TextFieldForm
+                      <PasswordTextFieldWithHide
                         name="password"
                         label="Password"
                         formProps={formProps}
                         props={{
-                          required: true,
-                          type: "password",
                           autoComplete: "new-password",
                         }}
                       />
-                      <TextFieldForm
+                      <PasswordTextFieldWithHide
                         name="confirm_password"
                         label="Confirm Password"
                         formProps={formProps}
-                        props={{ required: true, type: "password" }}
                       />
                       <MobileNumberForm
                         name="phone_no"

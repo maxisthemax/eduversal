@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { TextFieldForm, CheckboxForm } from "@/components/Form";
 import { FlexBox, OverlayBox } from "@/components/Box";
 import { useCustomDialog } from "@/components/Dialog";
+import PasswordTextFieldWithHide from "@/components/PasswordTextFieldWithHide";
 
 //*mui
 import Button from "@mui/material/Button";
@@ -104,11 +105,10 @@ function SignIn() {
                       formProps={formProps}
                       props={{ required: true, placeholder: "Your Email" }}
                     />
-                    <TextFieldForm
+                    <PasswordTextFieldWithHide
                       name="password"
                       label="Password"
                       formProps={formProps}
-                      props={{ required: true, type: "password" }}
                     />
                     <Stack direction="row" sx={{ alignItems: "center", pl: 1 }}>
                       <CheckboxForm

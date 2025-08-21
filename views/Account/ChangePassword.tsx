@@ -3,8 +3,8 @@ import { Formik, Form } from "formik";
 
 //*components
 import { FlexBox, OverlayBox, Page } from "@/components/Box";
-import { TextFieldForm } from "@/components/Form";
 import Container from "@mui/material/Container";
+import PasswordTextFieldWithHide from "@/components/PasswordTextFieldWithHide";
 
 //*mui
 import Stack from "@mui/material/Stack";
@@ -86,33 +86,27 @@ function ChangePassword() {
               <Form onSubmit={handleSubmit}>
                 <Container disableGutters sx={{ ml: 0 }}>
                   <Stack spacing={2} sx={{ pt: 2 }}>
-                    <TextFieldForm
+                    <PasswordTextFieldWithHide
                       name="password"
                       label="Password"
                       formProps={formProps}
                       props={{
-                        required: true,
-                        type: "password",
                         autoComplete: "new-password",
                       }}
                     />
-                    <TextFieldForm
+                    <PasswordTextFieldWithHide
                       name="new_password"
                       label="New Password"
                       formProps={formProps}
                       props={{
-                        required: true,
-                        type: "password",
                         autoComplete: "new-password",
                       }}
                     />
-                    <TextFieldForm
+                    <PasswordTextFieldWithHide
                       name="confirm_password"
                       label="Confirm Password"
                       formProps={formProps}
                       props={{
-                        required: true,
-                        type: "password",
                         autoComplete: "new-password",
                       }}
                     />
