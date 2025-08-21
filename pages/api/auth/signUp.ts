@@ -78,7 +78,14 @@ export default async function signUp(
   try {
     const newUser = await prisma.$transaction(async (prisma) => {
       // Check if user already exists
-      const existingUser = await prisma.user.findUnique({ where: { email } });
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          email: {
+            equals: email,
+            mode: "insensitive",
+          },
+        },
+      });
       if (existingUser) {
         return res.status(400).json({
           message: "User already exists",
