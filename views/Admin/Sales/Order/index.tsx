@@ -425,7 +425,8 @@ function Order() {
               "sales",
               "order",
               "page",
-              pagination.currentPage,
+              pagination.pageModel.page,
+              pagination.pageModel.pageSize,
               qs.stringify(filter),
             ]}
             onClose={() => {
