@@ -44,7 +44,14 @@ export default async function resendVerification(
 
   try {
     // Check if user exists and is not verified
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: email,
+          mode: "insensitive",
+        },
+      },
+    });
     if (!user || user.is_verified) {
       return res.status(404).json({
         message: "User not found or already verified",

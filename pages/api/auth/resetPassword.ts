@@ -47,8 +47,13 @@ export default async function resetPassword(
   try {
     await prisma.$transaction(async (prisma) => {
       // Find the verification entry
-      const user = await prisma.user.findUnique({
-        where: { email },
+      const user = await prisma.user.findFirst({
+        where: {
+          email: {
+            equals: email,
+            mode: "insensitive",
+          },
+        },
         include: { verification: true },
       });
 

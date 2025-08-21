@@ -40,9 +40,12 @@ export default async function signIn(
 
   try {
     // Find the user in the database
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: {
-        email,
+        email: {
+          equals: email,
+          mode: "insensitive",
+        },
         role: is_admin ? { in: ["ADMIN", "SUPERADMIN"] } : "USER",
         is_disabled: false,
       },

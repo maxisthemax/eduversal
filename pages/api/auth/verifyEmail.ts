@@ -36,8 +36,13 @@ export default async function verifyEmail(
 
   try {
     // Find the user with the matching email and include verification details
-    const user = await prisma.user.findUnique({
-      where: { email: email as string },
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: email,
+          mode: "insensitive",
+        },
+      },
       include: { verification: true },
     });
 
