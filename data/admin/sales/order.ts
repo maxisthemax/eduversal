@@ -85,8 +85,11 @@ export function useOrder(queryKey?: QueryKey): {
     page: queryKey?.[4] !== undefined ? (queryKey?.[4] as number) : 0,
     pageSize: queryKey?.[5] !== undefined ? (queryKey?.[5] as number) : 100,
   });
-
-  const [filter, setFilter] = useState<OrderFilter>();
+  const [filter, setFilter] = useState<OrderFilter>(
+    (queryKey?.[6]
+      ? (qs.parse(queryKey?.[6] as string) as OrderFilter)
+      : {}) as OrderFilter
+  );
 
   const filteredFilter = filter
     ? Object.fromEntries(
@@ -97,7 +100,15 @@ export function useOrder(queryKey?: QueryKey): {
   // Fetch order data with pagination
   const { data, status, isLoading, isRefetching, refetch } = useQueryFetch(
     queryKey
-      ? queryKey
+      ? [
+          queryKey[0],
+          queryKey[1],
+          queryKey[2],
+          queryKey[3],
+          queryKey[4],
+          queryKey[5],
+          qs.stringify(filteredFilter),
+        ]
       : [
           "admin",
           "sales",
