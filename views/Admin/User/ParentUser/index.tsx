@@ -104,6 +104,12 @@ function ParentUser() {
       headerName: "State",
       minWidth: 100,
     },
+    {
+      field: "created_at",
+      headerName: "Created At",
+      minWidth: 200,
+      type: "dateTime",
+    },
     access.edit && {
       field: "button",
       headerName: "",
