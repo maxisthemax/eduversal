@@ -30,17 +30,24 @@ export default async function handler(
         //create new order
         const { parentId } = req.body;
 
-        await prisma.$transaction([
-          prisma.user.update({
+        await prisma.$transaction(async (prisma) => {
+          await prisma.user.update({
             where: { id: parentId },
             data: {
               is_verified: true,
             },
-          }),
-          prisma.verification.delete({
+          });
+
+          const verification = await prisma.verification.findFirst({
             where: { user_id: parentId },
-          }),
-        ]);
+          });
+
+          if (verification) {
+            await prisma.verification.delete({
+              where: { user_id: parentId },
+            });
+          }
+        });
 
         // Return the newly created product type
         return res.status(201).json({ message: "Success" });
