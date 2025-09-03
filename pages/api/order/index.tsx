@@ -209,7 +209,7 @@ export default async function handler(
 
           const paymentId = `${newOrder.order_no}_${formatDate(
             new Date(),
-            "yyyyMMddHHmmssSS"
+            "yyMMddHHmmss"
           )}`;
 
           const queryData = {

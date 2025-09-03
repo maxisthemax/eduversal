@@ -263,7 +263,7 @@ function PurchaseDetails() {
                       OrderNumber: orderData.order_no,
                       PaymentID: `${orderData.order_no}_${formatDate(
                         new Date(),
-                        "yyyyMMddHHmmssSS"
+                        "yyMMddHHmmss"
                       )}`,
                       Amount: orderData.price.toFixed(2),
                       CurrencyCode: "MYR",
@@ -293,7 +293,7 @@ function PurchaseDetails() {
                   OrderNumber: orderData.order_no,
                   PaymentID: `${orderData.order_no}_${formatDate(
                     new Date(),
-                    "yyyyMMddHHmmssSS"
+                    "yyMMddHHmmss"
                   )}`,
                   Amount: orderData.price.toFixed(2),
                   CurrencyCode: "MYR",
