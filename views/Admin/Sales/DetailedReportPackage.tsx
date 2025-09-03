@@ -177,6 +177,7 @@ function DetailedReportPackage() {
                 [`${item.photoName}•none•photoOnly`]: photoOnly,
                 photoName: item.photoName,
                 photoId: item.photoId,
+                orderNo: order.order.order_no,
                 name: item.name,
                 id: `${order.id}_${index}`,
               };
@@ -244,7 +245,7 @@ function DetailedReportPackage() {
 
   const summaryRow = useMemo(() => {
     if (detailedReportData?.result?.length > 0) {
-      const { no, ...total } = sumGroupedNumericFields(
+      const { no, orderNo, ...total } = sumGroupedNumericFields(
         detailedReportData.result
       );
       const totalRow = {
@@ -252,6 +253,7 @@ function DetailedReportPackage() {
         id: "total",
         name: "Total",
         no_1: no,
+        order_no_1: orderNo,
       };
       return totalRow;
     } else return {};
@@ -261,6 +263,16 @@ function DetailedReportPackage() {
     {
       field: "no",
       headerName: "No",
+      headerAlign: "center",
+      align: "center",
+      minWidth: 80,
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
+    },
+    {
+      field: "orderNo",
+      headerName: "Order No.",
       headerAlign: "center",
       align: "center",
       minWidth: 80,

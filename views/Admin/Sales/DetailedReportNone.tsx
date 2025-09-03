@@ -178,6 +178,7 @@ function DetailedReportPackage({ type }: { type: "INDIVIDUAL" | "GROUP" }) {
                 [`${item.photoName}•none•photoOnly`]: photoOnly,
                 photoName: item.photoName,
                 photoId: item.photoId,
+                orderNo: order.order.order_no,
                 name: item.name,
                 id: `${order.id}_${index}`,
               };
@@ -245,7 +246,7 @@ function DetailedReportPackage({ type }: { type: "INDIVIDUAL" | "GROUP" }) {
 
   const summaryRow = useMemo(() => {
     if (detailedReportData?.result?.length > 0) {
-      const { no, ...total } = sumGroupedNumericFields(
+      const { no, orderNo, ...total } = sumGroupedNumericFields(
         detailedReportData.result
       );
       const totalRow = {
@@ -253,6 +254,7 @@ function DetailedReportPackage({ type }: { type: "INDIVIDUAL" | "GROUP" }) {
         id: "total",
         name: "Total",
         no_1: no,
+        order_no_1: orderNo,
       };
       return totalRow;
     } else return {};
@@ -262,6 +264,16 @@ function DetailedReportPackage({ type }: { type: "INDIVIDUAL" | "GROUP" }) {
     {
       field: "no",
       headerName: "No",
+      headerAlign: "center",
+      align: "center",
+      minWidth: 80,
+      disableColumnMenu: true,
+      sortable: false,
+      disableReorder: true,
+    },
+    {
+      field: "orderNo",
+      headerName: "Order No.",
       headerAlign: "center",
       align: "center",
       minWidth: 80,
