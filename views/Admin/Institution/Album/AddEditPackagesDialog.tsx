@@ -235,8 +235,10 @@ function AddEditPackagesDialogForm({
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         const inValid = some(
-          albumsData.map((album) => {
-            const findAlbum = albumsData.find((item) => item.id === album.id);
+          values.albums.map((album) => {
+            const findAlbum = albumsData.find(
+              (item) => item.id === album.album_id
+            );
             return findAlbum.is_disabled;
           }),
           Boolean
