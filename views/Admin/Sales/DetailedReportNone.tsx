@@ -238,6 +238,7 @@ function DetailedReportPackage({ type }: { type: "INDIVIDUAL" | "GROUP" }) {
             ...newData,
             photoPrice: price[key],
             shippingPrice: shippingPrice[key],
+            orderNo: data[0]?.orderNo,
           });
         });
         return { result: newResult, columns: newColumns, group };
