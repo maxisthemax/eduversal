@@ -10,6 +10,7 @@ import uniqBy from "lodash/uniqBy";
 import sumBy from "lodash/sumBy";
 import isEmpty from "lodash/isEmpty";
 import find from "lodash/find";
+import uniq from "lodash/uniq";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
@@ -237,11 +238,11 @@ function DetailedReportPackage() {
             ...newData,
             photoPrice: price[key],
             shippingPrice: shippingPrice[key],
-            orderNo: data
-              .map(({ orderNo }) => {
+            orderNo: uniq(
+              data.map(({ orderNo }) => {
                 return orderNo;
               })
-              .join(", "),
+            ).join(", "),
           });
         });
         return { result: newResult, columns: newColumns, group };
