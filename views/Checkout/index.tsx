@@ -64,7 +64,19 @@ const validationSchema = yup.object({
         email: yup
           .string()
           .email("Invalid email format")
-          .required("Email is required"),
+          .required("Email is required")
+          .test("forbidden-email", "This email is not allowed", (value) => {
+            if (!value) return true;
+            const forbiddenWords = [
+              "admin",
+              "administrator",
+              "root",
+              "support",
+            ];
+            return !forbiddenWords.some((word) =>
+              value.toLowerCase().includes(word)
+            );
+          }),
         phone_no: yup.string().required("Phone No is required"),
         address_1: yup.string().required("Address 1 No is required"),
         postcode: yup.string().required("Postcode is required"),
