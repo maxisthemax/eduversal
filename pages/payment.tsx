@@ -55,7 +55,7 @@ function Payment({
               sx={{ whiteSpace: "break-spaces" }}
             >
               {
-                "Your payment has been processed successfully.\nYou can now view your order details and\ndownload any purchased items."
+                "Your payment has been processed successfully.\nYou can now view your order details."
               }
             </Typography>
             <Button
