@@ -119,7 +119,7 @@ function Album() {
                       md: album.product_type.type === "INDIVIDUAL" ? 3 : 4,
                     }}
                   >
-                    <Stack>
+                    <Stack sx={{ alignItems: "center" }}>
                       <Button
                         sx={{
                           p: 0,
@@ -147,6 +147,7 @@ function Album() {
                           }}
                         />
                       </Button>
+                      <Typography>{name}</Typography>
                     </Stack>
                   </Grid>
                 );
