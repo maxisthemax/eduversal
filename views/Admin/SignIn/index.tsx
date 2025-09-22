@@ -24,12 +24,7 @@ const validationSchema = yup.object({
   email: yup
     .string()
     .email("Enter a valid email")
-    .required("Email is required")
-    .test("forbidden-email", "This email is not allowed", (value) => {
-      if (!value) return true;
-      const forbiddenWords = ["admin", "administrator", "root", "support"];
-      return !forbiddenWords.some((word) => value.toLowerCase().includes(word));
-    }),
+    .required("Email is required"),
   password: yup.string().required("Password is required"),
 });
 

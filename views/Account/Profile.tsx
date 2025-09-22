@@ -22,7 +22,13 @@ import { useUser } from "@/data/user";
 const validationSchema = yup.object({
   first_name: yup.string().required("First Name is required"),
   last_name: yup.string().required("Last Name is required"),
-  phone_no: yup.string().required("Phone No is required"),
+  phone_no: yup
+    .string()
+    .required("Phone No is required")
+    .test("forbidden-phone", "Invalid Phone No", (value) => {
+      if (!value) return true;
+      return !value.startsWith("0");
+    }),
   address_1: yup.string().required("Address 1 No is required"),
   postcode: yup.string().required("Postcode is required"),
   state: yup.string().required("State is required"),

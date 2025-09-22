@@ -55,7 +55,13 @@ const validationSchema = yup.object({
     .max(16, "Password must be at most 16 characters")
     .required("Password is required")
     .oneOf([yup.ref("password")], "Your passwords do not match."),
-  phone_no: yup.string().required("Phone No is required"),
+  phone_no: yup
+    .string()
+    .required("Phone No is required")
+    .test("forbidden-phone", "Invalid Phone No", (value) => {
+      if (!value) return true;
+      return !value.startsWith("0");
+    }),
   address_1: yup.string().required("Address 1 No is required"),
   postcode: yup.string().required("Postcode is required"),
   state: yup.string().required("State is required"),
