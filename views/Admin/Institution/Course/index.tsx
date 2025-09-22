@@ -4,6 +4,7 @@ import PopupState, {
   bindMenu,
   bindTrigger,
 } from "material-ui-popup-state";
+import { toast } from "react-toastify";
 
 //*components
 import { OverlayBox, AdminPage } from "@/components/Box";
@@ -24,6 +25,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 
 //*data
 import { useInstitutions } from "@/data/admin/institution/institution";
@@ -61,7 +63,34 @@ function Course() {
     {
       field: "access_code",
       headerName: "Access Code",
-      width: 200,
+      width: 210,
+      renderCell: ({ formattedValue }) => {
+        return (
+          <Stack
+            direction={"row"}
+            alignItems="center"
+            spacing={1}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <Typography>{formattedValue}</Typography>
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                navigator.clipboard.writeText(formattedValue);
+                toast.success("Access code copied to clipboard", {
+                  autoClose: 1000,
+                });
+              }}
+            >
+              <CustomIcon fontSizeSx="16px" icon="content_copy" />
+            </IconButton>
+          </Stack>
+        );
+      },
     },
     {
       field: "access_code_status",
