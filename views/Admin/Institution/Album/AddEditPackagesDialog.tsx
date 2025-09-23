@@ -120,7 +120,9 @@ function AddEditPackagesDialogForm({
 
   return !addEdit ? (
     <>
-      <DialogContent>
+      <DialogContent
+        sx={{ overflow: "auto", maxHeight: getFullHeightSize(16) }}
+      >
         <Grid container spacing={2}>
           {access.add && (
             <Grid
