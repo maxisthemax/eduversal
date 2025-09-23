@@ -53,7 +53,7 @@ const validationSchema = yup.object({
   phone_no: yup
     .string()
     .required("Phone No is required")
-    .test("forbidden-phone", "Invalid Phone No", (value) => {
+    .test("forbidden-phone", "Phone No cannot start with 0", (value) => {
       if (!value) return true;
       return !value.startsWith("0");
     }),
