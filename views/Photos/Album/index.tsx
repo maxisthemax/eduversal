@@ -118,8 +118,9 @@ function Album() {
                       sm: 6,
                       md: album.product_type.type === "INDIVIDUAL" ? 3 : 4,
                     }}
+                    sx={{ textAlign: "center" }}
                   >
-                    <Stack sx={{ alignItems: "center" }}>
+                    <Stack>
                       <Button
                         sx={{
                           p: 0,
@@ -147,8 +148,8 @@ function Album() {
                           }}
                         />
                       </Button>
-                      <Typography>{name}</Typography>
                     </Stack>
+                    <Typography>{name}</Typography>
                   </Grid>
                 );
               }
