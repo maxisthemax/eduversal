@@ -101,6 +101,7 @@ export default async function courseHandler(
               },
             },
           },
+          orderBy: { created_at: "desc" },
         });
 
         // Return the courses
