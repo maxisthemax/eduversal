@@ -36,6 +36,7 @@ export default async function signUp(
     postcode,
     state,
     city,
+    institutions,
   } = req.body;
 
   const type = req.body?.type ?? "USER";
@@ -53,6 +54,7 @@ export default async function signUp(
       "postcode",
       "state",
       "city",
+      "institutions",
     ])
   ) {
     return;
@@ -116,6 +118,7 @@ export default async function signUp(
           postcode,
           state,
           city,
+          institutions,
         },
       });
 

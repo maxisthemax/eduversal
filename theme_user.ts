@@ -13,15 +13,6 @@ const baseTheme: ThemeOptions = {
     MuiTextField: {
       defaultProps: {
         fullWidth: true,
-        slotProps: {
-          input: {
-            sx: {
-              height: "55px",
-              fontSize: "16px",
-              py: "18px",
-            },
-          },
-        },
       },
     },
     MuiSelect: {

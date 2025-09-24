@@ -116,7 +116,7 @@ function Dashboard() {
                   ) : (
                     <Typography variant="h4">
                       RM{" "}
-                      {(getTotalSale?.data?.data._sum?.price ?? 0).toFixed(2)}
+                      {(getTotalSale?.data?.data?._sum?.price ?? 0).toFixed(2)}
                     </Typography>
                   )}
                 </Stack>

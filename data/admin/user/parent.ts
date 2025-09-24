@@ -15,8 +15,12 @@ import { UserData } from "@/data/user";
 //*utils
 import axios from "@/utils/axios";
 
+//*data
+import { useInstitutions } from "../institution/institution";
+
 export interface ParentData extends UserData {
   contact_number_format: string;
+  institutions_name_format?: string;
 }
 
 export function useParent(): {
@@ -38,17 +42,30 @@ export function useParent(): {
   disabledUser: (id: string, isDisabled: boolean) => Promise<void>;
   approveUser: (id: string) => Promise<void>;
   deleteNonVerifiedUser: (id: string) => Promise<void>;
+  setInstitution: React.Dispatch<React.SetStateAction<string>>;
+  institution: string;
 } {
+  const [institution, setInstitution] = useState("");
   const [pageModel, setPageModel] = useState({ page: 0, pageSize: 100 });
   const [filterModel, setFilterModel] = useState<GridFilterModel>();
+  const { institutionsDataById, status: institutionsStatus } =
+    useInstitutions();
 
   // Fetch parent data with pagination
   const searchQuery = filterModel?.quickFilterValues?.[0] || undefined;
   const { data, status, isLoading, refetch } = useQueryFetch(
-    ["admin", "user", "parent", "page", pageModel.page, searchQuery],
-    `admin/user/parent?page=${pageModel.page}&pageSize=${pageModel.pageSize}${
-      searchQuery ? `&search=${searchQuery}` : ""
-    }`,
+    [
+      "admin",
+      "user",
+      "parent",
+      "page",
+      institution,
+      pageModel.page,
+      searchQuery,
+    ],
+    `admin/user/parent?page=${pageModel.page}&pageSize=${
+      pageModel.pageSize
+    }&institution=${institution}${searchQuery ? `&search=${searchQuery}` : ""}`,
     { isKeepPreviousData: true }
   );
 
@@ -58,7 +75,7 @@ export function useParent(): {
 
   // Memoize parent data
   const parentData = useMemo(() => {
-    if (!isLoading && parentQueryData) {
+    if (!isLoading && parentQueryData && institutionsStatus !== "pending") {
       return parentQueryData.map((data) => ({
         ...data,
         created_at: new Date(data.created_at),
@@ -67,9 +84,15 @@ export function useParent(): {
         address_format: `${data?.address_1}${
           data.address_2 ? ", \n" + data.address_2 : ""
         },\n${data.postcode}, ${data.city}, ${data.state}`,
+        institutions_name_format: data.institutions
+          .map((institutionId) => {
+            const institution = institutionsDataById[institutionId];
+            return institution ? institution.name : institutionId;
+          })
+          .join(", "),
       }));
     } else return [];
-  }, [parentQueryData, isLoading]);
+  }, [parentQueryData, isLoading, institutionsStatus, institutionsDataById]);
 
   // Memoize parent data by id
   const parentDataById = useMemo(() => {
@@ -107,5 +130,7 @@ export function useParent(): {
     disabledUser,
     approveUser,
     deleteNonVerifiedUser,
+    setInstitution,
+    institution,
   };
 }

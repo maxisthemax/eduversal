@@ -3,6 +3,10 @@ import { Form, Formik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+//*lodash
+import orderBy from "lodash/orderBy";
+import find from "lodash/find";
+
 //*components
 import PasswordTextFieldWithHide from "@/components/PasswordTextFieldWithHide";
 import { useCustomDialog } from "@/components/Dialog";
@@ -10,16 +14,22 @@ import {
   MobileNumberForm,
   TextFieldForm,
   StateSelectTextFieldForm,
+  TextFieldAutocompleteForm,
 } from "@/components/Form";
 import { OverlayBox } from "@/components/Box";
 
 //*mui
+import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
+
+//*data
+import { useInstitutions } from "@/data/public/institution";
 
 //*utils
 import axios from "@/utils/axios";
@@ -66,11 +76,14 @@ const validationSchema = yup.object({
   postcode: yup.string().required("Postcode is required"),
   state: yup.string().required("State is required"),
   city: yup.string().required("City is required"),
+  institutions: yup.array().min(1, "School / Institution is required"),
 });
 
 function SignUp() {
   const { push } = useRouter();
   const { handleOpenDialog } = useCustomDialog();
+  const { institutionsData, status } = useInstitutions();
+  if (status === "loading") return <LinearProgress />;
 
   return (
     <Box
@@ -103,6 +116,7 @@ function SignUp() {
               postcode: "",
               state: "",
               city: "",
+              institutions: [],
             }}
             validationSchema={validationSchema}
             onSubmit={async ({
@@ -117,6 +131,7 @@ function SignUp() {
               postcode,
               state,
               city,
+              institutions,
             }) => {
               await axios.post(
                 "auth/signUp",
@@ -132,6 +147,7 @@ function SignUp() {
                   postcode,
                   state,
                   city,
+                  institutions,
                 },
                 undefined,
                 true
@@ -226,6 +242,32 @@ function SignUp() {
                         onCountryChange={(e) =>
                           setFieldValue("country_code", e)
                         }
+                      />
+                      <Autocomplete
+                        fullWidth
+                        multiple
+                        options={orderBy(
+                          institutionsData,
+                          ["name"],
+                          ["asc"]
+                        ).map(({ id }) => id)}
+                        getOptionLabel={(id) => {
+                          const findOption = find(institutionsData, { id });
+                          return findOption?.name;
+                        }}
+                        onChange={(e, value) => {
+                          setFieldValue("institutions", value);
+                        }}
+                        value={values["institutions"]}
+                        renderInput={(params) => (
+                          <TextFieldAutocompleteForm
+                            params={params}
+                            name="institutions"
+                            label="School / Institution"
+                            formProps={formProps}
+                          />
+                        )}
+                        disableCloseOnSelect
                       />
                       <TextFieldForm
                         name="address_1"

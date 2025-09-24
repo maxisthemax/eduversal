@@ -38,6 +38,7 @@ export async function middleware(req: NextRequest) {
       "/api/auth/signIn",
       "/api/auth/signUp",
       "/api/auth/verifyEmail",
+      "/api/public/getInstitutions",
       "/payment",
     ].includes(pathname)
   ) {

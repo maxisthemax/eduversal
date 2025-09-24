@@ -1,11 +1,16 @@
 import * as yup from "yup";
 import { Formik, Form } from "formik";
 
+//*lodash
+import find from "lodash/find";
+import orderBy from "lodash/orderBy";
+
 //*components
 import { FlexBox, OverlayBox, Page } from "@/components/Box";
 import {
   MobileNumberForm,
   StateSelectTextFieldForm,
+  TextFieldAutocompleteForm,
   TextFieldForm,
 } from "@/components/Form";
 
@@ -15,9 +20,11 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import LinearProgress from "@mui/material/LinearProgress";
+import Autocomplete from "@mui/material/Autocomplete";
 
 //*data
 import { useUser } from "@/data/user";
+import { useInstitutions } from "@/data/admin/institution/institution";
 
 const validationSchema = yup.object({
   first_name: yup.string().required("First Name is required"),
@@ -29,6 +36,7 @@ const validationSchema = yup.object({
       if (!value) return true;
       return !value.startsWith("0");
     }),
+  institutions: yup.array().min(1, "School / Institution is required"),
   address_1: yup.string().required("Address 1 No is required"),
   postcode: yup.string().required("Postcode is required"),
   state: yup.string().required("State is required"),
@@ -37,8 +45,10 @@ const validationSchema = yup.object({
 
 function Profile() {
   const { data, updateUserData, status } = useUser();
+  const { institutionsData, status: institutionsStatus } = useInstitutions();
 
-  if (status === "pending") return <LinearProgress />;
+  if (status === "pending" || institutionsStatus === "pending")
+    return <LinearProgress />;
 
   return (
     <Page
@@ -57,6 +67,7 @@ function Profile() {
           postcode: data.postcode,
           state: data.state,
           city: data.city,
+          institutions: data.institutions,
         }}
         validationSchema={validationSchema}
         onSubmit={async ({
@@ -69,6 +80,7 @@ function Profile() {
           postcode,
           state,
           city,
+          institutions,
         }) => {
           await updateUserData({
             first_name,
@@ -80,6 +92,7 @@ function Profile() {
             postcode,
             state,
             city,
+            institutions,
           });
         }}
       >
@@ -146,6 +159,30 @@ function Profile() {
                       countryCallingCode={values.country_code}
                       onCountryChange={(e) => setFieldValue("country_code", e)}
                     />
+                    <Autocomplete
+                      fullWidth
+                      multiple
+                      options={orderBy(institutionsData, ["name"], ["asc"]).map(
+                        ({ id }) => id
+                      )}
+                      getOptionLabel={(id) => {
+                        const findOption = find(institutionsData, { id });
+                        return findOption?.name;
+                      }}
+                      onChange={(e, value) => {
+                        setFieldValue("institutions", value);
+                      }}
+                      value={values["institutions"]}
+                      renderInput={(params) => (
+                        <TextFieldAutocompleteForm
+                          params={params}
+                          name="institutions"
+                          label="School / Institution"
+                          formProps={formProps}
+                        />
+                      )}
+                      disableCloseOnSelect
+                    />
                     <TextFieldForm
                       name="address_1"
                       label="Address 1"
@@ -157,7 +194,6 @@ function Profile() {
                       label="Address 2"
                       formProps={formProps}
                     />
-
                     <Stack
                       direction={{ xs: "column", sm: "column", md: "row" }}
                       spacing={2}

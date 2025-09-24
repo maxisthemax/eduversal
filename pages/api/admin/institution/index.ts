@@ -20,7 +20,7 @@ export default async function institutionsHandler(
         // Fetch all institutions with their types
         const institutions = await prisma.institution.findMany({
           include: { type: true },
-          orderBy: { name: "desc" },
+          orderBy: { name: "asc" },
         });
 
         // Return the institutions

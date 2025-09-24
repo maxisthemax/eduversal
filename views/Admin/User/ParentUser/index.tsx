@@ -15,13 +15,16 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
 import { useParent } from "@/data/admin/user/parent";
 import { useGetStaffAccess } from "@/data/admin/user/staff";
+import { useInstitutions } from "@/data/admin/institution/institution";
 
 function ParentUser() {
+  const { institutionsData } = useInstitutions();
   const access = useGetStaffAccess("account_parent");
   const { handleOpenDialog } = useCustomDialog();
   const {
@@ -32,6 +35,8 @@ function ParentUser() {
     disabledUser,
     approveUser,
     deleteNonVerifiedUser,
+    institution,
+    setInstitution,
   } = useParent();
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
@@ -43,6 +48,11 @@ function ParentUser() {
     {
       field: "last_name",
       headerName: "Last Name",
+      minWidth: 200,
+    },
+    {
+      field: "institutions_name_format",
+      headerName: "Institutions",
       minWidth: 200,
     },
     {
@@ -192,6 +202,26 @@ function ParentUser() {
 
   return (
     <Box sx={{ p: 2 }}>
+      <Box sx={{ position: "absolute", zIndex: 1, pl: 1, pt: 1 }}>
+        <TextField
+          name="institutionId"
+          select
+          label="Institution"
+          value={institution}
+          onChange={(e) => setInstitution(e.target.value)}
+          fullWidth={false}
+          sx={{ minWidth: 300 }}
+        >
+          <MenuItem key="all" value="all">
+            All
+          </MenuItem>
+          {institutionsData?.map((institution) => (
+            <MenuItem key={institution.id} value={institution.id}>
+              {institution.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Box>
       <DataGrid
         loading={status === "pending"}
         height="maxHeight"

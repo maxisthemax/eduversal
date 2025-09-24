@@ -55,6 +55,7 @@ export interface UserData {
   permissions: PermissionsData;
   download_images?: DownloadImageData[];
   is_disabled: boolean;
+  institutions: string[];
 
   created_at: Date;
   updated_at: Date;

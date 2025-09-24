@@ -40,6 +40,7 @@ export default async function handler(
             download_images: true,
             is_disabled: true,
             permissions: true,
+            institutions: true,
           },
         });
 
@@ -76,6 +77,7 @@ export default async function handler(
           postcode,
           state,
           city,
+          institutions,
         } = req.body;
 
         // Create the new product type
@@ -95,6 +97,7 @@ export default async function handler(
             postcode,
             state,
             city,
+            institutions,
           },
         });
 

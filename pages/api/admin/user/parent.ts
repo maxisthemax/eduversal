@@ -14,7 +14,7 @@ export default async function handler(
   try {
     switch (req.method) {
       case "GET": {
-        const { page = 0, pageSize = 10 } = req.query;
+        const { page = 0, pageSize = 10, institution } = req.query;
         const search = (req.query?.search as string) ?? undefined;
         const skip = Number(page) * Number(pageSize);
 
@@ -55,6 +55,12 @@ export default async function handler(
         // Fetch users with pagination
         const users = await prisma.user.findMany({
           where: {
+            ...(institution &&
+              institution !== "all" && {
+                institutions: {
+                  has: institution as string,
+                },
+              }),
             role: "USER",
             ...(search
               ? {

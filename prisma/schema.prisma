@@ -25,6 +25,7 @@ model User {
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   verification    Verification?
+  institutions    String[]
   role            UserRole      @default(USER)
   userCourse      UserCourse[]
   Order           Order[]
