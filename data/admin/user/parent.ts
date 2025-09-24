@@ -45,7 +45,7 @@ export function useParent(): {
   setInstitution: React.Dispatch<React.SetStateAction<string>>;
   institution: string;
 } {
-  const [institution, setInstitution] = useState("");
+  const [institution, setInstitution] = useState("all");
   const [pageModel, setPageModel] = useState({ page: 0, pageSize: 100 });
   const [filterModel, setFilterModel] = useState<GridFilterModel>();
   const { institutionsDataById, status: institutionsStatus } =
