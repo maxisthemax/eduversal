@@ -45,6 +45,9 @@ import {
   ProductVariationOption,
 } from "@/data/admin/productVariation";
 
+//*helpers
+import { t } from "@/helpers/useTranslation";
+
 function PhotoCotent() {
   const [addedToCart, setAddedToCart] = useState(false);
   const path = usePathname();
@@ -474,7 +477,7 @@ function PhotoCotent() {
                 </Box>
                 <Box>
                   <Typography variant="body1" gutterBottom>
-                    {"Child's Name"}
+                    {t("Child's Name")}
                   </Typography>
                   <TextField
                     value={

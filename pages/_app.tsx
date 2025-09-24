@@ -23,6 +23,9 @@ import theme from "theme";
 import themeuser from "theme_user";
 import "./global.css";
 
+//*helpers
+import { useTranslation } from "@/helpers/useTranslation";
+
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +37,7 @@ const queryClient = new QueryClient({
 
 export default function App({ Component, pageProps }: AppProps) {
   const pathName = usePathname()?.split("/")[1];
+  useTranslation();
 
   useEffect(() => {
     //if (process.env.NEXT_PUBLIC_URL === "http://localhost:5000") return;

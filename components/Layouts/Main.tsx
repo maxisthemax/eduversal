@@ -2,6 +2,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 
 //*components
 import CustomIcon, { GoogleIcon } from "../Icons/CustomIcon";
@@ -28,10 +29,13 @@ import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Badge from "@mui/material/Badge";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 import { useGetIsMobileSize } from "@/helpers/view";
+import { languageList } from "@/helpers/useTranslation";
 
 //*data
 import { useUser } from "@/data/user";
@@ -285,6 +289,44 @@ function Main({ children }: { children: React.ReactNode }) {
                   </TabList>
                 </TabContext>
               )}
+              <PopupState key="menu" variant="popover" popupId="popup-menu">
+                {(popupState) => (
+                  <>
+                    <Box sx={{ alignContent: "center" }}>
+                      <IconButton size="small" {...bindTrigger(popupState)}>
+                        <CustomIcon icon="language" fontSizeSx="20px" />
+                      </IconButton>
+                    </Box>
+                    <Menu
+                      {...bindMenu(popupState)}
+                      onKeyDownCapture={(e) => e.stopPropagation()}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                      }}
+                    >
+                      {languageList.map((lang) => (
+                        <MenuItem
+                          key={lang.code}
+                          onClick={() => {
+                            localStorage.setItem(
+                              "language",
+                              JSON.stringify(lang)
+                            );
+                            window.location.reload();
+                          }}
+                        >
+                          {lang.name}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </>
+                )}
+              </PopupState>
             </Stack>
           </Container>
         </AppBar>
