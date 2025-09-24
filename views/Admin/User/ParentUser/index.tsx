@@ -16,6 +16,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import LinearProgress from "@mui/material/LinearProgress";
 import { GridColDef } from "@mui/x-data-grid";
 
 //*data
@@ -37,6 +38,7 @@ function ParentUser() {
     deleteNonVerifiedUser,
     institution,
     setInstitution,
+    fetchStatus,
   } = useParent();
 
   const columns: GridColDef<(typeof undefined)[number]>[] = [
@@ -222,6 +224,7 @@ function ParentUser() {
           ))}
         </TextField>
       </Box>
+      {fetchStatus === "fetching" && <LinearProgress />}
       <DataGrid
         loading={status === "pending"}
         height="maxHeight"

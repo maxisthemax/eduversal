@@ -44,6 +44,7 @@ export function useParent(): {
   deleteNonVerifiedUser: (id: string) => Promise<void>;
   setInstitution: React.Dispatch<React.SetStateAction<string>>;
   institution: string;
+  fetchStatus: string;
 } {
   const [institution, setInstitution] = useState("all");
   const [pageModel, setPageModel] = useState({ page: 0, pageSize: 100 });
@@ -53,7 +54,7 @@ export function useParent(): {
 
   // Fetch parent data with pagination
   const searchQuery = filterModel?.quickFilterValues?.[0] || undefined;
-  const { data, status, isLoading, refetch } = useQueryFetch(
+  const { data, status, isLoading, refetch, fetchStatus } = useQueryFetch(
     [
       "admin",
       "user",
@@ -132,5 +133,6 @@ export function useParent(): {
     deleteNonVerifiedUser,
     setInstitution,
     institution,
+    fetchStatus,
   };
 }
