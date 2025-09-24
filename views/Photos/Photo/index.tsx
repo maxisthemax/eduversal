@@ -2,6 +2,7 @@ import { useParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { formatDate } from "date-fns";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 //*lodash
 import find from "lodash/find";
@@ -280,56 +281,66 @@ function PhotoCotent() {
                 flexDirection: "column",
               }}
             >
-              {userPackage?.packageId === "none" ? (
-                <Paper
-                  variant="elevation"
-                  elevation={0}
-                  component="img"
-                  src={photo.display_url}
-                  sx={{
-                    width: "100%",
-                    aspectRatio: "1/1",
-                    objectFit: "contain",
-                    backgroundColor: "#f2f2f2",
-                  }}
-                />
-              ) : find(albumPackage, { id: userPackage?.packageId })
-                  .preview_url ? (
-                <Paper
-                  variant="elevation"
-                  elevation={0}
-                  component="img"
-                  src={
-                    find(albumPackage, { id: userPackage?.packageId })
-                      .preview_url
-                  }
-                  sx={{
-                    width: "100%",
-                    aspectRatio: "1/1",
-                    objectFit: "contain",
-                    backgroundColor: "#f2f2f2",
-                  }}
-                />
-              ) : (
-                <Paper
-                  variant="elevation"
-                  elevation={0}
-                  sx={{
-                    width: "100%",
-                    aspectRatio: "1/1",
-                    objectFit: "contain",
-                    backgroundColor: "#f2f2f2",
-                    textAlign: "center",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+              <TransformWrapper>
+                <TransformComponent
+                  contentStyle={{ width: "100%" }}
+                  wrapperStyle={{ width: "100%", cursor: "pointer" }}
                 >
-                  <Typography variant="h4">
-                    {find(albumPackage, { id: userPackage?.packageId }).name}
-                  </Typography>
-                </Paper>
-              )}
+                  {userPackage?.packageId === "none" ? (
+                    <Paper
+                      variant="elevation"
+                      elevation={0}
+                      component="img"
+                      src={photo.display_url}
+                      sx={{
+                        width: "100%",
+                        aspectRatio: "1/1",
+                        objectFit: "contain",
+                        backgroundColor: "#f2f2f2",
+                      }}
+                    />
+                  ) : find(albumPackage, { id: userPackage?.packageId })
+                      .preview_url ? (
+                    <Paper
+                      variant="elevation"
+                      elevation={0}
+                      component="img"
+                      src={
+                        find(albumPackage, { id: userPackage?.packageId })
+                          .preview_url
+                      }
+                      sx={{
+                        width: "100%",
+                        aspectRatio: "1/1",
+                        objectFit: "contain",
+                        backgroundColor: "#f2f2f2",
+                      }}
+                    />
+                  ) : (
+                    <Paper
+                      variant="elevation"
+                      elevation={0}
+                      sx={{
+                        width: "100%",
+                        aspectRatio: "1/1",
+                        objectFit: "contain",
+                        backgroundColor: "#f2f2f2",
+                        textAlign: "center",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography variant="h4">
+                        {
+                          find(albumPackage, { id: userPackage?.packageId })
+                            .name
+                        }
+                      </Typography>
+                    </Paper>
+                  )}
+                </TransformComponent>
+              </TransformWrapper>
               <Box
                 sx={{
                   backgroundColor: "#f2f2f2",
