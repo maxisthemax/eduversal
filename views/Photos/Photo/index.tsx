@@ -7,6 +7,9 @@ import {
   TransformComponent,
   useControls,
 } from "react-zoom-pan-pinch";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 //*lodash
 import find from "lodash/find";
@@ -75,6 +78,7 @@ function PhotoCotent() {
       is_downloadable: false,
       preview_url: "",
       description: undefined,
+      preview_url_additional: [],
     },
     ...userCourseData.course.package.filter(({ packageAlbums }) => {
       return includes(
@@ -288,7 +292,7 @@ function PhotoCotent() {
                 flexDirection: "column",
               }}
             >
-              <TransformWrapper>
+              <TransformWrapper disablePadding>
                 {() => (
                   <>
                     <Controls />
@@ -314,21 +318,58 @@ function PhotoCotent() {
                         />
                       ) : find(albumPackage, { id: userPackage?.packageId })
                           .preview_url ? (
-                        <Paper
-                          variant="elevation"
-                          elevation={0}
-                          component="img"
-                          src={
-                            find(albumPackage, { id: userPackage?.packageId })
-                              .preview_url
-                          }
+                        <Box
                           sx={{
                             width: "100%",
-                            aspectRatio: "1/1",
-                            objectFit: "contain",
-                            backgroundColor: "#f2f2f2",
                           }}
-                        />
+                        >
+                          <Slider
+                            dots={false}
+                            infinite={true}
+                            speed={600}
+                            slidesToShow={1}
+                            slidesToScroll={1}
+                            autoplay={true}
+                            autoplaySpeed={5000}
+                            pauseOnHover={true}
+                          >
+                            <Paper
+                              variant="elevation"
+                              elevation={0}
+                              component="img"
+                              src={
+                                find(albumPackage, {
+                                  id: userPackage?.packageId,
+                                }).preview_url
+                              }
+                              sx={{
+                                width: "100%",
+                                aspectRatio: "1/1",
+                                objectFit: "contain",
+                                backgroundColor: "#f2f2f2",
+                              }}
+                            />
+                            {find(albumPackage, {
+                              id: userPackage?.packageId,
+                            }).preview_url_additional.map((photo) => {
+                              return (
+                                <Paper
+                                  key={photo.display_url}
+                                  variant="elevation"
+                                  elevation={0}
+                                  component="img"
+                                  src={photo.display_url}
+                                  sx={{
+                                    width: "100%",
+                                    aspectRatio: "1/1",
+                                    objectFit: "contain",
+                                    backgroundColor: "#f2f2f2",
+                                  }}
+                                />
+                              );
+                            })}
+                          </Slider>
+                        </Box>
                       ) : (
                         <Paper
                           variant="elevation"

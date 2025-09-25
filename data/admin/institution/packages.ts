@@ -22,6 +22,12 @@ export interface PackageData {
   is_downloadable: boolean;
   preview_url: string;
   preview_url_key: string;
+  preview_url_additional?: {
+    display_url: string;
+    download_url: string;
+    name: string;
+    download_watermark_url: string;
+  }[];
   currency: string;
   price: number;
   packageAlbums: {
@@ -46,6 +52,12 @@ export interface PackageCreate {
   albums: {
     album_id: string;
     quantity: number;
+  }[];
+  preview_url_additional?: {
+    display_url: string;
+    download_url: string;
+    name: string;
+    download_watermark_url: string;
   }[];
 }
 

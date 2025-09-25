@@ -42,6 +42,7 @@ export default async function handler(
                 quantity: true,
               },
             },
+            preview_url_additional: true,
           },
         });
 
@@ -74,6 +75,7 @@ export default async function handler(
           currency,
           price,
           albums,
+          preview_url_additional,
         } = req.body;
 
         // Validate required fields
@@ -108,6 +110,7 @@ export default async function handler(
               price: price !== undefined ? parseFloat(price) : undefined,
               institution_id: institutionId as string,
               course_id: courseId as string,
+              preview_url_additional,
               ...created_by,
               ...updated_by,
             },

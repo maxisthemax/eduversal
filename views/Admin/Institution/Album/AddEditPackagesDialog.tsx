@@ -51,6 +51,9 @@ import { useAlbums } from "@/data/admin/institution/album";
 import { usePackage } from "@/data/admin/institution/packages";
 import { useGetStaffAccess } from "@/data/admin/user/staff";
 
+//*utils
+import axios from "@/utils/axios";
+
 //*validation
 const validationSchema = yup.object({
   name: yup.string().required("Required"),
@@ -76,7 +79,7 @@ function AddEditPackagesDialog() {
       <MenuItem {...bindTrigger(popupState)}>Manage Packages</MenuItem>
       <Dialog
         {...bindDialog(popupState)}
-        maxWidth="md"
+        maxWidth="lg"
         fullWidth
         keepMounted={false}
         disableEnforceFocus={true}
@@ -115,6 +118,16 @@ function AddEditPackagesDialogForm({
     useUpload(`institution/${institutionId}/course/${courseId}/package`, {
       multiple: false,
     });
+
+  const {
+    files: additionalFiles,
+    setFiles: setAdditionalFiles,
+    getRootProps: getAdditionalRootProps,
+    getInputProps: getAdditionalInputProps,
+    handleUpload: handleAdditionalUpload,
+  } = useUpload(`institution/${institutionId}/course/${courseId}/package`, {
+    multiple: true,
+  });
 
   if (status === "pending") return <LinearProgress />;
 
@@ -203,6 +216,7 @@ function AddEditPackagesDialogForm({
             handleClose();
             setPackageId("");
             setFiles([]);
+            setAdditionalFiles([]);
           }}
         >
           Close
@@ -222,6 +236,7 @@ function AddEditPackagesDialogForm({
               preview_url: packageData.preview_url,
               preview_url_key: packageData.preview_url_key,
               albums: packageData.packageAlbums,
+              preview_url_additional: packageData.preview_url_additional,
             }
           : {
               name: "",
@@ -232,6 +247,7 @@ function AddEditPackagesDialogForm({
               preview_url: "",
               preview_url_key: "",
               albums: [],
+              preview_url_additional: [],
             }
       }
       validationSchema={validationSchema}
@@ -255,6 +271,14 @@ function AddEditPackagesDialogForm({
           const res = await handleUpload();
           values.preview_url = res[0].display_url;
           values.preview_url_key = res[0].download_url;
+        }
+
+        if (additionalFiles.length > 0) {
+          const res = await handleAdditionalUpload();
+          values.preview_url_additional = [
+            ...values.preview_url_additional,
+            ...res,
+          ];
         }
         try {
           if (packageId) {
@@ -390,6 +414,189 @@ function AddEditPackagesDialogForm({
                       </Button>
                     </Box>
                   </Box>
+                  <Box>
+                    <Typography gutterBottom variant="body1">
+                      Additional Photos
+                    </Typography>
+                    <Grid
+                      container
+                      spacing={2}
+                      direction="row"
+                      sx={{
+                        maxHeight: getFullHeightSize(28),
+                        overflow: "auto",
+                        justifyContent: "flex-start",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      {packageData?.preview_url_additional?.map(
+                        (image, index) => {
+                          return (
+                            <Grid
+                              size={{
+                                xs: 2,
+                              }}
+                              key={index}
+                              sx={{
+                                textAlign: "center",
+                                position: "relative",
+                                "&:hover .delete": {
+                                  display: "block",
+                                },
+                              }}
+                            >
+                              <Box
+                                className="delete"
+                                sx={{
+                                  position: "absolute",
+                                  top: 0,
+                                  left: 0,
+                                  display: "none",
+                                }}
+                              >
+                                <IconButton
+                                  disableRipple
+                                  disableTouchRipple
+                                  disableFocusRipple
+                                  sx={{ background: "white", m: 0.5 }}
+                                  color="primary"
+                                  size="small"
+                                  onClick={() => {
+                                    handleOpenDialog({
+                                      title: "Delete This Photo",
+                                      description:
+                                        "Are you sure you want to delete this photo?",
+                                      onConfirm: async () => {
+                                        await axios.post(
+                                          `admin/photo/deletePhoto`,
+                                          { keys: [image.download_url] },
+                                          undefined,
+                                          true
+                                        );
+                                        setFieldValue(
+                                          "preview_url_additional",
+                                          values.preview_url_additional.filter(
+                                            ({ download_url }) =>
+                                              download_url !==
+                                              image.download_url
+                                          )
+                                        );
+                                        await updatePackage(packageId, {
+                                          name: packageData.name,
+                                          is_downloadable:
+                                            packageData.is_downloadable,
+                                          description: packageData.description,
+                                          currency: packageData.currency,
+                                          price: packageData.price,
+                                          preview_url: packageData.preview_url,
+                                          preview_url_key:
+                                            packageData.preview_url_key,
+                                          albums: packageData.packageAlbums,
+                                          preview_url_additional:
+                                            packageData.preview_url_additional.filter(
+                                              ({ download_url }) =>
+                                                download_url !==
+                                                image.download_url
+                                            ),
+                                        });
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <CustomIcon icon="delete" fontSizeSx="20px" />
+                                </IconButton>
+                              </Box>
+                              <Box
+                                draggable={false}
+                                component="img"
+                                src={image.display_url}
+                                alt={image.name}
+                                sx={{
+                                  width: "100%",
+                                  aspectRatio: "1/1",
+                                  objectFit: "contain",
+                                  backgroundColor: "#f2f2f2",
+                                }}
+                              />
+                              <Typography variant="caption">
+                                {image.name}
+                              </Typography>
+                            </Grid>
+                          );
+                        }
+                      )}
+                      {additionalFiles.map((file, index) => {
+                        return (
+                          <Grid
+                            size={{
+                              xs: 2,
+                            }}
+                            key={index}
+                            sx={{
+                              textAlign: "center",
+                              position: "relative",
+                              "&:hover .delete": {
+                                display: "block",
+                              },
+                            }}
+                          >
+                            <Box
+                              className="delete"
+                              sx={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                display: "none",
+                              }}
+                            >
+                              <IconButton
+                                disableRipple
+                                disableTouchRipple
+                                disableFocusRipple
+                                sx={{ background: "white", m: 0.5 }}
+                                color="primary"
+                                size="small"
+                                onClick={() => {
+                                  setAdditionalFiles((files) =>
+                                    files.filter((_, i) => i !== index)
+                                  );
+                                }}
+                              >
+                                <CustomIcon icon="delete" fontSizeSx="20px" />
+                              </IconButton>
+                            </Box>
+                            <Box
+                              draggable={false}
+                              component="img"
+                              src={URL.createObjectURL(file)}
+                              alt={file.name}
+                              sx={{
+                                width: "100%",
+                                aspectRatio: "1/1",
+                                objectFit: "contain",
+                                backgroundColor: "#f2f2f2",
+                              }}
+                            />
+                            <Typography variant="caption">
+                              {file.name}
+                            </Typography>
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                    <Box
+                      {...getAdditionalRootProps()}
+                      sx={{
+                        cursor: "pointer",
+                        pb: 1,
+                      }}
+                    >
+                      <input {...getAdditionalInputProps()} />
+                      <Button variant="contained" color="primary">
+                        Select Files
+                      </Button>
+                    </Box>
+                  </Box>
                   <Stack spacing={2} direction="row">
                     <TextFieldForm
                       name="currency"
@@ -507,6 +714,7 @@ function AddEditPackagesDialogForm({
                           resetForm();
                           setPackageId("");
                           setFiles([]);
+                          setAdditionalFiles([]);
                         },
                       });
                     }}
@@ -522,6 +730,7 @@ function AddEditPackagesDialogForm({
                     resetForm();
                     setPackageId("");
                     setFiles([]);
+                    setAdditionalFiles([]);
                   }}
                 >
                   Cancel

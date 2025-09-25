@@ -36,6 +36,7 @@ export default async function packageHandler(
           preview_url,
           preview_url_key,
           albums,
+          preview_url_additional,
         } = req.body;
         // Get updatedBy
         const { created_by, updated_by } = await getCreatedByUpdatedBy(
@@ -74,6 +75,7 @@ export default async function packageHandler(
               is_downloadable,
               preview_url,
               preview_url_key,
+              preview_url_additional,
               ...updated_by,
             },
           });

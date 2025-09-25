@@ -194,6 +194,8 @@ model Photo {
   updated_by_user_id String
   updated_by_name    String
   updated_at         DateTime @updatedAt
+  Package            Package? @relation(fields: [packageId], references: [id])
+  packageId          String?
 
   @@index([album_id])
   @@index([institution_id])
@@ -293,17 +295,18 @@ model AlbumProductVariation {
 }
 
 model Package {
-  id              String  @id @default(cuid())
-  name            String
-  description     String
-  is_downloadable Boolean
-  preview_url     String?
-  preview_url_key String?
-  currency        String
-  price           Float
-  institution_id  String
-  course_id       String
-  course          Course  @relation(fields: [course_id], references: [id])
+  id                     String  @id @default(cuid())
+  name                   String
+  description            String
+  is_downloadable        Boolean
+  preview_url            String?
+  preview_url_key        String?
+  currency               String
+  price                  Float
+  institution_id         String
+  course_id              String
+  course                 Course  @relation(fields: [course_id], references: [id])
+  preview_url_additional Json?   @default("[]")
 
   packageAlbums PackageAlbum[]
 
@@ -313,6 +316,7 @@ model Package {
   updated_by_user_id String
   updated_by_name    String
   updated_at         DateTime @updatedAt
+  Photo              Photo[]
 }
 
 model PackageAlbum {
