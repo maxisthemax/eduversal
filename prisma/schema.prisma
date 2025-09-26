@@ -295,18 +295,19 @@ model AlbumProductVariation {
 }
 
 model Package {
-  id                     String  @id @default(cuid())
-  name                   String
-  description            String
-  is_downloadable        Boolean
-  preview_url            String?
-  preview_url_key        String?
-  currency               String
-  price                  Float
-  institution_id         String
-  course_id              String
-  course                 Course  @relation(fields: [course_id], references: [id])
-  preview_url_additional Json?   @default("[]")
+  id                           String  @id @default(cuid())
+  name                         String
+  description                  String
+  is_downloadable              Boolean
+  preview_url                  String?
+  preview_url_key              String?
+  currency                     String
+  price                        Float
+  institution_id               String
+  course_id                    String
+  course                       Course  @relation(fields: [course_id], references: [id])
+  preview_url_additional       Json?   @default("[]")
+  preview_url_additional_video Json?   @default("[]")
 
   packageAlbums PackageAlbum[]
 

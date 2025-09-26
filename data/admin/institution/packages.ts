@@ -28,6 +28,12 @@ export interface PackageData {
     name: string;
     download_watermark_url: string;
   }[];
+  preview_url_additional_video?: {
+    display_url: string;
+    download_url: string;
+    name: string;
+    download_watermark_url: string;
+  }[];
   currency: string;
   price: number;
   packageAlbums: {
@@ -54,6 +60,12 @@ export interface PackageCreate {
     quantity: number;
   }[];
   preview_url_additional?: {
+    display_url: string;
+    download_url: string;
+    name: string;
+    download_watermark_url: string;
+  }[];
+  preview_url_additional_video?: {
     display_url: string;
     download_url: string;
     name: string;

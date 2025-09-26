@@ -8,6 +8,7 @@ import {
 } from "material-ui-popup-state/hooks";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
+import ReactPlayer from "react-player";
 
 //*find
 import find from "lodash/find";
@@ -23,6 +24,7 @@ import {
 } from "@/components/Form";
 import { CustomIcon } from "@/components/Icons";
 import useUpload from "@/components/useUpload";
+import useVideoUpload from "@/components/useVideoUpload";
 import { useCustomDialog } from "@/components/Dialog";
 
 //*material
@@ -129,6 +131,19 @@ function AddEditPackagesDialogForm({
     multiple: true,
   });
 
+  const {
+    files: additionalVideoFiles,
+    setFiles: setAdditionalVideoFiles,
+    getRootProps: getAdditionalVideoRootProps,
+    getInputProps: getAdditionalVideoInputProps,
+    handleUpload: handleAdditionalVideoUpload,
+  } = useVideoUpload(
+    `institution/${institutionId}/course/${courseId}/package`,
+    {
+      multiple: true,
+    }
+  );
+
   if (status === "pending") return <LinearProgress />;
 
   return !addEdit ? (
@@ -217,6 +232,7 @@ function AddEditPackagesDialogForm({
             setPackageId("");
             setFiles([]);
             setAdditionalFiles([]);
+            setAdditionalVideoFiles([]);
           }}
         >
           Close
@@ -237,6 +253,8 @@ function AddEditPackagesDialogForm({
               preview_url_key: packageData.preview_url_key,
               albums: packageData.packageAlbums,
               preview_url_additional: packageData.preview_url_additional,
+              preview_url_additional_video:
+                packageData.preview_url_additional_video,
             }
           : {
               name: "",
@@ -248,6 +266,7 @@ function AddEditPackagesDialogForm({
               preview_url_key: "",
               albums: [],
               preview_url_additional: [],
+              preview_url_additional_video: [],
             }
       }
       validationSchema={validationSchema}
@@ -277,6 +296,13 @@ function AddEditPackagesDialogForm({
           const res = await handleAdditionalUpload();
           values.preview_url_additional = [
             ...values.preview_url_additional,
+            ...res,
+          ];
+        }
+        if (additionalVideoFiles.length > 0) {
+          const res = await handleAdditionalVideoUpload();
+          values.preview_url_additional_video = [
+            ...values.preview_url_additional_video,
             ...res,
           ];
         }
@@ -498,6 +524,8 @@ function AddEditPackagesDialogForm({
                                                 download_url !==
                                                 image.download_url
                                             ),
+                                          preview_url_additional_video:
+                                            packageData.preview_url_additional_video,
                                         });
                                       },
                                     });
@@ -592,6 +620,197 @@ function AddEditPackagesDialogForm({
                       }}
                     >
                       <input {...getAdditionalInputProps()} />
+                      <Button variant="contained" color="primary">
+                        Select Files
+                      </Button>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Typography gutterBottom variant="body1">
+                      Additional Videos
+                    </Typography>
+                    <Grid
+                      container
+                      spacing={2}
+                      direction="row"
+                      sx={{
+                        maxHeight: getFullHeightSize(28),
+                        overflow: "auto",
+                        justifyContent: "flex-start",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      {packageData?.preview_url_additional_video?.map(
+                        (image, index) => {
+                          return (
+                            <Grid
+                              size={{
+                                xs: 4,
+                              }}
+                              key={index}
+                              sx={{
+                                textAlign: "center",
+                                position: "relative",
+                                "&:hover .delete": {
+                                  display: "block",
+                                },
+                              }}
+                            >
+                              <Box
+                                className="delete"
+                                sx={{
+                                  position: "absolute",
+                                  top: 0,
+                                  left: 0,
+                                  display: "none",
+                                }}
+                              >
+                                <IconButton
+                                  disableRipple
+                                  disableTouchRipple
+                                  disableFocusRipple
+                                  sx={{
+                                    background: "white",
+                                    m: 0.5,
+                                    zIndex: 10,
+                                  }}
+                                  color="primary"
+                                  size="small"
+                                  onClick={() => {
+                                    handleOpenDialog({
+                                      title: "Delete This Video",
+                                      description:
+                                        "Are you sure you want to delete this video?",
+                                      onConfirm: async () => {
+                                        await axios.post(
+                                          `admin/photo/deletePhoto`,
+                                          { keys: [image.download_url] },
+                                          undefined,
+                                          true
+                                        );
+                                        setFieldValue(
+                                          "preview_url_additional_video",
+                                          values.preview_url_additional_video.filter(
+                                            ({ download_url }) =>
+                                              download_url !==
+                                              image.download_url
+                                          )
+                                        );
+                                        await updatePackage(packageId, {
+                                          name: packageData.name,
+                                          is_downloadable:
+                                            packageData.is_downloadable,
+                                          description: packageData.description,
+                                          currency: packageData.currency,
+                                          price: packageData.price,
+                                          preview_url: packageData.preview_url,
+                                          preview_url_key:
+                                            packageData.preview_url_key,
+                                          albums: packageData.packageAlbums,
+                                          preview_url_additional:
+                                            packageData.preview_url_additional,
+                                          preview_url_additional_video:
+                                            packageData.preview_url_additional_video.filter(
+                                              ({ download_url }) =>
+                                                download_url !==
+                                                image.download_url
+                                            ),
+                                        });
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <CustomIcon icon="delete" fontSizeSx="20px" />
+                                </IconButton>
+                              </Box>
+                              <ReactPlayer
+                                src={image.display_url}
+                                controls
+                                width="100%"
+                                height="auto"
+                                playing={false}
+                              />
+                              <Typography variant="caption">
+                                {image.name}
+                              </Typography>
+                            </Grid>
+                          );
+                        }
+                      )}
+                      {additionalVideoFiles.map((file, index) => {
+                        return (
+                          <Grid
+                            size={{
+                              xs: 4,
+                            }}
+                            key={index}
+                            sx={{
+                              textAlign: "center",
+                              position: "relative",
+                              "&:hover .delete": {
+                                display: "block",
+                              },
+                            }}
+                          >
+                            <Box
+                              className="delete"
+                              sx={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                display: "none",
+                              }}
+                            >
+                              <IconButton
+                                disableRipple
+                                disableTouchRipple
+                                disableFocusRipple
+                                sx={{ background: "white", m: 0.5, zIndex: 10 }}
+                                color="primary"
+                                size="small"
+                                onClick={() => {
+                                  setAdditionalVideoFiles((files) =>
+                                    files.filter((_, i) => i !== index)
+                                  );
+                                }}
+                              >
+                                <CustomIcon icon="delete" fontSizeSx="20px" />
+                              </IconButton>
+                            </Box>
+                            <ReactPlayer
+                              src={URL.createObjectURL(file)}
+                              controls
+                              width="100%"
+                              height="auto"
+                              playing={false}
+                            />
+                            <Box
+                              draggable={false}
+                              component="img"
+                              src={URL.createObjectURL(file)}
+                              alt={file.name}
+                              sx={{
+                                width: "100%",
+                                aspectRatio: "1/1",
+                                objectFit: "contain",
+                                backgroundColor: "#f2f2f2",
+                              }}
+                            />
+                            <Typography variant="caption">
+                              {file.name}
+                            </Typography>
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                    <Box
+                      {...getAdditionalVideoRootProps()}
+                      sx={{
+                        cursor: "pointer",
+                        pb: 1,
+                      }}
+                    >
+                      <input {...getAdditionalVideoInputProps()} />
                       <Button variant="contained" color="primary">
                         Select Files
                       </Button>
@@ -715,6 +934,7 @@ function AddEditPackagesDialogForm({
                           setPackageId("");
                           setFiles([]);
                           setAdditionalFiles([]);
+                          setAdditionalVideoFiles([]);
                         },
                       });
                     }}
@@ -731,6 +951,7 @@ function AddEditPackagesDialogForm({
                     setPackageId("");
                     setFiles([]);
                     setAdditionalFiles([]);
+                    setAdditionalVideoFiles([]);
                   }}
                 >
                   Cancel

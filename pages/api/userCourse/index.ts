@@ -97,6 +97,7 @@ export default async function courseHandler(
                       where: { album: { is_disabled: false } },
                     },
                     preview_url_additional: true,
+                    preview_url_additional_video: true,
                   },
                 },
               },

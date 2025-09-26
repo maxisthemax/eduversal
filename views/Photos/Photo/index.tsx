@@ -1,5 +1,5 @@
 import { useParams, useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { formatDate } from "date-fns";
 import {
@@ -10,6 +10,7 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ReactPlayer from "react-player";
 
 //*lodash
 import find from "lodash/find";
@@ -52,6 +53,7 @@ import {
 import { t } from "@/helpers/useTranslation";
 
 function PhotoCotent() {
+  const sliderRef = useRef(null);
   const [addedToCart, setAddedToCart] = useState(false);
   const path = usePathname();
   const { push } = useRouter();
@@ -79,6 +81,7 @@ function PhotoCotent() {
       preview_url: "",
       description: undefined,
       preview_url_additional: [],
+      preview_url_additional_video: [],
     },
     ...userCourseData.course.package.filter(({ packageAlbums }) => {
       return includes(
@@ -292,32 +295,52 @@ function PhotoCotent() {
                 flexDirection: "column",
               }}
             >
-              <TransformWrapper disablePadding>
-                {() => (
-                  <>
-                    <Controls />
-                    <TransformComponent
-                      wrapperProps={{
-                        onContextMenu: (e) => e.preventDefault(),
-                      }}
-                      contentStyle={{ width: "100%" }}
-                      wrapperStyle={{ width: "100%", cursor: "pointer" }}
-                    >
-                      {userPackage?.packageId === "none" ? (
-                        <Paper
-                          variant="elevation"
-                          elevation={0}
-                          component="img"
-                          src={photo.display_url}
+              {userPackage?.packageId === "none" ? (
+                <TransformWrapper disablePadding>
+                  {() => (
+                    <>
+                      <Controls />
+                      <TransformComponent
+                        wrapperProps={{
+                          onContextMenu: (e) => e.preventDefault(),
+                        }}
+                        contentStyle={{ width: "100%" }}
+                        wrapperStyle={{ width: "100%", cursor: "pointer" }}
+                      >
+                        <Box
                           sx={{
                             width: "100%",
-                            aspectRatio: "1/1",
-                            objectFit: "contain",
-                            backgroundColor: "#f2f2f2",
                           }}
-                        />
-                      ) : find(albumPackage, { id: userPackage?.packageId })
-                          .preview_url ? (
+                        >
+                          <Paper
+                            variant="elevation"
+                            elevation={0}
+                            component="img"
+                            src={photo.display_url}
+                            sx={{
+                              width: "100%",
+                              aspectRatio: "1/1",
+                              objectFit: "contain",
+                              backgroundColor: "#f2f2f2",
+                            }}
+                          />
+                        </Box>
+                      </TransformComponent>
+                    </>
+                  )}
+                </TransformWrapper>
+              ) : (
+                <TransformWrapper disablePadding>
+                  {() => (
+                    <>
+                      <Controls />
+                      <TransformComponent
+                        wrapperProps={{
+                          onContextMenu: (e) => e.preventDefault(),
+                        }}
+                        contentStyle={{ width: "100%" }}
+                        wrapperStyle={{ width: "100%", cursor: "pointer" }}
+                      >
                         <Box
                           sx={{
                             width: "100%",
@@ -332,23 +355,85 @@ function PhotoCotent() {
                             autoplay={true}
                             autoplaySpeed={5000}
                             pauseOnHover={true}
+                            ref={sliderRef}
                           >
-                            <Paper
-                              variant="elevation"
-                              elevation={0}
-                              component="img"
-                              src={
-                                find(albumPackage, {
-                                  id: userPackage?.packageId,
-                                }).preview_url
-                              }
-                              sx={{
-                                width: "100%",
-                                aspectRatio: "1/1",
-                                objectFit: "contain",
-                                backgroundColor: "#f2f2f2",
-                              }}
-                            />
+                            {find(albumPackage, { id: userPackage?.packageId })
+                              .preview_url ? (
+                              <Paper
+                                variant="elevation"
+                                elevation={0}
+                                component="img"
+                                src={
+                                  find(albumPackage, {
+                                    id: userPackage?.packageId,
+                                  }).preview_url
+                                }
+                                sx={{
+                                  width: "100%",
+                                  aspectRatio: "1/1",
+                                  objectFit: "contain",
+                                  backgroundColor: "#f2f2f2",
+                                }}
+                              />
+                            ) : (
+                              <Paper
+                                variant="elevation"
+                                elevation={0}
+                                sx={{
+                                  width: "100%",
+                                  aspectRatio: "1/1",
+                                  objectFit: "contain",
+                                  backgroundColor: "#f2f2f2",
+                                  textAlign: "center",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  alignContent: "center",
+                                }}
+                              >
+                                <Typography variant="h4">
+                                  {
+                                    find(albumPackage, {
+                                      id: userPackage?.packageId,
+                                    }).name
+                                  }
+                                </Typography>
+                              </Paper>
+                            )}
+                            {find(albumPackage, {
+                              id: userPackage?.packageId,
+                            }).preview_url_additional_video.map((photo) => {
+                              return (
+                                <Paper
+                                  variant="elevation"
+                                  elevation={0}
+                                  key={photo.display_url}
+                                  sx={{
+                                    width: "100%",
+                                    aspectRatio: "1/1",
+                                    objectFit: "contain",
+                                    backgroundColor: "#f2f2f2",
+                                    alignContent: "center",
+                                  }}
+                                >
+                                  <ReactPlayer
+                                    onPlay={() => {
+                                      sliderRef.current.slickPause();
+                                    }}
+                                    onPause={() => {
+                                      sliderRef.current.slickPlay();
+                                    }}
+                                    onEnded={() => {
+                                      sliderRef.current.slickPlay();
+                                    }}
+                                    src={photo.display_url}
+                                    controls
+                                    width="100%"
+                                    height="auto"
+                                  />
+                                </Paper>
+                              );
+                            })}
                             {find(albumPackage, {
                               id: userPackage?.packageId,
                             }).preview_url_additional.map((photo) => {
@@ -370,33 +455,11 @@ function PhotoCotent() {
                             })}
                           </Slider>
                         </Box>
-                      ) : (
-                        <Paper
-                          variant="elevation"
-                          elevation={0}
-                          sx={{
-                            width: "100%",
-                            aspectRatio: "1/1",
-                            objectFit: "contain",
-                            backgroundColor: "#f2f2f2",
-                            textAlign: "center",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Typography variant="h4">
-                            {
-                              find(albumPackage, { id: userPackage?.packageId })
-                                .name
-                            }
-                          </Typography>
-                        </Paper>
-                      )}
-                    </TransformComponent>
-                  </>
-                )}
-              </TransformWrapper>
+                      </TransformComponent>
+                    </>
+                  )}
+                </TransformWrapper>
+              )}
               <Box
                 sx={{
                   backgroundColor: "#f2f2f2",

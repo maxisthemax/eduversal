@@ -43,6 +43,7 @@ export default async function handler(
               },
             },
             preview_url_additional: true,
+            preview_url_additional_video: true,
           },
         });
 
@@ -76,6 +77,7 @@ export default async function handler(
           price,
           albums,
           preview_url_additional,
+          preview_url_additional_video,
         } = req.body;
 
         // Validate required fields
@@ -111,6 +113,7 @@ export default async function handler(
               institution_id: institutionId as string,
               course_id: courseId as string,
               preview_url_additional,
+              preview_url_additional_video,
               ...created_by,
               ...updated_by,
             },
