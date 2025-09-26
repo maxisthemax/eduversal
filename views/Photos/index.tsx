@@ -198,7 +198,9 @@ function UserCourseItem({ userCourse }) {
                   </Typography>
                 </Stack>
                 <FlexBox />
-                <AddEditUserCourseDialog mode="edit" id={id} />
+                {!course.public_course && (
+                  <AddEditUserCourseDialog mode="edit" id={id} />
+                )}
               </Stack>
             </Grid>
             <Grid size={{ xs: 12, sm: 12, md: 2.5 }}>

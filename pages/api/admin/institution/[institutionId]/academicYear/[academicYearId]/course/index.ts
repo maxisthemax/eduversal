@@ -68,6 +68,7 @@ export default async function courseHandler(
           valid_period,
           start_date,
           end_date,
+          public_course,
         } = req.body;
 
         // Validate required fields in body
@@ -79,6 +80,7 @@ export default async function courseHandler(
             "start_date",
             "end_date",
             "valid_period",
+            "public_course",
           ])
         ) {
           return;
@@ -101,6 +103,7 @@ export default async function courseHandler(
             valid_period,
             institution_id: institutionId as string,
             academic_year_id: academicYearId as string,
+            public_course,
             ...created_by,
             ...updated_by,
           },

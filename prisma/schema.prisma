@@ -105,6 +105,7 @@ model Course {
   valid_period     ValidType
   albums           Album[]
   force_disable    Boolean?     @default(false)
+  public_course    Boolean      @default(false)
 
   created_by_user_id String
   created_by_name    String

@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 
 //*components
 import { OverlayBox } from "@/components/Box";
-import { TextFieldForm, DatePickerForm } from "@/components/Form";
+import { TextFieldForm, DatePickerForm, CheckboxForm } from "@/components/Form";
 
 //*material
 import Dialog from "@mui/material/Dialog";
@@ -119,6 +119,7 @@ function AddEditCourseDialogForm({
               end_date: courseData.end_date,
               standard_id: courseData.standard_id,
               valid_period: courseData.valid_period,
+              public_course: courseData.public_course,
             }
           : {
               name: "",
@@ -128,6 +129,7 @@ function AddEditCourseDialogForm({
                 uuidv4().slice(0, 4).toUpperCase(),
               standard_id: "",
               valid_period: "YEAR",
+              public_course: false,
               start_date: new Date(),
               end_date: addYears(new Date(), 1),
             }
@@ -254,6 +256,11 @@ function AddEditCourseDialogForm({
                       required: true,
                       disabled: values.valid_period !== "CUSTOM",
                     }}
+                  />
+                  <CheckboxForm
+                    name={`public_course`}
+                    label="Public"
+                    formProps={formProps}
                   />
                 </Stack>
               </DialogContent>

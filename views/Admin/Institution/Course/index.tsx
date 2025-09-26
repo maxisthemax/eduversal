@@ -61,6 +61,12 @@ function Course() {
       width: 200,
     },
     {
+      field: "public_course",
+      headerName: "Public Course",
+      width: 200,
+      type: "boolean",
+    },
+    {
       field: "access_code",
       headerName: "Access Code",
       width: 210,

@@ -1,5 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+//*lodash
+import uniq from "lodash/uniq";
+import orderBy from "lodash/orderBy";
+
 //*lib
 import prisma from "@/lib/prisma";
 
@@ -26,11 +30,13 @@ export default async function courseHandler(
             course: { end_date: { gte: new Date() }, force_disable: false },
           },
           select: {
+            created_at: true,
             id: true,
             names: true,
             course_id: true,
             course: {
               select: {
+                public_course: true,
                 institution: { select: { id: true, name: true } },
                 id: true,
                 academicYear: { select: { id: true, year: true, name: true } },
@@ -106,8 +112,122 @@ export default async function courseHandler(
           orderBy: { created_at: "desc" },
         });
 
+        const institutionIds = courses.map((course) => ({
+          id: course.course.institution.id,
+          names: course.names,
+        }));
+
+        const publicCourses = await prisma.course.findMany({
+          where: {
+            institution_id: { in: uniq(institutionIds.map((inst) => inst.id)) },
+            force_disable: false,
+            public_course: true,
+          },
+          select: {
+            public_course: true,
+            created_at: true,
+            institution: { select: { id: true, name: true } },
+            id: true,
+            academicYear: { select: { id: true, year: true, name: true } },
+            name: true,
+            standard: { select: { id: true, name: true } },
+            end_date: true,
+            albums: {
+              select: {
+                preview_url: true,
+                product_type: true,
+                id: true,
+                photos: {
+                  select: {
+                    id: true,
+                    name: true,
+                    display_url: true,
+                    download_url: true,
+                  },
+                },
+                name: true,
+                description: true,
+                albumProductVariations: {
+                  select: {
+                    productVariation: {
+                      select: {
+                        options: {
+                          select: {
+                            description: true,
+                            id: true,
+                            name: true,
+                            preview_url: true,
+                            preview_url_key: true,
+                            price: true,
+                            currency: true,
+                          },
+                        },
+                        name: true,
+                        description: true,
+                        is_downloadable: true,
+                        id: true,
+                      },
+                    },
+                    productVariation_id: true,
+                    mandatory: true,
+                    disabled_options: true,
+                  },
+                },
+              },
+              where: { is_disabled: false },
+            },
+            package: {
+              select: {
+                course_id: true,
+                currency: true,
+                description: true,
+                id: true,
+                is_downloadable: true,
+                name: true,
+                preview_url: true,
+                preview_url_key: true,
+                price: true,
+                packageAlbums: {
+                  select: { album_id: true, quantity: true },
+                  where: { album: { is_disabled: false } },
+                },
+                preview_url_additional: true,
+                preview_url_additional_video: true,
+              },
+            },
+          },
+        });
+
+        const newCourses = publicCourses.map((data, index) => {
+          return {
+            id: index,
+            names: institutionIds
+              .filter((inst) => inst.id === data.institution.id)
+              .map((inst) => inst.names)
+              .flat(),
+            course_id: data.id,
+            course: {
+              institution: data.institution,
+              id: data.id,
+              academicYear: data.academicYear,
+              name: data.name,
+              standard: data.standard,
+              end_date: data.end_date,
+              albums: data.albums,
+              package: data.package,
+              public_course: data.public_course,
+            },
+          };
+        });
+
         // Return the courses
-        return res.status(200).json({ data: courses });
+        return res.status(200).json({
+          data: orderBy(
+            [...(courses ? courses : []), ...(newCourses ? newCourses : [])],
+            ["created_at"],
+            ["desc"]
+          ),
+        });
       }
 
       case "POST": {

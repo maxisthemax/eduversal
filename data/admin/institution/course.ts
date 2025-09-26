@@ -31,6 +31,7 @@ export interface CourseData {
   standard_name_format: string;
   valid_period_format: string;
   access_code_status: string;
+  public_course?: boolean;
 }
 
 export const validPeriodOptions = [
@@ -49,6 +50,7 @@ export interface CourseCreate {
   end_date: Date;
   valid_period: string;
   force_disable?: boolean;
+  public_course?: boolean;
 }
 
 type CourseUpdate = Partial<CourseCreate>;
