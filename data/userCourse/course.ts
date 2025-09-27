@@ -66,6 +66,7 @@ export interface UserCourseData {
     package: UserCoursePackageData[];
     end_date: string;
     institution: { id: string; name: string };
+    public_course: boolean;
   };
   title_format: string;
   institution_id?: string;

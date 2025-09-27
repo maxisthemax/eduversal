@@ -196,11 +196,12 @@ export default async function courseHandler(
               },
             },
           },
+          orderBy: { created_at: "desc" },
         });
 
-        const newCourses = publicCourses.map((data, index) => {
+        const newCourses = publicCourses.map((data) => {
           return {
-            id: index,
+            id: `${data.id}-public`,
             names: institutionIds
               .filter((inst) => inst.id === data.institution.id)
               .map((inst) => inst.names)
