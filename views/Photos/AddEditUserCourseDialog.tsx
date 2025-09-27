@@ -30,6 +30,7 @@ import { UserCourseData, useUserCourse } from "@/data/userCourse/course";
 
 //*utils
 import axios from "@/utils/axios";
+import { t } from "@/helpers/useTranslation";
 
 function AddEditUserCourseDialog({
   mode = "add",
@@ -62,7 +63,7 @@ function AddEditUserCourseDialog({
           {...bindTrigger(popupState)}
           startIcon={<CustomIcon icon="add" />}
         >
-          Add Class
+          {t("Add Class")}
         </Button>
       )}
       <Dialog

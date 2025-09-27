@@ -17,6 +17,7 @@ import Paper from "@mui/material/Paper";
 
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
+import { t } from "@/helpers/useTranslation";
 
 function Class() {
   const { push } = useRouter();
@@ -29,13 +30,13 @@ function Class() {
       <Page
         isLoading={status === "pending"}
         links={[
-          { href: "/photos", title: "Class" },
+          { href: "/photos", title: t("Class") },
           {
             href: `/photos/${class_id}`,
-            title: "Albums",
+            title: t("Albums"),
           },
         ]}
-        title="Albums"
+        title={t("Albums")}
       >
         <Paper
           variant="elevation"
@@ -51,7 +52,7 @@ function Class() {
             </Typography>
             <FlexBox />
             <Typography variant="body1" color="error">
-              Available until{" "}
+              {t("Available until")}{" "}
               {formatDate(userCourseData.course.end_date, "dd MMM yyyy")}
             </Typography>
           </Stack>
@@ -97,7 +98,7 @@ function Class() {
                         <b>{name}</b>
                       </Typography>
                       <Typography variant="body1">
-                        {photos?.length ?? 0} Photos
+                        {photos?.length ?? 0} {t("Photos")}
                       </Typography>
                     </Stack>
                   </Grid>

@@ -24,6 +24,7 @@ import { useUserCourse } from "@/data/userCourse/course";
 
 //*utils
 import { useHover } from "@/utils/function";
+import { t } from "@/helpers/useTranslation";
 
 function Photos() {
   const { userCoursesData, status } = useUserCourse();
@@ -44,7 +45,9 @@ function Photos() {
         }}
       >
         <Typography sx={{ fontSize: "28px" }} variant="h4">
-          <b>Class ({userCoursesData?.length ?? 0})</b>
+          <b>
+            {t("Class")} ({userCoursesData?.length ?? 0})
+          </b>
         </Typography>
         <AddEditUserCourseDialog />
       </Stack>
@@ -78,12 +81,12 @@ function Photos() {
                 width={"50%"}
               />
               <Typography variant="h5">
-                <b>No Class Available</b>
+                <b>{t("No Class Available")}</b>
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                No classes available or the class may have expired. Click ‘Add
-                Class’ to access the class photo using the passcode from the
-                teacher.
+                {t(
+                  "No classes available or the class may have expired. Click ‘Add Class’ to access the class photo using the passcode from the teacher."
+                )}
               </Typography>
             </Stack>
           </Box>
@@ -213,14 +216,15 @@ function UserCourseItem({ userCourse }) {
               <Stack direction={"row"} spacing={1} sx={{ alignItems: "start" }}>
                 <CustomIcon icon="imagesmode" fontSizeSx="20px" />
                 <Typography variant="body2">
-                  {course.albums.length} Albums |{" "}
-                  {sum(course.albums.map(({ photos }) => photos.length))} Photos
+                  {course.albums.length} {t("Albums")} |{" "}
+                  {sum(course.albums.map(({ photos }) => photos.length))}{" "}
+                  {t("Photos")}
                 </Typography>
               </Stack>
             </Grid>
           </Grid>
           <Typography variant="body2" sx={{ pt: 2 }} color="error">
-            Avaliable until {formatDate(course.end_date, "dd MMM yyyy")}
+            {t("Available until")} {formatDate(course.end_date, "dd MMM yyyy")}
           </Typography>
         </Stack>
         <FlexBox sx={{ display: { xs: "none", sm: "none", md: "block" } }} />

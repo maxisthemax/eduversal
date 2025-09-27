@@ -35,7 +35,7 @@ import MenuItem from "@mui/material/MenuItem";
 //*helpers
 import { getFullHeightSize } from "@/helpers/stringHelpers";
 import { useGetIsMobileSize } from "@/helpers/view";
-import { languageList } from "@/helpers/useTranslation";
+import { languageList, t } from "@/helpers/useTranslation";
 
 //*data
 import { useUser } from "@/data/user";
@@ -112,6 +112,46 @@ function Main({ children }: { children: React.ReactNode }) {
                         <CustomIcon icon="shopping_bag" />
                       </Badge>
                     </IconButton>
+                    <PopupState
+                      key="menu"
+                      variant="popover"
+                      popupId="popup-menu"
+                    >
+                      {(popupState) => (
+                        <>
+                          <IconButton size="small" {...bindTrigger(popupState)}>
+                            <CustomIcon icon="language" fontSizeSx="20px" />
+                          </IconButton>
+                          <Menu
+                            {...bindMenu(popupState)}
+                            onKeyDownCapture={(e) => e.stopPropagation()}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                            transformOrigin={{
+                              vertical: "top",
+                              horizontal: "left",
+                            }}
+                          >
+                            {languageList.map((lang) => (
+                              <MenuItem
+                                key={lang.code}
+                                onClick={() => {
+                                  localStorage.setItem(
+                                    "language",
+                                    JSON.stringify(lang)
+                                  );
+                                  window.location.reload();
+                                }}
+                              >
+                                {lang.name}
+                              </MenuItem>
+                            ))}
+                          </Menu>
+                        </>
+                      )}
+                    </PopupState>
                   </Box>
                   <Drawer
                     open={open}
@@ -138,7 +178,7 @@ function Main({ children }: { children: React.ReactNode }) {
                         sx={{ pl: 4 }}
                       >
                         <ListItemText
-                          primary="Photos"
+                          primary={t("Photos")}
                           slotProps={{
                             primary: {
                               variant: "h6",
@@ -153,7 +193,7 @@ function Main({ children }: { children: React.ReactNode }) {
                       <Divider sx={{ mx: 2, my: 1 }} />
                       <ListItem sx={{ pl: 4 }}>
                         <ListItemText
-                          primary="Account"
+                          primary={t("Account")}
                           slotProps={{
                             primary: {
                               variant: "h6",
@@ -165,22 +205,22 @@ function Main({ children }: { children: React.ReactNode }) {
                       {[
                         {
                           pathName: "/account/profile",
-                          label: "Profile",
+                          label: t("Profile"),
                           icon: "person",
                         },
                         {
                           pathName: "/account/change-password",
-                          label: "Change Password",
+                          label: t("Change Password"),
                           icon: "lock",
                         },
                         {
                           pathName: "/account/purchase",
-                          label: "Purchases",
+                          label: t("Purchases"),
                           icon: "shopping_cart",
                         },
                         {
                           pathName: "/account/downloadable",
-                          label: "Downloadable",
+                          label: t("Downloadable"),
                           icon: "download",
                         },
                       ].map(({ pathName, label, icon }) => {
@@ -226,8 +266,8 @@ function Main({ children }: { children: React.ReactNode }) {
                         variant="outlined"
                         onClick={() => {
                           handleOpenDialog({
-                            title: "Logout",
-                            description: "Are you sure you want to logout?",
+                            title: t("Logout"),
+                            description: t("Are you sure you want to logout?"),
                             onConfirm: async () => {
                               await axios.post("auth/signOut");
                               push("/signin");
@@ -235,98 +275,100 @@ function Main({ children }: { children: React.ReactNode }) {
                           });
                         }}
                       >
-                        Logout
+                        {t("Logout")}
                       </Button>
                     </Box>
                   </Drawer>
                 </>
               ) : (
-                <TabContext value={pathName}>
-                  <TabList>
-                    {data?.role !== "USER" && (
+                <>
+                  <TabContext value={pathName}>
+                    <TabList>
+                      {data?.role !== "USER" && (
+                        <Tab
+                          onClick={() => push("/admin")}
+                          disableRipple
+                          label={t("Admin")}
+                          value="/admin"
+                          sx={{ fontSize: "16px", height: "60px" }}
+                        />
+                      )}
                       <Tab
-                        onClick={() => push("/admin")}
+                        onClick={() => push("/photos")}
                         disableRipple
-                        label="Admin"
-                        value="/admin"
-                        sx={{ fontSize: "16px", height: "60px" }}
+                        label={t("Photos")}
+                        value="/photos"
+                        sx={{ fontSize: "16px" }}
                       />
-                    )}
-                    <Tab
-                      onClick={() => push("/photos")}
-                      disableRipple
-                      label="Photos"
-                      value="/photos"
-                      sx={{ fontSize: "16px" }}
-                    />
-                    <Tab
-                      onClick={() => push("/account/profile")}
-                      disableRipple
-                      label="Account"
-                      value="/account"
-                      sx={{ fontSize: "16px" }}
-                    />
-                    <Tab
-                      onClick={() => push("/cart")}
-                      disableRipple
-                      label={
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          sx={{ alignItems: "center" }}
-                        >
-                          <Typography
-                            variant="inherit"
-                            sx={{ fontSize: "16px" }}
+                      <Tab
+                        onClick={() => push("/account/profile")}
+                        disableRipple
+                        label={t("Account")}
+                        value="/account"
+                        sx={{ fontSize: "16px" }}
+                      />
+                      <Tab
+                        onClick={() => push("/cart")}
+                        disableRipple
+                        label={
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            sx={{ alignItems: "center" }}
                           >
-                            Cart{" "}
-                            {`${cart?.length > 0 ? `(${cart.length})` : ""}`}
-                          </Typography>
-                        </Stack>
-                      }
-                      value="/cart"
-                    />
-                  </TabList>
-                </TabContext>
-              )}
-              <PopupState key="menu" variant="popover" popupId="popup-menu">
-                {(popupState) => (
-                  <>
-                    <Box sx={{ alignContent: "center" }}>
-                      <IconButton size="small" {...bindTrigger(popupState)}>
-                        <CustomIcon icon="language" fontSizeSx="20px" />
-                      </IconButton>
-                    </Box>
-                    <Menu
-                      {...bindMenu(popupState)}
-                      onKeyDownCapture={(e) => e.stopPropagation()}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                      }}
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "left",
-                      }}
-                    >
-                      {languageList.map((lang) => (
-                        <MenuItem
-                          key={lang.code}
-                          onClick={() => {
-                            localStorage.setItem(
-                              "language",
-                              JSON.stringify(lang)
-                            );
-                            window.location.reload();
+                            <Typography
+                              variant="inherit"
+                              sx={{ fontSize: "16px" }}
+                            >
+                              {t("Cart")}{" "}
+                              {`${cart?.length > 0 ? `(${cart.length})` : ""}`}
+                            </Typography>
+                          </Stack>
+                        }
+                        value="/cart"
+                      />
+                    </TabList>
+                  </TabContext>
+                  <PopupState key="menu" variant="popover" popupId="popup-menu">
+                    {(popupState) => (
+                      <>
+                        <Box sx={{ alignContent: "center" }}>
+                          <IconButton size="small" {...bindTrigger(popupState)}>
+                            <CustomIcon icon="language" fontSizeSx="20px" />
+                          </IconButton>
+                        </Box>
+                        <Menu
+                          {...bindMenu(popupState)}
+                          onKeyDownCapture={(e) => e.stopPropagation()}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
                           }}
                         >
-                          {lang.name}
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  </>
-                )}
-              </PopupState>
+                          {languageList.map((lang) => (
+                            <MenuItem
+                              key={lang.code}
+                              onClick={() => {
+                                localStorage.setItem(
+                                  "language",
+                                  JSON.stringify(lang)
+                                );
+                                window.location.reload();
+                              }}
+                            >
+                              {lang.name}
+                            </MenuItem>
+                          ))}
+                        </Menu>
+                      </>
+                    )}
+                  </PopupState>
+                </>
+              )}
             </Stack>
           </Container>
         </AppBar>
