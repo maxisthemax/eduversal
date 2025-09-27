@@ -200,12 +200,14 @@ function AddEditCourseDialogForm({
                       );
                     })}
                   </TextFieldForm>
-                  <TextFieldForm
-                    name="access_code"
-                    label="Access Code"
-                    formProps={formProps}
-                    props={{ required: true, disabled: true }}
-                  />
+                  {!values.public_course && (
+                    <TextFieldForm
+                      name="access_code"
+                      label="Access Code"
+                      formProps={formProps}
+                      props={{ required: true, disabled: true }}
+                    />
+                  )}
                   <TextFieldForm
                     name="valid_period"
                     label="Valid Period"

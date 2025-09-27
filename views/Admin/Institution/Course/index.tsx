@@ -70,31 +70,33 @@ function Course() {
       field: "access_code",
       headerName: "Access Code",
       width: 210,
-      renderCell: ({ formattedValue }) => {
+      renderCell: ({ formattedValue, row }) => {
         return (
-          <Stack
-            direction={"row"}
-            alignItems="center"
-            spacing={1}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <Typography>{formattedValue}</Typography>
-            <IconButton
-              size="small"
+          !row.public_course && (
+            <Stack
+              direction={"row"}
+              alignItems="center"
+              spacing={1}
               onClick={(e) => {
                 e.stopPropagation();
-                e.preventDefault();
-                navigator.clipboard.writeText(formattedValue);
-                toast.success("Access code copied to clipboard", {
-                  autoClose: 1000,
-                });
               }}
             >
-              <CustomIcon fontSizeSx="16px" icon="content_copy" />
-            </IconButton>
-          </Stack>
+              <Typography>{formattedValue}</Typography>
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  navigator.clipboard.writeText(formattedValue);
+                  toast.success("Access code copied to clipboard", {
+                    autoClose: 1000,
+                  });
+                }}
+              >
+                <CustomIcon fontSizeSx="16px" icon="content_copy" />
+              </IconButton>
+            </Stack>
+          )
         );
       },
     },
