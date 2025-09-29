@@ -40,10 +40,10 @@ export default function useVideoUpload(
       );
     },
     validator: (file) => {
-      if (file.size > 30 * 1024 * 1024) {
+      if (file.size > 300 * 1024 * 1024) {
         return {
           code: "size-too-large",
-          message: `file is larger than 30MB`,
+          message: `file is larger than 300MB`,
         };
       }
       return null;
