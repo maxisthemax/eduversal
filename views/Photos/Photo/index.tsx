@@ -19,6 +19,7 @@ import uniqBy from "lodash/uniqBy";
 import includes from "lodash/includes";
 import sumBy from "lodash/sumBy";
 import findIndex from "lodash/findIndex";
+import startsWith from "lodash/startsWith";
 
 //*components
 import { CustomIcon } from "@/components/Icons";
@@ -426,7 +427,11 @@ function PhotoCotent() {
                                     onEnded={() => {
                                       sliderRef.current.slickPlay();
                                     }}
-                                    src={photo.display_url}
+                                    src={
+                                      startsWith(photo.display_url, "sgp1")
+                                        ? "https://" + photo.display_url
+                                        : photo.display_url
+                                    }
                                     controls
                                     width="100%"
                                     height="auto"
@@ -443,7 +448,11 @@ function PhotoCotent() {
                                   variant="elevation"
                                   elevation={0}
                                   component="img"
-                                  src={photo.display_url}
+                                  src={
+                                    startsWith(photo.display_url, "sgp1")
+                                      ? "https://" + photo.display_url
+                                      : photo.display_url
+                                  }
                                   sx={{
                                     width: "100%",
                                     aspectRatio: "1/1",

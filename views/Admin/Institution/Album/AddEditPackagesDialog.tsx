@@ -13,6 +13,7 @@ import ReactPlayer from "react-player";
 //*find
 import find from "lodash/find";
 import some from "lodash/some";
+import startsWith from "lodash/startsWith";
 
 //*components
 import { FlexBox, OverlayBox } from "@/components/Box";
@@ -537,7 +538,11 @@ function AddEditPackagesDialogForm({
                               <Box
                                 draggable={false}
                                 component="img"
-                                src={image.display_url}
+                                src={
+                                  startsWith(image.display_url, "sgp1")
+                                    ? "https://" + image.display_url
+                                    : image.display_url
+                                }
                                 alt={image.name}
                                 sx={{
                                   width: "100%",
@@ -724,7 +729,11 @@ function AddEditPackagesDialogForm({
                                 </IconButton>
                               </Box>
                               <ReactPlayer
-                                src={image.display_url}
+                                src={
+                                  startsWith(image.display_url, "sgp1")
+                                    ? "https://" + image.display_url
+                                    : image.display_url
+                                }
                                 controls
                                 width="100%"
                                 height="auto"
