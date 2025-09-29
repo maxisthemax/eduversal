@@ -24,6 +24,7 @@ import { useOrder } from "@/data/order";
 import { statusColor } from "@/utils/constant";
 import axios from "@/utils/axios";
 import { publicIpv4 } from "public-ip";
+import { t } from "@/helpers/useTranslation";
 
 declare global {
   interface Window {
@@ -80,7 +81,7 @@ function PurchaseDetails() {
         sx={{ mb: 1 }}
         variant="outlined"
       >
-        Back
+        {t("Back")}
       </Button>
       <Paper
         variant="outlined"
@@ -94,17 +95,19 @@ function PurchaseDetails() {
             direction="row"
             sx={{ justifyContent: "space-between", width: "100%" }}
           >
-            <Typography variant="h6">ORDER #{orderData.order_no}</Typography>
+            <Typography variant="h6">
+              {t("ORDER")} #{orderData.order_no}
+            </Typography>
             <Typography
               variant="h6"
               sx={{ color: statusColor[orderData.status] }}
             >
-              {orderData.status}
+              {t(orderData.status)}
             </Typography>
           </Stack>
           <Stack direction="row" sx={{ width: "100%" }} spacing={6}>
             <Typography variant="body1" sx={{ whiteSpace: "break-spaces" }}>
-              <b>Shipping Method:</b>
+              <b>{t("Shipping Method")}:</b>
               <br />
               {orderData.shipment_method_format}
               <br />
@@ -121,10 +124,10 @@ function PurchaseDetails() {
                   </a>
                 )}
               {orderData.shipment_method === "in-store" &&
-                "\nCollect From Teacher"}
+                "\n" + t("Collect From Teacher")}
             </Typography>
             <Typography variant="body1">
-              <b>Remark:</b>
+              <b>{t("Remark")}:</b>
               <br />
               {orderData.remark}
             </Typography>
@@ -151,27 +154,27 @@ function PurchaseDetails() {
             spacing={1}
           >
             <Typography variant="body1">
-              Placed on{" "}
+              {t("Placed on")}{" "}
               {formatDate(orderData.created_at, "dd MMMM yyyy h:mm a")}
             </Typography>
             <Stack spacing={1}>
               {[
                 {
-                  label: "Subtotal:",
+                  label: `${t("Subtotal")}:`,
                   value: `RM ${(
                     Number(orderData.price) - Number(orderData.shipping_fee)
                   ).toFixed(2)}`,
                 },
                 {
-                  label: "Shipping Fee:",
+                  label: `${t("Shipping Fee")}:`,
                   value: `RM ${orderData.shipping_fee.toFixed(2)}`,
                 },
                 {
-                  label: "Total:",
+                  label: `${t("Total")}:`,
                   value: `RM ${orderData.price.toFixed(2)}`,
                 },
                 {
-                  label: "Payment Method:",
+                  label: `${t("Payment Method")}:`,
                   value: `${orderData.payment_method_format}`,
                 },
               ].map(({ label, value }, index) => {
@@ -231,9 +234,10 @@ function PurchaseDetails() {
               size="small"
               onClick={() => {
                 handleOpenDialog({
-                  title: "Change Payment Method",
-                  description:
-                    "Are you sure you want to change the payment method?",
+                  title: t("Change Payment Method"),
+                  description: t(
+                    "Are you sure you want to change the payment method?"
+                  ),
                   textField: {
                     id: "select",
                     selectField: [
@@ -280,7 +284,7 @@ function PurchaseDetails() {
                 });
               }}
             >
-              Change Payment
+              {t("Change Payment")}
             </Button>
 
             <Button
@@ -308,7 +312,7 @@ function PurchaseDetails() {
                 });
               }}
             >
-              Make Payment
+              {t("Make Payment")}
             </Button>
           </Stack>
         )}

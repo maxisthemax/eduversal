@@ -25,22 +25,23 @@ import Autocomplete from "@mui/material/Autocomplete";
 //*data
 import { useUser } from "@/data/user";
 import { useInstitutions } from "@/data/admin/institution/institution";
+import { t } from "@/helpers/useTranslation";
 
 const validationSchema = yup.object({
-  first_name: yup.string().required("First Name is required"),
-  last_name: yup.string().required("Last Name is required"),
+  first_name: yup.string().required(t("First Name is required")),
+  last_name: yup.string().required(t("Last Name is required")),
   phone_no: yup
     .string()
-    .required("Phone No is required")
-    .test("forbidden-phone", "Phone No cannot start with 0", (value) => {
+    .required(t("Phone No is required"))
+    .test("forbidden-phone", t("Phone No cannot start with 0"), (value) => {
       if (!value) return true;
       return !value.startsWith("0");
     }),
-  institutions: yup.array().min(1, "School / Institution is required"),
-  address_1: yup.string().required("Address 1 No is required"),
-  postcode: yup.string().required("Postcode is required"),
-  state: yup.string().required("State is required"),
-  city: yup.string().required("City is required"),
+  institutions: yup.array().min(1, t("School / Institution is required")),
+  address_1: yup.string().required(t("Address 1 No is required")),
+  postcode: yup.string().required(t("Postcode is required")),
+  state: yup.string().required(t("State is required")),
+  city: yup.string().required(t("City is required")),
 });
 
 function Profile() {
@@ -52,8 +53,8 @@ function Profile() {
 
   return (
     <Page
-      title="Profile"
-      subtitle="Manage and protect your account"
+      title={t("Profile")}
+      subtitle={t("Manage and protect your account")}
       backgroundColor="white"
     >
       <Formik
@@ -124,13 +125,13 @@ function Profile() {
                     >
                       <TextFieldForm
                         name="first_name"
-                        label="First Name"
+                        label={t("First Name")}
                         formProps={formProps}
                         props={{ required: true }}
                       />
                       <TextFieldForm
                         name="last_name"
-                        label="Last Name"
+                        label={t("Last Name")}
                         formProps={formProps}
                         props={{
                           required: true,
@@ -139,7 +140,7 @@ function Profile() {
                     </Stack>
                     <TextFieldForm
                       name="last_name"
-                      label="Last Name"
+                      label={t("Last Name")}
                       formProps={formProps}
                       props={{
                         required: true,
@@ -149,11 +150,11 @@ function Profile() {
                     <TextField
                       value={data.email}
                       disabled={true}
-                      label="Email"
+                      label={t("Email")}
                     />
                     <MobileNumberForm
                       name="phone_no"
-                      label="Phone No"
+                      label={t("Phone No")}
                       formProps={formProps}
                       props={{ required: true }}
                       countryCallingCode={values.country_code}
@@ -177,7 +178,7 @@ function Profile() {
                         <TextFieldAutocompleteForm
                           params={params}
                           name="institutions"
-                          label="School / Institution"
+                          label={t("School / Institution")}
                           formProps={formProps}
                         />
                       )}
@@ -185,13 +186,13 @@ function Profile() {
                     />
                     <TextFieldForm
                       name="address_1"
-                      label="Address 1"
+                      label={t("Address 1")}
                       formProps={formProps}
                       props={{ required: true }}
                     />
                     <TextFieldForm
                       name="address_2"
-                      label="Address 2"
+                      label={t("Address 2")}
                       formProps={formProps}
                     />
                     <Stack
@@ -200,18 +201,18 @@ function Profile() {
                     >
                       <TextFieldForm
                         name="postcode"
-                        label="Postcode"
+                        label={t("Postcode")}
                         formProps={formProps}
                         onlyNumber={true}
                       />
                       <StateSelectTextFieldForm
                         name="state"
-                        label="State"
+                        label={t("State")}
                         formProps={formProps}
                       />
                       <TextFieldForm
                         name="city"
-                        label="City"
+                        label={t("City")}
                         formProps={formProps}
                       />
                     </Stack>
@@ -223,7 +224,7 @@ function Profile() {
                         variant="contained"
                         color="primary"
                       >
-                        Save Changes
+                        {t("Save Changes")}
                       </Button>
                     </Stack>
                   </Stack>

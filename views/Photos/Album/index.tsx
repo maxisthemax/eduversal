@@ -20,6 +20,7 @@ import Paper from "@mui/material/Paper";
 //*data
 import { useUserCourse } from "@/data/userCourse/course";
 import { useUserPackages } from "../UserPackage";
+import { t } from "@/helpers/useTranslation";
 
 function Album() {
   const { push } = useRouter();
@@ -102,7 +103,7 @@ function Album() {
             </Typography>
             <FlexBox />
             <Typography variant="body1" color="error">
-              Available until{" "}
+              {t("Available until")}{" "}
               {formatDate(userCourseData.course.end_date, "dd MMM yyyy")}
             </Typography>
           </Stack>

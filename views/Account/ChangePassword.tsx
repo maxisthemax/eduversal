@@ -13,27 +13,28 @@ import Typography from "@mui/material/Typography";
 
 //*data
 import { useUser } from "@/data/user";
+import { t } from "@/helpers/useTranslation";
 
 const validationSchema = yup.object({
-  password: yup.string().required("Password is required"),
+  password: yup.string().required(t("Password is required")),
   new_password: yup
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(16, "Password must be at most 16 characters")
-    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-    .matches(/[0-9]/, "Password must contain at least one number")
+    .min(8, t("Password must be at least 8 characters"))
+    .max(16, t("Password must be at most 16 characters"))
+    .matches(/[A-Z]/, t("Password must contain at least one uppercase letter"))
+    .matches(/[a-z]/, t("Password must contain at least one lowercase letter"))
+    .matches(/[0-9]/, t("Password must contain at least one number"))
     .matches(
       /^[a-zA-Z0-9.,!?:;'"()\[\]{}\-_+=\/\\|@#$%^&*~]+$/,
-      "Password can only contain letters, numbers, and common punctuation"
+      t("Password can only contain letters, numbers, and common punctuation")
     )
-    .required("Password is required"),
+    .required(t("Password is required")),
   confirm_password: yup
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(16, "Password must be at most 16 characters")
-    .required("Password is required")
-    .oneOf([yup.ref("new_password")], "Your passwords do not match."),
+    .min(8, t("Password must be at least 8 characters"))
+    .max(16, t("Password must be at most 16 characters"))
+    .required(t("Password is required"))
+    .oneOf([yup.ref("new_password")], t("Your passwords do not match.")),
 });
 
 function ChangePassword() {
@@ -41,8 +42,10 @@ function ChangePassword() {
 
   return (
     <Page
-      title="Change Password"
-      subtitle="For the security of your account, please do not share your password with anyone"
+      title={t("Change Password")}
+      subtitle={t(
+        "For the security of your account, please do not share your password with anyone"
+      )}
       backgroundColor="white"
       sx={{ height: "calc(100% - 16px)" }}
     >
@@ -88,7 +91,7 @@ function ChangePassword() {
                   <Stack spacing={2} sx={{ pt: 2 }}>
                     <PasswordTextFieldWithHide
                       name="password"
-                      label="Password"
+                      label={t("Password")}
                       formProps={formProps}
                       props={{
                         autoComplete: "new-password",
@@ -96,7 +99,7 @@ function ChangePassword() {
                     />
                     <PasswordTextFieldWithHide
                       name="new_password"
-                      label="New Password"
+                      label={t("New Password")}
                       formProps={formProps}
                       props={{
                         autoComplete: "new-password",
@@ -104,16 +107,16 @@ function ChangePassword() {
                     />
                     <PasswordTextFieldWithHide
                       name="confirm_password"
-                      label="Confirm Password"
+                      label={t("Confirm Password")}
                       formProps={formProps}
                       props={{
                         autoComplete: "new-password",
                       }}
                     />
                     <Typography variant="body2" color="textDisabled">
-                      Password must be 8-16 characters long, contain at least
-                      one uppercase and one lowercase character, and include
-                      only letters, numbers or common punctuation
+                      {t(
+                        "Password must be 8-16 characters long, contain at least one uppercase and one lowercase character, and include only letters, numbers or common punctuation"
+                      )}
                     </Typography>
                     <Stack direction={"row"} spacing={2}>
                       <FlexBox />
@@ -123,7 +126,7 @@ function ChangePassword() {
                         variant="contained"
                         color="primary"
                       >
-                        Save Changes
+                        {t("Save Changes")}
                       </Button>
                     </Stack>
                   </Stack>

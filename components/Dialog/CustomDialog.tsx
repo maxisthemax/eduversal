@@ -15,6 +15,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import MenuItem from "@mui/material/MenuItem";
+import { t } from "@/helpers/useTranslation";
 
 //*interface
 interface DialogProps {
@@ -195,7 +196,7 @@ function CustomDialog() {
                 setValue(undefined);
               }}
             >
-              Cancel
+              {t("Cancel")}
             </Button>
           )}
           <LoadingButton
@@ -225,7 +226,7 @@ function CustomDialog() {
               }
             }}
           >
-            OK
+            {t("OK")}
           </LoadingButton>
         </DialogActions>
       </Dialog>
@@ -234,7 +235,7 @@ function CustomDialog() {
 }
 
 const defaultValue = {
-  title: "Are you sure?",
+  title: t("Are you sure?"),
   description: "",
   placeholder: "",
   textField: undefined,

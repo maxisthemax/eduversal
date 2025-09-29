@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 //*data
 import { useCart } from "../Cart";
 import { PaymentData } from "@/data/order";
+import { t } from "@/helpers/useTranslation";
 
 function PaymentDialog() {
   const { paymentData, clearPaymentData } = usePaymentStore();
@@ -60,11 +61,12 @@ function PaymentDialog() {
         >
           <CircularProgress size={80} thickness={4} />
           <Typography variant="h6" sx={{ mt: 4 }}>
-            Processing Payment
+            {t("Processing Payment")}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-            Please do not close this window. You will be redirected to the
-            payment gateway...
+            {t(
+              "Please do not close this window. You will be redirected to the payment gateway..."
+            )}
           </Typography>
         </Box>
 

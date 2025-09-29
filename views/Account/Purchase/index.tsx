@@ -23,6 +23,7 @@ import { useOrder } from "@/data/order";
 //*utils
 import { statusColor } from "@/utils/constant";
 import Box from "@mui/material/Box";
+import { t } from "@/helpers/useTranslation";
 
 function Purchase() {
   const params = useSearchParams();
@@ -31,22 +32,22 @@ function Purchase() {
   const { tabsComponent } = useCustomTabs({
     tabs: [
       {
-        label: "All",
+        label: t("All"),
         value: "all",
         render: <PurchaseComponent status={"ALL"} />,
       },
       {
-        label: "Pending",
+        label: t("Pending"),
         value: "pending",
         render: <PurchaseComponent status={"PENDING"} />,
       },
       {
-        label: "Completed",
+        label: t("Completed"),
         value: "completed",
         render: <PurchaseComponent status={"COMPLETED"} />,
       },
       {
-        label: "Cancelled/Refund",
+        label: t("Cancelled/Refund"),
         value: "cancelled/refund",
         render: <PurchaseComponent status={"CANCELLED/REFUND"} />,
       },
@@ -60,8 +61,8 @@ function Purchase() {
     <PurchaseDetails />
   ) : (
     <Page
-      title="Purchase"
-      subtitle="Manage your purchase"
+      title={t("Purchase")}
+      subtitle={t("Manage your purchase")}
       backgroundColor="white"
     >
       {tabsComponent}
@@ -95,11 +96,11 @@ function PurchaseComponent({ status }) {
                 <Stack direction="row" spacing={2}>
                   <CustomIcon icon="list_alt" />
                   <Typography variant="body1">
-                    ORDER ID: ORDER #{order_no}
+                    {t("ORDER ID")}: {t("ORDER")} #{order_no}
                   </Typography>
                 </Stack>
                 <Typography variant="body1" color={statusColor[status]}>
-                  {startCase(status)}
+                  {t(startCase(status))}
                 </Typography>
               </Stack>
               <Divider />
@@ -112,7 +113,7 @@ function PurchaseComponent({ status }) {
                 sx={{ p: 2, justifyContent: "space-between" }}
               >
                 <Typography variant="body1">
-                  Placed on {formatDate(created_at, "dd MMMM yyyy")}
+                  {t("Placed on")} {formatDate(created_at, "dd MMMM yyyy")}
                 </Typography>
                 <Typography variant="body1">
                   <b>RM {price.toFixed(2)}</b>

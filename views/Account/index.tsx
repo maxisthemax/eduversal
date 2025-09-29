@@ -30,6 +30,7 @@ import { useUser } from "@/data/user";
 
 //*utils
 import axios from "@/utils/axios";
+import { t } from "@/helpers/useTranslation";
 
 // Define types for menu items
 type MenuItem =
@@ -39,19 +40,19 @@ type MenuItem =
 
 // Menu items data
 const menuItems: MenuItem[] = [
-  { type: "header", text: "USER ACCOUNT" },
-  { type: "button", text: "Profile", icon: "person", route: "profile" },
+  { type: "header", text: t("USER ACCOUNT") },
+  { type: "button", text: t("Profile"), icon: "person", route: "profile" },
   {
     type: "button",
-    text: "Change Password",
+    text: t("Change Password"),
     icon: "lock",
     route: "change-password",
   },
-  { type: "header", text: "MARKETPLACE" },
-  { type: "button", text: "Purchase", icon: "work", route: "purchase" },
+  { type: "header", text: t("MARKETPLACE") },
+  { type: "button", text: t("Purchase"), icon: "work", route: "purchase" },
   {
     type: "button",
-    text: "Downloadable",
+    text: t("Downloadable"),
     icon: "download",
     route: "downloadable",
   },
@@ -141,8 +142,8 @@ function Account() {
                     variant="outlined"
                     onClick={() => {
                       handleOpenDialog({
-                        title: "Logout",
-                        description: "Are you sure you want to logout?",
+                        title: t("Logout"),
+                        description: t("Are you sure you want to logout?"),
                         onConfirm: async () => {
                           await axios.post("auth/signOut");
                           push("/signin");
@@ -150,7 +151,7 @@ function Account() {
                       });
                     }}
                   >
-                    Logout
+                    {t("Logout")}
                   </Button>
                 </Box>
               </List>

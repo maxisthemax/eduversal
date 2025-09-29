@@ -33,6 +33,7 @@ import IconButton from "@mui/material/IconButton";
 
 //*helpers
 import { useUserCourse } from "@/data/userCourse/course";
+import { t } from "@/helpers/useTranslation";
 export interface CartData {
   id?: string;
   userPackage: UserPackageData;
@@ -669,7 +670,7 @@ function Cart() {
             </Typography>
             <FlexBox />
             <Typography variant="body1" color="error">
-              Available until{" "}
+              {t("Available until")}{" "}
               {formatDate(publicCourse.course.end_date, "dd MMM yyyy")}
             </Typography>
           </Stack>

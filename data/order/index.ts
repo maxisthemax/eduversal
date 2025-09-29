@@ -17,6 +17,7 @@ import { useQueryFetch } from "@/helpers/queryHelpers";
 
 //*utils
 import { paymentLabel } from "@/utils/constant";
+import { t } from "@/helpers/useTranslation";
 
 //*interface
 export interface OrderData {
@@ -131,7 +132,9 @@ export function useOrder(orderStatus?: string): {
             ...data,
             created_at: new Date(data.created_at),
             shipment_method_format:
-              data.shipment_method === "ship" ? "Ship In" : "Pick up in store",
+              data.shipment_method === "ship"
+                ? t("Ship In")
+                : t("Pick up in store"),
             shipping_address_format:
               data.shipment_method === "ship"
                 ? `${data.shipping_address.first_name} ${

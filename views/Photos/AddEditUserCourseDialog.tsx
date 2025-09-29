@@ -134,12 +134,12 @@ function AddEditUserCourseDialogForm({
               }}
             >
               <Typography variant="h5">
-                <b>{"Add Your Child's Name"}</b>
+                <b>{t("Add Your Child's Name")}</b>
               </Typography>
               <Typography variant="body1" sx={{ fontWeight: 300 }}>
-                Enter your child’s name to access their class photos. If you
-                have more than one child in this class, you can add their names
-                too.
+                {t(
+                  "Enter your child’s name to access their class photos. If you have more than one child in this class, you can add their names too."
+                )}
               </Typography>
 
               <Stack sx={{ background: "#ECEDEF", p: 2 }} spacing={1}>
@@ -148,7 +148,7 @@ function AddEditUserCourseDialogForm({
                     variant="body2"
                     sx={{ fontWeight: 300, width: "120px", textAlign: "end" }}
                   >
-                    <b>Class Name :</b>
+                    <b>{t("Class Name")} :</b>
                   </Typography>
                   <Typography
                     variant="body2"
@@ -166,7 +166,7 @@ function AddEditUserCourseDialogForm({
                     variant="body2"
                     sx={{ fontWeight: 300, width: "120px", textAlign: "end" }}
                   >
-                    <b>Expiration Date :</b>
+                    <b>{t("Expiration Date")} :</b>
                   </Typography>
                   <Typography
                     variant="body2"
@@ -185,7 +185,7 @@ function AddEditUserCourseDialogForm({
                 sx={{ alignItems: "start", width: "100%", maxHeight: "250px" }}
                 spacing={2}
               >
-                <Typography>{"Child's Name"}</Typography>
+                <Typography>{t("Child's Name")}</Typography>
                 {child.map((name, index) => (
                   <TextField
                     onChange={(e) => {
@@ -196,7 +196,7 @@ function AddEditUserCourseDialogForm({
                     value={name}
                     key={index}
                     fullWidth
-                    placeholder="Enter your child's name"
+                    placeholder={t("Enter your child's name")}
                     slotProps={{
                       input: {
                         endAdornment: child.length > 1 && (
@@ -220,7 +220,7 @@ function AddEditUserCourseDialogForm({
                   variant="outlined"
                   onClick={() => setChild([...child, ""])}
                 >
-                  + Add Another Child
+                  + {t("Add Another Child")}
                 </Button>
               </Stack>
             </Stack>
@@ -232,7 +232,7 @@ function AddEditUserCourseDialogForm({
                 mode === "add" ? setData(undefined) : handleClose()
               }
             >
-              Back
+              {t("Back")}
             </Button>
             <FlexBox />
             <Button
@@ -251,7 +251,7 @@ function AddEditUserCourseDialogForm({
                 }
               }}
             >
-              {mode === "add" ? "   View Class Photos" : "Update"}
+              {mode === "add" ? t("View Class Photos") : t("Update")}
             </Button>
           </DialogActions>
         </>
@@ -274,10 +274,10 @@ function AddEditUserCourseDialogForm({
               sx={{ width: "136px", height: "106px" }}
             />
             <Typography variant="h5">
-              <b>Protected Content</b>
+              <b>{t("Protected Content")}</b>
             </Typography>
             <Typography variant="body1" sx={{ fontWeight: 300 }}>
-              Enter passcode to access the content.
+              {t("Enter passcode to access the content.")}
             </Typography>
             <Box
               sx={{
@@ -287,7 +287,7 @@ function AddEditUserCourseDialogForm({
               <TextField
                 value={code}
                 fullWidth
-                placeholder="Passcode"
+                placeholder={t("Passcode")}
                 sx={{ pb: 2 }}
                 onChange={(e) => setCode(e.target.value)}
               />
@@ -315,34 +315,42 @@ function AddEditUserCourseDialogForm({
                         ")",
                     });
                   } else {
-                    toast("Invalid Passcode", { type: "error" });
+                    toast(t("Invalid Passcode"), { type: "error" });
                   }
                   setIsChecking(false);
                 }}
               >
-                Unlock
+                {t("Unlock")}
               </Button>
             </Box>
             <Divider sx={{ width: "100%" }} />
             <Box>
               <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                Please obtain the passcode from the class teacher or the
-                relevant authority.
+                {t(
+                  "Please obtain the passcode from the class teacher or the relevant authority."
+                )}
               </Typography>
               <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                • The content is restricted to protect individual photos from
-                being
+                •{" "}
+                {t(
+                  "The content is restricted to protect individual photos from being"
+                )}
               </Typography>
               <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                • Enter the passcode to be redirected to the specific page.
+                •{" "}
+                {t("Enter the passcode to be redirected to the specific page.")}
               </Typography>
               <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                • All passcodes are only active for a limited time they were
-                issued by the teacher.
+                •{" "}
+                {t(
+                  "All passcodes are only active for a limited time they were issued by the teacher."
+                )}
               </Typography>
               <Typography variant="body2" sx={{ fontWeight: 300 }}>
-                • If you need access to photos from previous years, please
-                contact us for assistance.
+                •{" "}
+                {t(
+                  "If you need access to photos from previous years, please contact us for assistance."
+                )}
               </Typography>
             </Box>
           </Stack>

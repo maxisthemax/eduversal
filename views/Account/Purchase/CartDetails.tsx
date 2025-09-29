@@ -7,6 +7,7 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import { groupBy } from "lodash";
 import { useMemo } from "react";
+import { t } from "@/helpers/useTranslation";
 
 function CartDetails({ cart }) {
   const cartGroup = useMemo(
@@ -85,7 +86,7 @@ function CartDetails({ cart }) {
                           </Typography>
                         )}
                         <Typography variant="body2">
-                          Child: {item.userPackage.items[0]?.name}
+                          {t("Child")}: {item.userPackage.items[0]?.name}
                         </Typography>
                         {item.userPackage.items[0]?.productVariationOptions.map(
                           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,7 +98,7 @@ function CartDetails({ cart }) {
                               >
                                 {option.productVariationName}
                                 {option.productVariationDownloadable
-                                  ? ` (Includes Soft Copy)`
+                                  ? ` ${t("(Includes Soft Copy)")}`
                                   : ""}
                                 : {option.productVariationOptionName}
                               </Typography>
@@ -167,7 +168,7 @@ function CartDetails({ cart }) {
                                         >
                                           {option.productVariationName}
                                           {option.productVariationDownloadable
-                                            ? ` (Includes Soft Copy)`
+                                            ? ` ${t("(Includes Soft Copy)")}`
                                             : ""}
                                           : {option.productVariationOptionName}
                                         </Typography>

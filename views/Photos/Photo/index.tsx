@@ -575,7 +575,7 @@ function PhotoCotent() {
                     ).toFixed(2)}
                   </Typography>
                   <Typography variant="body1">
-                    Available until{" "}
+                    {t("Available until")}{" "}
                     {formatDate(userCourseData.course.end_date, "dd MMM yyyy")}
                   </Typography>
                 </Box>
