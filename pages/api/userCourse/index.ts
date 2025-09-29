@@ -201,6 +201,7 @@ export default async function courseHandler(
 
         const newCourses = publicCourses.map((data) => {
           return {
+            created_at: data.created_at,
             id: `${data.id}-public`,
             names: institutionIds
               .filter((inst) => inst.id === data.institution.id)
